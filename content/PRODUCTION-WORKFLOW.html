@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zenscape — Content Production Workflow</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; color: #212529; max-width: 760px; margin: 0 auto; padding: 48px 24px; line-height: 1.8; }
+    h1 { font-size: 1.8rem; margin-bottom: 4px; }
+    .sub { color: #6c757d; margin-bottom: 40px; }
+    h2 { font-size: 1.2rem; color: #7a9e7e; margin: 36px 0 12px; padding-bottom: 6px; border-bottom: 1px solid #e9ecef; }
+    h3 { font-size: 1rem; margin: 20px 0 8px; }
+    p { margin-bottom: 12px; color: #495057; }
+    ol, ul { padding-left: 24px; margin-bottom: 16px; }
+    li { margin-bottom: 8px; color: #495057; }
+    code { background: #f1f3f5; padding: 2px 8px; border-radius: 4px; font-size: 0.9rem; }
+    a { color: #7a9e7e; }
+    .tool { display: inline-block; background: #0f1a12; color: #fff; padding: 4px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; margin-right: 4px; }
+    .free { display: inline-block; background: #7a9e7e; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; }
+    .paid { display: inline-block; background: #f4a261; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e9ecef; font-size: 0.9rem; }
+    th { font-weight: 600; }
+    td { color: #495057; }
+    .callout { background: #f8f9fa; border-left: 3px solid #7a9e7e; padding: 16px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+  </style>
+</head>
+<body>
+
+  <h1>Content Production Workflow</h1>
+  <p class="sub">Your step-by-step guide to producing Zenscape content using AI and free tools.</p>
+
+  <h2>Your Toolkit</h2>
+  <table>
+    <tr><th>Tool</th><th>Purpose</th><th>Cost</th></tr>
+    <tr><td><strong>ElevenLabs</strong></td><td>AI voice narration — paste script, export MP3</td><td><span class="paid">~$5/mo</span></td></tr>
+    <tr><td><strong>Pixabay Music</strong></td><td>Free ambient audio (rain, ocean, pads) — no attribution</td><td><span class="free">Free</span></td></tr>
+    <tr><td><strong>Audacity</strong></td><td>Layer voice + ambient, adjust levels, export final MP3</td><td><span class="free">Free</span></td></tr>
+    <tr><td><strong>Canva</strong></td><td>Create video (static image + audio), thumbnails</td><td><span class="free">Free</span></td></tr>
+    <tr><td><strong>YouTube</strong></td><td>Upload and host videos</td><td><span class="free">Free</span></td></tr>
+    <tr><td><strong>Claude</strong></td><td>Write new scripts, descriptions, SEO titles</td><td>Your existing plan</td></tr>
+  </table>
+
+  <h2>Step 1: Generate Voice Audio</h2>
+  <ol>
+    <li>Go to <a href="https://elevenlabs.io">elevenlabs.io</a> and sign up</li>
+    <li>Choose a voice — recommended: calm, warm, British or neutral accent. Try "Rachel", "Adam", or browse the voice library</li>
+    <li>Open a <code>.txt</code> script file from <code>content/scripts/</code></li>
+    <li>Paste the full text into ElevenLabs</li>
+    <li>Set stability to ~70% and clarity to ~80% for a natural, warm tone</li>
+    <li>Generate and download the MP3</li>
+  </ol>
+
+  <h2>Step 2: Download Background Audio</h2>
+  <ol>
+    <li>Go to <a href="https://pixabay.com/music/">pixabay.com/music</a></li>
+    <li>Search for the right ambience for each video:</li>
+  </ol>
+  <table>
+    <tr><th>Video</th><th>Search terms</th></tr>
+    <tr><td>Morning Meditation</td><td>"ambient morning", "gentle birds", "calm piano"</td></tr>
+    <tr><td>Deep Sleep</td><td>"rain sleep", "ocean waves night", "dark ambient"</td></tr>
+    <tr><td>Breathing for Anxiety</td><td>"calm ambient", "soft pad", "meditation background"</td></tr>
+    <tr><td>Science of Mindfulness</td><td>"minimal background music", "documentary ambient"</td></tr>
+  </table>
+  <ol start="3">
+    <li>Download the MP3 — no attribution needed from Pixabay</li>
+  </ol>
+
+  <h2>Step 3: Combine in Audacity</h2>
+  <ol>
+    <li>Download <a href="https://www.audacityteam.org/">Audacity</a> (free, Windows/Mac)</li>
+    <li>Import the voice MP3 (File &rarr; Import &rarr; Audio)</li>
+    <li>Import the ambient MP3 on a second track</li>
+    <li>Lower the ambient track volume to about -18 dB (use the track volume slider)</li>
+    <li>Trim or loop the ambient to match the voice length</li>
+    <li>File &rarr; Export &rarr; Export as MP3</li>
+    <li>Save to <code>content/audio/</code> using the naming convention: <code>01-morning-meditation.mp3</code></li>
+  </ol>
+
+  <div class="callout">
+    <strong>Once you save the MP3 to content/audio/</strong>, the audio players on the media page will work automatically — no code changes needed.
+  </div>
+
+  <h2>Step 4: Create YouTube Video</h2>
+  <ol>
+    <li>Open <a href="https://www.canva.com">Canva</a> (free account works)</li>
+    <li>Create a new design: <strong>YouTube Video (1920x1080)</strong></li>
+    <li>Set a background matching the thumbnail colour for that video</li>
+    <li>Add the Zenscape logo and title text</li>
+    <li>Upload your combined MP3 audio</li>
+    <li>Set the page duration to match the audio length</li>
+    <li>Download as MP4</li>
+    <li>Upload to YouTube with title, description, and tags (see below)</li>
+  </ol>
+
+  <h2>Step 5: Create Thumbnail</h2>
+  <ol>
+    <li>In Canva, create: <strong>YouTube Thumbnail (1280x720)</strong></li>
+    <li>Reference <code>content/thumbnails/thumbnails.html</code> for the design of each</li>
+    <li>Use bold Inter font, brand colours, keep it clean</li>
+    <li>Upload as the custom thumbnail when publishing on YouTube</li>
+  </ol>
+
+  <h2>Step 6: Update the Website</h2>
+  <p>Once you've uploaded to YouTube:</p>
+  <ol>
+    <li>Get the YouTube video ID from the URL (the part after <code>v=</code>)</li>
+    <li>Open <code>media.html</code></li>
+    <li>Find the HTML comment for that video's YouTube embed</li>
+    <li>Uncomment it and replace <code>YOUR_ID</code> with the actual video ID</li>
+    <li>Update the "Subscribe on YouTube" button href with your channel URL</li>
+  </ol>
+
+  <h2>YouTube SEO — Titles & Descriptions</h2>
+
+  <h3>Video 1: Morning Meditation</h3>
+  <p><strong>Title:</strong> 10-Minute Morning Meditation for Focus & Clarity | Zenscape</p>
+  <p><strong>Description:</strong> Start your day with this gentle 10-minute guided meditation. Perfect for beginners and experienced meditators alike. Body scan, breath awareness, and intention-setting to bring calm and focus to your morning. Subscribe for new meditations every week. #meditation #mindfulness #morning</p>
+
+  <h3>Video 2: Deep Sleep</h3>
+  <p><strong>Title:</strong> Deep Sleep Meditation — 30 Minutes | Fall Asleep Fast | Zenscape</p>
+  <p><strong>Description:</strong> A 30-minute guided sleep meditation with progressive relaxation, breathing exercises, and a calming ocean visualisation. Designed to help you fall asleep faster and wake up feeling rested. Best with headphones. #sleep #meditation #sleepmeditation</p>
+
+  <h3>Video 3: Breathing for Anxiety</h3>
+  <p><strong>Title:</strong> Breathing Exercises for Anxiety — Box Breathing & 4-7-8 Technique | Zenscape</p>
+  <p><strong>Description:</strong> Learn two science-backed breathing techniques that reduce anxiety in minutes: box breathing and the 4-7-8 method. Includes guided practice rounds you can follow along with. Works for panic attacks, stress, and trouble sleeping. #anxiety #breathing #mentalhealth</p>
+
+  <h3>Video 4: Science of Mindfulness</h3>
+  <p><strong>Title:</strong> How Meditation Changes Your Brain — The Science of Mindfulness | Zenscape</p>
+  <p><strong>Description:</strong> What actually happens in your brain when you meditate? This video explains the neuroscience: how the amygdala shrinks, the prefrontal cortex thickens, and the default mode network quiets down. Real studies, plain language. #mindfulness #neuroscience #meditation</p>
+
+  <h2>Content Pipeline — Producing More</h2>
+  <p>When you want new content, ask Claude to:</p>
+  <ul>
+    <li>Write a new meditation script on any topic</li>
+    <li>Generate the YouTube title, description, and tags</li>
+    <li>Update the media page with a new card</li>
+  </ul>
+  <p>Then run the same 6-step workflow above. Each new piece of content should take roughly 30–45 minutes of your time.</p>
+
+</body>
+</html>

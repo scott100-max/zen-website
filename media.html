@@ -5,8 +5,70 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Media — Zenscape</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    .media-card {
+      background: var(--white); border: 1px solid var(--light-gray);
+      border-radius: 12px; overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .media-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+    }
+    .media-thumb {
+      aspect-ratio: 16/9; display: flex; align-items: center;
+      justify-content: center; flex-direction: column; position: relative;
+    }
+    .media-thumb .thumb-title {
+      font-weight: 800; color: #fff; text-align: center;
+      line-height: 1.2; font-size: 1.4rem;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.3); z-index: 1;
+    }
+    .media-thumb .thumb-sub {
+      color: rgba(255,255,255,0.85); font-size: 0.7rem;
+      letter-spacing: 2px; margin-top: 8px; z-index: 1;
+    }
+    .media-thumb .thumb-brand {
+      position: absolute; bottom: 8px; right: 12px;
+      color: rgba(255,255,255,0.5); font-size: 0.6rem;
+      letter-spacing: 2px; z-index: 1;
+    }
+    .media-body { padding: 24px; }
+    .media-body h3 { font-size: 1.1rem; margin-bottom: 4px; }
+    .media-meta {
+      font-size: 0.8rem; color: var(--mid-gray); margin-bottom: 12px;
+    }
+    .media-body p { color: var(--mid-gray); font-size: 0.95rem; margin-bottom: 16px; }
+    .media-body audio { width: 100%; margin-bottom: 12px; }
+    .media-body .yt-embed { display: none; margin-bottom: 12px; }
+    .media-body .yt-embed iframe {
+      width: 100%; aspect-ratio: 16/9; border: none; border-radius: 8px;
+    }
+    .media-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px;
+    }
+    .pipeline-section {
+      background: var(--off-white); border: 1px solid var(--light-gray);
+      border-radius: 12px; padding: 40px; margin-top: 60px;
+    }
+    .pipeline-section h3 { margin-bottom: 20px; }
+    .step-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .step { text-align: center; }
+    .step-num {
+      width: 36px; height: 36px; background: var(--accent);
+      color: var(--white); border-radius: 50%; display: inline-flex;
+      align-items: center; justify-content: center; font-weight: 700;
+      font-size: 0.9rem; margin-bottom: 10px;
+    }
+    .step h4 { font-size: 0.9rem; margin-bottom: 4px; }
+    .step p { font-size: 0.8rem; color: var(--mid-gray); }
+    @media (max-width: 768px) {
+      .media-grid { grid-template-columns: 1fr; }
+      .step-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
 </head>
 <body>
 
@@ -27,45 +89,95 @@
   <section class="hero" style="padding-bottom:60px;">
     <div class="container">
       <h1 class="fade-in">Zenscape <span>Media</span></h1>
-      <p class="fade-in">Free guided sessions, talks, and mindfulness content on our YouTube channel.</p>
+      <p class="fade-in">Guided meditations and mindfulness content. Listen here or watch on YouTube.</p>
     </div>
   </section>
 
+  <!-- Featured Content -->
   <section>
     <div class="container">
       <div class="section-header fade-in">
-        <h2>Featured Videos</h2>
-        <p>Watch our most popular guided meditations and mindfulness talks.</p>
+        <h2>Featured Sessions</h2>
+        <p>Listen directly or watch the full video on YouTube.</p>
       </div>
-      <div class="video-grid">
-        <div class="video-card fade-in">
-          <iframe src="about:blank" data-src="https://www.youtube.com/embed/" title="Video placeholder" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-          <div class="video-info">
+
+      <div class="media-grid">
+
+        <!-- 01 Morning Meditation -->
+        <div class="media-card fade-in">
+          <div class="media-thumb" style="background:linear-gradient(135deg,#f4a261,#e76f51);">
+            <div class="thumb-title">10-Minute<br>Morning Meditation</div>
+            <div class="thumb-sub">START YOUR DAY WITH CLARITY</div>
+            <div class="thumb-brand">ZENSCAPE</div>
+          </div>
+          <div class="media-body">
             <h3>10-Minute Morning Meditation</h3>
-            <p>Start your day with clarity and intention. A gentle guided session for all levels.</p>
+            <div class="media-meta">10 min &middot; Guided Meditation &middot; All levels</div>
+            <p>Body scan, breath awareness, and intention-setting to start your day with clarity and focus.</p>
+            <!-- Replace src with your audio file path once produced -->
+            <audio controls preload="none">
+              <source src="content/audio/01-morning-meditation.mp3" type="audio/mpeg">
+              Audio coming soon.
+            </audio>
+            <!-- Uncomment and add YouTube ID once uploaded -->
+            <!-- <div class="yt-embed" style="display:block"><iframe src="https://www.youtube.com/embed/YOUR_ID" allowfullscreen></iframe></div> -->
           </div>
         </div>
-        <div class="video-card fade-in">
-          <iframe src="about:blank" data-src="https://www.youtube.com/embed/" title="Video placeholder" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-          <div class="video-info">
-            <h3>Breathing for Anxiety Relief</h3>
-            <p>Learn the 4-7-8 breathing technique to quickly calm your nervous system.</p>
+
+        <!-- 02 Deep Sleep -->
+        <div class="media-card fade-in">
+          <div class="media-thumb" style="background:linear-gradient(135deg,#1a2e1e,#0f1a12);">
+            <div class="thumb-title">Deep Sleep<br>Meditation</div>
+            <div class="thumb-sub">30 MIN &middot; FALL ASLEEP PEACEFULLY</div>
+            <div class="thumb-brand">ZENSCAPE</div>
           </div>
-        </div>
-        <div class="video-card fade-in">
-          <iframe src="about:blank" data-src="https://www.youtube.com/embed/" title="Video placeholder" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-          <div class="video-info">
+          <div class="media-body">
             <h3>Deep Sleep Meditation</h3>
-            <p>A 30-minute guided session to help you fall asleep peacefully.</p>
+            <div class="media-meta">30 min &middot; Guided Meditation &middot; Sleep</div>
+            <p>Progressive tension release, breath anchoring, and a calming shore visualisation to ease you into restful sleep.</p>
+            <audio controls preload="none">
+              <source src="content/audio/02-deep-sleep.mp3" type="audio/mpeg">
+              Audio coming soon.
+            </audio>
           </div>
         </div>
-        <div class="video-card fade-in">
-          <iframe src="about:blank" data-src="https://www.youtube.com/embed/" title="Video placeholder" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-          <div class="video-info">
+
+        <!-- 03 Breathing for Anxiety -->
+        <div class="media-card fade-in">
+          <div class="media-thumb" style="background:linear-gradient(135deg,#7a9e7e,#5a7e5e);">
+            <div class="thumb-title">Breathing for<br>Anxiety Relief</div>
+            <div class="thumb-sub">TWO TECHNIQUES THAT WORK INSTANTLY</div>
+            <div class="thumb-brand">ZENSCAPE</div>
+          </div>
+          <div class="media-body">
+            <h3>Breathing for Anxiety Relief</h3>
+            <div class="media-meta">12 min &middot; Educational + Guided &middot; Anxiety</div>
+            <p>Learn box breathing and the 4-7-8 technique — two science-backed methods to calm your nervous system fast.</p>
+            <audio controls preload="none">
+              <source src="content/audio/03-breathing-for-anxiety.mp3" type="audio/mpeg">
+              Audio coming soon.
+            </audio>
+          </div>
+        </div>
+
+        <!-- 04 Science of Mindfulness -->
+        <div class="media-card fade-in">
+          <div class="media-thumb" style="background:linear-gradient(135deg,#2c3e50,#1a252f);">
+            <div class="thumb-title">The Science of<br>Mindfulness</div>
+            <div class="thumb-sub">HOW MEDITATION CHANGES YOUR BRAIN</div>
+            <div class="thumb-brand">ZENSCAPE</div>
+          </div>
+          <div class="media-body">
             <h3>The Science of Mindfulness</h3>
-            <p>How meditation changes your brain — a talk with our resident neuroscientist.</p>
+            <div class="media-meta">15 min &middot; Educational &middot; All levels</div>
+            <p>What happens in your brain when you meditate? The neuroscience of mindfulness explained in plain language.</p>
+            <audio controls preload="none">
+              <source src="content/audio/04-science-of-mindfulness.mp3" type="audio/mpeg">
+              Audio coming soon.
+            </audio>
           </div>
         </div>
+
       </div>
 
       <div style="text-align:center;margin-top:48px;" class="fade-in">

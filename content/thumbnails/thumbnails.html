@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zenscape — YouTube Thumbnail Designs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #f8f9fa; padding: 48px 24px; }
+    h1 { text-align: center; margin-bottom: 8px; font-size: 1.6rem; }
+    .sub { text-align: center; color: #6c757d; margin-bottom: 48px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; max-width: 1000px; margin: 0 auto; }
+    .thumb-wrap { background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #e9ecef; }
+    .thumb-wrap .label { padding: 16px; font-size: 0.85rem; color: #6c757d; }
+    .thumb-wrap .label strong { color: #212529; display: block; margin-bottom: 4px; }
+
+    .thumb {
+      width: 100%; aspect-ratio: 16/9; position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center; flex-direction: column;
+    }
+    .thumb .title {
+      font-weight: 800; color: #fff; text-align: center; line-height: 1.2;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.4); z-index: 2; padding: 0 24px;
+    }
+    .thumb .subtitle {
+      color: rgba(255,255,255,0.85); font-size: 0.7rem; letter-spacing: 2px;
+      text-transform: uppercase; margin-top: 8px; z-index: 2;
+    }
+    .thumb .logo {
+      position: absolute; bottom: 12px; right: 16px; font-size: 0.65rem;
+      color: rgba(255,255,255,0.6); letter-spacing: 2px; z-index: 2;
+    }
+    .thumb::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.1));
+      z-index: 1;
+    }
+
+    /* Individual thumbnail styles */
+    .thumb-1 { background: linear-gradient(135deg, #f4a261, #e76f51); }
+    .thumb-1 .title { font-size: 1.6rem; }
+
+    .thumb-2 { background: linear-gradient(135deg, #1a2e1e, #0f1a12); }
+    .thumb-2 .title { font-size: 1.6rem; }
+    .thumb-2::after { background: none; }
+    .thumb-2 .stars { position: absolute; inset: 0; z-index: 0; }
+    .thumb-2 .stars span {
+      position: absolute; width: 2px; height: 2px; background: rgba(255,255,255,0.5);
+      border-radius: 50%;
+    }
+
+    .thumb-3 { background: linear-gradient(135deg, #7a9e7e, #5a7e5e); }
+    .thumb-3 .title { font-size: 1.5rem; }
+
+    .thumb-4 { background: linear-gradient(135deg, #2c3e50, #1a252f); }
+    .thumb-4 .title { font-size: 1.4rem; }
+
+    @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <h1>YouTube Thumbnail Designs</h1>
+  <p class="sub">1280 x 720px recommended. Recreate these in your design tool of choice.</p>
+
+  <div class="grid">
+
+    <!-- Thumb 1 -->
+    <div class="thumb-wrap">
+      <div class="thumb thumb-1">
+        <div class="title" style="z-index:2">10-Minute<br>Morning<br>Meditation</div>
+        <div class="subtitle">Start your day with clarity</div>
+        <div class="logo">ZENSCAPE</div>
+      </div>
+      <div class="label">
+        <strong>01 — Morning Meditation</strong>
+        Background: Warm sunrise gradient (#f4a261 → #e76f51). White bold text. Consider adding a subtle sun or horizon graphic.
+      </div>
+    </div>
+
+    <!-- Thumb 2 -->
+    <div class="thumb-wrap">
+      <div class="thumb thumb-2">
+        <div class="stars">
+          <span style="top:15%;left:20%"></span><span style="top:25%;left:60%"></span>
+          <span style="top:10%;left:80%"></span><span style="top:40%;left:30%"></span>
+          <span style="top:50%;left:75%"></span><span style="top:70%;left:15%"></span>
+          <span style="top:65%;left:55%"></span><span style="top:80%;left:85%"></span>
+          <span style="top:35%;left:45%"></span><span style="top:55%;left:10%"></span>
+        </div>
+        <div class="title" style="z-index:2">Deep Sleep<br>Meditation</div>
+        <div class="subtitle">30 minutes &middot; Fall asleep peacefully</div>
+        <div class="logo">ZENSCAPE</div>
+      </div>
+      <div class="label">
+        <strong>02 — Deep Sleep</strong>
+        Background: Dark forest gradient (#1a2e1e → #0f1a12) with star dots. Soft white text. Moon icon optional.
+      </div>
+    </div>
+
+    <!-- Thumb 3 -->
+    <div class="thumb-wrap">
+      <div class="thumb thumb-3">
+        <div class="title" style="z-index:2">Breathing<br>for Anxiety<br>Relief</div>
+        <div class="subtitle">Two techniques that work instantly</div>
+        <div class="logo">ZENSCAPE</div>
+      </div>
+      <div class="label">
+        <strong>03 — Breathing for Anxiety</strong>
+        Background: Brand sage gradient (#7a9e7e → #5a7e5e). Consider adding a simple breathing circle graphic.
+      </div>
+    </div>
+
+    <!-- Thumb 4 -->
+    <div class="thumb-wrap">
+      <div class="thumb thumb-4">
+        <div class="title" style="z-index:2">The Science<br>of Mindfulness</div>
+        <div class="subtitle">How meditation changes your brain</div>
+        <div class="logo">ZENSCAPE</div>
+      </div>
+      <div class="label">
+        <strong>04 — Science of Mindfulness</strong>
+        Background: Dark blue-grey gradient (#2c3e50 → #1a252f). Consider a minimal brain outline icon.
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
