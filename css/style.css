@@ -6,9 +6,11 @@
   --light-gray: #e9ecef;
   --mid-gray: #6c757d;
   --dark: #212529;
-  --accent: #7eb8a0;
-  --accent-light: #b5d8c7;
-  --accent-dark: #5a9a7e;
+  --accent: #7a9e7e;
+  --accent-light: #b5cdb8;
+  --accent-dark: #5a7e5e;
+  --forest: #0f1a12;
+  --forest-mid: #1a2e1e;
   --font-heading: 'Inter', sans-serif;
   --font-body: 'Inter', sans-serif;
   --max-width: 1140px;
@@ -47,10 +49,10 @@ img { max-width: 100%; display: block; }
   display: flex; align-items: center; justify-content: space-between;
 }
 .nav-logo {
-  font-size: 1.5rem; font-weight: 700; color: var(--dark);
-  letter-spacing: -0.5px;
+  font-size: 1.2rem; font-weight: 700; color: var(--dark);
+  letter-spacing: 2px; display: flex; align-items: center; gap: 8px;
 }
-.nav-logo span { color: var(--accent); }
+.nav-icon { width: 28px; height: 28px; }
 .nav-links { display: flex; gap: 32px; list-style: none; }
 .nav-links a { color: var(--mid-gray); font-size: 0.95rem; font-weight: 500; }
 .nav-links a:hover, .nav-links a.active { color: var(--dark); }
@@ -188,7 +190,7 @@ section:nth-child(even) { background: var(--off-white); }
 
 /* ---- CTA Banner ---- */
 .cta-banner {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+  background: linear-gradient(135deg, var(--forest-mid) 0%, var(--forest) 100%);
   color: var(--white); text-align: center; padding: 80px 0;
 }
 .cta-banner h2 { font-size: 2rem; margin-bottom: 12px; }
@@ -198,7 +200,7 @@ section:nth-child(even) { background: var(--off-white); }
 
 /* ---- Footer ---- */
 .footer {
-  background: var(--dark); color: rgba(255,255,255,0.6);
+  background: var(--forest); color: rgba(255,255,255,0.6);
   padding: 60px 0 32px;
 }
 .footer-grid {

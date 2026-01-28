@@ -35,7 +35,7 @@ if (contactForm) {
     e.preventDefault();
     const btn = contactForm.querySelector('.btn');
     btn.textContent = 'Message Sent!';
-    btn.style.background = '#5a9a7e';
+    btn.style.background = '#7a9e7e';
     setTimeout(() => {
       btn.textContent = 'Send Message';
       btn.style.background = '';
