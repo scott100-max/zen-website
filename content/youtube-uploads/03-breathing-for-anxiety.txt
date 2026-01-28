@@ -1,0 +1,56 @@
+============================================
+VIDEO 3: Breathing for Anxiety Relief
+============================================
+
+STEP 1 — ELEVENLABS
+Paste the script from: content/scripts/03-breathing-for-anxiety.txt
+Voice: Same voice as previous videos
+Settings: Stability 70%, Clarity 80%, Speed 0.9x (steady, reassuring pace)
+Download MP3
+
+STEP 2 — CANVA AI VIDEO
+Create new: YouTube Video (1920x1080)
+Use Canva's AI video/image feature with this prompt:
+
+  "Soft green abstract background with a gentle glowing circle
+   that slowly pulses like breathing, minimal and calming,
+   sage green tones, clean modern aesthetic, no text, no people"
+
+Alternatively search Canva stock for "breathing animation",
+"calm abstract green", or "meditation background loop".
+
+Set duration to match audio (~12 minutes).
+Upload your ElevenLabs MP3 as the audio track.
+Export as MP4.
+
+STEP 3 — YOUTUBE UPLOAD
+Copy-paste the following:
+
+---TITLE---
+Breathing Exercises for Anxiety — Box Breathing & 4-7-8 Technique | Zenscape
+
+---DESCRIPTION---
+Two breathing techniques that reduce anxiety in minutes.
+
+This video teaches you box breathing and the 4-7-8 technique — both backed by science and used by therapists and military professionals worldwide. Includes an explanation of why they work (vagus nerve activation) and guided practice rounds you can follow along with.
+
+Use these techniques before meetings, during panic attacks, before sleep, or anytime you feel overwhelmed.
+
+What's included:
+00:00 Why breathing works for anxiety
+02:00 Box Breathing — explanation + 4 guided rounds
+06:30 4-7-8 Breathing — explanation + 4 guided rounds
+10:30 When to use each technique
+
+Subscribe for more practical mindfulness tools.
+
+#anxiety #breathingexercises #mentalhealth #boxbreathing #478breathing #zenscape
+
+---TAGS---
+breathing exercises, anxiety relief, box breathing, 4-7-8 breathing, calm anxiety fast, panic attack help, breathing technique, stress relief, mental health, guided breathing, zenscape
+
+---THUMBNAIL---
+Brand sage gradient (#7a9e7e to #5a7e5e),
+bold white text "Breathing for Anxiety Relief",
+subtitle "Two Techniques That Work Instantly",
+ZENSCAPE logo bottom right

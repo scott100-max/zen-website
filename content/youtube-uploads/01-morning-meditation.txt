@@ -1,0 +1,58 @@
+============================================
+VIDEO 1: 10-Minute Morning Meditation
+============================================
+
+STEP 1 — ELEVENLABS
+Paste the script from: content/scripts/01-morning-meditation.txt
+Voice: Choose a calm, warm voice (try "Rachel" or "Daniel")
+Settings: Stability 70%, Clarity 80%, Speed 0.85x
+Download MP3
+
+STEP 2 — CANVA AI VIDEO
+Create new: YouTube Video (1920x1080)
+Use Canva's "Magic Media" or AI video feature with this prompt:
+
+  "Slow cinematic sunrise over misty mountains, golden morning light
+   filtering through trees, peaceful nature footage, soft warm tones,
+   no text, no people, 4K quality, meditation ambiance"
+
+Set duration to match your audio length (~10 minutes).
+If Canva limits AI video length, use a slow-zoom on a single
+generated image or search Canva's stock for "sunrise timelapse".
+
+Upload your ElevenLabs MP3 as the audio track.
+Export as MP4.
+
+STEP 3 — YOUTUBE UPLOAD
+Copy-paste the following:
+
+---TITLE---
+10-Minute Morning Meditation for Focus & Clarity | Guided Meditation | Zenscape
+
+---DESCRIPTION---
+Start your morning with calm and intention.
+
+This gentle 10-minute guided meditation walks you through a body scan, breath awareness, and intention-setting to help you begin your day with clarity and focus. Perfect for beginners and experienced meditators.
+
+What's included:
+00:00 Welcome & settling in
+00:30 Body scan
+02:30 Breath awareness
+05:00 Setting your daily intention
+07:00 Gratitude moment
+08:30 Gentle closing
+
+Subscribe for new guided meditations every week.
+
+Download the Zenscape app: [your app link]
+Website: [your website link]
+
+#meditation #morningmeditation #guidedmeditation #mindfulness #focus #zenscape
+
+---TAGS---
+morning meditation, guided meditation, 10 minute meditation, meditation for beginners, meditation for focus, mindfulness, morning routine, calm, zenscape, daily meditation, meditation for clarity
+
+---THUMBNAIL---
+Recreate from content/thumbnails/thumbnails.html (Video 1)
+Or in Canva: warm sunrise gradient background (#f4a261 to #e76f51),
+bold white text "10-Minute Morning Meditation", ZENSCAPE logo bottom right

@@ -1,0 +1,60 @@
+============================================
+VIDEO 4: The Science of Mindfulness
+============================================
+
+STEP 1 — ELEVENLABS
+Paste the script from: content/scripts/04-science-of-mindfulness.txt
+Voice: Same voice as previous videos
+Settings: Stability 65%, Clarity 85%, Speed 0.95x (conversational, engaging)
+Download MP3
+
+STEP 2 — CANVA AI VIDEO
+Create new: YouTube Video (1920x1080)
+Use Canva's AI video/image feature with this prompt:
+
+  "Minimal dark blue-grey background with a subtle glowing
+   brain outline made of soft light particles, clean modern
+   scientific aesthetic, no text, no people, 4K quality"
+
+Alternatively search Canva stock for "brain illustration",
+"neuroscience abstract", "minimal dark background".
+
+Set duration to match audio (~15 minutes).
+Upload your ElevenLabs MP3 as the audio track.
+Export as MP4.
+
+STEP 3 — YOUTUBE UPLOAD
+Copy-paste the following:
+
+---TITLE---
+How Meditation Changes Your Brain — The Science of Mindfulness | Zenscape
+
+---DESCRIPTION---
+What actually happens inside your brain when you meditate?
+
+This video breaks down decades of neuroscience research into plain language. You'll learn how mindfulness meditation shrinks the amygdala (your fear centre), thickens the prefrontal cortex (focus and decision-making), and quiets the default mode network (the source of rumination and worry).
+
+Plus: how meditation affects stress hormones, blood pressure, and pain perception — with real studies and numbers.
+
+What's covered:
+00:00 Introduction
+00:45 What is mindfulness?
+03:00 Brain change 1 — The amygdala shrinks
+05:00 Brain change 2 — Prefrontal cortex thickens
+06:30 Brain change 3 — Default mode network quiets
+08:00 Effects beyond the brain
+11:00 How much practice do you need?
+13:00 Closing and next steps
+
+Subscribe for weekly meditations and mindfulness content.
+
+#mindfulness #neuroscience #meditation #brainscience #mentalhealth #zenscape
+
+---TAGS---
+science of meditation, mindfulness research, how meditation works, brain changes meditation, neuroscience mindfulness, amygdala meditation, default mode network, meditation benefits, mental health science, zenscape
+
+---THUMBNAIL---
+Dark blue-grey gradient (#2c3e50 to #1a252f),
+bold white text "The Science of Mindfulness",
+subtitle "How Meditation Changes Your Brain",
+ZENSCAPE logo bottom right

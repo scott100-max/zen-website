@@ -1,0 +1,56 @@
+============================================
+VIDEO 2: Deep Sleep Meditation
+============================================
+
+STEP 1 — ELEVENLABS
+Paste the script from: content/scripts/02-deep-sleep.txt
+Voice: Same voice as Video 1 (keep consistent)
+Settings: Stability 75%, Clarity 75%, Speed 0.75x (slower for sleep)
+Download MP3
+
+STEP 2 — CANVA AI VIDEO
+Create new: YouTube Video (1920x1080)
+Use Canva's AI video/image feature with this prompt:
+
+  "Dark night sky with slowly twinkling stars over a calm ocean,
+   moonlight reflecting on gentle waves, deep blue and dark green
+   tones, cinematic, peaceful, no text, no people, 4K quality"
+
+Set duration to match audio (~30 minutes).
+For long videos: use a slow-zoom or gentle pan across one AI image.
+Or search Canva stock for "night ocean", "stars timelapse".
+
+Upload your ElevenLabs MP3 as the audio track.
+Export as MP4.
+
+STEP 3 — YOUTUBE UPLOAD
+Copy-paste the following:
+
+---TITLE---
+Deep Sleep Meditation — 30 Minutes | Fall Asleep Fast | Zenscape
+
+---DESCRIPTION---
+Let go of the day and drift into deep, restful sleep.
+
+This 30-minute guided sleep meditation uses progressive tension release, breath anchoring, and a calming ocean shore visualisation to ease you into sleep. The narration gradually slows and fades, leaving you in peaceful silence.
+
+Best experienced with headphones in a dark room.
+
+What's included:
+00:00 Welcome & settling in
+01:00 Full body tension release
+05:00 Breathing anchor
+10:00 Visualisation — The Quiet Shore
+20:00 Gentle drift into sleep
+
+Subscribe for new sleep content every week.
+
+#sleepmeditation #deepsleep #guidedmeditation #sleep #insomnia #relaxation #zenscape
+
+---TAGS---
+sleep meditation, deep sleep, guided sleep meditation, fall asleep fast, meditation for sleep, insomnia help, relaxation, 30 minute meditation, sleep music, zenscape, bedtime meditation
+
+---THUMBNAIL---
+Dark forest gradient (#1a2e1e to #0f1a12), small star dots,
+bold white text "Deep Sleep Meditation", subtitle "30 Minutes",
+ZENSCAPE logo bottom right
