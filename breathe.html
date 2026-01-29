@@ -163,6 +163,7 @@
         secondsLeft--;
         if (secondsLeft >= 1) {
           countdownEl.textContent = secondsLeft;
+          playChime(180, 0.2);
         } else {
           clearInterval(countdownTimer);
           countdownTimer = null;
