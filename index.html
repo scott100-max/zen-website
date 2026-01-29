@@ -27,28 +27,21 @@
   </nav>
 
   <!-- Hero -->
-  <section class="hero">
-    <div class="container">
-      <h1 class="fade-in">Your journey to<br><span>inner calm</span> starts here</h1>
-      <p class="fade-in">Guided meditations, breathing exercises, and mindfulness tools designed to bring peace and clarity to your everyday life.</p>
-      <div class="btn-group fade-in">
-        <a href="apps.html" class="btn btn-primary">Download the App</a>
-        <a href="about.html" class="btn btn-outline">Learn More</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Video -->
-  <section>
-    <div class="container">
-      <div class="section-header fade-in">
-        <h2>Experience Zenscape</h2>
-      </div>
-      <div class="fade-in">
-        <video autoplay muted loop playsinline controls style="width:100%;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.15);">
-          <source src="https://media.githubusercontent.com/media/scott100-max/zen-website/master/Zenscape%20video.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
+  <section class="hero" style="position:relative;padding:0;overflow:hidden;">
+    <div style="position:relative;width:100%;">
+      <video id="heroVideo" autoplay muted loop playsinline style="width:100%;display:block;min-height:500px;object-fit:cover;">
+        <source src="https://media.githubusercontent.com/media/scott100-max/zen-website/master/Zenscape%20video.mp4" type="video/mp4">
+      </video>
+      <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;">
+        <div style="text-align:center;padding:24px;">
+          <h1 class="fade-in" style="color:#fff;">Your journey to<br><span style="color:var(--accent-light);">inner calm</span> starts here</h1>
+          <p class="fade-in" style="color:rgba(255,255,255,0.85);max-width:560px;margin:0 auto 32px;font-size:1.2rem;">Guided meditations, breathing exercises, and mindfulness tools designed to bring peace and clarity to your everyday life.</p>
+          <div class="btn-group fade-in">
+            <a href="apps.html" class="btn btn-primary">Download the App</a>
+            <a href="about.html" class="btn btn-outline" style="color:#fff;border-color:#fff;">Learn More</a>
+          </div>
+          <p id="soundHint" style="font-size:0.85rem;color:rgba(255,255,255,0.6);margin-top:16px;">Click anywhere to enable sound</p>
+        </div>
       </div>
     </div>
   </section>
@@ -156,5 +149,14 @@
   </footer>
 
   <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('click', function unmute() {
+      var v = document.getElementById('heroVideo');
+      if (v) { v.muted = false; }
+      var hint = document.getElementById('soundHint');
+      if (hint) { hint.style.display = 'none'; }
+      document.removeEventListener('click', unmute);
+    });
+  </script>
 </body>
 </html>
