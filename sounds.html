@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sleep Sounds — Zenscape</title>
+  <meta name="description" content="Mix ambient sounds to create your perfect relaxation environment. Rain, forest, ocean, birds, and more.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .sounds-container {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 40px 0;
+    }
+    .sound-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+      width: 100%; max-width: 640px;
+    }
+    .sound-card {
+      background: var(--white); border: 1px solid var(--light-gray);
+      border-radius: 16px; padding: 28px 16px; text-align: center;
+      cursor: pointer; transition: all 0.3s ease; user-select: none;
+    }
+    .sound-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+    .sound-card.active { border-color: var(--accent); background: var(--accent-light); }
+    .sound-card .sound-emoji { font-size: 2rem; margin-bottom: 8px; }
+    .sound-card .sound-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 12px; }
+    .sound-card input[type="range"] {
+      width: 100%; accent-color: var(--accent);
+    }
+    .sound-card .vol-label {
+      font-size: 0.75rem; color: var(--mid-gray); margin-top: 4px;
+    }
+    .master-controls {
+      margin-top: 32px; display: flex; gap: 16px; align-items: center;
+    }
+    @media (max-width: 768px) {
+      .sound-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="promo-banner">Start your free 7-day trial<a href="apps.html">Get Started</a></div>
+
+  <nav class="nav" style="position:relative;">
+    <div class="container">
+      <a href="index.html" class="nav-logo"><img src="images/zenscape-icon.svg" alt="" class="nav-icon">ZENSCAPE</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="apps.html">Apps</a></li>
+        <li><a href="media.html">Media</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+    </div>
+  </nav>
+
+  <section class="hero" style="padding-bottom:60px;">
+    <div class="container">
+      <h1 class="fade-in">Sleep <span>Sounds</span></h1>
+      <p class="fade-in">Mix ambient sounds to create your perfect relaxation environment.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="sounds-container">
+        <div class="sound-grid" id="soundGrid">
+          <div class="sound-card" data-sound="rain">
+            <div class="sound-emoji">&#127783;</div>
+            <div class="sound-name">Rain</div>
+            <input type="range" min="0" max="100" value="0">
+            <div class="vol-label">Off</div>
+          </div>
+          <div class="sound-card" data-sound="forest">
+            <div class="sound-emoji">&#127794;</div>
+            <div class="sound-name">Forest</div>
+            <input type="range" min="0" max="100" value="0">
+            <div class="vol-label">Off</div>
+          </div>
+          <div class="sound-card" data-sound="ocean">
+            <div class="sound-emoji">&#127754;</div>
+            <div class="sound-name">Ocean</div>
+            <input type="range" min="0" max="100" value="0">
+            <div class="vol-label">Off</div>
+          </div>
+          <div class="sound-card" data-sound="birds">
+            <div class="sound-emoji">&#128038;</div>
+            <div class="sound-name">Birds</div>
+            <input type="range" min="0" max="100" value="0">
+            <div class="vol-label">Off</div>
+          </div>
+          <div class="sound-card" data-sound="wind">
+            <div class="sound-emoji">&#127788;</div>
+            <div class="sound-name">Wind</div>
+            <input type="range" min="0" max="100" value="0">
+            <div class="vol-label">Off</div>
+          </div>
+          <div class="sound-card" data-sound="fire">
+            <div class="sound-emoji">&#128293;</div>
+            <div class="sound-name">Fireplace</div>
+            <input type="range" min="0" max="100" value="0">
+            <div class="vol-label">Off</div>
+          </div>
+        </div>
+        <div class="master-controls">
+          <button class="btn btn-primary" id="soundToggle">Play All</button>
+          <button class="btn btn-outline" id="soundReset">Reset</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-banner">
+    <div class="container">
+      <h2 class="fade-in">Want more sounds?</h2>
+      <p class="fade-in">The Zenscape app has 50+ ambient soundscapes and the ability to save your mixes.</p>
+      <a href="apps.html" class="btn fade-in">Get the App</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        &copy; 2026 Zenscape. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    (function () {
+      var audioCtx = null;
+      var sounds = {};
+
+      // Generate ambient noise using Web Audio API
+      function createNoise(type) {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        var bufferSize = audioCtx.sampleRate * 4;
+        var buffer = audioCtx.createBuffer(2, bufferSize, audioCtx.sampleRate);
+
+        for (var ch = 0; ch < 2; ch++) {
+          var data = buffer.getChannelData(ch);
+          var b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+          for (var i = 0; i < bufferSize; i++) {
+            var white = Math.random() * 2 - 1;
+            if (type === 'rain' || type === 'ocean') {
+              // Pink-ish noise
+              b0 = 0.99886 * b0 + white * 0.0555179;
+              b1 = 0.99332 * b1 + white * 0.0750759;
+              b2 = 0.96900 * b2 + white * 0.1538520;
+              b3 = 0.86650 * b3 + white * 0.3104856;
+              b4 = 0.55000 * b4 + white * 0.5329522;
+              b5 = -0.7616 * b5 - white * 0.0168980;
+              data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.08;
+              b6 = white * 0.115926;
+            } else if (type === 'wind' || type === 'forest') {
+              // Brown noise
+              data[i] = (b0 + white * 0.02) * 0.5;
+              b0 = (data[i] / 0.5);
+              data[i] *= 3.5;
+            } else if (type === 'birds') {
+              // Chirpy: modulated high-frequency
+              data[i] = Math.sin(i * 0.05 * (1 + Math.sin(i * 0.0003))) * white * 0.15;
+            } else if (type === 'fire') {
+              // Crackle: filtered white noise with pops
+              b0 = 0.97 * b0 + white * 0.03;
+              data[i] = b0 * 2 + (Math.random() < 0.002 ? white * 0.8 : 0);
+            }
+          }
+        }
+
+        var source = audioCtx.createBufferSource();
+        source.buffer = buffer;
+        source.loop = true;
+        var gain = audioCtx.createGain();
+        gain.gain.value = 0;
+        source.connect(gain);
+        gain.connect(audioCtx.destination);
+        return { source: source, gain: gain, started: false };
+      }
+
+      var cards = document.querySelectorAll('.sound-card');
+      cards.forEach(function (card) {
+        var slider = card.querySelector('input[type="range"]');
+        var label = card.querySelector('.vol-label');
+        var type = card.getAttribute('data-sound');
+
+        slider.addEventListener('input', function () {
+          var val = parseInt(slider.value);
+          label.textContent = val === 0 ? 'Off' : val + '%';
+          card.classList.toggle('active', val > 0);
+
+          if (val > 0 && !sounds[type]) {
+            sounds[type] = createNoise(type);
+          }
+          if (sounds[type]) {
+            if (!sounds[type].started) {
+              sounds[type].source.start();
+              sounds[type].started = true;
+            }
+            sounds[type].gain.gain.value = val / 100;
+          }
+        });
+      });
+
+      document.getElementById('soundToggle').addEventListener('click', function () {
+        cards.forEach(function (card) {
+          var slider = card.querySelector('input[type="range"]');
+          if (parseInt(slider.value) === 0) {
+            slider.value = 50;
+            slider.dispatchEvent(new Event('input'));
+          }
+        });
+      });
+
+      document.getElementById('soundReset').addEventListener('click', function () {
+        cards.forEach(function (card) {
+          var slider = card.querySelector('input[type="range"]');
+          slider.value = 0;
+          slider.dispatchEvent(new Event('input'));
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

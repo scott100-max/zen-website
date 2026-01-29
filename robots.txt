@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://scott100-max.github.io/zen-website/sitemap.xml

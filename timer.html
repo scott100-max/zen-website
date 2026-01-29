@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meditation Timer — Zenscape</title>
+  <meta name="description" content="Simple meditation timer with interval bells. Set your duration and focus.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .timer-container {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 40px 0;
+    }
+    .timer-display {
+      font-size: 5rem; font-weight: 700; color: var(--dark);
+      font-variant-numeric: tabular-nums; margin-bottom: 8px;
+    }
+    .timer-label {
+      font-size: 1rem; color: var(--mid-gray); margin-bottom: 32px;
+    }
+    .timer-settings {
+      display: flex; gap: 24px; margin-bottom: 32px; flex-wrap: wrap;
+      justify-content: center;
+    }
+    .timer-setting {
+      text-align: center;
+    }
+    .timer-setting label {
+      display: block; font-weight: 600; font-size: 0.85rem;
+      margin-bottom: 8px; color: var(--dark);
+    }
+    .timer-setting select, .timer-setting input {
+      padding: 10px 16px; border-radius: 50px; border: 1px solid var(--light-gray);
+      font-size: 1rem; font-family: var(--font-body); text-align: center;
+      min-width: 120px;
+    }
+    .timer-setting select:focus, .timer-setting input:focus {
+      outline: none; border-color: var(--accent);
+    }
+    .timer-controls { display: flex; gap: 16px; }
+  </style>
+</head>
+<body>
+
+  <div class="promo-banner">Start your free 7-day trial<a href="apps.html">Get Started</a></div>
+
+  <nav class="nav" style="position:relative;">
+    <div class="container">
+      <a href="index.html" class="nav-logo"><img src="images/zenscape-icon.svg" alt="" class="nav-icon">ZENSCAPE</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="apps.html">Apps</a></li>
+        <li><a href="media.html">Media</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+    </div>
+  </nav>
+
+  <section class="hero" style="padding-bottom:60px;">
+    <div class="container">
+      <h1 class="fade-in">Meditation <span>Timer</span></h1>
+      <p class="fade-in">Set your duration, press start, and focus on your breath. A bell will guide you.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="timer-container">
+        <div class="timer-display" id="timerDisplay">05:00</div>
+        <div class="timer-label" id="timerLabel">Set your duration and press Start</div>
+
+        <div class="timer-settings" id="timerSettings">
+          <div class="timer-setting">
+            <label for="duration">Duration</label>
+            <select id="duration">
+              <option value="1">1 min</option>
+              <option value="3">3 min</option>
+              <option value="5" selected>5 min</option>
+              <option value="10">10 min</option>
+              <option value="15">15 min</option>
+              <option value="20">20 min</option>
+              <option value="30">30 min</option>
+              <option value="45">45 min</option>
+              <option value="60">60 min</option>
+            </select>
+          </div>
+          <div class="timer-setting">
+            <label for="interval">Interval Bell</label>
+            <select id="interval">
+              <option value="0">None</option>
+              <option value="1">Every 1 min</option>
+              <option value="2">Every 2 min</option>
+              <option value="5" selected>Every 5 min</option>
+              <option value="10">Every 10 min</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="timer-controls">
+          <button class="btn btn-primary" id="timerStart">Start</button>
+          <button class="btn btn-outline" id="timerReset" style="display:none;">Reset</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-banner">
+    <div class="container">
+      <h2 class="fade-in">Try our other tools</h2>
+      <p class="fade-in">Breathing exercises and ambient soundscapes to deepen your practice.</p>
+      <div class="btn-group fade-in">
+        <a href="breathe.html" class="btn" style="background:var(--white);color:var(--accent-dark);">Breathing Timer</a>
+        <a href="sounds.html" class="btn" style="background:var(--white);color:var(--accent-dark);">Sleep Sounds</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        &copy; 2026 Zenscape. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    (function () {
+      var display = document.getElementById('timerDisplay');
+      var label = document.getElementById('timerLabel');
+      var startBtn = document.getElementById('timerStart');
+      var resetBtn = document.getElementById('timerReset');
+      var settings = document.getElementById('timerSettings');
+      var durationSel = document.getElementById('duration');
+      var intervalSel = document.getElementById('interval');
+
+      var audioCtx = null;
+      var totalSeconds = 0;
+      var remaining = 0;
+      var intervalMinutes = 0;
+      var ticker = null;
+      var running = false;
+
+      function playBell(freq, dur) {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        var osc = audioCtx.createOscillator();
+        var gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+        osc.start();
+        osc.stop(audioCtx.currentTime + dur);
+      }
+
+      function startBell() { playBell(528, 1.5); }
+      function intervalBell() { playBell(396, 0.8); }
+      function endBell() {
+        playBell(528, 2);
+        setTimeout(function() { playBell(396, 2); }, 500);
+        setTimeout(function() { playBell(264, 2.5); }, 1000);
+      }
+
+      function formatTime(s) {
+        var m = Math.floor(s / 60);
+        var sec = s % 60;
+        return (m < 10 ? '0' : '') + m + ':' + (sec < 10 ? '0' : '') + sec;
+      }
+
+      function updateDisplay() {
+        display.textContent = formatTime(remaining);
+      }
+
+      durationSel.addEventListener('change', function () {
+        display.textContent = formatTime(parseInt(durationSel.value) * 60);
+      });
+
+      function tick() {
+        remaining--;
+        updateDisplay();
+
+        if (intervalMinutes > 0) {
+          var elapsed = totalSeconds - remaining;
+          if (elapsed > 0 && elapsed % (intervalMinutes * 60) === 0 && remaining > 0) {
+            intervalBell();
+          }
+        }
+
+        if (remaining <= 0) {
+          clearInterval(ticker);
+          running = false;
+          label.textContent = 'Session complete. Namaste.';
+          startBtn.textContent = 'Start';
+          resetBtn.style.display = 'none';
+          settings.style.display = 'flex';
+          endBell();
+        }
+      }
+
+      startBtn.addEventListener('click', function () {
+        if (running) {
+          // Pause
+          clearInterval(ticker);
+          running = false;
+          startBtn.textContent = 'Resume';
+          label.textContent = 'Paused';
+          return;
+        }
+
+        if (remaining <= 0) {
+          totalSeconds = parseInt(durationSel.value) * 60;
+          remaining = totalSeconds;
+          intervalMinutes = parseInt(intervalSel.value);
+        }
+
+        running = true;
+        startBtn.textContent = 'Pause';
+        resetBtn.style.display = 'inline-block';
+        settings.style.display = 'none';
+        label.textContent = 'Focus on your breath...';
+        startBell();
+        ticker = setInterval(tick, 1000);
+      });
+
+      resetBtn.addEventListener('click', function () {
+        clearInterval(ticker);
+        running = false;
+        remaining = 0;
+        display.textContent = formatTime(parseInt(durationSel.value) * 60);
+        label.textContent = 'Set your duration and press Start';
+        startBtn.textContent = 'Start';
+        resetBtn.style.display = 'none';
+        settings.style.display = 'flex';
+      });
+    })();
+  </script>
+</body>
+</html>

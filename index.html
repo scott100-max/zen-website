@@ -11,8 +11,10 @@
 </head>
 <body>
 
+  <div class="promo-banner">Start your free 7-day trial<a href="apps.html">Get Started</a></div>
+
   <!-- Nav -->
-  <nav class="nav">
+  <nav class="nav" style="position:relative;">
     <div class="container">
       <a href="index.html" class="nav-logo"><img src="images/zenscape-icon.svg" alt="" class="nav-icon">ZENSCAPE</a>
       <ul class="nav-links">
@@ -97,6 +99,12 @@
     </div>
   </section>
 
+  <!-- Daily Quote -->
+  <div class="daily-quote fade-in">
+    <blockquote id="dailyQuote">"The mind is everything. What you think you become."</blockquote>
+    <cite id="dailyAuthor">— Buddha</cite>
+  </div>
+
   <!-- CTA -->
   <section class="cta-banner">
     <div class="container">
@@ -128,18 +136,23 @@
           <h4>Support</h4>
           <ul>
             <li><a href="contact.html">Contact</a></li>
-            <li><a href="#">FAQ</a></li>
-            <li><a href="#">Privacy</a></li>
-            <li><a href="#">Terms</a></li>
+            <li><a href="faq.html">FAQ</a></li>
+            <li><a href="privacy.html">Privacy</a></li>
+            <li><a href="terms.html">Terms</a></li>
           </ul>
         </div>
         <div>
-          <h4>Connect</h4>
+          <h4>Tools</h4>
           <ul>
-            <li><a href="#">YouTube</a></li>
-            <li><a href="#">Instagram</a></li>
-            <li><a href="#">Twitter</a></li>
+            <li><a href="breathe.html">Breathing Timer</a></li>
+            <li><a href="timer.html">Meditation Timer</a></li>
+            <li><a href="sounds.html">Sleep Sounds</a></li>
           </ul>
+          <h4 style="margin-top:24px;">Newsletter</h4>
+          <form class="newsletter-form" onsubmit="this.querySelector('button').textContent='Subscribed!';setTimeout(function(){}.bind(this),2000);return false;">
+            <input type="email" placeholder="Your email" required>
+            <button type="submit">Join</button>
+          </form>
         </div>
       </div>
       <div class="footer-bottom">
@@ -157,6 +170,22 @@
       if (hint) { hint.style.display = 'none'; }
       document.removeEventListener('click', unmute);
     });
+  </script>
+  <script>
+    (function() {
+      var quotes = [
+        ['"The mind is everything. What you think you become."', '— Buddha'],
+        ['"Almost everything will work again if you unplug it for a few minutes, including you."', '— Anne Lamott'],
+        ['"Feelings come and go like clouds in a windy sky. Conscious breathing is my anchor."', '— Thich Nhat Hanh'],
+        ['"The present moment is filled with joy and happiness. If you are attentive, you will see it."', '— Thich Nhat Hanh'],
+        ['"Quiet the mind and the soul will speak."', '— Ma Jaya Sati Bhagavati'],
+        ['"In the midst of movement and chaos, keep stillness inside of you."', '— Deepak Chopra'],
+        ['"The greatest weapon against stress is our ability to choose one thought over another."', '— William James']
+      ];
+      var idx = new Date().getDate() % quotes.length;
+      document.getElementById('dailyQuote').textContent = quotes[idx][0];
+      document.getElementById('dailyAuthor').textContent = quotes[idx][1];
+    })();
   </script>
 </body>
 </html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ — Zenscape</title>
+  <meta name="description" content="Frequently asked questions about Zenscape. Find answers about subscriptions, features, and getting started.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .faq-item { border-bottom: 1px solid var(--light-gray); padding: 24px 0; }
+    .faq-item:first-child { border-top: 1px solid var(--light-gray); }
+    .faq-q {
+      font-weight: 600; font-size: 1.1rem; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .faq-q::after { content: '+'; font-size: 1.4rem; color: var(--accent); transition: transform 0.3s ease; }
+    .faq-item.open .faq-q::after { content: '\2212'; }
+    .faq-a {
+      max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease;
+      color: var(--mid-gray); font-size: 0.95rem; line-height: 1.7;
+    }
+    .faq-item.open .faq-a { max-height: 200px; padding-top: 12px; }
+  </style>
+</head>
+<body>
+
+  <div class="promo-banner">Start your free 7-day trial<a href="apps.html">Get Started</a></div>
+
+  <nav class="nav" style="position:relative;">
+    <div class="container">
+      <a href="index.html" class="nav-logo"><img src="images/zenscape-icon.svg" alt="" class="nav-icon">ZENSCAPE</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="apps.html">Apps</a></li>
+        <li><a href="media.html">Media</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+    </div>
+  </nav>
+
+  <section class="hero" style="padding-bottom:60px;">
+    <div class="container">
+      <h1 class="fade-in">Frequently Asked <span>Questions</span></h1>
+      <p class="fade-in">Everything you need to know about Zenscape.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container" style="max-width:760px;">
+      <div class="fade-in">
+
+        <div class="faq-item">
+          <div class="faq-q">Is Zenscape free?</div>
+          <div class="faq-a">Yes! Zenscape offers a free tier with basic meditations, the breathing timer, and daily mindfulness tips. Premium unlocks the full library, sleep stories, offline access, and family sharing for $9.99/month.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">How does the free trial work?</div>
+          <div class="faq-a">You get 7 days of full Premium access with no credit card required. At the end of the trial, you can choose to subscribe or continue with the free tier.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">Can I cancel my subscription?</div>
+          <div class="faq-a">Absolutely. You can cancel anytime from your account settings. You'll keep Premium access until the end of your current billing period.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">What devices does Zenscape work on?</div>
+          <div class="faq-a">Zenscape is available on iOS, Android, and the web. Your progress syncs across all your devices automatically.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">Can I use Zenscape offline?</div>
+          <div class="faq-a">Premium subscribers can download sessions for offline listening. Perfect for flights, commutes, or anywhere without a connection.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">I'm new to meditation. Where should I start?</div>
+          <div class="faq-a">Try our 10-Minute Morning Meditation — it's a gentle introduction to breath awareness and body scanning. The breathing timer is also a great starting point for beginners.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">How does the Family Plan work?</div>
+          <div class="faq-a">The Family Plan lets you share your Premium subscription with up to 5 family members. Each person gets their own profile with personalised recommendations and progress tracking.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">How do I contact support?</div>
+          <div class="faq-a">Visit our <a href="contact.html">contact page</a> to send us a message. We typically respond within 24 hours.</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-banner">
+    <div class="container">
+      <h2 class="fade-in">Still have questions?</h2>
+      <p class="fade-in">We're here to help.</p>
+      <a href="contact.html" class="btn fade-in">Contact Us</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        &copy; 2026 Zenscape. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    document.querySelectorAll('.faq-q').forEach(function(q) {
+      q.addEventListener('click', function() {
+        this.parentElement.classList.toggle('open');
+      });
+    });
+  </script>
+</body>
+</html>
