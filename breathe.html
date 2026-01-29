@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Breathing Timer — Zenscape</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .breathe-container {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 40px 0;
+    }
+    .breathe-circle-wrap {
+      position: relative; width: 260px; height: 260px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 40px;
+    }
+    .breathe-circle {
+      width: 120px; height: 120px;
+      background: var(--accent-light);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column;
+      transform: scale(1);
+    }
+    .breathe-circle.inhale  { animation: expand 4s ease-in-out forwards; }
+    .breathe-circle.hold    { transform: scale(2); }
+    .breathe-circle.exhale  { animation: contract 8s ease-in-out forwards; }
+    .breathe-circle.stopped { transform: scale(1); transition: transform 0.4s ease; }
+
+    @keyframes expand {
+      from { transform: scale(1); }
+      to   { transform: scale(2); }
+    }
+    @keyframes contract {
+      from { transform: scale(2); }
+      to   { transform: scale(1); }
+    }
+
+    .breathe-phase {
+      font-size: 1.1rem; font-weight: 600; color: var(--dark);
+      pointer-events: none; text-align: center;
+    }
+    .breathe-countdown {
+      font-size: 2rem; font-weight: 700; color: var(--accent-dark);
+      pointer-events: none;
+    }
+    .breathe-controls { display: flex; gap: 16px; margin-bottom: 24px; }
+    .breathe-cycles {
+      font-size: 0.95rem; color: var(--mid-gray); font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container">
+      <a href="index.html" class="nav-logo"><img src="images/zenscape-icon.svg" alt="" class="nav-icon">ZENSCAPE</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="apps.html">Apps</a></li>
+        <li><a href="media.html">Media</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+    </div>
+  </nav>
+
+  <section class="hero" style="padding-bottom:60px;">
+    <div class="container">
+      <h1 class="fade-in">Breathing <span>Timer</span></h1>
+      <p class="fade-in">Follow the 4-7-8 technique: Inhale for 4 seconds, hold for 7, exhale for 8. A calming rhythm to reduce stress and ease into sleep.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="breathe-container">
+        <div class="breathe-circle-wrap">
+          <div class="breathe-circle" id="breatheCircle">
+            <span class="breathe-phase" id="breathePhase">Ready</span>
+            <span class="breathe-countdown" id="breatheCountdown"></span>
+          </div>
+        </div>
+        <div class="breathe-controls">
+          <button class="btn btn-primary" id="breatheToggle">Start</button>
+        </div>
+        <div class="breathe-cycles" id="breatheCycles">Cycles: 0</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-banner">
+    <div class="container">
+      <h2 class="fade-in">Explore more in the Zenscape app</h2>
+      <p class="fade-in">Box breathing, guided sessions, sleep stories, and more.</p>
+      <a href="apps.html" class="btn fade-in">See All Features</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        &copy; 2026 Zenscape. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    (function () {
+      var circle = document.getElementById('breatheCircle');
+      var phaseEl = document.getElementById('breathePhase');
+      var countdownEl = document.getElementById('breatheCountdown');
+      var cyclesEl = document.getElementById('breatheCycles');
+      var toggleBtn = document.getElementById('breatheToggle');
+
+      if (!circle || !toggleBtn) return;
+
+      // Audio: soft chime using Web Audio API
+      var audioCtx = null;
+      function playChime(freq, duration) {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        var osc = audioCtx.createOscillator();
+        var gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      }
+      function chimeForPhase(name) {
+        if (name === 'Inhale') playChime(528, 0.6);
+        else if (name === 'Hold') playChime(396, 0.4);
+        else if (name === 'Exhale') playChime(264, 0.8);
+      }
+
+      var phases = [
+        { name: 'Inhale', duration: 4, cls: 'inhale' },
+        { name: 'Hold',   duration: 7, cls: 'hold' },
+        { name: 'Exhale', duration: 8, cls: 'exhale' }
+      ];
+
+      var running = false;
+      var cycles = 0;
+      var phaseIndex = 0;
+      var secondsLeft = 0;
+      var countdownTimer = null;
+      var phaseTimer = null;
+
+      function clearClasses() {
+        circle.classList.remove('inhale', 'hold', 'exhale', 'stopped');
+        void circle.offsetWidth; // force reflow to restart animations
+      }
+
+      function tick() {
+        secondsLeft--;
+        if (secondsLeft >= 1) {
+          countdownEl.textContent = secondsLeft;
+        } else {
+          clearInterval(countdownTimer);
+          countdownTimer = null;
+        }
+      }
+
+      function nextPhase() {
+        if (!running) return;
+
+        phaseIndex++;
+        if (phaseIndex >= phases.length) {
+          phaseIndex = 0;
+          cycles++;
+          cyclesEl.textContent = 'Cycles: ' + cycles;
+        }
+        runPhase();
+      }
+
+      function runPhase() {
+        if (!running) return;
+
+        var phase = phases[phaseIndex];
+        secondsLeft = phase.duration;
+        phaseEl.textContent = phase.name;
+        countdownEl.textContent = secondsLeft;
+        chimeForPhase(phase.name);
+
+        clearClasses();
+        circle.classList.add(phase.cls);
+
+        // Countdown display
+        countdownTimer = setInterval(tick, 1000);
+
+        // Schedule next phase
+        phaseTimer = setTimeout(nextPhase, phase.duration * 1000);
+      }
+
+      function stop() {
+        running = false;
+        clearInterval(countdownTimer);
+        clearTimeout(phaseTimer);
+        countdownTimer = null;
+        phaseTimer = null;
+        clearClasses();
+        circle.classList.add('stopped');
+        phaseEl.textContent = 'Ready';
+        countdownEl.textContent = '';
+        toggleBtn.textContent = 'Start';
+        phaseIndex = 0;
+      }
+
+      toggleBtn.addEventListener('click', function () {
+        if (running) {
+          stop();
+        } else {
+          running = true;
+          cycles = 0;
+          cyclesEl.textContent = 'Cycles: 0';
+          toggleBtn.textContent = 'Stop';
+          runPhase();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
