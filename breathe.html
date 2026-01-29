@@ -19,11 +19,12 @@
     }
     .breathe-circle {
       width: 120px; height: 120px;
-      background: var(--accent-light);
+      background: radial-gradient(circle at 40% 35%, #fff5c0, #ffd644 40%, #f7a600 70%, #e87800);
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       flex-direction: column;
       transform: scale(1);
+      box-shadow: 0 0 40px rgba(255, 180, 0, 0.4), 0 0 80px rgba(255, 140, 0, 0.2);
     }
     .breathe-circle.inhale  { animation: expand 4s ease-in-out forwards; }
     .breathe-circle.hold    { transform: scale(2); }
@@ -40,11 +41,11 @@
     }
 
     .breathe-phase {
-      font-size: 1.1rem; font-weight: 600; color: var(--dark);
+      font-size: 1.1rem; font-weight: 600; color: #5a2e00;
       pointer-events: none; text-align: center;
     }
     .breathe-countdown {
-      font-size: 2rem; font-weight: 700; color: var(--accent-dark);
+      font-size: 2rem; font-weight: 700; color: #5a2e00;
       pointer-events: none;
     }
     .breathe-controls { display: flex; gap: 16px; margin-bottom: 24px; }
@@ -143,7 +144,7 @@
 
       var phases = [
         { name: 'Inhale', duration: 4, cls: 'inhale' },
-        { name: 'Hold',   duration: 7, cls: 'hold' },
+        { name: 'Hold',   duration: 5, cls: 'hold' },
         { name: 'Exhale', duration: 8, cls: 'exhale' }
       ];
 
