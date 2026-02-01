@@ -220,10 +220,23 @@ if (contactForm) {
   });
 
   progressWrap.addEventListener('click', function(e) {
-    if (!persistentAudio.duration || !isFinite(persistentAudio.duration)) return;
     var rect = progressWrap.getBoundingClientRect();
     var pct = (e.clientX - rect.left) / rect.width;
-    persistentAudio.currentTime = pct * persistentAudio.duration;
+
+    // Try seeking on-page video with matching source first
+    var seeked = false;
+    document.querySelectorAll('video').forEach(function(v) {
+      if (getMediaSrc(v) === currentTrackSrc && v.duration && isFinite(v.duration)) {
+        v.currentTime = pct * v.duration;
+        seeked = true;
+      }
+    });
+
+    // Always seek persistent audio if it has a valid duration
+    if (persistentAudio.duration && isFinite(persistentAudio.duration)) {
+      persistentAudio.currentTime = pct * persistentAudio.duration;
+    }
+
     saveState();
   });
 
@@ -272,6 +285,9 @@ if (contactForm) {
       mediaEl._salusHooked = true;
 
       mediaEl.addEventListener('play', function() {
+        // Skip the home page hero video — it's ambient, not a session
+        if (mediaEl.id === 'heroVideo') return;
+
         var src = getMediaSrc(mediaEl);
         var name = getTrackName(mediaEl);
 
@@ -364,7 +380,7 @@ if (contactForm) {
   var saved = null;
   try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch(e) {}
 
-  if (saved && saved.src) {
+  if (saved && saved.src && saved.src.indexOf('salus-video') === -1) {
     // Check if there's an on-page video with this source
     var onPageVideo = null;
     document.querySelectorAll('video').forEach(function(v) {
@@ -372,21 +388,39 @@ if (contactForm) {
     });
 
     if (onPageVideo) {
-      // We're on the same page as the video — restore its position
+      // We're on the same page as the video — restore its position but do NOT auto-play
       trackNameEl.textContent = saved.name;
       currentTrackSrc = saved.src;
       currentTrackName = saved.name;
       showPlayer();
       onPageVideo.currentTime = saved.time || 0;
-      if (saved.playing) {
-        onPageVideo.play().catch(function() {});
-      }
+      updatePlayBtn();
     } else {
-      // Different page or audio — play through persistent audio
-      playTrack(saved.src, saved.name, saved.time || 0);
-      if (!saved.playing) {
-        persistentAudio.pause();
+      // Different page or audio — restore state but do NOT auto-play
+      currentTrackSrc = saved.src;
+      currentTrackName = saved.name;
+      trackNameEl.textContent = saved.name;
+
+      persistentAudio.src = saved.src;
+      persistentAudio.setAttribute('data-src', saved.src);
+      persistentAudio.preload = 'auto';
+
+      // Set the start time once metadata is loaded
+      var startTime = saved.time || 0;
+      if (startTime > 0) {
+        persistentAudio.addEventListener('loadedmetadata', function onMeta() {
+          persistentAudio.currentTime = startTime;
+          updateProgress();
+          persistentAudio.removeEventListener('loadedmetadata', onMeta);
+        });
       }
+
+      showPlayer();
+      updatePlayBtn();
+
+      // Start periodic save (will only save if playing)
+      clearInterval(saveInterval);
+      saveInterval = setInterval(saveState, 2000);
     }
   }
 

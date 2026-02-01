@@ -15,9 +15,18 @@ videos = [
         "subtitle": "Start Your Day with Clarity",
         "clips_dir": "content/video/backgrounds/morning",
         "output": "content/video/01-morning-meditation.mp4",
+        # Timestamps aligned to script content (audio ~236s)
         "keywords": [
-            "stillness", "clarity", "breathe", "present moment",
-            "gratitude", "intention", "awareness", "peace",
+            (15, "deep breath"),        # "Take a deep breath in..."
+            (38, "let go"),             # "letting go of anything you carried"
+            (55, "notice your body"),   # "Begin to notice your body"
+            (80, "breathe"),            # body scan, exhale tension
+            (105, "observe"),           # "just observe" the breath
+            (130, "each breath"),       # "Each breath is a small beginning"
+            (155, "no judgment"),       # "No judgment. Just returning"
+            (175, "intention"),         # "one word, one intention"
+            (200, "gratitude"),         # "take a moment to feel grateful"
+            (220, "stillness"),         # "you chose to begin your day with stillness"
         ],
     },
     {
@@ -26,9 +35,18 @@ videos = [
         "subtitle": "30 Minutes — Fall Asleep Peacefully",
         "clips_dir": "content/video/backgrounds/sleep",
         "output": "content/video/02-deep-sleep.mp4",
+        # Timestamps aligned to script content (audio ~226s)
         "keywords": [
-            "let go", "safe", "heavy", "warm",
-            "floating", "deep rest", "surrender", "peace",
+            (15, "let go"),             # "all you need to do is listen and let go"
+            (35, "soften"),             # "Let your neck soften"
+            (55, "heavy"),              # "Your arms grow heavy"
+            (75, "rise and fall"),      # "gentle rise... and fall"
+            (95, "safe"),               # "You're safe"
+            (115, "warm"),              # "sand is soft and warm"
+            (140, "gentle waves"),      # "Gentle waves roll in..."
+            (165, "rest now"),          # "rest now. Everything is taken care of"
+            (185, "drifting"),          # "You're drifting now"
+            (210, "goodnight"),         # "Goodnight"
         ],
     },
     {
@@ -37,9 +55,17 @@ videos = [
         "subtitle": "Two Techniques That Work Instantly",
         "clips_dir": "content/video/backgrounds/breathing",
         "output": "content/video/03-breathing-for-anxiety.mp4",
+        # Timestamps aligned to script content (audio ~250s)
         "keywords": [
-            "breathe in", "hold", "exhale", "calm",
-            "vagus nerve", "box breathing", "release", "steady",
+            (15, "you're in the\nright place"),  # opening reassurance
+            (35, "vagus nerve"),        # "activate the vagus nerve"
+            (55, "box breathing"),      # "The first technique is called box breathing"
+            (80, "breathe in"),         # first round of box breathing
+            (110, "calmer"),            # "most people report feeling noticeably calmer"
+            (135, "4-7-8"),             # second technique intro
+            (165, "exhale"),            # 4-7-8 practice rounds
+            (200, "in-the-moment\ncalm"),  # "best for in-the-moment calm"
+            (225, "you showed up"),     # "You showed up for yourself today"
         ],
     },
     {
@@ -48,9 +74,18 @@ videos = [
         "subtitle": "How Meditation Changes Your Brain",
         "clips_dir": "content/video/backgrounds/science",
         "output": "content/video/04-science-of-mindfulness.mp4",
+        # Timestamps aligned to script content (audio ~377s)
         "keywords": [
-            "neuroplasticity", "amygdala", "grey matter", "focus",
-            "8 weeks", "rewire", "cortisol", "presence",
+            (20, "change your brain"),   # "physically change the structure of your brain"
+            (55, "present moment"),      # "paying attention to the present moment"
+            (85, "autopilot"),           # "most of the time, we're on autopilot"
+            (115, "amygdala\nshrinks"),  # "the amygdala shrinks"
+            (150, "prefrontal\ncortex"),  # "prefrontal cortex thickens"
+            (185, "less rumination"),    # "Less mind-wandering means less rumination"
+            (220, "cortisol"),           # "reduces cortisol"
+            (255, "pain reduced\n40%"),  # "reduced pain intensity by 40 percent"
+            (290, "10 minutes\na day"),  # "ten minutes of daily mindfulness"
+            (340, "trainable skill"),    # "Mindfulness... is a trainable skill"
         ],
     },
 ]
@@ -153,35 +188,35 @@ def create_keyword_overlay(keyword, output_path, width=1920, height=1080):
     draw = ImageDraw.Draw(img)
 
     try:
-        kw_font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", 60)
+        kw_font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", 84)
     except (OSError, IOError):
         kw_font = ImageFont.load_default()
 
-    # Measure keyword text
-    bbox = draw.textbbox((0, 0), keyword, font=kw_font)
+    # Measure keyword text (supports multiline)
+    bbox = draw.multiline_textbbox((0, 0), keyword, font=kw_font, align="center")
     text_w = bbox[2] - bbox[0]
     text_h = bbox[3] - bbox[1]
     text_x = (width - text_w) // 2
     text_y = (height - text_h) // 2
 
     # Semi-transparent rounded rectangle backdrop
-    pad_x, pad_y = 50, 30
+    pad_x, pad_y = 60, 36
     backdrop = Image.new("RGBA", (width, height), (0, 0, 0, 0))
     bd = ImageDraw.Draw(backdrop)
     bd.rounded_rectangle(
         [text_x - pad_x, text_y - pad_y, text_x + text_w + pad_x, text_y + text_h + pad_y],
-        radius=20, fill=(0, 0, 0, 160),
+        radius=20, fill=(0, 0, 0, 170),
     )
     img = Image.alpha_composite(img, backdrop)
     draw = ImageDraw.Draw(img)
 
     # Text shadow
     for dx, dy in [(2, 2), (0, 2), (2, 0)]:
-        draw.text((text_x + dx, text_y + dy), keyword,
-                  fill=(0, 0, 0, 100), font=kw_font)
+        draw.multiline_text((text_x + dx, text_y + dy), keyword,
+                  fill=(0, 0, 0, 100), font=kw_font, align="center")
     # White text
-    draw.text((text_x, text_y), keyword,
-              fill=(255, 255, 255, 255), font=kw_font)
+    draw.multiline_text((text_x, text_y), keyword,
+              fill=(255, 255, 255, 255), font=kw_font, align="center")
 
     img.save(output_path, "PNG")
 
@@ -262,21 +297,15 @@ def build_clip_reel(clips_dir, target_duration, output_path):
     return True
 
 
-def compute_keyword_timings(keywords, duration, start_offset=15, fade_in=1, hold=3, fade_out=1):
-    """Compute start/end times for keyword overlays, evenly spaced after start_offset.
-    Each keyword: fade_in + hold + fade_out = total visible time (5s default).
-    Returns list of (keyword, start_time, end_time) tuples."""
+def compute_keyword_timings(keywords, duration, fade_in=1, hold=4, fade_out=1):
+    """Convert (timestamp, keyword) tuples to (keyword, start_time, end_time).
+    Each keyword: fade_in + hold + fade_out = total visible time (6s default)."""
     total_per_kw = fade_in + hold + fade_out
-    available = duration - start_offset - 10  # leave 10s buffer at end
-    if available < total_per_kw:
-        return []
-    n = len(keywords)
-    spacing = available / n
     timings = []
-    for i, kw in enumerate(keywords):
-        start = start_offset + i * spacing
-        end = start + total_per_kw
-        timings.append((kw, round(start, 2), round(end, 2)))
+    for ts, kw in keywords:
+        if ts + total_per_kw > duration:
+            continue
+        timings.append((kw, round(ts, 2), round(ts + total_per_kw, 2)))
     return timings
 
 

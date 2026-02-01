@@ -100,6 +100,7 @@ scripts = [
     ("content/scripts/01-morning-meditation.txt", "content/audio/01-morning-meditation.mp3"),
     ("content/scripts/02-deep-sleep.txt", "content/audio/02-deep-sleep.mp3"),
     ("content/scripts/03-breathing-for-anxiety.txt", "content/audio/03-breathing-for-anxiety.mp3"),
+    ("content/scripts/03-breathing-for-anxiety-narration.txt", "content/audio/03-breathing-for-anxiety-narration.mp3"),
     ("content/scripts/04-science-of-mindfulness.txt", "content/audio/04-science-of-mindfulness.mp3"),
 ]
 
