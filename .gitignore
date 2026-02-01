@@ -1,7 +1,5 @@
-# Large video files (host separately)
+# Background source clips (not needed on site)
 content/video/backgrounds/
-*.mp4
-!content/video/*-thumb.jpg
 
 # System files
 .DS_Store
