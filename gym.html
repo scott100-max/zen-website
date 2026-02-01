@@ -146,12 +146,40 @@
         <p class="fade-in">Log your PureGym visits, track workouts, and monitor your daily fitness.</p>
       </div>
 
-      <!-- PureGym Live Data -->
-      <div class="pg-banner fade-in" id="pgBanner">
+      <!-- PureGym Login -->
+      <div class="panel fade-in" id="pgLoginPanel" style="margin-bottom:48px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <h3 style="margin-bottom:0;">Connect PureGym</h3>
+          <span class="pg-status offline" id="pgStatus">Not connected</span>
+        </div>
+        <p style="font-size:0.9rem;color:var(--mid-gray);margin-bottom:20px;">
+          Sign in with your PureGym email and PIN to see your visits, attendance, and gym stats.
+          Your credentials are not stored on our servers.
+        </p>
+        <form class="gym-form" id="pgLoginForm">
+          <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;">
+            <div class="field" style="margin-bottom:0;">
+              <label for="pgEmail">PureGym Email</label>
+              <input type="email" id="pgEmail" placeholder="you@email.com" required>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="pgPin">PIN (8 digits)</label>
+              <input type="password" id="pgPin" placeholder="12345678" pattern="[0-9]{8}" maxlength="8" required>
+            </div>
+            <button type="submit" class="btn btn-primary" id="pgLoginBtn" style="height:46px;white-space:nowrap;">Connect</button>
+          </div>
+          <div id="pgError" style="color:#e74c3c;font-size:0.85rem;margin-top:10px;display:none;"></div>
+        </form>
+      </div>
+
+      <!-- PureGym Live Data (hidden until logged in) -->
+      <div class="pg-banner fade-in" id="pgBanner" style="display:none;">
         <div>
-          <h3>PureGym <span class="pg-status offline" id="pgStatus">Connecting...</span></h3>
+          <h3>PureGym <span class="pg-status online">Live</span>
+            <button class="clear-btn" id="pgLogout" style="float:none;margin-left:12px;">Sign Out</button>
+          </h3>
           <div class="pg-value" id="pgMember">--</div>
-          <div class="pg-label" id="pgGymName">Loading your gym data...</div>
+          <div class="pg-label" id="pgGymName">--</div>
         </div>
         <div>
           <div class="pg-value" id="pgPeopleInGym">--</div>
@@ -161,16 +189,6 @@
           <div class="pg-value" id="pgTotalVisits">--</div>
           <div class="pg-label">PureGym total visits</div>
         </div>
-      </div>
-
-      <!-- PureGym local data upload -->
-      <div class="panel fade-in" id="pgUploadPanel" style="display:none; margin-bottom:48px;">
-        <h3>Load PureGym Data</h3>
-        <p style="font-size:0.9rem;color:var(--mid-gray);margin-bottom:16px;">
-          PureGym's servers block cloud requests. Run <code>python3 fetch-puregym.py</code> on your computer, then upload the JSON here:
-        </p>
-        <input type="file" id="pgFileUpload" accept=".json" style="margin-bottom:12px;">
-        <button class="btn btn-primary" id="pgUploadBtn" style="width:auto;padding:8px 24px;">Load Data</button>
       </div>
 
       <!-- PureGym Visit History -->

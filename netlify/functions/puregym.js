@@ -1,13 +1,9 @@
 // Netlify serverless function — proxies PureGym API requests
-// Authenticates with PureGym, fetches member + activity data, returns JSON
+// Multi-user: accepts email + pin via POST body
 
 const AUTH_URL = "https://auth.puregym.com/connect/token";
 const API_BASE = "https://capi.puregym.com/api/v1";
 const CLIENT_AUTH = "Basic cm8uY2xpZW50Og=="; // ro.client: (no secret)
-
-// Credentials — move to Netlify environment variables for production
-const PG_EMAIL = process.env.PUREGYM_EMAIL || "Ella.ripley@icloud.com";
-const PG_PIN = process.env.PUREGYM_PIN || "97966079";
 
 const BROWSER_HEADERS = {
   "User-Agent": "PureGym/8.5.0 (iPhone; iOS 17.4; Scale/3.00)",
@@ -17,7 +13,7 @@ const BROWSER_HEADERS = {
   "X-Requested-With": "com.puregym.mobile"
 };
 
-async function getToken() {
+async function getToken(email, pin) {
   const res = await fetch(AUTH_URL, {
     method: "POST",
     headers: {
@@ -25,10 +21,11 @@ async function getToken() {
       "Authorization": CLIENT_AUTH,
       "Content-Type": "application/x-www-form-urlencoded"
     },
-    body: `grant_type=password&username=${encodeURIComponent(PG_EMAIL)}&password=${encodeURIComponent(PG_PIN)}&scope=pgcapi%20offline_access`
+    body: `grant_type=password&username=${encodeURIComponent(email)}&password=${encodeURIComponent(pin)}&scope=pgcapi%20offline_access`
   });
   if (!res.ok) {
     const text = await res.text();
+    if (res.status === 400) throw new Error("Invalid email or PIN. Please check your PureGym credentials.");
     throw new Error(`Auth failed (${res.status}): ${text.substring(0, 200)}`);
   }
   return res.json();
@@ -51,7 +48,8 @@ async function apiGet(path, token) {
 export default async (req) => {
   const cors = {
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
     "Content-Type": "application/json"
   };
 
@@ -59,9 +57,25 @@ export default async (req) => {
     return new Response("", { status: 204, headers: cors });
   }
 
+  if (req.method !== "POST") {
+    return new Response(JSON.stringify({ error: "POST required with { email, pin }" }), {
+      status: 405, headers: cors
+    });
+  }
+
   try {
-    // 1. Authenticate
-    const auth = await getToken();
+    const body = await req.json();
+    const email = body.email;
+    const pin = body.pin;
+
+    if (!email || !pin) {
+      return new Response(JSON.stringify({ error: "Email and PIN are required." }), {
+        status: 400, headers: cors
+      });
+    }
+
+    // 1. Authenticate with user's credentials
+    const auth = await getToken(email, pin);
     const token = auth.access_token;
 
     // 2. Fetch member info + activity in parallel
@@ -88,14 +102,12 @@ export default async (req) => {
     }), { status: 200, headers: cors });
 
   } catch (err) {
-    // Clean error message — strip HTML if Cloudflare blocked us
     let msg = err.message || "Unknown error";
     if (msg.includes("<!DOCTYPE") || msg.includes("Cloudflare")) {
-      msg = "PureGym blocked this request (Cloudflare). Use fetch-puregym.py locally and upload the JSON.";
+      msg = "PureGym servers are currently unavailable. Please try again later.";
     }
     return new Response(JSON.stringify({ error: msg }), {
-      status: 500,
-      headers: cors
+      status: 500, headers: cors
     });
   }
 };
