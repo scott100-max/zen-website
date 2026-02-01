@@ -96,6 +96,7 @@ VOICES = {
 DEFAULT_VOICE = "bella"
 
 scripts = [
+    ("content/scripts/00-landing-page.txt", "content/audio/00-landing-page.mp3"),
     ("content/scripts/01-morning-meditation.txt", "content/audio/01-morning-meditation.mp3"),
     ("content/scripts/02-deep-sleep.txt", "content/audio/02-deep-sleep.mp3"),
     ("content/scripts/03-breathing-for-anxiety.txt", "content/audio/03-breathing-for-anxiety.mp3"),

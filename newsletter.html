@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Newsletter — Salus</title>
+  <meta name="description" content="Stay mindful with the Salus newsletter. Monthly insights on meditation, breathwork, and wellness delivered to your inbox.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .signup-section {
+      background: var(--off-white); border-radius: 16px; padding: 48px;
+      text-align: center; max-width: 600px; margin: 0 auto 60px;
+      border: 1px solid var(--light-gray);
+    }
+    .signup-section h2 { font-size: 1.5rem; margin-bottom: 8px; }
+    .signup-section p { color: var(--mid-gray); font-size: 0.95rem; margin-bottom: 24px; }
+    .signup-form {
+      display: flex; gap: 12px; justify-content: center;
+    }
+    .signup-form input[type="email"] {
+      flex: 1; padding: 14px 18px; border: 1px solid var(--light-gray);
+      border-radius: 8px; font-size: 0.95rem; font-family: inherit;
+      outline: none; transition: border-color 0.3s ease;
+    }
+    .signup-form input[type="email"]:focus {
+      border-color: var(--accent);
+    }
+    .signup-form button {
+      padding: 14px 28px; background: var(--accent-dark); color: #fff;
+      border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600;
+      cursor: pointer; font-family: inherit; transition: background 0.3s ease;
+    }
+    .signup-form button:hover { background: var(--accent); }
+
+    .archive-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;
+    }
+    .newsletter-card {
+      background: var(--white); border: 1px solid var(--light-gray);
+      border-radius: 12px; padding: 28px 24px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .newsletter-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+    }
+    .newsletter-date {
+      font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px;
+      color: var(--mid-gray); margin-bottom: 8px; font-weight: 500;
+    }
+    .newsletter-card h3 { font-size: 1.1rem; margin-bottom: 8px; }
+    .newsletter-card p {
+      color: var(--mid-gray); font-size: 0.9rem; margin-bottom: 14px; line-height: 1.6;
+    }
+    .newsletter-card .read-link {
+      font-size: 0.85rem; font-weight: 600; color: var(--accent-dark);
+      text-decoration: none;
+    }
+    .newsletter-card .read-link:hover { text-decoration: underline; }
+
+    @media (max-width: 768px) {
+      .archive-grid { grid-template-columns: 1fr; }
+      .signup-section { padding: 32px 20px; }
+      .signup-form { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="promo-banner">Start your free 7-day trial<a href="apps.html">Premium</a></div>
+
+  <nav class="nav" style="position:relative;">
+    <div class="container">
+      <a href="index.html" class="nav-logo"><img src="Salus.PNG" alt="Salus" class="nav-icon" style="height:32px;border-radius:6px;margin-right:8px;">SALUS</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="sessions.html">Sessions</a></li>
+        <li><a href="soundscapes.html">Soundscapes</a></li>
+        <li><a href="education.html">Learn</a></li>
+        <li><a href="mindfulness.html">Mindfulness</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="apps.html">Apps</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="newsletter.html">Newsletter</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" style="padding-bottom:60px;">
+    <div class="container">
+      <h1 class="fade-in"><span>Newsletter</span></h1>
+      <p class="fade-in" style="font-style:italic;color:var(--mid-gray);font-size:0.9rem;margin-bottom:12px;letter-spacing:0.5px;opacity:0.7;"><em>salus</em> &nbsp;/&#712;sa.lus/ &nbsp; health &middot; safety &middot; well-being</p>
+      <p class="fade-in">Monthly reflections, practical tips, and gentle reminders to stay present. Delivered to your inbox, never to your spam folder.</p>
+    </div>
+  </section>
+
+  <!-- Newsletter Signup -->
+  <section style="padding-top:40px;background:var(--white);">
+    <div class="container">
+      <div class="signup-section fade-in">
+        <h2>Stay Mindful</h2>
+        <p>Join thousands of readers who start each month with a moment of calm. One email, once a month — no noise, just insight.</p>
+        <form class="signup-form" onsubmit="event.preventDefault(); this.innerHTML='<p style=\'color:var(--accent-dark);font-weight:600;padding:14px 0;\'>Thank you — welcome to the Salus community.</p>';">
+          <input type="email" placeholder="Your email address" required>
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Past Newsletters Archive -->
+  <section style="background:var(--white);">
+    <div class="container">
+      <div class="section-header fade-in" style="margin-bottom:32px;">
+        <h2>Newsletter Archive</h2>
+        <p>Catch up on past editions — every issue is worth revisiting.</p>
+      </div>
+
+      <div class="archive-grid">
+
+        <div class="newsletter-card fade-in">
+          <div class="newsletter-date">January 2026</div>
+          <h3>New Year, Same Breath</h3>
+          <p>Why resolutions fail and rituals endure. This month we explore how to set intentions rooted in self-compassion rather than self-improvement.</p>
+          <a href="newsletters/2026-01.html" class="read-link">Read &rarr;</a>
+        </div>
+
+        <div class="newsletter-card fade-in">
+          <div class="newsletter-date">December 2025</div>
+          <h3>The Quiet Season</h3>
+          <p>How to protect your peace during the holidays. Practical strategies for staying grounded when the world speeds up around you.</p>
+          <a href="newsletters/2025-12.html" class="read-link">Read &rarr;</a>
+        </div>
+
+        <div class="newsletter-card fade-in">
+          <div class="newsletter-date">November 2025</div>
+          <h3>Gratitude Beyond the List</h3>
+          <p>Gratitude journals are everywhere — but do they actually work? We look at what the research says and share a deeper practice.</p>
+          <a href="newsletters/2025-11.html" class="read-link">Read &rarr;</a>
+        </div>
+
+        <div class="newsletter-card fade-in">
+          <div class="newsletter-date">October 2025</div>
+          <h3>Sitting with Uncertainty</h3>
+          <p>Autumn is a season of letting go. This issue explores how meditation helps us tolerate not knowing what comes next.</p>
+          <a href="newsletters/2025-10.html" class="read-link">Read &rarr;</a>
+        </div>
+
+        <div class="newsletter-card fade-in">
+          <div class="newsletter-date">August 2025</div>
+          <h3>Rest Is Not a Reward</h3>
+          <p>On the culture of burnout and why doing nothing is one of the most radical things you can do for your health.</p>
+          <a href="newsletters/2025-08.html" class="read-link">Read &rarr;</a>
+        </div>
+
+        <div class="newsletter-card fade-in">
+          <div class="newsletter-date">June 2025</div>
+          <h3>Summer Solstice: An Outdoor Meditation Guide</h3>
+          <p>Take your practice outside. Five nature-based meditations designed for the longest days of the year.</p>
+          <a href="newsletters/2025-06.html" class="read-link">Read &rarr;</a>
+        </div>
+
+        <div class="newsletter-card fade-in">
+          <div class="newsletter-date">May 2025</div>
+          <h3>Your Body Keeps the Score</h3>
+          <p>How stress lives in the body and why a body scan might be the most underrated meditation technique we teach.</p>
+          <a href="newsletters/2025-05.html" class="read-link">Read &rarr;</a>
+        </div>
+
+        <div class="newsletter-card fade-in">
+          <div class="newsletter-date">April 2025</div>
+          <h3>The Science Behind Your Daily Practice</h3>
+          <p>We break down three landmark studies on meditation and the brain — and what they mean for your morning routine.</p>
+          <a href="newsletters/2025-04.html" class="read-link">Read &rarr;</a>
+        </div>
+
+        <div class="newsletter-card fade-in">
+          <div class="newsletter-date">March 2025</div>
+          <h3>Finding Stillness in a Busy World</h3>
+          <p>Our very first newsletter. A letter from the founder on why we built Salus and what it means to choose stillness.</p>
+          <a href="newsletters/2025-03.html" class="read-link">Read &rarr;</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-banner">
+    <div class="container">
+      <h2 class="fade-in">Ready to start your practice?</h2>
+      <p class="fade-in">Try guided meditations, breathing exercises, and more — free for 7 days.</p>
+      <a href="apps.html" class="btn fade-in">Get Salus Free</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4 style="letter-spacing:2px;">SALUS</h4>
+          <p>SLEEP &middot; RELAX &middot; RESTORE</p>
+          <p style="margin-top:8px;">Meditation and mindfulness for everyday life.</p>
+        </div>
+        <div>
+          <h4>Pages</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="sessions.html">Sessions</a></li>
+            <li><a href="soundscapes.html">Soundscapes</a></li>
+            <li><a href="education.html">Learn</a></li>
+        <li><a href="mindfulness.html">Mindfulness</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="apps.html">Apps</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Support</h4>
+          <ul>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="faq.html">FAQ</a></li>
+            <li><a href="privacy.html">Privacy</a></li>
+            <li><a href="terms.html">Terms</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Tools</h4>
+          <ul>
+            <li><a href="breathe.html">Breathing Timer</a></li>
+            <li><a href="timer.html">Meditation Timer</a></li>
+            <li><a href="sounds.html">Sleep Sounds</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        &copy; 2026 Salus. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

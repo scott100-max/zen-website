@@ -53,8 +53,8 @@ img { max-width: 100%; display: block; }
   letter-spacing: 2px; display: flex; align-items: center; gap: 8px;
 }
 .nav-icon { height: 64px; width: auto; }
-.nav-links { display: flex; gap: 32px; list-style: none; }
-.nav-links a { color: var(--mid-gray); font-size: 0.95rem; font-weight: 500; }
+.nav-links { display: flex; gap: 18px; list-style: none; flex-wrap: nowrap; }
+.nav-links a { color: var(--mid-gray); font-size: 0.85rem; font-weight: 500; white-space: nowrap; }
 .nav-links a:hover, .nav-links a.active { color: var(--dark); }
 .nav-toggle { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; }
 
@@ -343,6 +343,13 @@ section:nth-child(even) { background: var(--off-white); }
   margin-top: 12px; display: flex; flex-direction: column; align-items: center;
 }
 .sound-lock-overlay > span { font-size: 1.5rem; }
+
+/* ---- Lock Badge ---- */
+.lock-badge {
+  position: absolute; top: 12px; right: 12px;
+  font-size: 1.4rem; display: flex; align-items: center;
+  justify-content: center; z-index: 2;
+}
 
 /* ---- Animations ---- */
 .fade-in {
