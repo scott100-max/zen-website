@@ -9,10 +9,19 @@ const CLIENT_AUTH = "Basic cm8uY2xpZW50Og=="; // ro.client: (no secret)
 const PG_EMAIL = process.env.PUREGYM_EMAIL || "Ella.ripley@icloud.com";
 const PG_PIN = process.env.PUREGYM_PIN || "97966079";
 
+const BROWSER_HEADERS = {
+  "User-Agent": "PureGym/8.5.0 (iPhone; iOS 17.4; Scale/3.00)",
+  "Accept": "application/json, text/plain, */*",
+  "Accept-Language": "en-GB,en;q=0.9",
+  "Accept-Encoding": "gzip, deflate, br",
+  "X-Requested-With": "com.puregym.mobile"
+};
+
 async function getToken() {
   const res = await fetch(AUTH_URL, {
     method: "POST",
     headers: {
+      ...BROWSER_HEADERS,
       "Authorization": CLIENT_AUTH,
       "Content-Type": "application/x-www-form-urlencoded"
     },
@@ -20,18 +29,21 @@ async function getToken() {
   });
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`Auth failed (${res.status}): ${text}`);
+    throw new Error(`Auth failed (${res.status}): ${text.substring(0, 200)}`);
   }
   return res.json();
 }
 
 async function apiGet(path, token) {
   const res = await fetch(`${API_BASE}${path}`, {
-    headers: { "Authorization": `Bearer ${token}` }
+    headers: {
+      ...BROWSER_HEADERS,
+      "Authorization": `Bearer ${token}`
+    }
   });
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`API ${path} failed (${res.status}): ${text}`);
+    throw new Error(`API ${path} failed (${res.status}): ${text.substring(0, 200)}`);
   }
   return res.json();
 }
