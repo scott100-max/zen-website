@@ -1,37 +1,43 @@
 #!/usr/bin/env python3
-"""Build the breathing exercise audio: Lily narration + gentle tone cues."""
+"""Build breathing exercise audio: narration + bell tones at counting points."""
 import subprocess
 import os
 import math
 import struct
 import wave
 import tempfile
+import json
 
 BASE = "/Users/scottripley/salus-website"
 NARRATION = os.path.join(BASE, "content/audio/03-breathing-for-anxiety-narration.mp3")
 OUTPUT = os.path.join(BASE, "content/audio/03-breathing-for-anxiety.mp3")
-
 SR = 44100
-VOLUME = 0.06
-PING_VOL = 0.05
+
+# Split points in narration audio (seconds)
+# These are where exercises should be inserted
+# After "Let your shoulders drop." → ~69s (1 round box 4-4-4-4)
+# After "Good. Let's do three more rounds together." → ~86s (3 rounds box)
+# After "Keep it there throughout." → ~148s (1 round 4-7-8)
+# After "Let's do that three more times." → ~155s (3 rounds 4-7-8)
+SPLITS = [69.0, 86.0, 148.0, 155.0]
+
+# Exercise definitions: list of (phase_name, count) tuples per round
+BOX_ROUND = [("in", 4), ("hold", 4), ("out", 4), ("hold", 4)]
+ROUND_478 = [("in", 4), ("hold", 7), ("out", 8)]
 
 
-def gen_tone(path, freq, duration, vol=VOLUME, sweep_to=None):
-    """Generate a sine tone WAV. Optional frequency sweep."""
+def gen_bell(path, freq=528, duration=1.2, vol=0.12):
+    """Generate a soft bell/chime tone."""
     n = int(SR * duration)
-    fade = int(SR * 0.03)
     samples = []
     for i in range(n):
-        if sweep_to:
-            f = freq + (sweep_to - freq) * (i / n)
-        else:
-            f = freq
-        val = math.sin(2 * math.pi * f * i / SR) * vol
-        if i < fade:
-            val *= i / fade
-        if i > n - fade:
-            val *= (n - i) / fade
-        samples.append(int(val * 32767))
+        t = i / SR
+        # Bell = fundamental + harmonic, with exponential decay
+        decay = math.exp(-3.5 * t)
+        val = (math.sin(2 * math.pi * freq * t) * 0.7 +
+               math.sin(2 * math.pi * freq * 2.0 * t) * 0.2 +
+               math.sin(2 * math.pi * freq * 3.0 * t) * 0.1) * vol * decay
+        samples.append(int(max(-1, min(1, val)) * 32767))
     with wave.open(path, 'w') as wf:
         wf.setnchannels(1)
         wf.setsampwidth(2)
@@ -39,12 +45,12 @@ def gen_tone(path, freq, duration, vol=VOLUME, sweep_to=None):
         wf.writeframes(struct.pack(f'<{len(samples)}h', *samples))
 
 
-def gen_ping(path, freq=396, duration=0.15, vol=PING_VOL):
-    """Generate a soft ping/tick."""
+def gen_tick(path, freq=396, duration=0.12, vol=0.08):
+    """Generate a soft tick/ping for each count."""
     n = int(SR * duration)
     samples = []
     for i in range(n):
-        decay = math.exp(-6 * i / n)
+        decay = math.exp(-8 * i / n)
         val = math.sin(2 * math.pi * freq * i / SR) * vol * decay
         samples.append(int(val * 32767))
     with wave.open(path, 'w') as wf:
@@ -57,114 +63,86 @@ def gen_ping(path, freq=396, duration=0.15, vol=PING_VOL):
 def gen_silence(path, duration):
     """Generate silence WAV."""
     n = int(SR * duration)
-    samples = [0] * n
     with wave.open(path, 'w') as wf:
         wf.setnchannels(1)
         wf.setsampwidth(2)
         wf.setframerate(SR)
-        wf.writeframes(struct.pack(f'<{len(samples)}h', *samples))
+        wf.writeframes(struct.pack(f'<{n}h', *([0] * n)))
 
 
-def gen_exercise_round(tmpdir, prefix, in_counts, hold_counts, out_counts, hold2_counts=None):
-    """Generate one round of breathing exercise as WAV.
-    Pattern: in-cue + pings, hold-cue + pings, out-cue + pings, [hold-cue + pings]"""
+def gen_phase(tmpdir, prefix, phase, count):
+    """Generate audio for one phase: bell + count ticks with gaps.
+    Bell frequencies: in=440, hold=528, out=396"""
+    freq_map = {"in": 440, "hold": 528, "out": 396}
     parts = []
 
-    # "Breathe in" — ascending tone + count pings
-    in_cue = os.path.join(tmpdir, f"{prefix}_in_cue.wav")
-    gen_tone(in_cue, 330, 0.6, sweep_to=528)
-    parts.append(in_cue)
-    for c in range(in_counts - 1):
-        sil = os.path.join(tmpdir, f"{prefix}_in_sil{c}.wav")
-        gen_silence(sil, 0.85)
-        parts.append(sil)
-        ping = os.path.join(tmpdir, f"{prefix}_in_ping{c}.wav")
-        gen_ping(ping, freq=440)
-        parts.append(ping)
+    # Opening bell for this phase
+    bell = os.path.join(tmpdir, f"{prefix}_bell.wav")
+    gen_bell(bell, freq=freq_map.get(phase, 528), duration=1.0, vol=0.10)
+    parts.append(bell)
 
-    # Brief pause between phases
-    gap = os.path.join(tmpdir, f"{prefix}_gap1.wav")
-    gen_silence(gap, 0.4)
+    # Gap after bell
+    gap = os.path.join(tmpdir, f"{prefix}_gap0.wav")
+    gen_silence(gap, 0.5)
     parts.append(gap)
 
-    # "Hold" — steady tone + count pings
-    hold_cue = os.path.join(tmpdir, f"{prefix}_hold_cue.wav")
-    gen_tone(hold_cue, 528, 0.4)
-    parts.append(hold_cue)
-    for c in range(hold_counts - 1):
-        sil = os.path.join(tmpdir, f"{prefix}_hold_sil{c}.wav")
-        gen_silence(sil, 0.85)
-        parts.append(sil)
-        ping = os.path.join(tmpdir, f"{prefix}_hold_ping{c}.wav")
-        gen_ping(ping, freq=528)
-        parts.append(ping)
-
-    gap2 = os.path.join(tmpdir, f"{prefix}_gap2.wav")
-    gen_silence(gap2, 0.4)
-    parts.append(gap2)
-
-    # "Breathe out" — descending tone + count pings
-    out_cue = os.path.join(tmpdir, f"{prefix}_out_cue.wav")
-    gen_tone(out_cue, 528, 0.6, sweep_to=330)
-    parts.append(out_cue)
-    for c in range(out_counts - 1):
-        sil = os.path.join(tmpdir, f"{prefix}_out_sil{c}.wav")
-        gen_silence(sil, 0.85)
-        parts.append(sil)
-        ping = os.path.join(tmpdir, f"{prefix}_out_ping{c}.wav")
-        gen_ping(ping, freq=396)
-        parts.append(ping)
-
-    # Optional second hold (for box breathing)
-    if hold2_counts:
-        gap3 = os.path.join(tmpdir, f"{prefix}_gap3.wav")
-        gen_silence(gap3, 0.4)
-        parts.append(gap3)
-
-        hold2_cue = os.path.join(tmpdir, f"{prefix}_hold2_cue.wav")
-        gen_tone(hold2_cue, 528, 0.4)
-        parts.append(hold2_cue)
-        for c in range(hold2_counts - 1):
-            sil = os.path.join(tmpdir, f"{prefix}_hold2_sil{c}.wav")
-            gen_silence(sil, 0.85)
+    # Count ticks (one per second)
+    for c in range(count):
+        tick = os.path.join(tmpdir, f"{prefix}_tick{c}.wav")
+        gen_tick(tick, freq=440 if phase == "in" else (528 if phase == "hold" else 350))
+        parts.append(tick)
+        if c < count - 1:
+            sil = os.path.join(tmpdir, f"{prefix}_sil{c}.wav")
+            gen_silence(sil, 0.88)  # ~1s per count total
             parts.append(sil)
-            ping = os.path.join(tmpdir, f"{prefix}_hold2_ping{c}.wav")
-            gen_ping(ping, freq=528)
-            parts.append(ping)
 
-    # End gap
-    end_gap = os.path.join(tmpdir, f"{prefix}_end.wav")
-    gen_silence(end_gap, 1.0)
-    parts.append(end_gap)
+    # End gap between phases
+    end = os.path.join(tmpdir, f"{prefix}_end.wav")
+    gen_silence(end, 0.8)
+    parts.append(end)
 
-    # Concat all parts
-    round_wav = os.path.join(tmpdir, f"{prefix}_round.wav")
-    concat_list = os.path.join(tmpdir, f"{prefix}_list.txt")
-    with open(concat_list, 'w') as f:
+    return parts
+
+
+def gen_round(tmpdir, prefix, phases):
+    """Generate one full breathing round."""
+    all_parts = []
+    for i, (phase, count) in enumerate(phases):
+        parts = gen_phase(tmpdir, f"{prefix}_p{i}_{phase}", phase, count)
+        all_parts.extend(parts)
+    return all_parts
+
+
+def concat_wavs(tmpdir, parts, output_name):
+    """Concatenate WAV files using ffmpeg."""
+    list_file = os.path.join(tmpdir, f"{output_name}_list.txt")
+    with open(list_file, 'w') as f:
         for p in parts:
             f.write(f"file '{p}'\n")
+    out = os.path.join(tmpdir, f"{output_name}.wav")
     subprocess.run([
-        "ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", concat_list,
-        "-c", "copy", round_wav
+        "ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", list_file,
+        "-c", "copy", out
     ], capture_output=True)
-    return round_wav
+    return out
+
+
+def wav_to_mp3(wav_path, mp3_path):
+    subprocess.run([
+        "ffmpeg", "-y", "-i", wav_path,
+        "-codec:a", "libmp3lame", "-q:a", "2", "-ar", "44100", "-ac", "1",
+        mp3_path
+    ], capture_output=True)
 
 
 def main():
-    print("Building breathing exercise audio with tones...")
-
-    # Split points in the narration (approximate timestamps from silence detection)
-    # After "Let your shoulders drop." → ~69.8s
-    # After "Good. Let's do three more rounds together." → ~85.6s
-    # After "Keep it there throughout." → ~147.5s
-    # After "Let's do that three more times." → ~154.5s
-    splits = [69.8, 85.6, 147.5, 154.5]
+    print("Building breathing exercise audio (narration + bell tones)...")
 
     with tempfile.TemporaryDirectory() as tmpdir:
-        # Split narration into 5 segments
+        # Split narration into segments
         segments = []
         prev = 0
-        for i, t in enumerate(splits):
+        for i, t in enumerate(SPLITS):
             seg = os.path.join(tmpdir, f"narr_{i}.mp3")
             subprocess.run([
                 "ffmpeg", "-y", "-i", NARRATION,
@@ -173,86 +151,78 @@ def main():
             ], capture_output=True)
             segments.append(seg)
             prev = t
+
         # Final segment
-        seg_final = os.path.join(tmpdir, "narr_4.mp3")
+        seg_final = os.path.join(tmpdir, "narr_final.mp3")
         subprocess.run([
             "ffmpeg", "-y", "-i", NARRATION,
             "-ss", str(prev), "-c", "copy", seg_final
         ], capture_output=True)
         segments.append(seg_final)
 
-        # Generate exercise rounds
-        # 1. One round box breathing (4-4-4-4)
-        print("  Generating box breathing round 1...")
-        ex1 = gen_exercise_round(tmpdir, "box1", 4, 4, 4, hold2_counts=4)
+        # Generate exercise audio for each insertion point
+        # 1. One round box breathing
+        print("  Exercise 1: Box breathing round 1...")
+        parts1 = gen_round(tmpdir, "ex1", BOX_ROUND)
+        ex1 = concat_wavs(tmpdir, parts1, "ex1")
 
         # 2. Three rounds box breathing
-        print("  Generating box breathing rounds 2-4...")
-        box_rounds = []
+        print("  Exercise 2: Box breathing rounds 2-4...")
+        parts2 = []
         for r in range(3):
-            rnd = gen_exercise_round(tmpdir, f"box{r+2}", 4, 4, 4, hold2_counts=4)
-            box_rounds.append(rnd)
-        # Concat 3 rounds
-        box3_list = os.path.join(tmpdir, "box3_list.txt")
-        with open(box3_list, 'w') as f:
-            for br in box_rounds:
-                f.write(f"file '{br}'\n")
-        ex2 = os.path.join(tmpdir, "box3_all.wav")
-        subprocess.run([
-            "ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", box3_list,
-            "-c", "copy", ex2
-        ], capture_output=True)
+            parts2.extend(gen_round(tmpdir, f"ex2r{r}", BOX_ROUND))
+            # Gap between rounds
+            rg = os.path.join(tmpdir, f"ex2_roundgap{r}.wav")
+            gen_silence(rg, 1.5)
+            parts2.append(rg)
+        ex2 = concat_wavs(tmpdir, parts2, "ex2")
 
-        # 3. One round 4-7-8 breathing
-        print("  Generating 4-7-8 round 1...")
-        ex3 = gen_exercise_round(tmpdir, "478_1", 4, 7, 8)
+        # 3. One round 4-7-8
+        print("  Exercise 3: 4-7-8 round 1...")
+        parts3 = gen_round(tmpdir, "ex3", ROUND_478)
+        ex3 = concat_wavs(tmpdir, parts3, "ex3")
 
         # 4. Three rounds 4-7-8
-        print("  Generating 4-7-8 rounds 2-4...")
-        r478_rounds = []
+        print("  Exercise 4: 4-7-8 rounds 2-4...")
+        parts4 = []
         for r in range(3):
-            rnd = gen_exercise_round(tmpdir, f"478_{r+2}", 4, 7, 8)
-            r478_rounds.append(rnd)
-        r478_list = os.path.join(tmpdir, "478_list.txt")
-        with open(r478_list, 'w') as f:
-            for rr in r478_rounds:
-                f.write(f"file '{rr}'\n")
-        ex4 = os.path.join(tmpdir, "478_all.wav")
-        subprocess.run([
-            "ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", r478_list,
-            "-c", "copy", ex4
-        ], capture_output=True)
+            parts4.extend(gen_round(tmpdir, f"ex4r{r}", ROUND_478))
+            rg = os.path.join(tmpdir, f"ex4_roundgap{r}.wav")
+            gen_silence(rg, 1.5)
+            parts4.append(rg)
+        ex4 = concat_wavs(tmpdir, parts4, "ex4")
 
-        # Convert exercise WAVs to MP3 for concat compatibility
+        # Convert exercises to mp3
         exercises = [ex1, ex2, ex3, ex4]
         ex_mp3s = []
         for i, ex in enumerate(exercises):
-            mp3 = os.path.join(tmpdir, f"ex_{i}.mp3")
-            subprocess.run([
-                "ffmpeg", "-y", "-i", ex,
-                "-codec:a", "libmp3lame", "-q:a", "2",
-                "-ar", "44100", "-ac", "1", mp3
-            ], capture_output=True)
+            mp3 = os.path.join(tmpdir, f"ex{i}.mp3")
+            wav_to_mp3(ex, mp3)
             ex_mp3s.append(mp3)
+            dur = float(json.loads(subprocess.run(
+                ["ffprobe", "-v", "quiet", "-print_format", "json", "-show_format", mp3],
+                capture_output=True, text=True
+            ).stdout)["format"]["duration"])
+            print(f"    → {dur:.1f}s")
 
-        # Normalize narration segments to same format
-        narr_norm = []
+        # Normalize narration segments
+        narr_mp3s = []
         for i, seg in enumerate(segments):
             norm = os.path.join(tmpdir, f"narr_norm_{i}.mp3")
             subprocess.run([
                 "ffmpeg", "-y", "-i", seg,
-                "-codec:a", "libmp3lame", "-q:a", "2",
-                "-ar", "44100", "-ac", "1", norm
+                "-codec:a", "libmp3lame", "-q:a", "2", "-ar", "44100", "-ac", "1",
+                norm
             ], capture_output=True)
-            narr_norm.append(norm)
+            narr_mp3s.append(norm)
 
         # Interleave: narr0 + ex0 + narr1 + ex1 + narr2 + ex2 + narr3 + ex3 + narr4
         final_list = os.path.join(tmpdir, "final_list.txt")
         with open(final_list, 'w') as f:
             for i in range(4):
-                f.write(f"file '{narr_norm[i]}'\n")
+                f.write(f"file '{narr_mp3s[i]}'\n")
                 f.write(f"file '{ex_mp3s[i]}'\n")
-            f.write(f"file '{narr_norm[4]}'\n")
+            f.write(f"file '{narr_mp3s[4]}'\n")
 
         print("  Concatenating final audio...")
         subprocess.run([
@@ -260,15 +230,13 @@ def main():
             "-codec:a", "libmp3lame", "-q:a", "2", OUTPUT
         ], capture_output=True)
 
-    size = os.path.getsize(OUTPUT)
-    dur_result = subprocess.run(
+    dur = float(json.loads(subprocess.run(
         ["ffprobe", "-v", "quiet", "-print_format", "json", "-show_format", OUTPUT],
         capture_output=True, text=True
-    )
-    import json
-    dur = float(json.loads(dur_result.stdout)["format"]["duration"])
-    print(f"  Saved: {OUTPUT}")
-    print(f"  Duration: {dur:.0f}s ({dur/60:.1f} min), Size: {size/1024:.0f} KB")
+    ).stdout)["format"]["duration"])
+    size = os.path.getsize(OUTPUT)
+    print(f"\n  Saved: {OUTPUT}")
+    print(f"  Duration: {dur:.0f}s ({dur/60:.1f} min), Size: {size//1024} KB")
     print("Done!")
 
 
