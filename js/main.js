@@ -1,4 +1,4 @@
-// ===== Zenscape — Main JS =====
+// ===== Salus — Main JS =====
 
 // Mobile nav toggle
 const navToggle = document.querySelector('.nav-toggle');

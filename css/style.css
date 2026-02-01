@@ -52,7 +52,7 @@ img { max-width: 100%; display: block; }
   font-size: 1.2rem; font-weight: 700; color: var(--dark);
   letter-spacing: 2px; display: flex; align-items: center; gap: 8px;
 }
-.nav-icon { width: 28px; height: 28px; }
+.nav-icon { height: 64px; width: auto; }
 .nav-links { display: flex; gap: 32px; list-style: none; }
 .nav-links a { color: var(--mid-gray); font-size: 0.95rem; font-weight: 500; }
 .nav-links a:hover, .nav-links a.active { color: var(--dark); }
