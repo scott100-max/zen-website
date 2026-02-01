@@ -88,7 +88,12 @@ export default async (req) => {
     }), { status: 200, headers: cors });
 
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), {
+    // Clean error message — strip HTML if Cloudflare blocked us
+    let msg = err.message || "Unknown error";
+    if (msg.includes("<!DOCTYPE") || msg.includes("Cloudflare")) {
+      msg = "PureGym blocked this request (Cloudflare). Use fetch-puregym.py locally and upload the JSON.";
+    }
+    return new Response(JSON.stringify({ error: msg }), {
       status: 500,
       headers: cors
     });

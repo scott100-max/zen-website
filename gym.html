@@ -163,6 +163,16 @@
         </div>
       </div>
 
+      <!-- PureGym local data upload -->
+      <div class="panel fade-in" id="pgUploadPanel" style="display:none; margin-bottom:48px;">
+        <h3>Load PureGym Data</h3>
+        <p style="font-size:0.9rem;color:var(--mid-gray);margin-bottom:16px;">
+          PureGym's servers block cloud requests. Run <code>python3 fetch-puregym.py</code> on your computer, then upload the JSON here:
+        </p>
+        <input type="file" id="pgFileUpload" accept=".json" style="margin-bottom:12px;">
+        <button class="btn btn-primary" id="pgUploadBtn" style="width:auto;padding:8px 24px;">Load Data</button>
+      </div>
+
       <!-- PureGym Visit History -->
       <div class="panel pg-visits-panel fade-in" id="pgVisitsPanel" style="display:none;">
         <h3>PureGym Visit History</h3>
@@ -521,79 +531,111 @@
     renderFitness();
     updateStats();
 
-    // ========== PureGym Live Data ==========
+    // ========== PureGym Data Display ==========
+    function displayPureGymData(data) {
+      if (data.error) {
+        showPureGymOffline();
+        return;
+      }
+
+      document.getElementById('pgStatus').textContent = 'Connected';
+      document.getElementById('pgStatus').className = 'pg-status online';
+      document.getElementById('pgUploadPanel').style.display = 'none';
+
+      if (data.member) {
+        document.getElementById('pgMember').textContent = (data.member.firstName || '') + ' ' + (data.member.lastName || '');
+        document.getElementById('pgGymName').textContent = data.member.homeGymName || 'PureGym Member';
+      }
+
+      if (data.attendance && data.attendance.totalPeopleInGym !== undefined) {
+        document.getElementById('pgPeopleInGym').textContent = data.attendance.totalPeopleInGym;
+      }
+
+      if (data.activity) {
+        if (data.activity.totalVisits !== undefined) {
+          document.getElementById('pgTotalVisits').textContent = data.activity.totalVisits;
+        }
+
+        var visits = data.activity.visits || data.activity.Visits || [];
+        if (Array.isArray(visits) && visits.length) {
+          var panel = document.getElementById('pgVisitsPanel');
+          panel.style.display = 'block';
+          var html = '';
+          visits.forEach(function(v) {
+            var dateStr = '--';
+            if (v.startTime || v.StartTime || v.date) {
+              var d = new Date(v.startTime || v.StartTime || v.date);
+              dateStr = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+              var timeStr = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+              dateStr += ' at ' + timeStr;
+            }
+            var duration = v.duration || v.Duration || '';
+            if (typeof duration === 'number') duration = duration + ' min';
+            var gymName = v.gymName || v.GymName || '';
+            html += '<div class="pg-visit-row">'
+              + '<div><div class="pg-visit-date">' + escapeHtml(dateStr) + '</div>'
+              + (gymName ? '<div class="pg-visit-gym">' + escapeHtml(gymName) + '</div>' : '')
+              + '</div>'
+              + '<div class="pg-visit-duration">' + escapeHtml(String(duration)) + '</div>'
+              + '</div>';
+          });
+          document.getElementById('pgVisitsList').innerHTML = html;
+        }
+      }
+
+      // Cache in localStorage
+      localStorage.setItem('salus_puregym_cache', JSON.stringify(data));
+    }
+
+    function showPureGymOffline() {
+      document.getElementById('pgStatus').textContent = 'Offline';
+      document.getElementById('pgStatus').className = 'pg-status offline';
+      document.getElementById('pgGymName').textContent = 'Upload data from fetch-puregym.py or use manual logging below.';
+      document.getElementById('pgUploadPanel').style.display = 'block';
+    }
+
+    // Try API first, fall back to cached data
     function loadPureGymData() {
       fetch('/api/puregym')
         .then(function(res) { return res.json(); })
         .then(function(data) {
-          if (data.error) {
-            document.getElementById('pgStatus').textContent = 'Offline';
-            document.getElementById('pgStatus').className = 'pg-status offline';
-            document.getElementById('pgGymName').textContent = data.error;
-            return;
-          }
-
-          // Member info
-          document.getElementById('pgStatus').textContent = 'Connected';
-          document.getElementById('pgStatus').className = 'pg-status online';
-
-          if (data.member) {
-            document.getElementById('pgMember').textContent = (data.member.firstName || '') + ' ' + (data.member.lastName || '');
-            document.getElementById('pgGymName').textContent = data.member.homeGymName || 'PureGym Member';
-          }
-
-          // Live attendance
-          if (data.attendance && data.attendance.totalPeopleInGym !== undefined) {
-            document.getElementById('pgPeopleInGym').textContent = data.attendance.totalPeopleInGym;
-          }
-
-          // Activity / visits
-          if (data.activity) {
-            // totalVisits count
-            if (data.activity.totalVisits !== undefined) {
-              document.getElementById('pgTotalVisits').textContent = data.activity.totalVisits;
-            }
-
-            // Visit history list
-            var visits = data.activity.visits || data.activity.Visits || [];
-            if (Array.isArray(visits) && visits.length) {
-              var panel = document.getElementById('pgVisitsPanel');
-              panel.style.display = 'block';
-              var html = '';
-              visits.forEach(function(v) {
-                var dateStr = '--';
-                if (v.startTime || v.StartTime || v.date) {
-                  var d = new Date(v.startTime || v.StartTime || v.date);
-                  dateStr = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
-                  var timeStr = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-                  dateStr += ' at ' + timeStr;
-                }
-                var duration = v.duration || v.Duration || '';
-                if (typeof duration === 'number') {
-                  duration = duration + ' min';
-                }
-                var gymName = v.gymName || v.GymName || '';
-                html += '<div class="pg-visit-row">'
-                  + '<div><div class="pg-visit-date">' + escapeHtml(dateStr) + '</div>'
-                  + (gymName ? '<div class="pg-visit-gym">' + escapeHtml(gymName) + '</div>' : '')
-                  + '</div>'
-                  + '<div class="pg-visit-duration">' + escapeHtml(String(duration)) + '</div>'
-                  + '</div>';
-              });
-              document.getElementById('pgVisitsList').innerHTML = html;
-            }
-          }
+          if (data.error) throw new Error(data.error);
+          displayPureGymData(data);
         })
-        .catch(function(err) {
-          document.getElementById('pgStatus').textContent = 'Offline';
-          document.getElementById('pgStatus').className = 'pg-status offline';
-          document.getElementById('pgGymName').textContent = 'Could not connect to PureGym. Deploy to Netlify to enable.';
+        .catch(function() {
+          // Try cached data
+          var cached = localStorage.getItem('salus_puregym_cache');
+          if (cached) {
+            try {
+              displayPureGymData(JSON.parse(cached));
+              document.getElementById('pgStatus').textContent = 'Cached';
+              document.getElementById('pgStatus').className = 'pg-status online';
+              document.getElementById('pgUploadPanel').style.display = 'block';
+            } catch (e) { showPureGymOffline(); }
+          } else {
+            showPureGymOffline();
+          }
         });
     }
 
-    // Fetch on load, refresh every 5 minutes
+    // File upload handler
+    document.getElementById('pgUploadBtn').addEventListener('click', function() {
+      var file = document.getElementById('pgFileUpload').files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          var data = JSON.parse(e.target.result);
+          displayPureGymData(data);
+        } catch (err) {
+          alert('Invalid JSON file. Run fetch-puregym.py and upload puregym-data.json.');
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    // Fetch on load
     loadPureGymData();
-    setInterval(loadPureGymData, 5 * 60 * 1000);
 
   })();
   </script>
