@@ -3,3 +3,4 @@ content/video/backgrounds/
 
 # System files
 .DS_Store
+.env

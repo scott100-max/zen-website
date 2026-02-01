@@ -7,11 +7,21 @@ import requests
 import tempfile
 import time
 
+# Load .env file if present
+_env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+if os.path.exists(_env_path):
+    with open(_env_path) as _f:
+        for _line in _f:
+            _line = _line.strip()
+            if _line and not _line.startswith("#") and "=" in _line:
+                _k, _v = _line.split("=", 1)
+                os.environ.setdefault(_k.strip(), _v.strip())
+
 BASE = "/Users/scottripley/salus-website"
 NARRATION = os.path.join(BASE, "content/audio/03-breathing-for-anxiety-narration.mp3")
 OUTPUT = os.path.join(BASE, "content/audio/03-breathing-for-anxiety.mp3")
 
-API_KEY = "sk_400c6d730d0efccda44656815ac3472e985bf51bf4917f13"
+API_KEY = os.environ.get("ELEVENLABS_API_KEY", "")
 VOICE_ID = "pFZP5JQG7iQjIQuC4Bku"  # Lily
 
 # Split points in narration-only audio (seconds)
