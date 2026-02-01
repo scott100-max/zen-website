@@ -85,10 +85,32 @@
     }
     .clear-btn:hover { border-color: #c0392b; color: #c0392b; }
 
+    /* PureGym live banner */
+    .pg-banner {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 12px; padding: 28px 32px; margin-bottom: 48px; color: #fff;
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; align-items: center;
+    }
+    .pg-banner h3 { font-size: 1.1rem; margin-bottom: 8px; color: var(--accent-light); }
+    .pg-banner .pg-value { font-size: 2.2rem; font-weight: 700; }
+    .pg-banner .pg-label { font-size: 0.8rem; opacity: 0.6; margin-top: 2px; }
+    .pg-status { display: inline-block; padding: 4px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
+    .pg-status.online { background: rgba(122,158,126,0.3); color: #b5cdb8; }
+    .pg-status.offline { background: rgba(192,57,43,0.3); color: #e74c3c; }
+    .pg-loading { text-align: center; padding: 20px; color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+
+    /* PureGym visits section */
+    .pg-visits-panel { margin-bottom: 48px; }
+    .pg-visit-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--light-gray); }
+    .pg-visit-date { font-weight: 600; }
+    .pg-visit-gym { font-size: 0.85rem; color: var(--mid-gray); }
+    .pg-visit-duration { font-weight: 600; color: var(--accent-dark); }
+
     /* Responsive */
     @media (max-width: 768px) {
       .stats-row { grid-template-columns: repeat(2, 1fr); }
       .gym-grid { grid-template-columns: 1fr; }
+      .pg-banner { grid-template-columns: 1fr; text-align: center; }
       .visit-table, .fitness-table { font-size: 0.8rem; }
       .visit-table th, .visit-table td, .fitness-table th, .fitness-table td { padding: 8px; }
     }
@@ -122,6 +144,29 @@
       <div class="section-header">
         <h2 class="fade-in" style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;">Gym Tracker</h2>
         <p class="fade-in">Log your PureGym visits, track workouts, and monitor your daily fitness.</p>
+      </div>
+
+      <!-- PureGym Live Data -->
+      <div class="pg-banner fade-in" id="pgBanner">
+        <div>
+          <h3>PureGym <span class="pg-status offline" id="pgStatus">Connecting...</span></h3>
+          <div class="pg-value" id="pgMember">--</div>
+          <div class="pg-label" id="pgGymName">Loading your gym data...</div>
+        </div>
+        <div>
+          <div class="pg-value" id="pgPeopleInGym">--</div>
+          <div class="pg-label">People in gym now</div>
+        </div>
+        <div>
+          <div class="pg-value" id="pgTotalVisits">--</div>
+          <div class="pg-label">PureGym total visits</div>
+        </div>
+      </div>
+
+      <!-- PureGym Visit History -->
+      <div class="panel pg-visits-panel fade-in" id="pgVisitsPanel" style="display:none;">
+        <h3>PureGym Visit History</h3>
+        <div id="pgVisitsList"></div>
       </div>
 
       <!-- Stats Overview -->
@@ -475,6 +520,80 @@
     renderVisits();
     renderFitness();
     updateStats();
+
+    // ========== PureGym Live Data ==========
+    function loadPureGymData() {
+      fetch('/api/puregym')
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          if (data.error) {
+            document.getElementById('pgStatus').textContent = 'Offline';
+            document.getElementById('pgStatus').className = 'pg-status offline';
+            document.getElementById('pgGymName').textContent = data.error;
+            return;
+          }
+
+          // Member info
+          document.getElementById('pgStatus').textContent = 'Connected';
+          document.getElementById('pgStatus').className = 'pg-status online';
+
+          if (data.member) {
+            document.getElementById('pgMember').textContent = (data.member.firstName || '') + ' ' + (data.member.lastName || '');
+            document.getElementById('pgGymName').textContent = data.member.homeGymName || 'PureGym Member';
+          }
+
+          // Live attendance
+          if (data.attendance && data.attendance.totalPeopleInGym !== undefined) {
+            document.getElementById('pgPeopleInGym').textContent = data.attendance.totalPeopleInGym;
+          }
+
+          // Activity / visits
+          if (data.activity) {
+            // totalVisits count
+            if (data.activity.totalVisits !== undefined) {
+              document.getElementById('pgTotalVisits').textContent = data.activity.totalVisits;
+            }
+
+            // Visit history list
+            var visits = data.activity.visits || data.activity.Visits || [];
+            if (Array.isArray(visits) && visits.length) {
+              var panel = document.getElementById('pgVisitsPanel');
+              panel.style.display = 'block';
+              var html = '';
+              visits.forEach(function(v) {
+                var dateStr = '--';
+                if (v.startTime || v.StartTime || v.date) {
+                  var d = new Date(v.startTime || v.StartTime || v.date);
+                  dateStr = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+                  var timeStr = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+                  dateStr += ' at ' + timeStr;
+                }
+                var duration = v.duration || v.Duration || '';
+                if (typeof duration === 'number') {
+                  duration = duration + ' min';
+                }
+                var gymName = v.gymName || v.GymName || '';
+                html += '<div class="pg-visit-row">'
+                  + '<div><div class="pg-visit-date">' + escapeHtml(dateStr) + '</div>'
+                  + (gymName ? '<div class="pg-visit-gym">' + escapeHtml(gymName) + '</div>' : '')
+                  + '</div>'
+                  + '<div class="pg-visit-duration">' + escapeHtml(String(duration)) + '</div>'
+                  + '</div>';
+              });
+              document.getElementById('pgVisitsList').innerHTML = html;
+            }
+          }
+        })
+        .catch(function(err) {
+          document.getElementById('pgStatus').textContent = 'Offline';
+          document.getElementById('pgStatus').className = 'pg-status offline';
+          document.getElementById('pgGymName').textContent = 'Could not connect to PureGym. Deploy to Netlify to enable.';
+        });
+    }
+
+    // Fetch on load, refresh every 5 minutes
+    loadPureGymData();
+    setInterval(loadPureGymData, 5 * 60 * 1000);
 
   })();
   </script>
