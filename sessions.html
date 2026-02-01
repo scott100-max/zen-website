@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guided Sessions — Salus</title>
+  <meta name="description" content="Explore guided meditations for sleep, focus, stress relief, and more. Try free sessions or get the app for hundreds more.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="promo-banner">Start your free 7-day trial<a href="apps.html">Get Started</a></div>
+
+  <nav class="nav" style="position:relative;">
+    <div class="container">
+      <a href="index.html" class="nav-logo"><img src="Salus.PNG" alt="Salus" class="nav-icon" style="height:32px;border-radius:6px;margin-right:8px;">SALUS</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="sessions.html" class="active">Sessions</a></li>
+        <li><a href="soundscapes.html">Soundscapes</a></li>
+        <li><a href="education.html">Learn</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="apps.html">Apps</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" style="padding-bottom:60px;">
+    <div class="container">
+      <h1>Guided Sessions</h1>
+      <p style="font-style:italic;color:var(--mid-gray);font-size:0.9rem;margin-bottom:12px;letter-spacing:0.5px;opacity:0.7;"><em>salus</em> &nbsp;/&#712;sa.lus/ &nbsp; health &middot; safety &middot; well-being</p>
+      <p>Meditations crafted by experts to help you sleep, focus, and find calm. Try two free sessions below, or get the app for hundreds more.</p>
+    </div>
+  </section>
+
+  <!-- Category Filters -->
+  <section style="padding:0 0 20px;background:var(--white);">
+    <div class="container">
+      <div class="filter-bar" id="filterBar">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="sleep">Sleep</button>
+        <button class="filter-btn" data-filter="focus">Focus</button>
+        <button class="filter-btn" data-filter="stress">Stress</button>
+        <button class="filter-btn" data-filter="beginners">Beginners</button>
+        <button class="filter-btn" data-filter="advanced">Advanced</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sessions Grid -->
+  <section style="padding-top:40px;background:var(--white);">
+    <div class="container">
+
+      <!-- Free Sessions -->
+      <div class="section-header fade-in" style="margin-bottom:32px;">
+        <h2>Free Sessions</h2>
+        <p>Try these sessions right now — no account needed.</p>
+      </div>
+
+      <div class="sessions-grid" id="sessionsGrid">
+
+        <div class="session-card session-free fade-in" data-category="beginners stress">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#2d6a4f 0%,#52b788 40%,#d8f3dc 100%);">
+            <span class="session-emoji">&#127793;</span>
+            <span class="session-badge badge-free">Free</span>
+          </div>
+          <div class="session-info">
+            <h3>Morning Meditation</h3>
+            <div class="session-meta"><span>10 min</span><span>Beginners</span></div>
+            <p>Start your day with intention and clarity. A gentle guided practice to ground yourself before the day begins.</p>
+            <audio controls preload="none" style="width:100%;margin-top:12px;">
+              <source src="content/audio/01-morning-meditation.mp3" type="audio/mpeg">
+            </audio>
+          </div>
+        </div>
+
+        <div class="session-card session-free fade-in" data-category="stress beginners">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#1b4332 0%,#40916c 50%,#95d5b2 100%);">
+            <span class="session-emoji">&#128172;</span>
+            <span class="session-badge badge-free">Free</span>
+          </div>
+          <div class="session-info">
+            <h3>Breathing for Anxiety</h3>
+            <div class="session-meta"><span>8 min</span><span>Stress</span></div>
+            <p>A calming breathwork session designed to ease anxious thoughts and restore a sense of control.</p>
+            <audio controls preload="none" style="width:100%;margin-top:12px;">
+              <source src="content/audio/03-breathing-for-anxiety.mp3" type="audio/mpeg">
+            </audio>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Locked Sessions -->
+      <div class="section-header fade-in" style="margin-top:60px;margin-bottom:32px;">
+        <h2>Explore All Sessions</h2>
+        <p>Hundreds of guided meditations available in the Salus app.</p>
+      </div>
+
+      <div class="sessions-grid" id="lockedGrid">
+
+        <!-- Sleep -->
+        <div class="session-card session-locked fade-in" data-category="sleep">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#0a0e27 0%,#1b2845 40%,#274c77 100%);">
+            <span class="session-emoji">&#128164;</span>
+            <span class="session-badge badge-locked">&#128274; App Only</span>
+          </div>
+          <div class="session-info">
+            <h3>Body Scan for Deep Rest</h3>
+            <div class="session-meta"><span>25 min</span><span>Sleep</span></div>
+            <p>Release tension from head to toe as you drift into a deep, restorative sleep.</p>
+            <a href="apps.html" class="btn btn-primary" style="margin-top:12px;font-size:0.85rem;padding:10px 20px;">Get the App</a>
+          </div>
+        </div>
+
+        <div class="session-card session-locked fade-in" data-category="sleep">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#0d0221 0%,#261447 40%,#6b2fa0 100%);">
+            <span class="session-emoji">&#127769;</span>
+            <span class="session-badge badge-locked">&#128274; App Only</span>
+          </div>
+          <div class="session-info">
+            <h3>Letting Go of the Day</h3>
+            <div class="session-meta"><span>20 min</span><span>Sleep</span></div>
+            <p>Unwind from the stresses of the day and prepare your mind for peaceful rest.</p>
+            <a href="apps.html" class="btn btn-primary" style="margin-top:12px;font-size:0.85rem;padding:10px 20px;">Get the App</a>
+          </div>
+        </div>
+
+        <div class="session-card session-locked fade-in" data-category="sleep">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#03071e 0%,#14213d 40%,#003566 70%,#006d77 100%);">
+            <span class="session-emoji">&#127752;</span>
+            <span class="session-badge badge-locked">&#128274; App Only</span>
+          </div>
+          <div class="session-info">
+            <h3>Moonlight Drift</h3>
+            <div class="session-meta"><span>30 min</span><span>Sleep</span></div>
+            <p>A soothing visualisation journey under starlit skies to ease you into sleep.</p>
+            <a href="apps.html" class="btn btn-primary" style="margin-top:12px;font-size:0.85rem;padding:10px 20px;">Get the App</a>
+          </div>
+        </div>
+
+        <div class="session-card session-locked fade-in" data-category="sleep">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#1a1a2e 0%,#2d3142 40%,#4f5d75 70%,#bfc0c0 100%);">
+            <span class="session-emoji">&#9729;&#65039;</span>
+            <span class="session-badge badge-locked">&#128274; App Only</span>
+          </div>
+          <div class="session-info">
+            <h3>Sleep Stories: The Quiet Shore</h3>
+            <div class="session-meta"><span>40 min</span><span>Sleep</span></div>
+            <p>A calming bedtime story narrated to guide you gently into deep sleep.</p>
+            <a href="apps.html" class="btn btn-primary" style="margin-top:12px;font-size:0.85rem;padding:10px 20px;">Get the App</a>
+          </div>
+        </div>
+
+        <!-- Focus -->
+        <div class="session-card session-locked fade-in" data-category="focus">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#9d4edd 0%,#e040fb 40%,#ff6d00 100%);">
+            <span class="session-emoji">&#9889;</span>
+            <span class="session-badge badge-locked">&#128274; App Only</span>
+          </div>
+          <div class="session-info">
+            <h3>5-Minute Reset</h3>
+            <div class="session-meta"><span>5 min</span><span>Focus</span></div>
+            <p>A quick mental reset to sharpen your attention and get back in the zone.</p>
+            <a href="apps.html" class="btn btn-primary" style="margin-top:12px;font-size:0.85rem;padding:10px 20px;">Get the App</a>
+          </div>
+        </div>
+
+        <div class="session-card session-locked fade-in" data-category="focus">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#6a040f 0%,#d00000 40%,#e85d04 70%,#faa307 100%);">
+            <span class="session-emoji">&#127919;</span>
+            <span class="session-badge badge-locked">&#128274; App Only</span>
+          </div>
+          <div class="session-info">
+            <h3>Flow State</h3>
+            <div class="session-meta"><span>15 min</span><span>Focus</span></div>
+            <p>Train your mind to enter a state of deep concentration and effortless productivity.</p>
+            <a href="apps.html" class="btn btn-primary" style="margin-top:12px;font-size:0.85rem;padding:10px 20px;">Get the App</a>
+          </div>
+        </div>
+
+        <div class="session-card session-locked fade-in" data-category="focus beginners">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#ff9e00 0%,#ffbd00 40%,#ffe566 70%,#fffbe6 100%);">
+            <span class="session-emoji">&#9728;&#65039;</span>
+            <span class="session-badge badge-locked">&#128274; App Only</span>
+          </div>
+          <div class="session-info">
+            <h3>Morning Clarity</h3>
+            <div class="session-meta"><span>10 min</span><span>Focus</span></div>
+            <p>Set clear intentions for the day ahead with this energising morning practice.</p>
+            <a href="apps.html" class="btn btn-primary" style="margin-top:12px;font-size:0.85rem;padding:10px 20px;">Get the App</a>
+          </div>
+        </div>
+
+        <div class="session-card session-locked fade-in" data-category="focus advanced">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#240046 0%,#5a189a 40%,#9d4edd 70%,#c77dff 100%);">
+            <span class="session-emoji">&#129504;</span>
+            <span class="session-badge badge-locked">&#128274; App Only</span>
+          </div>
+          <div class="session-info">
+            <h3>Deep Work Prep</h3>
+            <div class="session-meta"><span>12 min</span><span>Focus</span></div>
+            <p>Prepare your mind for a challenging work session with focused breathwork and visualisation.</p>
+            <a href="apps.html" class="btn btn-primary" style="margin-top:12px;font-size:0.85rem;padding:10px 20px;">Get the App</a>
+          </div>
+        </div>
+
+        <!-- Stress -->
+        <div class="session-card session-locked fade-in" data-category="stress">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#005f73 0%,#0a9396 40%,#94d2bd 70%,#e9d8a6 100%);">
+            <span class="session-emoji">&#128167;</span>
+            <span class="session-badge badge-locked">&#128274; App Only</span>
+          </div>
+          <div class="session-info">
+            <h3>Calm in 3 Minutes</h3>
+            <div class="session-meta"><span>3 min</span><span>Stress</span></div>
+            <p>An ultra-quick breathing technique for moments when stress feels overwhelming.</p>
+            <a href="apps.html" class="btn btn-primary" style="margin-top:12px;font-size:0.85rem;padding:10px 20px;">Get the App</a>
+          </div>
+        </div>
+
+        <div class="session-card session-locked fade-in" data-category="stress">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#004e64 0%,#00a5cf 40%,#25a18e 70%,#7ae582 100%);">
+            <span class="session-emoji">&#127800;</span>
+            <span class="session-badge badge-locked">&#128274; App Only</span>
+          </div>
+          <div class="session-info">
+            <h3>Release &amp; Restore</h3>
+            <div class="session-meta"><span>18 min</span><span>Stress</span></div>
+            <p>A body-based meditation to release stored tension and restore inner balance.</p>
+            <a href="apps.html" class="btn btn-primary" style="margin-top:12px;font-size:0.85rem;padding:10px 20px;">Get the App</a>
+          </div>
+        </div>
+
+        <div class="session-card session-locked fade-in" data-category="stress">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#caf0f8 0%,#90e0ef 30%,#00b4d8 60%,#0077b6 100%);">
+            <span class="session-emoji">&#10052;&#65039;</span>
+            <span class="session-badge badge-locked">&#128274; App Only</span>
+          </div>
+          <div class="session-info">
+            <h3>Tension Melt</h3>
+            <div class="session-meta"><span>15 min</span><span>Stress</span></div>
+            <p>Progressive relaxation to melt away physical and mental tension, layer by layer.</p>
+            <a href="apps.html" class="btn btn-primary" style="margin-top:12px;font-size:0.85rem;padding:10px 20px;">Get the App</a>
+          </div>
+        </div>
+
+        <div class="session-card session-locked fade-in" data-category="stress advanced">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#1b4332 0%,#2d6a4f 40%,#74c69d 70%,#b7e4c7 100%);">
+            <span class="session-emoji">&#127811;</span>
+            <span class="session-badge badge-locked">&#128274; App Only</span>
+          </div>
+          <div class="session-info">
+            <h3>Anxiety Unravelled</h3>
+            <div class="session-meta"><span>22 min</span><span>Stress</span></div>
+            <p>A deeper exploration into anxiety patterns with mindful awareness techniques.</p>
+            <a href="apps.html" class="btn btn-primary" style="margin-top:12px;font-size:0.85rem;padding:10px 20px;">Get the App</a>
+          </div>
+        </div>
+
+        <!-- Beginners -->
+        <div class="session-card session-locked fade-in" data-category="beginners">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#a8dadc 0%,#bee1e6 40%,#dfe7fd 70%,#f0efeb 100%);">
+            <span class="session-emoji">&#128075;</span>
+            <span class="session-badge badge-locked">&#128274; App Only</span>
+          </div>
+          <div class="session-info">
+            <h3>Your First Meditation</h3>
+            <div class="session-meta"><span>7 min</span><span>Beginners</span></div>
+            <p>Brand new to meditation? Start here. A warm, simple introduction to mindful sitting.</p>
+            <a href="apps.html" class="btn btn-primary" style="margin-top:12px;font-size:0.85rem;padding:10px 20px;">Get the App</a>
+          </div>
+        </div>
+
+        <div class="session-card session-locked fade-in" data-category="beginners">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#ffccd5 0%,#ff8fa3 40%,#ff5c8a 70%,#c9184a 100%);">
+            <span class="session-emoji">&#128147;</span>
+            <span class="session-badge badge-locked">&#128274; App Only</span>
+          </div>
+          <div class="session-info">
+            <h3>Loving-Kindness Intro</h3>
+            <div class="session-meta"><span>10 min</span><span>Beginners</span></div>
+            <p>Learn the practice of sending compassion to yourself and others.</p>
+            <a href="apps.html" class="btn btn-primary" style="margin-top:12px;font-size:0.85rem;padding:10px 20px;">Get the App</a>
+          </div>
+        </div>
+
+        <div class="session-card session-locked fade-in" data-category="beginners">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#ffd166 0%,#f4a261 40%,#e76f51 100%);">
+            <span class="session-emoji">&#127774;</span>
+            <span class="session-badge badge-locked">&#128274; App Only</span>
+          </div>
+          <div class="session-info">
+            <h3>Mindful Walking</h3>
+            <div class="session-meta"><span>12 min</span><span>Beginners</span></div>
+            <p>Take your practice off the cushion with this gentle walking meditation guide.</p>
+            <a href="apps.html" class="btn btn-primary" style="margin-top:12px;font-size:0.85rem;padding:10px 20px;">Get the App</a>
+          </div>
+        </div>
+
+        <!-- Advanced -->
+        <div class="session-card session-locked fade-in" data-category="advanced">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#000000 0%,#1a0a2e 30%,#3c1361 60%,#6a1b9a 100%);">
+            <span class="session-emoji">&#128302;</span>
+            <span class="session-badge badge-locked">&#128274; App Only</span>
+          </div>
+          <div class="session-info">
+            <h3>Vipassana: Insight Practice</h3>
+            <div class="session-meta"><span>30 min</span><span>Advanced</span></div>
+            <p>A traditional insight meditation for experienced practitioners seeking deeper awareness.</p>
+            <a href="apps.html" class="btn btn-primary" style="margin-top:12px;font-size:0.85rem;padding:10px 20px;">Get the App</a>
+          </div>
+        </div>
+
+        <div class="session-card session-locked fade-in" data-category="advanced">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#212529 0%,#495057 40%,#6c757d 70%,#adb5bd 100%);">
+            <span class="session-emoji">&#9883;&#65039;</span>
+            <span class="session-badge badge-locked">&#128274; App Only</span>
+          </div>
+          <div class="session-info">
+            <h3>Non-Dual Awareness</h3>
+            <div class="session-meta"><span>25 min</span><span>Advanced</span></div>
+            <p>Explore the nature of consciousness itself in this advanced awareness practice.</p>
+            <a href="apps.html" class="btn btn-primary" style="margin-top:12px;font-size:0.85rem;padding:10px 20px;">Get the App</a>
+          </div>
+        </div>
+
+        <div class="session-card session-locked fade-in" data-category="advanced">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#03045e 0%,#023e8a 30%,#0077b6 60%,#48cae4 100%);">
+            <span class="session-emoji">&#127756;</span>
+            <span class="session-badge badge-locked">&#128274; App Only</span>
+          </div>
+          <div class="session-info">
+            <h3>Yoga Nidra: Deep Rest</h3>
+            <div class="session-meta"><span>45 min</span><span>Advanced</span></div>
+            <p>The ancient practice of yogic sleep — profound rest while remaining fully conscious.</p>
+            <a href="apps.html" class="btn btn-primary" style="margin-top:12px;font-size:0.85rem;padding:10px 20px;">Get the App</a>
+          </div>
+        </div>
+
+        <div class="session-card session-locked fade-in" data-category="sleep advanced">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#10002b 0%,#3c096c 30%,#7b2cbf 60%,#c77dff 100%);">
+            <span class="session-emoji">&#128156;</span>
+            <span class="session-badge badge-locked">&#128274; App Only</span>
+          </div>
+          <div class="session-info">
+            <h3>Gratitude Before Sleep</h3>
+            <div class="session-meta"><span>15 min</span><span>Sleep</span></div>
+            <p>End your day by reflecting on what you're grateful for, easing into peaceful rest.</p>
+            <a href="apps.html" class="btn btn-primary" style="margin-top:12px;font-size:0.85rem;padding:10px 20px;">Get the App</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-banner">
+    <div class="container">
+      <h2 class="fade-in">Unlock hundreds of sessions</h2>
+      <p class="fade-in">Download Salus for guided meditations, courses, and daily practices.</p>
+      <a href="apps.html" class="btn fade-in">Get the App Free</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4 style="letter-spacing:2px;">SALUS</h4>
+          <p>SLEEP &middot; RELAX &middot; RESTORE</p>
+          <p style="margin-top:8px;">Meditation and mindfulness for everyday life.</p>
+        </div>
+        <div>
+          <h4>Pages</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="sessions.html">Sessions</a></li>
+            <li><a href="soundscapes.html">Soundscapes</a></li>
+            <li><a href="education.html">Learn</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="apps.html">Apps</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Support</h4>
+          <ul>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="faq.html">FAQ</a></li>
+            <li><a href="privacy.html">Privacy</a></li>
+            <li><a href="terms.html">Terms</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Tools</h4>
+          <ul>
+            <li><a href="breathe.html">Breathing Timer</a></li>
+            <li><a href="timer.html">Meditation Timer</a></li>
+            <li><a href="sounds.html">Sleep Sounds</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        &copy; 2026 Salus. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    // Category filtering
+    document.getElementById('filterBar').addEventListener('click', function(e) {
+      if (!e.target.classList.contains('filter-btn')) return;
+      document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+      e.target.classList.add('active');
+      var filter = e.target.getAttribute('data-filter');
+      document.querySelectorAll('.session-card').forEach(function(card) {
+        if (filter === 'all' || card.getAttribute('data-category').indexOf(filter) !== -1) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

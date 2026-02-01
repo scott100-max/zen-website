@@ -43,6 +43,7 @@
     }
     .media-body p { color: var(--mid-gray); font-size: 0.95rem; margin-bottom: 16px; }
     .media-body audio { width: 100%; margin-bottom: 12px; }
+    .media-body video { width: 100%; border-radius: 8px; margin-bottom: 12px; }
     .media-body .yt-embed { display: none; margin-bottom: 12px; }
     .media-body .yt-embed iframe {
       width: 100%; aspect-ratio: 16/9; border: none; border-radius: 8px;
@@ -80,9 +81,11 @@
       <a href="index.html" class="nav-logo"><img src="Salus.PNG" alt="Salus" class="nav-icon" style="height:32px;border-radius:6px;margin-right:8px;">SALUS</a>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
+        <li><a href="sessions.html">Sessions</a></li>
+        <li><a href="soundscapes.html">Soundscapes</a></li>
+        <li><a href="education.html">Learn</a></li>
         <li><a href="about.html">About</a></li>
         <li><a href="apps.html">Apps</a></li>
-        <li><a href="media.html">Media</a></li>
         <li><a href="contact.html">Contact</a></li>
       </ul>
       <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
@@ -108,76 +111,49 @@
 
         <!-- 01 Morning Meditation -->
         <div class="media-card fade-in">
-          <div class="media-thumb" style="background:linear-gradient(135deg,#f4a261,#e76f51);">
-            <div class="thumb-title">10-Minute<br>Morning Meditation</div>
-            <div class="thumb-sub">START YOUR DAY WITH CLARITY</div>
-            <div class="thumb-brand">SALUS</div>
-          </div>
           <div class="media-body">
             <h3>10-Minute Morning Meditation</h3>
             <div class="media-meta">10 min &middot; Guided Meditation &middot; All levels</div>
+            <video controls preload="none" poster="content/video/01-morning-meditation-thumb.jpg">
+              <source src="content/video/01-morning-meditation.mp4" type="video/mp4">
+            </video>
             <p>Body scan, breath awareness, and intention-setting to start your day with clarity and focus.</p>
-            <!-- Replace src with your audio file path once produced -->
-            <audio controls preload="none">
-              <source src="content/audio/01-morning-meditation.mp3" type="audio/mpeg">
-              Audio coming soon.
-            </audio>
-            <!-- Uncomment and add YouTube ID once uploaded -->
-            <!-- <div class="yt-embed" style="display:block"><iframe src="https://www.youtube.com/embed/YOUR_ID" allowfullscreen></iframe></div> -->
           </div>
         </div>
 
         <!-- 02 Deep Sleep -->
         <div class="media-card fade-in">
-          <div class="media-thumb" style="background:linear-gradient(135deg,#1a2e1e,#0f1a12);">
-            <div class="thumb-title">Deep Sleep<br>Meditation</div>
-            <div class="thumb-sub">30 MIN &middot; FALL ASLEEP PEACEFULLY</div>
-            <div class="thumb-brand">SALUS</div>
-          </div>
           <div class="media-body">
             <h3>Deep Sleep Meditation</h3>
             <div class="media-meta">30 min &middot; Guided Meditation &middot; Sleep</div>
+            <video controls preload="none" poster="content/video/02-deep-sleep-thumb.jpg">
+              <source src="content/video/02-deep-sleep.mp4" type="video/mp4">
+            </video>
             <p>Progressive tension release, breath anchoring, and a calming shore visualisation to ease you into restful sleep.</p>
-            <audio controls preload="none">
-              <source src="content/audio/02-deep-sleep.mp3" type="audio/mpeg">
-              Audio coming soon.
-            </audio>
           </div>
         </div>
 
         <!-- 03 Breathing for Anxiety -->
         <div class="media-card fade-in">
-          <div class="media-thumb" style="background:linear-gradient(135deg,#7a9e7e,#5a7e5e);">
-            <div class="thumb-title">Breathing for<br>Anxiety Relief</div>
-            <div class="thumb-sub">TWO TECHNIQUES THAT WORK INSTANTLY</div>
-            <div class="thumb-brand">SALUS</div>
-          </div>
           <div class="media-body">
             <h3>Breathing for Anxiety Relief</h3>
             <div class="media-meta">12 min &middot; Educational + Guided &middot; Anxiety</div>
+            <video controls preload="none" poster="content/video/03-breathing-for-anxiety-thumb.jpg">
+              <source src="content/video/03-breathing-for-anxiety.mp4" type="video/mp4">
+            </video>
             <p>Learn box breathing and the 4-7-8 technique — two science-backed methods to calm your nervous system fast.</p>
-            <audio controls preload="none">
-              <source src="content/audio/03-breathing-for-anxiety.mp3" type="audio/mpeg">
-              Audio coming soon.
-            </audio>
           </div>
         </div>
 
         <!-- 04 Science of Mindfulness -->
         <div class="media-card fade-in">
-          <div class="media-thumb" style="background:linear-gradient(135deg,#2c3e50,#1a252f);">
-            <div class="thumb-title">The Science of<br>Mindfulness</div>
-            <div class="thumb-sub">HOW MEDITATION CHANGES YOUR BRAIN</div>
-            <div class="thumb-brand">SALUS</div>
-          </div>
           <div class="media-body">
             <h3>The Science of Mindfulness</h3>
             <div class="media-meta">15 min &middot; Educational &middot; All levels</div>
+            <video controls preload="none" poster="content/video/04-science-of-mindfulness-thumb.jpg">
+              <source src="content/video/04-science-of-mindfulness.mp4" type="video/mp4">
+            </video>
             <p>What happens in your brain when you meditate? The neuroscience of mindfulness explained in plain language.</p>
-            <audio controls preload="none">
-              <source src="content/audio/04-science-of-mindfulness.mp3" type="audio/mpeg">
-              Audio coming soon.
-            </audio>
           </div>
         </div>
 

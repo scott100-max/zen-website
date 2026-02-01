@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learn — Salus</title>
+  <meta name="description" content="Learn about meditation, mindfulness, and breathwork. Articles, science, and practical tips to build your practice.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .article-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+    }
+    .article-card {
+      background: var(--white); border: 1px solid var(--light-gray);
+      border-radius: 12px; overflow: hidden; cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .article-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+    }
+    .article-header {
+      padding: 32px 24px 24px; background: var(--off-white);
+      border-bottom: 1px solid var(--light-gray);
+    }
+    .article-header .article-icon { font-size: 2rem; margin-bottom: 12px; }
+    .article-header h3 { font-size: 1.1rem; margin-bottom: 6px; }
+    .article-tags {
+      display: flex; gap: 6px; flex-wrap: wrap;
+    }
+    .article-tag {
+      font-size: 0.7rem; padding: 2px 10px; border-radius: 50px;
+      background: var(--accent-light); color: var(--accent-dark); font-weight: 500;
+    }
+    .article-body { padding: 24px; }
+    .article-body p { color: var(--mid-gray); font-size: 0.9rem; margin-bottom: 12px; }
+    .article-body .read-more {
+      font-size: 0.85rem; font-weight: 600; color: var(--accent-dark);
+    }
+    .article-content {
+      display: none; padding: 0 24px 24px; color: var(--mid-gray);
+      font-size: 0.92rem; line-height: 1.8;
+    }
+    .article-card.expanded .article-content { display: block; }
+    .article-card.expanded .read-more { display: none; }
+    .article-content h4 {
+      color: var(--dark); font-size: 1rem; margin: 20px 0 8px;
+    }
+    .article-content ul {
+      margin: 8px 0 8px 20px; list-style: disc;
+    }
+    .article-content ul li { margin-bottom: 4px; }
+
+    .tips-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+    }
+    .tip-card {
+      background: var(--white); border: 1px solid var(--light-gray);
+      border-radius: 12px; padding: 24px; text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .tip-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+    }
+    .tip-icon { font-size: 2rem; margin-bottom: 12px; }
+    .tip-card h4 { font-size: 0.95rem; margin-bottom: 8px; }
+    .tip-card p { color: var(--mid-gray); font-size: 0.85rem; }
+
+    .stat-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    }
+    .stat-card {
+      background: var(--white); border: 1px solid var(--light-gray);
+      border-radius: 12px; padding: 32px; text-align: center;
+    }
+    .stat-number {
+      font-size: 2.5rem; font-weight: 700; color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .stat-label { font-size: 0.95rem; color: var(--dark); margin-bottom: 8px; }
+    .stat-source { font-size: 0.75rem; color: var(--mid-gray); font-style: italic; }
+
+    .edu-video-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px;
+    }
+    .edu-video-card {
+      background: var(--white); border: 1px solid var(--light-gray);
+      border-radius: 12px; overflow: hidden;
+    }
+    .edu-video-thumb {
+      aspect-ratio: 16/9; display: flex; align-items: center;
+      justify-content: center; flex-direction: column; position: relative;
+    }
+    .edu-video-thumb .thumb-title {
+      font-weight: 700; color: #fff; text-align: center;
+      line-height: 1.2; font-size: 1.3rem;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.3); z-index: 1;
+    }
+    .edu-video-thumb .thumb-sub {
+      color: rgba(255,255,255,0.85); font-size: 0.7rem;
+      letter-spacing: 2px; margin-top: 8px; z-index: 1;
+    }
+    .edu-video-info { padding: 20px; }
+    .edu-video-info h3 { font-size: 1.05rem; margin-bottom: 6px; }
+    .edu-video-info p { color: var(--mid-gray); font-size: 0.9rem; margin-bottom: 12px; }
+    .edu-video-info video { width: 100%; border-radius: 8px; }
+    .edu-video-info audio { width: 100%; }
+
+    @media (max-width: 768px) {
+      .article-grid { grid-template-columns: 1fr; }
+      .tips-grid { grid-template-columns: 1fr 1fr; }
+      .stat-grid { grid-template-columns: 1fr; }
+      .edu-video-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="promo-banner">Start your free 7-day trial<a href="apps.html">Get Started</a></div>
+
+  <nav class="nav" style="position:relative;">
+    <div class="container">
+      <a href="index.html" class="nav-logo"><img src="Salus.PNG" alt="Salus" class="nav-icon" style="height:32px;border-radius:6px;margin-right:8px;">SALUS</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="sessions.html">Sessions</a></li>
+        <li><a href="soundscapes.html">Soundscapes</a></li>
+        <li><a href="education.html" class="active">Learn</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="apps.html">Apps</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" style="padding-bottom:60px;">
+    <div class="container">
+      <h1 class="fade-in"><span>Learn</span></h1>
+      <p class="fade-in" style="font-style:italic;color:var(--mid-gray);font-size:0.9rem;margin-bottom:12px;letter-spacing:0.5px;opacity:0.7;"><em>salus</em> &nbsp;/&#712;sa.lus/ &nbsp; health &middot; safety &middot; well-being</p>
+      <p class="fade-in">Understand the science, build your practice, and discover practical techniques for a calmer mind.</p>
+    </div>
+  </section>
+
+  <!-- Category Filters -->
+  <section style="padding:0 0 20px;background:var(--white);">
+    <div class="container">
+      <div class="filter-bar" id="filterBar">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="beginners">Beginners</button>
+        <button class="filter-btn" data-filter="science">Science</button>
+        <button class="filter-btn" data-filter="techniques">Techniques</button>
+        <button class="filter-btn" data-filter="sleep">Sleep</button>
+        <button class="filter-btn" data-filter="stress">Stress</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Articles -->
+  <section style="padding-top:40px;background:var(--white);">
+    <div class="container">
+      <div class="section-header fade-in" style="margin-bottom:32px;">
+        <h2>Articles &amp; Guides</h2>
+        <p>In-depth resources to deepen your understanding of mindfulness.</p>
+      </div>
+
+      <div class="article-grid" id="articleGrid">
+
+        <!-- 1. What is Meditation? -->
+        <div class="article-card fade-in" data-category="beginners" onclick="this.classList.toggle('expanded')">
+          <div class="article-header">
+            <div class="article-icon">&#129502;</div>
+            <h3>What is Meditation?</h3>
+            <div class="article-tags">
+              <span class="article-tag">Beginners</span>
+            </div>
+          </div>
+          <div class="article-body">
+            <p>A clear, jargon-free introduction to meditation — what it is, what it isn't, and why millions of people practice it every day.</p>
+            <span class="read-more">Read more &rarr;</span>
+          </div>
+          <div class="article-content">
+            <h4>So, What Actually Is Meditation?</h4>
+            <p>Meditation is the practice of training your attention. That's it. It's not about emptying your mind, achieving enlightenment, or sitting cross-legged on a mountain. It's about learning to notice where your mind goes — and gently bringing it back.</p>
+            <p>Think of it like exercise for your brain. Just as going to the gym strengthens your muscles, meditation strengthens your ability to focus, regulate emotions, and stay present.</p>
+
+            <h4>What Meditation Is Not</h4>
+            <ul>
+              <li><strong>Not about stopping thoughts.</strong> Your mind will wander. That's normal. The practice is in the returning.</li>
+              <li><strong>Not religious.</strong> While meditation has roots in Buddhist and Hindu traditions, modern mindfulness is entirely secular.</li>
+              <li><strong>Not complicated.</strong> You don't need special equipment, a quiet room, or hours of free time. Two minutes is enough to start.</li>
+            </ul>
+
+            <h4>Common Types of Meditation</h4>
+            <ul>
+              <li><strong>Mindfulness meditation:</strong> Paying attention to the present moment — usually by focusing on your breath.</li>
+              <li><strong>Body scan:</strong> Slowly moving attention through each part of your body, noticing sensations without judgement.</li>
+              <li><strong>Loving-kindness:</strong> Silently repeating phrases of compassion toward yourself and others.</li>
+              <li><strong>Guided meditation:</strong> Following a narrator's instructions (like Salus sessions).</li>
+            </ul>
+
+            <h4>Why Do People Meditate?</h4>
+            <p>Research shows regular meditation can reduce anxiety, improve sleep, sharpen focus, and even change the physical structure of your brain. But most people who stick with it will tell you something simpler: it just makes life feel a little more manageable.</p>
+          </div>
+        </div>
+
+        <!-- 2. The Science of Mindfulness -->
+        <div class="article-card fade-in" data-category="science" onclick="this.classList.toggle('expanded')">
+          <div class="article-header">
+            <div class="article-icon">&#129504;</div>
+            <h3>The Science of Mindfulness</h3>
+            <div class="article-tags">
+              <span class="article-tag">Science</span>
+            </div>
+          </div>
+          <div class="article-body">
+            <p>What actually happens inside your brain when you meditate? Decades of neuroscience research, explained in plain language.</p>
+            <span class="read-more">Read more &rarr;</span>
+          </div>
+          <div class="article-content">
+            <h4>Your Brain on Meditation</h4>
+            <p>Neuroscience has shown that meditation doesn't just feel good — it physically changes your brain. Here are the three most significant changes:</p>
+
+            <h4>1. The Amygdala Shrinks</h4>
+            <p>The amygdala is your brain's alarm system. It triggers the fight-or-flight response. A 2011 study at Harvard found that after just 8 weeks of mindfulness practice, the amygdala's grey matter density decreased — meaning participants were literally less reactive to stress.</p>
+
+            <h4>2. The Prefrontal Cortex Thickens</h4>
+            <p>The prefrontal cortex handles focus, decision-making, and self-awareness. Research by Sara Lazar at Harvard showed that regular meditators had thicker cortical tissue in this region — even as they aged. Meditation appears to slow the natural thinning of this area.</p>
+
+            <h4>3. The Default Mode Network Quiets</h4>
+            <p>The DMN is the brain network active during mind-wandering, rumination, and self-referential thinking — the "monkey mind." Studies at Yale found that experienced meditators show decreased activity in the DMN, and when it does activate, they're better at snapping back to the present.</p>
+
+            <h4>Beyond the Brain</h4>
+            <ul>
+              <li><strong>Cortisol:</strong> Regular meditation lowers cortisol, the primary stress hormone, by an average of 25%.</li>
+              <li><strong>Blood pressure:</strong> A meta-analysis of 12 studies found meditation reduces systolic blood pressure by ~5 mmHg.</li>
+              <li><strong>Telomeres:</strong> Early research suggests meditation may slow cellular ageing by maintaining telomere length.</li>
+              <li><strong>Pain perception:</strong> Meditators report 40% lower pain intensity (Wake Forest University).</li>
+            </ul>
+
+            <h4>How Much Practice Do You Need?</h4>
+            <p>Brain changes have been observed with as little as 8 weeks of practice at 10-20 minutes per day. Some studies show measurable benefits after just 4 days. The key is consistency, not duration.</p>
+          </div>
+        </div>
+
+        <!-- 3. How to Build a Daily Practice -->
+        <div class="article-card fade-in" data-category="beginners" onclick="this.classList.toggle('expanded')">
+          <div class="article-header">
+            <div class="article-icon">&#128197;</div>
+            <h3>How to Build a Daily Practice</h3>
+            <div class="article-tags">
+              <span class="article-tag">Beginners</span>
+            </div>
+          </div>
+          <div class="article-body">
+            <p>Practical strategies for making meditation a consistent habit — even if you've struggled to stick with it before.</p>
+            <span class="read-more">Read more &rarr;</span>
+          </div>
+          <div class="article-content">
+            <h4>Start Embarrassingly Small</h4>
+            <p>The biggest mistake people make is trying to meditate for 20 minutes on day one. Start with 2 minutes. Seriously. The goal isn't duration — it's showing up. Once 2 minutes feels easy, add a minute. Let it grow naturally.</p>
+
+            <h4>Anchor It to an Existing Habit</h4>
+            <p>Don't rely on motivation. Attach meditation to something you already do every day. After your morning coffee. Before you check your phone. Right after brushing your teeth. This is called "habit stacking" and it works.</p>
+
+            <h4>Same Time, Same Place</h4>
+            <p>Your brain loves patterns. Meditating at the same time and place each day reduces the mental effort of deciding when and where. It becomes automatic, like putting on a seatbelt.</p>
+
+            <h4>Don't Judge Your Sessions</h4>
+            <p>There's no such thing as a bad meditation. If your mind wandered the entire time, you still practiced. The noticing — "oh, I'm distracted" — is the exercise. Every time you catch your mind wandering and bring it back, that's one mental rep.</p>
+
+            <h4>Track Your Streak</h4>
+            <p>Humans are motivated by streaks. Use a simple calendar, an app, or a habit tracker to mark each day you practice. Missing one day isn't failure — just don't miss two in a row.</p>
+
+            <h4>Be Flexible</h4>
+            <p>If you miss your morning slot, meditate at lunch. If you can't sit, do a walking meditation. If you only have 60 seconds, take 3 deep breaths with full attention. Something always beats nothing.</p>
+          </div>
+        </div>
+
+        <!-- 4. Understanding Breathwork -->
+        <div class="article-card fade-in" data-category="techniques stress" onclick="this.classList.toggle('expanded')">
+          <div class="article-header">
+            <div class="article-icon">&#127744;</div>
+            <h3>Understanding Breathwork</h3>
+            <div class="article-tags">
+              <span class="article-tag">Techniques</span>
+              <span class="article-tag">Stress</span>
+            </div>
+          </div>
+          <div class="article-body">
+            <p>How conscious breathing techniques activate your parasympathetic nervous system and reduce anxiety in minutes.</p>
+            <span class="read-more">Read more &rarr;</span>
+          </div>
+          <div class="article-content">
+            <h4>Why Breathing Works</h4>
+            <p>Your breath is the only autonomic function you can consciously control. When you deliberately slow and deepen your breathing, you activate the vagus nerve — the longest cranial nerve in your body — which triggers your parasympathetic nervous system (the "rest and digest" mode).</p>
+            <p>This directly counteracts the sympathetic "fight or flight" response. Heart rate drops, blood pressure lowers, cortisol production decreases, and your body physically relaxes.</p>
+
+            <h4>Box Breathing (4-4-4-4)</h4>
+            <p>Used by Navy SEALs to stay calm under pressure. Inhale for 4 seconds, hold for 4, exhale for 4, hold for 4. Repeat 4-8 rounds. The equal timing creates a rhythmic pattern that stabilises the nervous system.</p>
+
+            <h4>4-7-8 Breathing</h4>
+            <p>Developed by Dr Andrew Weil. Inhale through your nose for 4 seconds, hold for 7 seconds, exhale through your mouth for 8 seconds. The extended exhale maximises vagus nerve activation. Particularly effective before sleep.</p>
+
+            <h4>Physiological Sigh</h4>
+            <p>Discovered by Stanford neuroscientist Andrew Huberman. A double inhale through the nose (one full breath, then a short second sip of air) followed by a long exhale. This is the fastest known way to calm the nervous system — a single cycle can reduce stress in real time.</p>
+
+            <h4>When to Use Breathwork</h4>
+            <ul>
+              <li>Before stressful meetings or presentations</li>
+              <li>During a panic or anxiety episode</li>
+              <li>Before sleep to calm an active mind</li>
+              <li>After conflict to regulate emotions</li>
+              <li>As a transition between work and personal time</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 5. Meditation for Sleep -->
+        <div class="article-card fade-in" data-category="sleep" onclick="this.classList.toggle('expanded')">
+          <div class="article-header">
+            <div class="article-icon">&#127769;</div>
+            <h3>Meditation for Sleep</h3>
+            <div class="article-tags">
+              <span class="article-tag">Sleep</span>
+            </div>
+          </div>
+          <div class="article-body">
+            <p>Why your mind won't switch off at night, and how meditation techniques can help you fall asleep faster and sleep deeper.</p>
+            <span class="read-more">Read more &rarr;</span>
+          </div>
+          <div class="article-content">
+            <h4>Why We Can't Sleep</h4>
+            <p>The most common cause of insomnia isn't physical — it's mental. When you lie down and remove external stimulation, your default mode network activates. This is the brain's "idle mode," and it loves to replay the day, plan tomorrow, and worry about things you can't control.</p>
+            <p>Sleep meditation works by giving your brain something else to focus on — a body scan, a visualisation, a breathing pattern — which gradually overrides the rumination cycle.</p>
+
+            <h4>Techniques That Help</h4>
+            <ul>
+              <li><strong>Progressive muscle relaxation:</strong> Systematically tensing and releasing muscle groups from feet to head. This signals physical safety to your nervous system.</li>
+              <li><strong>Body scan:</strong> Moving attention slowly through each body part without tensing. Simply noticing sensation.</li>
+              <li><strong>4-7-8 breathing:</strong> The extended exhale naturally slows heart rate and triggers sleepiness.</li>
+              <li><strong>Visualisation:</strong> Imagining a peaceful scene in detail (a beach, a forest path, rain on a window) engages the mind without stimulating it.</li>
+              <li><strong>Counting breaths backwards:</strong> Count from 20 to 1, one number per exhale. If you lose count, start again from 20.</li>
+            </ul>
+
+            <h4>Sleep Hygiene + Meditation</h4>
+            <p>Meditation works best as part of a broader sleep routine. Dim lights an hour before bed. Avoid screens (or use a blue light filter). Keep your room cool (16-18&deg;C). Meditate in bed, with the intention of falling asleep — this is one of the few times it's fine to drift off during practice.</p>
+
+            <h4>The Research</h4>
+            <p>A Harvard study found mindfulness meditation improved sleep quality in older adults more effectively than standard sleep hygiene education. A 2019 meta-analysis of 18 trials found meditation significantly improved sleep quality with moderate effect sizes.</p>
+          </div>
+        </div>
+
+        <!-- 6. Mindfulness for Stress & Anxiety -->
+        <div class="article-card fade-in" data-category="stress techniques" onclick="this.classList.toggle('expanded')">
+          <div class="article-header">
+            <div class="article-icon">&#127807;</div>
+            <h3>Mindfulness for Stress &amp; Anxiety</h3>
+            <div class="article-tags">
+              <span class="article-tag">Stress</span>
+              <span class="article-tag">Techniques</span>
+            </div>
+          </div>
+          <div class="article-body">
+            <p>How mindfulness changes your relationship with anxious thoughts — and practical techniques you can use right now.</p>
+            <span class="read-more">Read more &rarr;</span>
+          </div>
+          <div class="article-content">
+            <h4>Anxiety Is Not the Enemy</h4>
+            <p>Anxiety is your brain doing its job — scanning for threats and preparing you to respond. The problem isn't anxiety itself. It's when the alarm system gets stuck in the "on" position, reacting to emails, social situations, and hypothetical future events as if they were genuine dangers.</p>
+            <p>Mindfulness doesn't eliminate anxiety. It changes your relationship with it. Instead of being swept away by anxious thoughts, you learn to observe them with a degree of distance — like watching clouds pass rather than being caught in the storm.</p>
+
+            <h4>The RAIN Technique</h4>
+            <ul>
+              <li><strong>R — Recognise:</strong> Notice what you're feeling. Name it. "This is anxiety."</li>
+              <li><strong>A — Allow:</strong> Don't fight it or push it away. Let it be there.</li>
+              <li><strong>I — Investigate:</strong> Get curious. Where do you feel it in your body? What triggered it?</li>
+              <li><strong>N — Non-identification:</strong> Remind yourself: "I am not my anxiety. This is a temporary state."</li>
+            </ul>
+
+            <h4>Grounding: The 5-4-3-2-1 Method</h4>
+            <p>When anxiety spikes, bring yourself back to the present moment by naming: 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, 1 you can taste. This interrupts the anxiety loop by redirecting attention to sensory reality.</p>
+
+            <h4>The Evidence</h4>
+            <p>A 2014 meta-analysis (Johns Hopkins) found mindfulness meditation programmes showed moderate evidence of improving anxiety, with effect sizes comparable to antidepressants. Mindfulness-Based Stress Reduction (MBSR) has been shown to reduce anxiety symptoms by up to 47% in clinical populations.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Tips -->
+  <section>
+    <div class="container">
+      <div class="section-header fade-in">
+        <h2>Quick Tips</h2>
+        <p>Small, practical things you can do today.</p>
+      </div>
+      <div class="tips-grid">
+        <div class="tip-card fade-in">
+          <div class="tip-icon">&#9201;</div>
+          <h4>Start with 2 Minutes</h4>
+          <p>You don't need 20 minutes. Two minutes of focused breathing is enough to start building the habit.</p>
+        </div>
+        <div class="tip-card fade-in">
+          <div class="tip-icon">&#128197;</div>
+          <h4>Same Time Every Day</h4>
+          <p>Attach meditation to an existing habit — after coffee, before bed, or right after waking up.</p>
+        </div>
+        <div class="tip-card fade-in">
+          <div class="tip-icon">&#128173;</div>
+          <h4>Don't Judge Your Thoughts</h4>
+          <p>A wandering mind isn't failure. Noticing the wandering and returning is the entire practice.</p>
+        </div>
+        <div class="tip-card fade-in">
+          <div class="tip-icon">&#127793;</div>
+          <h4>Breathe Before You React</h4>
+          <p>Before responding to stress, take three slow breaths. This 15-second pause changes everything.</p>
+        </div>
+        <div class="tip-card fade-in">
+          <div class="tip-icon">&#128694;</div>
+          <h4>Try Walking Meditation</h4>
+          <p>Can't sit still? Walk slowly and pay attention to each step. Meditation doesn't require stillness.</p>
+        </div>
+        <div class="tip-card fade-in">
+          <div class="tip-icon">&#127769;</div>
+          <h4>Use It for Sleep</h4>
+          <p>A body scan or 4-7-8 breathing in bed is one of the most effective natural sleep aids.</p>
+        </div>
+        <div class="tip-card fade-in">
+          <div class="tip-icon">&#128241;</div>
+          <h4>Put Your Phone Away</h4>
+          <p>Even 5 minutes without screens trains your brain to be comfortable with stillness.</p>
+        </div>
+        <div class="tip-card fade-in">
+          <div class="tip-icon">&#128170;</div>
+          <h4>Never Miss Twice</h4>
+          <p>Missing one day is fine. Just don't miss two in a row. Consistency beats perfection.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Research & Science -->
+  <section>
+    <div class="container">
+      <div class="section-header fade-in">
+        <h2>Research &amp; Science</h2>
+        <p>Key findings from peer-reviewed studies on meditation and mindfulness.</p>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card fade-in">
+          <div class="stat-number">47%</div>
+          <div class="stat-label">Reduction in anxiety symptoms</div>
+          <div class="stat-source">Johns Hopkins University, JAMA Internal Medicine, 2014</div>
+        </div>
+        <div class="stat-card fade-in">
+          <div class="stat-number">8 wks</div>
+          <div class="stat-label">For measurable brain changes</div>
+          <div class="stat-source">Harvard / Massachusetts General Hospital, 2011</div>
+        </div>
+        <div class="stat-card fade-in">
+          <div class="stat-number">25%</div>
+          <div class="stat-label">Lower cortisol (stress hormone)</div>
+          <div class="stat-source">Rutgers University, Health Psychology, 2013</div>
+        </div>
+        <div class="stat-card fade-in">
+          <div class="stat-number">40%</div>
+          <div class="stat-label">Lower pain intensity reported</div>
+          <div class="stat-source">Wake Forest University, Journal of Neuroscience, 2011</div>
+        </div>
+        <div class="stat-card fade-in">
+          <div class="stat-number">4.8&times;</div>
+          <div class="stat-label">Better sleep quality vs control</div>
+          <div class="stat-source">Harvard Medical School, JAMA Internal Medicine, 2015</div>
+        </div>
+        <div class="stat-card fade-in">
+          <div class="stat-number">10 min</div>
+          <div class="stat-label">Daily practice for measurable benefits</div>
+          <div class="stat-source">University of Waterloo, Consciousness &amp; Cognition, 2017</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Video Section -->
+  <section>
+    <div class="container">
+      <div class="section-header fade-in">
+        <h2>Watch &amp; Listen</h2>
+        <p>Guided sessions from the Salus library.</p>
+      </div>
+      <div class="edu-video-grid">
+        <div class="edu-video-card fade-in">
+          <div class="edu-video-info">
+            <h3>The Science of Mindfulness</h3>
+            <p>15 min — What happens in your brain when you meditate? Neuroscience explained in plain language.</p>
+            <video controls preload="none" poster="content/video/04-science-of-mindfulness-thumb.jpg">
+              <source src="content/video/04-science-of-mindfulness.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <div class="edu-video-card fade-in">
+          <div class="edu-video-info">
+            <h3>Breathing for Anxiety Relief</h3>
+            <p>12 min — Learn box breathing and the 4-7-8 technique to calm your nervous system fast.</p>
+            <video controls preload="none" poster="content/video/03-breathing-for-anxiety-thumb.jpg">
+              <source src="content/video/03-breathing-for-anxiety.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-banner">
+    <div class="container">
+      <h2 class="fade-in">Ready to start your practice?</h2>
+      <p class="fade-in">Try guided meditations, breathing exercises, and more — free for 7 days.</p>
+      <a href="apps.html" class="btn fade-in">Get Salus Free</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4 style="letter-spacing:2px;">SALUS</h4>
+          <p>SLEEP &middot; RELAX &middot; RESTORE</p>
+          <p style="margin-top:8px;">Meditation and mindfulness for everyday life.</p>
+        </div>
+        <div>
+          <h4>Pages</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="sessions.html">Sessions</a></li>
+            <li><a href="soundscapes.html">Soundscapes</a></li>
+            <li><a href="education.html">Learn</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="apps.html">Apps</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Support</h4>
+          <ul>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="faq.html">FAQ</a></li>
+            <li><a href="privacy.html">Privacy</a></li>
+            <li><a href="terms.html">Terms</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Tools</h4>
+          <ul>
+            <li><a href="breathe.html">Breathing Timer</a></li>
+            <li><a href="timer.html">Meditation Timer</a></li>
+            <li><a href="sounds.html">Sleep Sounds</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        &copy; 2026 Salus. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    // Category filtering
+    document.getElementById('filterBar').addEventListener('click', function(e) {
+      if (!e.target.classList.contains('filter-btn')) return;
+      document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+      e.target.classList.add('active');
+      var filter = e.target.getAttribute('data-filter');
+      document.querySelectorAll('.article-card').forEach(function(card) {
+        if (filter === 'all' || card.getAttribute('data-category').indexOf(filter) !== -1) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

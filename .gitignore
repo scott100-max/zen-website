@@ -1,0 +1,7 @@
+# Large video files (host separately)
+content/video/backgrounds/
+*.mp4
+!content/video/*-thumb.jpg
+
+# System files
+.DS_Store

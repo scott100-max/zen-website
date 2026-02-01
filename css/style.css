@@ -232,7 +232,7 @@ section:nth-child(even) { background: var(--off-white); }
 
 /* ---- CTA Banner ---- */
 .cta-banner {
-  background: linear-gradient(135deg, var(--forest-mid) 0%, var(--forest) 100%);
+  background: linear-gradient(135deg, var(--forest-mid) 0%, var(--forest) 100%) !important;
   color: var(--white); text-align: center; padding: 80px 0;
 }
 .cta-banner h2 { font-size: 2rem; margin-bottom: 12px; }
@@ -260,6 +260,90 @@ section:nth-child(even) { background: var(--off-white); }
   padding-top: 24px; text-align: center; font-size: 0.85rem;
 }
 
+/* ---- Filter Bar ---- */
+.filter-bar {
+  display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+}
+.filter-btn {
+  padding: 8px 20px; border-radius: 50px; border: 1px solid var(--light-gray);
+  background: var(--white); color: var(--mid-gray); font-size: 0.9rem;
+  font-weight: 500; cursor: pointer; transition: all var(--transition);
+  font-family: var(--font-body);
+}
+.filter-btn:hover { border-color: var(--accent); color: var(--accent-dark); }
+.filter-btn.active {
+  background: var(--accent); color: var(--white); border-color: var(--accent);
+}
+
+/* ---- Sessions Grid ---- */
+.sessions-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px;
+}
+.session-card {
+  background: var(--white); border-radius: 12px; overflow: hidden;
+  border: 1px solid var(--light-gray);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.session-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+}
+.session-thumb {
+  height: 160px; display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.session-thumb::before {
+  content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+  background: radial-gradient(circle at 30% 40%, rgba(255,255,255,0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+.session-thumb::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 40%;
+  background: linear-gradient(to top, rgba(0,0,0,0.2), transparent);
+  pointer-events: none;
+}
+.session-emoji { font-size: 3.2rem; z-index: 1; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2)); }
+.session-badge {
+  position: absolute; top: 12px; right: 12px; padding: 4px 12px;
+  border-radius: 50px; font-size: 0.75rem; font-weight: 600;
+}
+.badge-free { background: var(--accent); color: var(--white); }
+.badge-locked { background: rgba(0,0,0,0.5); color: var(--white); }
+.session-info { padding: 20px; }
+.session-info h3 { font-size: 1.1rem; margin-bottom: 6px; }
+.session-meta {
+  display: flex; gap: 12px; font-size: 0.8rem; color: var(--mid-gray);
+  margin-bottom: 8px;
+}
+.session-info p { color: var(--mid-gray); font-size: 0.9rem; }
+.session-locked { opacity: 0.75; }
+
+/* ---- Sound Grid ---- */
+.sound-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+}
+.sound-card {
+  background: var(--white); border-radius: 12px; padding: 24px;
+  border: 1px solid var(--light-gray); text-align: center;
+  transition: transform var(--transition), box-shadow var(--transition);
+  position: relative;
+}
+.sound-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+}
+.sound-icon { font-size: 2.8rem; margin-bottom: 12px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.1)); }
+.sound-card h3 { font-size: 1rem; margin-bottom: 6px; }
+.sound-category-tag {
+  display: inline-block; font-size: 0.75rem; color: var(--mid-gray);
+  background: var(--off-white); padding: 2px 10px; border-radius: 50px;
+}
+.sound-locked { opacity: 0.7; }
+.sound-lock-overlay {
+  margin-top: 12px; display: flex; flex-direction: column; align-items: center;
+}
+.sound-lock-overlay > span { font-size: 1.5rem; }
+
 /* ---- Animations ---- */
 .fade-in {
   opacity: 0; transform: translateY(24px);
@@ -280,5 +364,7 @@ section:nth-child(even) { background: var(--off-white); }
   .hero { padding: 120px 0 60px; }
   .feature-grid, .testimonial-grid { grid-template-columns: 1fr; }
   .video-grid { grid-template-columns: 1fr; }
+  .sessions-grid { grid-template-columns: 1fr; }
+  .sound-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-grid { grid-template-columns: 1fr 1fr; }
 }
