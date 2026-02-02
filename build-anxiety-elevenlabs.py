@@ -51,91 +51,91 @@ Let's try it. Sit comfortably. Let your shoulders drop. I'll guide you through e
 
 {P3}
 
-Breathe in slowly.
+Now, gently and slowly, breathe in through your nose, filling your lungs completely.
 
 {P4}
 
-And breathe out slowly.
+And now, slowly and gently, breathe all the way out through your mouth.
 
 {P4}
 
-Good. Let's do three more rounds together.
+Good. That was your first round. Let's do three more rounds together, nice and easy.
 
 {P2}
 
-Breathe in slowly.
+Once again, gently and slowly, breathe in through your nose, all the way in.
 
 {P4}
 
-And breathe out slowly.
+And now, slowly and gently, let all of that air flow back out through your mouth.
 
 {P4}
 
-Breathe in slowly.
+Breathing in once more, nice and slow, filling your chest and your belly with air.
 
 {P4}
 
-And breathe out slowly.
+And releasing it all, slowly and completely, letting everything go with your exhale.
 
 {P4}
 
-Breathe in slowly.
+One last round now. Gently breathing in, all the way in, nice and slow.
 
 {P4}
 
-And breathe out slowly.
+And slowly breathing out, letting your body soften and relax as the air leaves.
 
 {P4}
 
-Notice how you feel. Even after a few rounds, most people report feeling noticeably calmer. That's the vagus nerve doing its job.
+Notice how you feel right now. Even after just a few rounds, most people report feeling noticeably calmer. That's the vagus nerve doing its job.
 
 {P3}
 
-The second technique was developed by Dr Andrew Weil and is particularly effective for acute anxiety and falling asleep.
+The second technique was developed by Dr Andrew Weil and is particularly effective for acute anxiety and for falling asleep.
 
 {P2}
 
-The pattern: breathe in through your nose for four counts, then exhale slowly through your mouth for eight. The long exhale is what activates your relaxation response.
+The pattern is this: breathe in through your nose for four counts, then exhale slowly through your mouth for eight counts. The long exhale is what activates your relaxation response.
 
 {P2}
 
-Let's practise. Place the tip of your tongue on the roof of your mouth, just behind your front teeth. Keep it there throughout.
+Let's practise together now. Place the tip of your tongue gently on the roof of your mouth, just behind your front teeth. Keep it there throughout.
 
 {P3}
 
-Breathe in gently through your nose.
+Now, gently and slowly, breathe in through your nose, nice and deep.
 
 {P4}
 
-And exhale slowly through your mouth.
+And now, very slowly, exhale all the way out through your mouth, letting it take as long as it needs.
 
 {P7}
 
-Let's do that three more times.
+Let's do that three more times together.
 
 {P2}
 
-Breathe in gently through your nose.
+Once again, gently and slowly, breathe in through your nose, filling your lungs completely.
 
 {P4}
 
-And slowly breathe out through your mouth.
+And now, slowly and softly, breathe all the way out through your mouth, nice and long.
 
 {P7}
 
-Breathe in again, gently.
+Breathing in once more, gently through your nose, taking your time with each breath.
 
 {P4}
 
-And let it all go.
+And letting it all go now, breathing out slowly and completely through your mouth.
 
 {P7}
 
-One more. Breathe in gently.
+One last round. Gently breathing in through your nose, all the way in, nice and slow.
 
 {P4}
 
-And slowly breathe out.
+And now, slowly and gently, releasing everything with one long, soft exhale.
 
 {P7}
 
