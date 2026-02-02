@@ -119,7 +119,7 @@ def generate_tts(text, output_path):
             "model": "s1",
             "Content-Type": "application/json",
         },
-        json={"text": text, "format": "mp3"},
+        json={"text": text, "format": "mp3", "reference_id": "0165567b33324f518b02336ad232e31a"},
     )
     if resp.status_code != 200:
         print(f"  ERROR: {resp.status_code} - {resp.text[:200]}")
