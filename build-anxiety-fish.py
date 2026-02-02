@@ -3,7 +3,7 @@
 Build breathing-for-anxiety audio using Fish Audio TTS.
 Generates each segment, splices with FFmpeg silence.
 """
-import os, subprocess, requests, tempfile, shutil
+import os, subprocess, requests, tempfile, shutil, wave, struct
 
 # Load .env
 for line in open('.env'):
@@ -137,19 +137,29 @@ def generate_silence(seconds, output_path):
     ], capture_output=True)
 
 
+def read_pcm(wav_path):
+    """Read raw PCM samples from a WAV file."""
+    with wave.open(wav_path, 'rb') as w:
+        return w.readframes(w.getnframes())
+
+
+def silence_pcm(seconds, sample_rate=44100):
+    """Generate raw PCM silence bytes."""
+    return b'\x00\x00' * int(sample_rate * seconds)
+
+
 def main():
     tmpdir = tempfile.mkdtemp()
     print(f"Working in {tmpdir}")
 
-    part_files = []
+    pcm_data = bytearray()
     text_count = 0
 
     for i, (stype, value) in enumerate(segments):
-        part_path = os.path.join(tmpdir, f"part_{i:03d}.wav")
-
         if stype == "text":
             text_count += 1
             mp3_path = os.path.join(tmpdir, f"tts_{i:03d}.mp3")
+            wav_path = os.path.join(tmpdir, f"tts_{i:03d}.wav")
             print(f"  [{text_count}] TTS: {value[:60]}...")
             if not generate_tts(value, mp3_path):
                 print("    Failed! Skipping.")
@@ -157,25 +167,22 @@ def main():
             subprocess.run([
                 "ffmpeg", "-y", "-i", mp3_path,
                 "-ar", "44100", "-ac", "1",
-                "-acodec", "pcm_s16le", part_path
+                "-acodec", "pcm_s16le", wav_path
             ], capture_output=True)
+            pcm_data.extend(read_pcm(wav_path))
         else:
             print(f"  [silence] {value}s")
-            generate_silence(value, part_path)
+            pcm_data.extend(silence_pcm(value))
 
-        part_files.append(part_path)
-
-    concat_list = os.path.join(tmpdir, "concat.txt")
-    with open(concat_list, 'w') as f:
-        for p in part_files:
-            f.write(f"file '{p}'\n")
-
+    # Write single continuous WAV
     concat_wav = os.path.join(tmpdir, "full.wav")
-    subprocess.run([
-        "ffmpeg", "-y", "-f", "concat", "-safe", "0",
-        "-i", concat_list, "-acodec", "pcm_s16le", concat_wav
-    ], capture_output=True)
+    with wave.open(concat_wav, 'wb') as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(44100)
+        w.writeframes(bytes(pcm_data))
 
+    # Convert to MP3
     os.makedirs(os.path.dirname(OUTPUT), exist_ok=True)
     subprocess.run([
         "ffmpeg", "-y", "-i", concat_wav,
