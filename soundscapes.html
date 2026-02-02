@@ -7,7 +7,7 @@
   <meta name="description" content="Immersive soundscapes for sleep, focus, and relaxation. Play rain, forest, fire, and more — or get the app for full mixing.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=1770053724">
 </head>
 <body>
 
@@ -19,7 +19,7 @@
 
   <nav class="nav" style="position:relative;">
     <div class="container">
-      <a href="index.html" class="nav-logo"><img src="salus-logo.png" alt="Salus" class="nav-icon" style="height:32px;border-radius:6px;margin-right:8px;">SALUS</a>
+      <a href="index.html" class="nav-logo">SALUS</a>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="sessions.html">Sessions</a></li>
@@ -31,12 +31,12 @@
         <li><a href="contact.html">Contact</a></li>
         <li><a href="newsletter.html">Newsletter</a></li>
       </ul>
-      <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+      <button class="nav-toggle" aria-label="Toggle menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     </div>
   </nav>
 
   <!-- Hero -->
-  <section class="hero" style="padding-bottom:60px;">
+  <section class="hero hero-bg" style="padding-bottom:60px;background-image:url('content/images/heroes/soundscapes-hero.jpg');">
     <div class="container">
       <h1>Soundscapes</h1>
       <p style="font-style:italic;color:var(--mid-gray);font-size:0.9rem;margin-bottom:12px;letter-spacing:0.5px;opacity:0.7;"><em>salus</em> &nbsp;/&#712;sa.lus/ &nbsp; health &middot; safety &middot; well-being</p>
@@ -45,7 +45,7 @@
   </section>
 
   <!-- Category Filters -->
-  <section style="padding:0 0 20px;background:var(--white);">
+  <section style="padding:0 0 20px;background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%);">
     <div class="container">
       <div class="filter-bar" id="filterBar">
         <button class="filter-btn active" data-filter="all">All</button>
@@ -59,7 +59,7 @@
   </section>
 
   <!-- Soundscapes Grid -->
-  <section style="padding-top:40px;background:var(--white);">
+  <section style="padding-top:40px;background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%);">
     <div class="container">
 
       <div class="section-header fade-in" style="margin-bottom:32px;">
@@ -67,46 +67,54 @@
         <p>Play these right now — no account needed.</p>
       </div>
 
-      <div class="sound-grid" id="soundGrid">
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:900px;margin:0 auto;" id="soundGrid">
 
-        <!-- Free: Rain -->
-        <div class="sound-card sound-free fade-in" data-category="weather">
-          <div class="sound-icon">&#127783;&#65039;</div>
-          <h3>Rain</h3>
-          <span class="sound-category-tag">Weather</span>
-          <audio controls preload="none" style="width:100%;margin-top:12px;">
-            <source src="content/sounds/rain.mp3" type="audio/mpeg">
-          </audio>
+        <div class="fade-in" data-category="weather">
+          <h3 style="font-size:1.05rem;margin-bottom:2px;">Rain</h3>
+          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Weather &middot; Gentle rainfall</p>
+          <div class="custom-player" data-src="content/sounds/rain.mp3">
+            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
+              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+            </div>
+          </div>
         </div>
 
-        <!-- Free: Thunder -->
-        <div class="sound-card sound-free fade-in" data-category="weather">
-          <div class="sound-icon">&#9889;</div>
-          <h3>Thunder</h3>
-          <span class="sound-category-tag">Weather</span>
-          <audio controls preload="none" style="width:100%;margin-top:12px;">
-            <source src="content/sounds/thunder.mp3" type="audio/mpeg">
-          </audio>
+        <div class="fade-in" data-category="weather">
+          <h3 style="font-size:1.05rem;margin-bottom:2px;">Thunder</h3>
+          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Weather &middot; Distant storm</p>
+          <div class="custom-player" data-src="content/sounds/thunder.mp3">
+            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
+              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+            </div>
+          </div>
         </div>
 
-        <!-- Free: Forest -->
-        <div class="sound-card sound-free fade-in" data-category="nature">
-          <div class="sound-icon">&#127794;</div>
-          <h3>Forest</h3>
-          <span class="sound-category-tag">Nature</span>
-          <audio controls preload="none" style="width:100%;margin-top:12px;">
-            <source src="content/sounds/forest.mp3" type="audio/mpeg">
-          </audio>
+        <div class="fade-in" data-category="nature">
+          <h3 style="font-size:1.05rem;margin-bottom:2px;">Forest</h3>
+          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Nature &middot; Woodland ambience</p>
+          <div class="custom-player" data-src="content/sounds/forest.mp3">
+            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
+              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+            </div>
+          </div>
         </div>
 
-        <!-- Free: Fire -->
-        <div class="sound-card sound-free fade-in" data-category="ambient">
-          <div class="sound-icon">&#128293;</div>
-          <h3>Fire</h3>
-          <span class="sound-category-tag">Ambient</span>
-          <audio controls preload="none" style="width:100%;margin-top:12px;">
-            <source src="content/sounds/fire.mp3" type="audio/mpeg">
-          </audio>
+        <div class="fade-in" data-category="ambient">
+          <h3 style="font-size:1.05rem;margin-bottom:2px;">Fire</h3>
+          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Ambient &middot; Crackling fireplace</p>
+          <div class="custom-player" data-src="content/sounds/fire.mp3">
+            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
+              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -119,144 +127,164 @@
 
       <div class="sound-grid" id="lockedSoundGrid">
 
-        <div class="sound-card sound-locked fade-in" data-category="nature">
-          <div class="sound-icon">&#127754;</div>
-          <h3>Ocean</h3>
-          <span class="sound-category-tag">Nature</span>
-          <span class="lock-badge">🔒</span>
+        <div class="sound-card sound-free fade-in" data-category="nature">
+          <div class="sound-scene" style="background:linear-gradient(160deg, rgba(3,4,94,0.75), rgba(0,119,182,0.75), rgba(0,180,216,0.75)),url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=70');background-size:cover;background-position:center;"><span class="sound-title">Ocean</span>
+          </div>
+          <div class="sound-meta">
+            <span class="sound-category-tag">Nature</span>
+          </div>
         </div>
 
-        <div class="sound-card sound-locked fade-in" data-category="nature">
-          <div class="sound-icon">&#128038;</div>
-          <h3>Birds</h3>
-          <span class="sound-category-tag">Nature</span>
-          <span class="lock-badge">🔒</span>
+        <div class="sound-card sound-free fade-in" data-category="nature">
+          <div class="sound-scene" style="background:linear-gradient(160deg, rgba(26,58,26,0.75), rgba(74,122,58,0.75), rgba(106,154,90,0.75)),url('https://images.unsplash.com/photo-1444464666168-49d633b86797?w=400&q=70');background-size:cover;background-position:center;"><span class="sound-title">Birds</span>
+          </div>
+          <div class="sound-meta">
+            <span class="sound-category-tag">Nature</span>
+          </div>
         </div>
 
-        <div class="sound-card sound-locked fade-in" data-category="nature">
-          <div class="sound-icon">&#127769;</div>
-          <h3>Night</h3>
-          <span class="sound-category-tag">Nature</span>
-          <span class="lock-badge">🔒</span>
+        <div class="sound-card sound-free fade-in" data-category="nature">
+          <div class="sound-scene" style="background:linear-gradient(160deg, rgba(5,5,26,0.75), rgba(10,10,42,0.75), rgba(26,26,80,0.75)),url('https://images.unsplash.com/photo-1532978379173-523e16f371f2?w=400&q=70');background-size:cover;background-position:center;"><span class="sound-title">Night</span>
+          </div>
+          <div class="sound-meta">
+            <span class="sound-category-tag">Nature</span>
+          </div>
         </div>
 
-        <div class="sound-card sound-locked fade-in" data-category="nature">
-          <div class="sound-icon">&#127754;</div>
-          <h3>Stream</h3>
-          <span class="sound-category-tag">Nature</span>
-          <span class="lock-badge">🔒</span>
+        <div class="sound-card sound-free fade-in" data-category="nature">
+          <div class="sound-scene" style="background:linear-gradient(160deg, rgba(26,42,58,0.75), rgba(58,106,122,0.75), rgba(90,154,170,0.75)),url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&q=70');background-size:cover;background-position:center;"><span class="sound-title">Stream</span>
+          </div>
+          <div class="sound-meta">
+            <span class="sound-category-tag">Nature</span>
+          </div>
         </div>
 
-        <div class="sound-card sound-locked fade-in" data-category="ambient">
-          <div class="sound-icon">&#9749;</div>
-          <h3>Cafe</h3>
-          <span class="sound-category-tag">Ambient</span>
-          <span class="lock-badge">🔒</span>
+        <div class="sound-card sound-free fade-in" data-category="ambient">
+          <div class="sound-scene" style="background:linear-gradient(160deg, rgba(42,26,10,0.75), rgba(106,74,48,0.75), rgba(138,106,74,0.75)),url('https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=400&q=70');background-size:cover;background-position:center;"><span class="sound-title">Cafe</span>
+          </div>
+          <div class="sound-meta">
+            <span class="sound-category-tag">Ambient</span>
+          </div>
         </div>
 
-        <div class="sound-card sound-locked fade-in" data-category="ambient">
-          <div class="sound-icon">&#9000;&#65039;</div>
-          <h3>Keyboard</h3>
-          <span class="sound-category-tag">Ambient</span>
-          <span class="lock-badge">🔒</span>
+        <div class="sound-card sound-free fade-in" data-category="ambient">
+          <div class="sound-scene" style="background:linear-gradient(160deg, rgba(26,26,26,0.75), rgba(58,58,74,0.75), rgba(90,90,106,0.75)),url('https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&q=70');background-size:cover;background-position:center;"><span class="sound-title">Keyboard</span>
+          </div>
+          <div class="sound-meta">
+            <span class="sound-category-tag">Ambient</span>
+          </div>
         </div>
 
-        <div class="sound-card sound-locked fade-in" data-category="ambient">
-          <div class="sound-icon">&#128646;</div>
-          <h3>Train</h3>
-          <span class="sound-category-tag">Ambient</span>
-          <span class="lock-badge">🔒</span>
+        <div class="sound-card sound-free fade-in" data-category="ambient">
+          <div class="sound-scene" style="background:linear-gradient(160deg, rgba(26,26,46,0.75), rgba(42,58,78,0.75), rgba(74,90,110,0.75)),url('https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=400&q=70');background-size:cover;background-position:center;"><span class="sound-title">Train</span>
+          </div>
+          <div class="sound-meta">
+            <span class="sound-category-tag">Ambient</span>
+          </div>
         </div>
 
-        <div class="sound-card sound-locked fade-in" data-category="apothecary">
-          <div class="sound-icon">&#129514;</div>
-          <h3>Potions</h3>
-          <span class="sound-category-tag">Apothecary</span>
-          <span class="lock-badge">🔒</span>
+        <div class="sound-card sound-free fade-in" data-category="apothecary">
+          <div class="sound-scene" style="background:linear-gradient(160deg, rgba(26,10,46,0.75), rgba(74,42,110,0.75), rgba(106,74,142,0.75)),url('https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400&q=70');background-size:cover;background-position:center;"><span class="sound-title">Potions</span>
+          </div>
+          <div class="sound-meta">
+            <span class="sound-category-tag">Apothecary</span>
+          </div>
         </div>
 
-        <div class="sound-card sound-locked fade-in" data-category="weather mixes">
-          <div class="sound-icon">&#127783;&#65039;&#127968;</div>
-          <h3>Rain on Cabin</h3>
-          <span class="sound-category-tag">Mixes</span>
-          <span class="lock-badge">🔒</span>
+        <div class="sound-card sound-free fade-in" data-category="mixes">
+          <div class="sound-scene" style="background:linear-gradient(160deg, rgba(26,42,26,0.75), rgba(42,74,58,0.75), rgba(58,90,74,0.75)),url('https://images.unsplash.com/photo-1449247709967-d4461a6a6103?w=400&q=70');background-size:cover;background-position:center;"><span class="sound-title">Rain on Cabin</span>
+          </div>
+          <div class="sound-meta">
+            <span class="sound-category-tag">Mixes</span>
+          </div>
         </div>
 
-        <div class="sound-card sound-locked fade-in" data-category="weather mixes">
-          <div class="sound-icon">&#127783;&#65039;&#128656;</div>
-          <h3>Rain on Campervan</h3>
-          <span class="sound-category-tag">Mixes</span>
-          <span class="lock-badge">🔒</span>
+        <div class="sound-card sound-free fade-in" data-category="mixes">
+          <div class="sound-scene" style="background:linear-gradient(160deg, rgba(26,42,58,0.75), rgba(42,74,90,0.75), rgba(58,90,90,0.75)),url('https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=400&q=70');background-size:cover;background-position:center;"><span class="sound-title">Rain on Campervan</span>
+          </div>
+          <div class="sound-meta">
+            <span class="sound-category-tag">Mixes</span>
+          </div>
         </div>
 
-        <div class="sound-card sound-locked fade-in" data-category="weather">
-          <div class="sound-icon">&#128168;</div>
-          <h3>Wind</h3>
-          <span class="sound-category-tag">Weather</span>
-          <span class="lock-badge">🔒</span>
+        <div class="sound-card sound-free fade-in" data-category="weather">
+          <div class="sound-scene" style="background:linear-gradient(160deg, rgba(74,90,106,0.75), rgba(122,138,154,0.75), rgba(154,170,186,0.75)),url('https://images.unsplash.com/photo-1505672678657-cc7037095e60?w=400&q=70');background-size:cover;background-position:center;"><span class="sound-title">Wind</span>
+          </div>
+          <div class="sound-meta">
+            <span class="sound-category-tag">Weather</span>
+          </div>
         </div>
 
-        <div class="sound-card sound-locked fade-in" data-category="mixes">
-          <div class="sound-icon">&#9889;&#128293;</div>
-          <h3>Storm + Fire</h3>
-          <span class="sound-category-tag">Mixes</span>
-          <span class="lock-badge">🔒</span>
+        <div class="sound-card sound-free fade-in" data-category="mixes">
+          <div class="sound-scene" style="background:linear-gradient(160deg, rgba(26,10,26,0.75), rgba(90,42,26,0.75), rgba(138,74,42,0.75)),url('https://images.unsplash.com/photo-1475776408506-9a5371e7a068?w=400&q=70');background-size:cover;background-position:center;"><span class="sound-title">Storm + Fire</span>
+          </div>
+          <div class="sound-meta">
+            <span class="sound-category-tag">Mixes</span>
+          </div>
         </div>
 
-        <div class="sound-card sound-locked fade-in" data-category="nature">
-          <div class="sound-icon">&#127795;</div>
-          <h3>Woodland</h3>
-          <span class="sound-category-tag">Nature</span>
-          <span class="lock-badge">🔒</span>
+        <div class="sound-card sound-free fade-in" data-category="nature">
+          <div class="sound-scene" style="background:linear-gradient(160deg, rgba(10,26,10,0.75), rgba(42,90,42,0.75), rgba(58,122,58,0.75)),url('https://images.unsplash.com/photo-1448375240586-882707db888b?w=400&q=70');background-size:cover;background-position:center;"><span class="sound-title">Woodland</span>
+          </div>
+          <div class="sound-meta">
+            <span class="sound-category-tag">Nature</span>
+          </div>
         </div>
 
-        <div class="sound-card sound-locked fade-in" data-category="ambient">
-          <div class="sound-icon">&#128214;</div>
-          <h3>Library</h3>
-          <span class="sound-category-tag">Ambient</span>
-          <span class="lock-badge">🔒</span>
+        <div class="sound-card sound-free fade-in" data-category="ambient">
+          <div class="sound-scene" style="background:linear-gradient(160deg, rgba(42,26,10,0.75), rgba(90,74,58,0.75), rgba(122,106,90,0.75)),url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&q=70');background-size:cover;background-position:center;"><span class="sound-title">Library</span>
+          </div>
+          <div class="sound-meta">
+            <span class="sound-category-tag">Ambient</span>
+          </div>
         </div>
 
-        <div class="sound-card sound-locked fade-in" data-category="weather">
-          <div class="sound-icon">&#10052;&#65039;</div>
-          <h3>Snowfall</h3>
-          <span class="sound-category-tag">Weather</span>
-          <span class="lock-badge">🔒</span>
+        <div class="sound-card sound-free fade-in" data-category="weather">
+          <div class="sound-scene" style="background:linear-gradient(160deg, rgba(74,90,106,0.75), rgba(138,154,170,0.75), rgba(176,196,212,0.75)),url('https://images.unsplash.com/photo-1457269449834-928af64c7dd4?w=400&q=70');background-size:cover;background-position:center;"><span class="sound-title">Snowfall</span>
+          </div>
+          <div class="sound-meta">
+            <span class="sound-category-tag">Weather</span>
+          </div>
         </div>
 
-        <div class="sound-card sound-locked fade-in" data-category="ambient">
-          <div class="sound-icon">&#128507;</div>
-          <h3>White Noise</h3>
-          <span class="sound-category-tag">Ambient</span>
-          <span class="lock-badge">🔒</span>
+        <div class="sound-card sound-free fade-in" data-category="ambient">
+          <div class="sound-scene" style="background:linear-gradient(160deg, rgba(42,42,42,0.75), rgba(90,90,90,0.75), rgba(122,122,122,0.75)),url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?w=400&q=70');background-size:cover;background-position:center;"><span class="sound-title">White Noise</span>
+          </div>
+          <div class="sound-meta">
+            <span class="sound-category-tag">Ambient</span>
+          </div>
         </div>
 
-        <div class="sound-card sound-locked fade-in" data-category="nature">
-          <div class="sound-icon">&#127804;</div>
-          <h3>Garden</h3>
-          <span class="sound-category-tag">Nature</span>
-          <span class="lock-badge">🔒</span>
+        <div class="sound-card sound-free fade-in" data-category="nature">
+          <div class="sound-scene" style="background:linear-gradient(160deg, rgba(26,42,26,0.75), rgba(74,122,74,0.75), rgba(106,170,106,0.75)),url('https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&q=70');background-size:cover;background-position:center;"><span class="sound-title">Garden</span>
+          </div>
+          <div class="sound-meta">
+            <span class="sound-category-tag">Nature</span>
+          </div>
         </div>
 
-        <div class="sound-card sound-locked fade-in" data-category="mixes">
-          <div class="sound-icon">&#127754;&#128168;</div>
-          <h3>Ocean Breeze</h3>
-          <span class="sound-category-tag">Mixes</span>
-          <span class="lock-badge">🔒</span>
+        <div class="sound-card sound-free fade-in" data-category="mixes">
+          <div class="sound-scene" style="background:linear-gradient(160deg, rgba(3,4,94,0.75), rgba(0,150,199,0.75), rgba(72,202,228,0.75)),url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=400&q=70');background-size:cover;background-position:center;"><span class="sound-title">Ocean Breeze</span>
+          </div>
+          <div class="sound-meta">
+            <span class="sound-category-tag">Mixes</span>
+          </div>
         </div>
 
-        <div class="sound-card sound-locked fade-in" data-category="apothecary">
-          <div class="sound-icon">&#127862;</div>
-          <h3>Singing Bowls</h3>
-          <span class="sound-category-tag">Apothecary</span>
-          <span class="lock-badge">🔒</span>
+        <div class="sound-card sound-free fade-in" data-category="apothecary">
+          <div class="sound-scene" style="background:linear-gradient(160deg, rgba(26,10,46,0.75), rgba(90,58,110,0.75), rgba(138,106,158,0.75)),url('https://images.unsplash.com/photo-1545389336-cf090694435e?w=400&q=70');background-size:cover;background-position:center;"><span class="sound-title">Singing Bowls</span>
+          </div>
+          <div class="sound-meta">
+            <span class="sound-category-tag">Apothecary</span>
+          </div>
         </div>
 
-        <div class="sound-card sound-locked fade-in" data-category="mixes">
-          <div class="sound-icon">&#127783;&#65039;&#128038;</div>
-          <h3>Rainy Morning</h3>
-          <span class="sound-category-tag">Mixes</span>
-          <span class="lock-badge">🔒</span>
+        <div class="sound-card sound-free fade-in" data-category="mixes">
+          <div class="sound-scene" style="background:linear-gradient(160deg, rgba(26,42,58,0.75), rgba(74,106,122,0.75), rgba(106,138,154,0.75)),url('https://images.unsplash.com/photo-1428592953211-077101b2021b?w=400&q=70');background-size:cover;background-position:center;"><span class="sound-title">Rainy Morning</span>
+          </div>
+          <div class="sound-meta">
+            <span class="sound-category-tag">Mixes</span>
+          </div>
         </div>
 
       </div>
@@ -268,7 +296,7 @@
   <section class="cta-banner">
     <div class="container">
       <h2 class="fade-in">Mix sounds your way</h2>
-      <p class="fade-in">The Salus app lets you layer and mix any combination of sounds with custom volumes, timers, and more.</p>
+      <p class="fade-in">The Salus app lets you layer and mix any combination of sounds with custom volumes, timers, and more. No expensive celebrities. Just real tools, built by a real family.</p>
       <a href="apps.html" class="btn fade-in">Premium</a>
     </div>
   </section>
@@ -316,7 +344,7 @@
     </div>
   </footer>
 
-  <script src="js/main.js"></script>
+  <script src="js/main.js?v=1770053724"></script>
   <script>
     // Category filtering
     document.getElementById('filterBar').addEventListener('click', function(e) {

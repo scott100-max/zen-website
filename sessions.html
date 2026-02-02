@@ -7,7 +7,7 @@
   <meta name="description" content="Explore guided meditations for sleep, focus, stress relief, and more. Try free sessions or get the app for hundreds more.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=1770053724">
 </head>
 <body>
 
@@ -17,9 +17,9 @@
     <a href="apps.html">Start Free Trial</a>
   </div>
 
-  <nav class="nav" style="position:relative;">
+  <nav class="nav" style="">
     <div class="container">
-      <a href="index.html" class="nav-logo"><img src="salus-logo.png" alt="Salus" class="nav-icon" style="height:32px;border-radius:6px;margin-right:8px;">SALUS</a>
+      <a href="index.html" class="nav-logo">SALUS</a>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="sessions.html" class="active">Sessions</a></li>
@@ -31,12 +31,12 @@
         <li><a href="contact.html">Contact</a></li>
         <li><a href="newsletter.html">Newsletter</a></li>
       </ul>
-      <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+      <button class="nav-toggle" aria-label="Toggle menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     </div>
   </nav>
 
   <!-- Hero -->
-  <section class="hero" style="padding-bottom:60px;">
+  <section class="hero hero-bg" style="padding-bottom:60px;background-image:url('content/images/heroes/sessions-hero.jpg');">
     <div class="container">
       <h1>Guided Sessions</h1>
       <p style="font-style:italic;color:var(--mid-gray);font-size:0.9rem;margin-bottom:12px;letter-spacing:0.5px;opacity:0.7;"><em>salus</em> &nbsp;/&#712;sa.lus/ &nbsp; health &middot; safety &middot; well-being</p>
@@ -45,7 +45,7 @@
   </section>
 
   <!-- Category Filters -->
-  <section style="padding:0 0 20px;background:var(--white);">
+  <section style="padding:0 0 20px;background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%);">
     <div class="container">
       <div class="filter-bar" id="filterBar">
         <button class="filter-btn active" data-filter="all">All</button>
@@ -60,7 +60,7 @@
   </section>
 
   <!-- Sessions Grid -->
-  <section style="padding-top:40px;background:var(--white);">
+  <section style="padding-top:40px;background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%);">
     <div class="container">
 
       <!-- Free Sessions -->
@@ -69,41 +69,37 @@
         <p>Try these sessions right now — no account needed.</p>
       </div>
 
-      <div class="sessions-grid" id="sessionsGrid">
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:32px;max-width:900px;margin:0 auto;" id="sessionsGrid">
 
-        <div class="session-card session-free fade-in" data-category="beginners stress">
-          <div class="session-info">
-            <h3>Morning Meditation</h3>
-            <div class="session-meta"><span>10 min</span><span>Beginners</span></div>
-            <p>Start your day with intention and clarity. A gentle guided practice to ground yourself before the day begins.</p>
-            <div class="custom-player" data-src="content/audio/01-morning-meditation.mp3" style="margin-top:12px;">
-              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
-                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
-                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-              </div>
+        <div class="fade-in" data-category="beginners stress" style="border-radius:12px;padding:28px 24px;">
+          <h3 style="font-size:1.1rem;margin-bottom:4px;">Morning Meditation</h3>
+          <p style="font-size:0.8rem;color:var(--mid-gray);margin-bottom:10px;">10 min &middot; Beginners</p>
+          <p style="color:var(--mid-gray);font-size:0.9rem;margin-bottom:14px;">Start your day with intention and clarity. A gentle guided practice to ground yourself before the day begins.</p>
+          <div class="custom-player" data-src="content/audio/01-morning-meditation.mp3">
+            <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
             </div>
           </div>
         </div>
 
-        <div class="session-card session-free fade-in" data-category="stress beginners">
-          <div class="session-info">
-            <h3>Breathing for Anxiety</h3>
-            <div class="session-meta"><span>8 min</span><span>Stress</span></div>
-            <p>A calming breathwork session designed to ease anxious thoughts and restore a sense of control.</p>
-            <div class="custom-player" data-src="content/audio/03-breathing-for-anxiety-v2.mp3" style="margin-top:12px;">
-              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
-                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
-                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-              </div>
+        <div class="fade-in" data-category="stress beginners" style="border-radius:12px;padding:28px 24px;">
+          <h3 style="font-size:1.1rem;margin-bottom:4px;">Breathing for Anxiety</h3>
+          <p style="font-size:0.8rem;color:var(--mid-gray);margin-bottom:10px;">8 min &middot; Stress</p>
+          <p style="color:var(--mid-gray);font-size:0.9rem;margin-bottom:14px;">A calming breathwork session designed to ease anxious thoughts and restore a sense of control.</p>
+          <div class="custom-player" data-src="content/audio/03-breathing-for-anxiety-v2.mp3">
+            <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
             </div>
           </div>
         </div>
 
       </div>
 
-      <!-- Locked Sessions -->
+      <!-- All Sessions -->
       <div class="section-header fade-in" style="margin-top:60px;margin-bottom:32px;">
         <h2>Explore All Sessions</h2>
         <p>Hundreds of guided meditations available in the Salus app.</p>
@@ -112,559 +108,761 @@
       <div class="sessions-grid" id="lockedGrid">
 
         <!-- Sleep -->
-        <div class="session-card session-locked fade-in" data-category="sleep">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#0a0e27 0%,#1b2845 40%,#274c77 100%);">
-            <span class="session-emoji">&#128164;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="sleep">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(10,14,39,0.7) 0%,rgba(27,40,69,0.7) 40%,rgba(39,76,119,0.7) 100%),url('https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/deep-sleep.html" style="color:inherit;text-decoration:none;">Body Scan for Deep Rest</a></h3>
             <div class="session-meta"><span>25 min</span><span>Sleep</span></div>
             <p>Release tension from head to toe as you drift into a deep, restorative sleep.</p>
+            <div class="custom-player" data-src="content/audio/05-body-scan-deep-rest.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="sleep">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#0d0221 0%,#261447 40%,#6b2fa0 100%);">
-            <span class="session-emoji">&#127769;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="sleep">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(13,2,33,0.7) 0%,rgba(38,20,71,0.7) 40%,rgba(107,47,160,0.7) 100%),url('https://images.unsplash.com/photo-1495364141860-b0d03eccd065?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3>Letting Go of the Day</h3>
             <div class="session-meta"><span>20 min</span><span>Sleep</span></div>
             <p>Unwind from the stresses of the day and prepare your mind for peaceful rest.</p>
+            <div class="custom-player" data-src="content/audio/06-letting-go-of-the-day.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="sleep">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#03071e 0%,#14213d 40%,#003566 70%,#006d77 100%);">
-            <span class="session-emoji">&#127752;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="sleep">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(3,7,30,0.7) 0%,rgba(20,33,61,0.7) 40%,rgba(0,53,102,0.7) 70%,rgba(0,109,119,0.7) 100%),url('https://images.unsplash.com/photo-1532978379173-523e16f371f2?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3>Moonlight Drift</h3>
             <div class="session-meta"><span>30 min</span><span>Sleep</span></div>
             <p>A soothing visualisation journey under starlit skies to ease you into sleep.</p>
+            <div class="custom-player" data-src="content/audio/07-moonlight-drift.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="sleep">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#1a1a2e 0%,#2d3142 40%,#4f5d75 70%,#bfc0c0 100%);">
-            <span class="session-emoji">&#9729;&#65039;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="sleep">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(26,26,46,0.7) 0%,rgba(45,49,66,0.7) 40%,rgba(79,93,117,0.7) 70%,rgba(191,192,192,0.7) 100%),url('https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3>Sleep Stories: The Quiet Shore</h3>
             <div class="session-meta"><span>40 min</span><span>Sleep</span></div>
             <p>A calming bedtime story narrated to guide you gently into deep sleep.</p>
+            <div class="custom-player" data-src="content/audio/08-sleep-stories-quiet-shore.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Focus -->
-        <div class="session-card session-locked fade-in" data-category="focus">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#9d4edd 0%,#e040fb 40%,#ff6d00 100%);">
-            <span class="session-emoji">&#9889;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="focus">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(157,78,221,0.7) 0%,rgba(224,64,251,0.7) 40%,rgba(255,109,0,0.7) 100%),url('https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3>5-Minute Reset</h3>
             <div class="session-meta"><span>5 min</span><span>Focus</span></div>
             <p>A quick mental reset to sharpen your attention and get back in the zone.</p>
+            <div class="custom-player" data-src="content/audio/12-five-minute-reset.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="focus">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#6a040f 0%,#d00000 40%,#e85d04 70%,#faa307 100%);">
-            <span class="session-emoji">&#127919;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="focus">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(106,4,15,0.7) 0%,rgba(208,0,0,0.7) 40%,rgba(232,93,4,0.7) 70%,rgba(250,163,7,0.7) 100%),url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3>Flow State</h3>
             <div class="session-meta"><span>15 min</span><span>Focus</span></div>
             <p>Train your mind to enter a state of deep concentration and effortless productivity.</p>
+            <div class="custom-player" data-src="content/audio/13-flow-state.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="focus beginners">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#ff9e00 0%,#ffbd00 40%,#ffe566 70%,#fffbe6 100%);">
-            <span class="session-emoji">&#9728;&#65039;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="focus beginners">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(255,158,0,0.7) 0%,rgba(255,189,0,0.7) 40%,rgba(255,229,102,0.7) 70%,rgba(255,251,230,0.7) 100%),url('https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3>Morning Clarity</h3>
             <div class="session-meta"><span>10 min</span><span>Focus</span></div>
             <p>Set clear intentions for the day ahead with this energising morning practice.</p>
+            <div class="custom-player" data-src="content/audio/14-morning-clarity.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="focus advanced">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#240046 0%,#5a189a 40%,#9d4edd 70%,#c77dff 100%);">
-            <span class="session-emoji">&#129504;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="focus advanced">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(36,0,70,0.7) 0%,rgba(90,24,154,0.7) 40%,rgba(157,78,221,0.7) 70%,rgba(199,125,255,0.7) 100%),url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3>Deep Work Prep</h3>
             <div class="session-meta"><span>12 min</span><span>Focus</span></div>
             <p>Prepare your mind for a challenging work session with focused breathwork and visualisation.</p>
+            <div class="custom-player" data-src="content/audio/15-deep-work-prep.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Stress -->
-        <div class="session-card session-locked fade-in" data-category="stress">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#005f73 0%,#0a9396 40%,#94d2bd 70%,#e9d8a6 100%);">
-            <span class="session-emoji">&#128167;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="stress">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(0,95,115,0.7) 0%,rgba(10,147,150,0.7) 40%,rgba(148,210,189,0.7) 70%,rgba(233,216,166,0.7) 100%),url('https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3>Calm in 3 Minutes</h3>
             <div class="session-meta"><span>3 min</span><span>Stress</span></div>
             <p>An ultra-quick breathing technique for moments when stress feels overwhelming.</p>
+            <div class="custom-player" data-src="content/audio/18-calm-in-three-minutes.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="stress">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#004e64 0%,#00a5cf 40%,#25a18e 70%,#7ae582 100%);">
-            <span class="session-emoji">&#127800;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="stress">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(0,78,100,0.7) 0%,rgba(0,165,207,0.7) 40%,rgba(37,161,142,0.7) 70%,rgba(122,229,130,0.7) 100%),url('https://images.unsplash.com/photo-1540555700478-4be289fbec6d?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3>Release &amp; Restore</h3>
             <div class="session-meta"><span>18 min</span><span>Stress</span></div>
             <p>A body-based meditation to release stored tension and restore inner balance.</p>
+            <div class="custom-player" data-src="content/audio/19-release-and-restore.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="stress">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#caf0f8 0%,#90e0ef 30%,#00b4d8 60%,#0077b6 100%);">
-            <span class="session-emoji">&#10052;&#65039;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="stress">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(202,240,248,0.7) 0%,rgba(144,224,239,0.7) 30%,rgba(0,180,216,0.7) 60%,rgba(0,119,182,0.7) 100%),url('https://images.unsplash.com/photo-1518199266791-5375a83190b8?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3>Tension Melt</h3>
             <div class="session-meta"><span>15 min</span><span>Stress</span></div>
             <p>Progressive relaxation to melt away physical and mental tension, layer by layer.</p>
+            <div class="custom-player" data-src="content/audio/20-tension-melt.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="stress advanced">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#1b4332 0%,#2d6a4f 40%,#74c69d 70%,#b7e4c7 100%);">
-            <span class="session-emoji">&#127811;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="stress advanced">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(27,67,50,0.7) 0%,rgba(45,106,79,0.7) 40%,rgba(116,198,157,0.7) 70%,rgba(183,228,199,0.7) 100%),url('https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3>Anxiety Unravelled</h3>
             <div class="session-meta"><span>22 min</span><span>Stress</span></div>
             <p>A deeper exploration into anxiety patterns with mindful awareness techniques.</p>
+            <div class="custom-player" data-src="content/audio/21-anxiety-unravelled.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Beginners -->
-        <div class="session-card session-locked fade-in" data-category="beginners">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#a8dadc 0%,#bee1e6 40%,#dfe7fd 70%,#f0efeb 100%);">
-            <span class="session-emoji">&#128075;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="beginners">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(168,218,220,0.7) 0%,rgba(190,225,230,0.7) 40%,rgba(223,231,253,0.7) 70%,rgba(240,239,235,0.7) 100%),url('https://images.unsplash.com/photo-1545389336-cf090694435e?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/meditation-for-beginners.html" style="color:inherit;text-decoration:none;">Your First Meditation</a></h3>
             <div class="session-meta"><span>7 min</span><span>Beginners</span></div>
             <p>Brand new to meditation? Start here. A warm, simple introduction to mindful sitting.</p>
+            <div class="custom-player" data-src="content/audio/35-your-first-meditation.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="beginners">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#ffccd5 0%,#ff8fa3 40%,#ff5c8a 70%,#c9184a 100%);">
-            <span class="session-emoji">&#128147;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="beginners">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(255,204,213,0.7) 0%,rgba(255,143,163,0.7) 40%,rgba(255,92,138,0.7) 70%,rgba(201,24,74,0.7) 100%),url('https://images.unsplash.com/photo-1517842645767-c639042777db?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3>Loving-Kindness Intro</h3>
             <div class="session-meta"><span>10 min</span><span>Beginners</span></div>
             <p>Learn the practice of sending compassion to yourself and others.</p>
+            <div class="custom-player" data-src="content/audio/36-loving-kindness-intro.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="beginners">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#ffd166 0%,#f4a261 40%,#e76f51 100%);">
-            <span class="session-emoji">&#127774;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="beginners">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(255,209,102,0.7) 0%,rgba(244,162,97,0.7) 40%,rgba(231,111,81,0.7) 100%),url('https://images.unsplash.com/photo-1473773508845-188df298d2d1?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/mindful-walking.html" style="color:inherit;text-decoration:none;">Mindful Walking</a></h3>
             <div class="session-meta"><span>12 min</span><span>Beginners</span></div>
             <p>Take your practice off the cushion with this gentle walking meditation guide.</p>
+            <div class="custom-player" data-src="content/audio/30-mindful-walking.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Advanced -->
-        <div class="session-card session-locked fade-in" data-category="advanced">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#000000 0%,#1a0a2e 30%,#3c1361 60%,#6a1b9a 100%);">
-            <span class="session-emoji">&#128302;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="advanced">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(0,0,0,0.7) 0%,rgba(26,10,46,0.7) 30%,rgba(60,19,97,0.7) 60%,rgba(106,27,154,0.7) 100%),url('https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3>Vipassana: Insight Practice</h3>
             <div class="session-meta"><span>30 min</span><span>Advanced</span></div>
             <p>A traditional insight meditation for experienced practitioners seeking deeper awareness.</p>
+            <div class="custom-player" data-src="content/audio/41-vipassana-insight.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="advanced">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#212529 0%,#495057 40%,#6c757d 70%,#adb5bd 100%);">
-            <span class="session-emoji">&#9883;&#65039;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="advanced">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(33,37,41,0.7) 0%,rgba(73,80,87,0.7) 40%,rgba(108,117,125,0.7) 70%,rgba(173,181,189,0.7) 100%),url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/non-dual-awareness.html" style="color:inherit;text-decoration:none;">Non-Dual Awareness</a></h3>
             <div class="session-meta"><span>25 min</span><span>Advanced</span></div>
             <p>Explore the nature of consciousness itself in this advanced awareness practice.</p>
+            <div class="custom-player" data-src="content/audio/43-non-dual-awareness.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="advanced">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#03045e 0%,#023e8a 30%,#0077b6 60%,#48cae4 100%);">
-            <span class="session-emoji">&#127756;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="advanced">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(3,4,94,0.7) 0%,rgba(2,62,138,0.7) 30%,rgba(0,119,182,0.7) 60%,rgba(72,202,228,0.7) 100%),url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3>Yoga Nidra: Deep Rest</h3>
             <div class="session-meta"><span>45 min</span><span>Advanced</span></div>
             <p>The ancient practice of yogic sleep — profound rest while remaining fully conscious.</p>
+            <div class="custom-player" data-src="content/audio/39-yoga-nidra.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="sleep advanced">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#10002b 0%,#3c096c 30%,#7b2cbf 60%,#c77dff 100%);">
-            <span class="session-emoji">&#128156;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="sleep advanced">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(16,0,43,0.7) 0%,rgba(60,9,108,0.7) 30%,rgba(123,44,191,0.7) 60%,rgba(199,125,255,0.7) 100%),url('https://images.unsplash.com/photo-1531353826977-0941b4779a1c?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/gratitude-before-sleep.html" style="color:inherit;text-decoration:none;">Gratitude Before Sleep</a></h3>
             <div class="session-meta"><span>15 min</span><span>Sleep</span></div>
             <p>End your day by reflecting on what you're grateful for, easing into peaceful rest.</p>
+            <div class="custom-player" data-src="content/audio/40-gratitude-before-sleep.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Mindfulness Sessions -->
-        <div class="session-card session-locked fade-in" data-category="mindfulness beginners">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#2d6a4f 0%,#40916c 40%,#74c69d 100%);">
-            <span class="session-emoji">&#127793;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="mindfulness beginners">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(45,106,79,0.7) 0%,rgba(64,145,108,0.7) 40%,rgba(116,198,157,0.7) 100%),url('https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/introduction-to-mindfulness.html" style="color:inherit;text-decoration:none;">Introduction to Mindfulness</a></h3>
             <div class="session-meta"><span>10 min</span><span>Mindfulness</span></div>
             <p>Your first step into mindful awareness. Learn the foundations of present-moment attention.</p>
+            <div class="custom-player" data-src="content/audio/25-introduction-to-mindfulness.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="mindfulness">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#1b4332 0%,#2d6a4f 40%,#52b788 100%);">
-            <span class="session-emoji">&#129528;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="mindfulness">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(27,67,50,0.7) 0%,rgba(45,106,79,0.7) 40%,rgba(82,183,136,0.7) 100%),url('https://images.unsplash.com/photo-1552196563-55cd4e45efb3?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/body-scan-meditation.html" style="color:inherit;text-decoration:none;">Body Scan Meditation</a></h3>
             <div class="session-meta"><span>20 min</span><span>Mindfulness</span></div>
             <p>Gently move your attention through each part of your body, releasing tension as you go.</p>
+            <div class="custom-player" data-src="content/audio/26-body-scan-meditation.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="mindfulness">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#184e77 0%,#1a759f 40%,#76c893 100%);">
-            <span class="session-emoji">&#127800;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="mindfulness">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(24,78,119,0.7) 0%,rgba(26,117,159,0.7) 40%,rgba(118,200,147,0.7) 100%),url('https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/mindful-breathing.html" style="color:inherit;text-decoration:none;">Mindful Breathing</a></h3>
             <div class="session-meta"><span>15 min</span><span>Mindfulness</span></div>
             <p>Anchor your attention on the breath. A simple yet powerful practice for daily calm.</p>
+            <div class="custom-player" data-src="content/audio/27-mindful-breathing.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="mindfulness stress">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#3a5a40 0%,#588157 40%,#a3b18a 100%);">
-            <span class="session-emoji">&#127807;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="mindfulness stress">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(58,90,64,0.7) 0%,rgba(88,129,87,0.7) 40%,rgba(163,177,138,0.7) 100%),url('https://images.unsplash.com/photo-1501004318855-e73hcb8a7366?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/letting-go-of-thoughts.html" style="color:inherit;text-decoration:none;">Letting Go of Thoughts</a></h3>
             <div class="session-meta"><span>12 min</span><span>Mindfulness</span></div>
             <p>Learn to observe your thoughts without attachment. Watch them arrive and gently let them pass.</p>
+            <div class="custom-player" data-src="content/audio/28-letting-go-of-thoughts.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="mindfulness advanced">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#0b525b 0%,#168aad 40%,#76c893 100%);">
-            <span class="session-emoji">&#128167;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="mindfulness advanced">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(11,82,91,0.7) 0%,rgba(22,138,173,0.7) 40%,rgba(118,200,147,0.7) 100%),url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/open-awareness.html" style="color:inherit;text-decoration:none;">Open Awareness</a></h3>
             <div class="session-meta"><span>25 min</span><span>Mindfulness</span></div>
             <p>Expand your attention to include all sensations, sounds, and thoughts simultaneously.</p>
+            <div class="custom-player" data-src="content/audio/29-open-awareness.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="mindfulness">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#344e41 0%,#3a5a40 40%,#a3b18a 100%);">
-            <span class="session-emoji">&#129717;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="mindfulness">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(52,78,65,0.7) 0%,rgba(58,90,64,0.7) 40%,rgba(163,177,138,0.7) 100%),url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/mindful-walking.html" style="color:inherit;text-decoration:none;">Mindful Walking</a></h3>
             <div class="session-meta"><span>10 min</span><span>Mindfulness</span></div>
             <p>Bring awareness to each step. A moving meditation for when sitting still feels difficult.</p>
+            <div class="custom-player" data-src="content/audio/30-mindful-walking.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="mindfulness stress">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#2b2d42 0%,#3a5a40 40%,#588157 100%);">
-            <span class="session-emoji">&#127758;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="mindfulness stress">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(43,45,66,0.7) 0%,rgba(58,90,64,0.7) 40%,rgba(88,129,87,0.7) 100%),url('https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/mindfulness-at-work.html" style="color:inherit;text-decoration:none;">Mindfulness at Work</a></h3>
             <div class="session-meta"><span>8 min</span><span>Mindfulness</span></div>
             <p>Quick reset for the workplace. Calm your mind before meetings, presentations, or difficult conversations.</p>
+            <div class="custom-player" data-src="content/audio/31-mindfulness-at-work.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="mindfulness advanced">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#132a13 0%,#31572c 40%,#4f772d 100%);">
-            <span class="session-emoji">&#128161;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="mindfulness advanced">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(19,42,19,0.7) 0%,rgba(49,87,44,0.7) 40%,rgba(79,119,45,0.7) 100%),url('https://images.unsplash.com/photo-1507400492013-162706c8c05e?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/observing-emotions.html" style="color:inherit;text-decoration:none;">Observing Emotions</a></h3>
             <div class="session-meta"><span>18 min</span><span>Mindfulness</span></div>
             <p>Develop the skill of sitting with difficult emotions without reacting or suppressing them.</p>
+            <div class="custom-player" data-src="content/audio/32-observing-emotions.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="mindfulness beginners">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#006466 0%,#0b525b 40%,#144552 100%);">
-            <span class="session-emoji">&#127774;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="mindfulness beginners">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(0,100,102,0.7) 0%,rgba(11,82,91,0.7) 40%,rgba(20,69,82,0.7) 100%),url('https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/morning-mindfulness.html" style="color:inherit;text-decoration:none;">Morning Mindfulness</a></h3>
             <div class="session-meta"><span>7 min</span><span>Mindfulness</span></div>
             <p>Set an intentional tone for the day ahead with this gentle morning awareness practice.</p>
+            <div class="custom-player" data-src="content/audio/33-morning-mindfulness.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="mindfulness">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#283618 0%,#606c38 40%,#dda15e 100%);">
-            <span class="session-emoji">&#127860;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="mindfulness">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(40,54,24,0.7) 0%,rgba(96,108,56,0.7) 40%,rgba(221,161,94,0.7) 100%),url('https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/mindful-eating.html" style="color:inherit;text-decoration:none;">Mindful Eating</a></h3>
             <div class="session-meta"><span>10 min</span><span>Mindfulness</span></div>
             <p>Transform mealtimes into moments of presence. Taste, texture, and gratitude.</p>
+            <div class="custom-player" data-src="content/audio/34-mindful-eating.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Additional Sleep -->
-        <div class="session-card session-locked fade-in" data-category="sleep">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#03045e 0%,#023e8a 40%,#0077b6 100%);">
-            <span class="session-emoji">&#127752;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="sleep">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(3,4,94,0.7) 0%,rgba(2,62,138,0.7) 40%,rgba(0,119,182,0.7) 100%),url('https://images.unsplash.com/photo-1428592953211-077101b2021b?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/rainfall-sleep-journey.html" style="color:inherit;text-decoration:none;">Rainfall Sleep Journey</a></h3>
             <div class="session-meta"><span>35 min</span><span>Sleep</span></div>
             <p>Drift off to the sound of gentle rain with a soothing narrative guiding you to rest.</p>
+            <div class="custom-player" data-src="content/audio/09-rainfall-sleep-journey.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="sleep beginners">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#1b263b 0%,#415a77 40%,#778da9 100%);">
-            <span class="session-emoji">&#128716;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="sleep beginners">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(27,38,59,0.7) 0%,rgba(65,90,119,0.7) 40%,rgba(119,141,169,0.7) 100%),url('https://images.unsplash.com/photo-1540518614846-7eded433c457?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/counting-down-to-sleep.html" style="color:inherit;text-decoration:none;">Counting Down to Sleep</a></h3>
             <div class="session-meta"><span>20 min</span><span>Sleep</span></div>
             <p>A gentle countdown technique that quiets the mind and eases you into deep sleep.</p>
+            <div class="custom-player" data-src="content/audio/10-counting-down-to-sleep.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="sleep advanced">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#240046 0%,#5a189a 40%,#9d4edd 100%);">
-            <span class="session-emoji">&#127769;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="sleep advanced">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(36,0,70,0.7) 0%,rgba(90,24,154,0.7) 40%,rgba(157,78,221,0.7) 100%),url('https://images.unsplash.com/photo-1534088568595-a066f410bcda?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/lucid-dream-preparation.html" style="color:inherit;text-decoration:none;">Lucid Dream Preparation</a></h3>
             <div class="session-meta"><span>30 min</span><span>Sleep</span></div>
             <p>Techniques to maintain awareness as you fall asleep, opening the door to lucid dreaming.</p>
+            <div class="custom-player" data-src="content/audio/11-lucid-dream-preparation.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Additional Focus -->
-        <div class="session-card session-locked fade-in" data-category="focus">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#432818 0%,#6f1d1b 40%,#bb9457 100%);">
-            <span class="session-emoji">&#128640;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="focus">
+          <div class="session-thumb" style="background:linear-gradient(160deg,rgba(67,40,24,0.7) 0%,rgba(111,29,27,0.7) 40%,rgba(187,148,87,0.7) 100%),url('https://images.unsplash.com/photo-1506784365847-bbad939e9335?w=600&q=70');background-size:cover;background-position:center;position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/peak-performance.html" style="color:inherit;text-decoration:none;">Peak Performance</a></h3>
             <div class="session-meta"><span>12 min</span><span>Focus</span></div>
             <p>Mental preparation for high-stakes moments — exams, interviews, or competitions.</p>
+            <div class="custom-player" data-src="content/audio/16-peak-performance.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="focus">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#14213d 0%,#003049 40%,#669bbc 100%);">
-            <span class="session-emoji">&#127911;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="focus">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#14213d 0%,#003049 40%,#669bbc 100%);position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/deep-work-mode.html" style="color:inherit;text-decoration:none;">Deep Work Mode</a></h3>
             <div class="session-meta"><span>5 min</span><span>Focus</span></div>
             <p>A quick mental reset to enter a state of focused, uninterrupted concentration.</p>
+            <div class="custom-player" data-src="content/audio/17-deep-work-mode.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Additional Stress -->
-        <div class="session-card session-locked fade-in" data-category="stress">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#582f0e 0%,#7f4f24 40%,#b08968 100%);">
-            <span class="session-emoji">&#129693;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="stress">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#582f0e 0%,#7f4f24 40%,#b08968 100%);position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/releasing-tension.html" style="color:inherit;text-decoration:none;">Releasing Tension</a></h3>
             <div class="session-meta"><span>15 min</span><span>Stress</span></div>
             <p>A guided progressive muscle relaxation to physically release the stress you're carrying.</p>
+            <div class="custom-player" data-src="content/audio/22-releasing-tension.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="stress beginners">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#2b2d42 0%,#8d99ae 40%,#edf2f4 100%);">
-            <span class="session-emoji">&#127754;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="stress beginners">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#2b2d42 0%,#8d99ae 40%,#edf2f4 100%);position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/calm-reset.html" style="color:inherit;text-decoration:none;">The Calm Reset</a></h3>
             <div class="session-meta"><span>5 min</span><span>Stress</span></div>
             <p>An emergency calm-down for overwhelming moments. Five minutes to reset your nervous system.</p>
+            <div class="custom-player" data-src="content/audio/23-the-calm-reset.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="stress advanced">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#370617 0%,#6a040f 40%,#d00000 60%,#e85d04 100%);">
-            <span class="session-emoji">&#128293;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="stress advanced">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#370617 0%,#6a040f 40%,#d00000 60%,#e85d04 100%);position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/anger-frustration-release.html" style="color:inherit;text-decoration:none;">Anger &amp; Frustration Release</a></h3>
             <div class="session-meta"><span>12 min</span><span>Stress</span></div>
             <p>Channel and release intense emotions through breathwork and guided visualisation.</p>
+            <div class="custom-player" data-src="content/audio/24-anger-frustration-release.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Additional Beginners -->
-        <div class="session-card session-locked fade-in" data-category="beginners">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#006d77 0%,#83c5be 40%,#edf6f9 100%);">
-            <span class="session-emoji">&#127795;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="beginners">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#006d77 0%,#83c5be 40%,#edf6f9 100%);position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/meditation-for-beginners.html" style="color:inherit;text-decoration:none;">Your First Meditation</a></h3>
             <div class="session-meta"><span>5 min</span><span>Beginners</span></div>
             <p>Never meditated before? Start here. A gentle, no-pressure introduction to the practice.</p>
+            <div class="custom-player" data-src="content/audio/35-your-first-meditation.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="beginners mindfulness">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#264653 0%,#2a9d8f 40%,#e9c46a 100%);">
-            <span class="session-emoji">&#128220;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="beginners">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#006d77 0%,#83c5be 40%,#edf6f9 100%);position:relative;">
+          </div>
+          <div class="session-info">
+            <h3><a href="sessions/building-a-daily-practice.html" style="color:inherit;text-decoration:none;">Building a Daily Practice</a></h3>
+            <div class="session-meta"><span>10 min</span><span>Beginners</span></div>
+            <p>Tips and guided support for establishing a consistent meditation routine.</p>
+            <div class="custom-player" data-src="content/audio/37-building-a-daily-practice.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="session-card fade-in" data-category="beginners mindfulness">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#264653 0%,#2a9d8f 40%,#e9c46a 100%);position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/seven-day-mindfulness-course.html" style="color:inherit;text-decoration:none;">7-Day Mindfulness Course</a></h3>
             <div class="session-meta"><span>Day 1 of 7</span><span>Beginners</span></div>
             <p>A structured week-long programme to build your mindfulness habit from scratch.</p>
+            <div class="custom-player" data-src="content/audio/38-seven-day-mindfulness-day1.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Additional Advanced -->
-        <div class="session-card session-locked fade-in" data-category="advanced mindfulness">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#0d1b2a 0%,#1b2838 40%,#415a77 100%);">
-            <span class="session-emoji">&#9775;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="advanced mindfulness">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#0d1b2a 0%,#1b2838 40%,#415a77 100%);position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/vipassana-insight.html" style="color:inherit;text-decoration:none;">Vipassana: Insight Meditation</a></h3>
             <div class="session-meta"><span>40 min</span><span>Advanced</span></div>
             <p>An extended insight meditation practice rooted in the Buddhist Theravada tradition.</p>
+            <div class="custom-player" data-src="content/audio/41-vipassana-insight.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="advanced">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#001219 0%,#005f73 40%,#94d2bd 100%);">
-            <span class="session-emoji">&#9883;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="advanced">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#001219 0%,#005f73 40%,#94d2bd 100%);position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/chakra-alignment.html" style="color:inherit;text-decoration:none;">Chakra Alignment</a></h3>
             <div class="session-meta"><span>35 min</span><span>Advanced</span></div>
             <p>Journey through each energy centre with breath, visualisation, and intention.</p>
+            <div class="custom-player" data-src="content/audio/42-chakra-alignment.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="session-card session-locked fade-in" data-category="advanced mindfulness">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#1a1a2e 0%,#16213e 40%,#0f3460 100%);">
-            <span class="session-emoji">&#128302;</span>
-            <span class="session-badge badge-locked">&#128274; Premium</span>
-            <span class="lock-badge">🔒</span>
+        <div class="session-card fade-in" data-category="advanced mindfulness">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#1a1a2e 0%,#16213e 40%,#0f3460 100%);position:relative;">
           </div>
           <div class="session-info">
             <h3><a href="sessions/non-dual-awareness.html" style="color:inherit;text-decoration:none;">Non-Dual Awareness</a></h3>
             <div class="session-meta"><span>30 min</span><span>Advanced</span></div>
             <p>Explore the space between observer and observed. A practice for experienced meditators.</p>
+            <div class="custom-player" data-src="content/audio/43-non-dual-awareness.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="session-card fade-in" data-category="advanced">
+          <div class="session-thumb" style="background:linear-gradient(160deg,#0d1b2a 0%,#1b2838 40%,#415a77 100%);position:relative;">
+          </div>
+          <div class="session-info">
+            <h3><a href="sessions/transcendental-stillness.html" style="color:inherit;text-decoration:none;">Transcendental Stillness</a></h3>
+            <div class="session-meta"><span>45 min</span><span>Advanced</span></div>
+            <p>Go beyond thought into pure stillness. An advanced practice for deep transcendence.</p>
+            <div class="custom-player" data-src="content/audio/44-transcendental-stillness.mp3">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+                <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+                <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+                <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -675,9 +873,9 @@
   <!-- CTA -->
   <section class="cta-banner">
     <div class="container">
-      <h2 class="fade-in">Unlock hundreds of sessions</h2>
-      <p class="fade-in">Download Salus for guided meditations, courses, and daily practices.</p>
-      <a href="apps.html" class="btn fade-in">Premium</a>
+      <h2 class="fade-in">Join the Salus family</h2>
+      <p class="fade-in">Hundreds of guided sessions, built with care by a family — not a corporation. No expensive celebrities. No gimmicks. Try free for 7 days.</p>
+      <a href="apps.html" class="btn fade-in">Start Free Trial</a>
     </div>
   </section>
 
@@ -726,7 +924,7 @@
     </div>
   </footer>
 
-  <script src="js/main.js"></script>
+  <script src="js/main.js?v=1770053724"></script>
   <script>
     // Category filtering
     document.getElementById('filterBar').addEventListener('click', function(e) {
@@ -741,17 +939,6 @@
           card.style.display = 'none';
         }
       });
-    });
-
-    // Make entire locked card clickable
-    document.querySelectorAll('.session-card.session-locked').forEach(function(card) {
-      var link = card.querySelector('a');
-      if (link) {
-        card.style.cursor = 'pointer';
-        card.addEventListener('click', function(e) {
-          if (e.target.tagName !== 'A') window.location = link.href;
-        });
-      }
     });
   </script>
 </body>

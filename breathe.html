@@ -7,7 +7,7 @@
   <meta name="description" content="Interactive breathing exercises tailored to your needs. Relax, focus, energise, or unwind with guided breathwork from Salus.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=1770053724">
   <style>
     .intent-screen { text-align: center; padding: 60px 0; }
     .intent-grid {
@@ -116,7 +116,7 @@
 
   <nav class="nav" style="position:relative;">
     <div class="container">
-      <a href="index.html" class="nav-logo"><img src="salus-logo.png" alt="Salus" class="nav-icon" style="height:32px;border-radius:6px;margin-right:8px;">SALUS</a>
+      <a href="index.html" class="nav-logo">SALUS</a>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="sessions.html">Sessions</a></li>
@@ -128,11 +128,11 @@
         <li><a href="contact.html">Contact</a></li>
         <li><a href="newsletter.html">Newsletter</a></li>
       </ul>
-      <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+      <button class="nav-toggle" aria-label="Toggle menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     </div>
   </nav>
 
-  <section class="hero" style="padding-bottom:40px;">
+  <section class="hero hero-bg" style="padding-bottom:40px;background-image:url('content/images/heroes/breathe-hero.jpg');">
     <div class="container">
       <h1 class="fade-in">Breathing <span>Exercises</span></h1>
       <p class="fade-in" style="font-style:italic;color:var(--mid-gray);font-size:0.9rem;margin-bottom:12px;letter-spacing:0.5px;opacity:0.7;">Simple exercises tailored to your specific needs.</p>
@@ -141,31 +141,31 @@
   </section>
 
   <!-- Intent Selection -->
-  <section id="intentScreen" class="intent-screen">
+  <section id="intentScreen" class="intent-screen" style="background:linear-gradient(135deg,#f4f1ec 0%,#ece7e0 100%);">
     <div class="container">
       <div class="intent-grid">
         <button class="intent-btn" data-intent="relax" onclick="selectIntent('relax')">
-          <span class="intent-emoji">&#128524;</span>
+          <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(76,175,80,0.7),rgba(46,125,50,0.6)),url('content/images/heroes/soundscapes-hero.jpg');background-size:cover;background-position:center;"></div>
           <span class="intent-label">Relax</span>
         </button>
         <button class="intent-btn" data-intent="focus" onclick="selectIntent('focus')">
-          <span class="intent-emoji">&#127919;</span>
+          <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(30,136,229,0.7),rgba(21,101,192,0.6)),url('content/images/heroes/education-hero.jpg');background-size:cover;background-position:center;"></div>
           <span class="intent-label">Focus</span>
         </button>
         <button class="intent-btn" data-intent="sleep" onclick="selectIntent('sleep')">
-          <span class="intent-emoji">&#127769;</span>
+          <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(69,39,160,0.7),rgba(126,87,194,0.6)),url('content/images/heroes/sessions-hero.jpg');background-size:cover;background-position:center;"></div>
           <span class="intent-label">Sleep</span>
         </button>
         <button class="intent-btn" data-intent="energise" onclick="selectIntent('energise')">
-          <span class="intent-emoji">&#9889;</span>
+          <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(230,81,0,0.7),rgba(255,179,0,0.6)),url('content/images/heroes/media-hero.jpg');background-size:cover;background-position:center;"></div>
           <span class="intent-label">Energise</span>
         </button>
         <button class="intent-btn" data-intent="calm" onclick="selectIntent('calm')">
-          <span class="intent-emoji">&#127793;</span>
+          <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(247,166,0,0.7),rgba(232,120,0,0.6)),url('content/images/heroes/mindfulness-hero.jpg');background-size:cover;background-position:center;"></div>
           <span class="intent-label">Calm</span>
         </button>
         <button class="intent-btn" data-intent="unwind" onclick="selectIntent('unwind')">
-          <span class="intent-emoji">&#127773;</span>
+          <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(173,20,87,0.7),rgba(233,30,99,0.6)),url('content/images/heroes/newsletter-hero.jpg');background-size:cover;background-position:center;"></div>
           <span class="intent-label">Unwind</span>
         </button>
       </div>
@@ -176,7 +176,7 @@
   <section id="breatheScreen" class="breathe-fullscreen">
     <div class="container" style="display:flex;flex-direction:column;align-items:center;">
 
-      <button class="back-link" onclick="goBack()">&#8592; Choose another</button>
+      <button class="back-link" onclick="goBack()">&larr; Choose another</button>
 
       <div class="technique-name" id="techniqueName"></div>
 
@@ -215,9 +215,9 @@
 
   <section class="cta-banner">
     <div class="container">
-      <h2 class="fade-in">Explore more in the Salus app</h2>
-      <p class="fade-in">Guided breathwork sessions, sleep stories, soundscapes, and more.</p>
-      <a href="apps.html" class="btn fade-in">See All Features</a>
+      <h2 class="fade-in">Join the Salus family</h2>
+      <p class="fade-in">Guided breathwork, sleep stories, soundscapes, and more — built by a family, not a corporation.</p>
+      <a href="apps.html" class="btn fade-in">Start Free Trial</a>
     </div>
   </section>
 
@@ -265,7 +265,7 @@
     </div>
   </footer>
 
-  <script src="js/main.js"></script>
+  <script src="js/main.js?v=1770053724"></script>
   <script>
     // Techniques mapped to intents
     var techniques = {

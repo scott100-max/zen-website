@@ -7,14 +7,14 @@
   <meta name="description" content="Start your free Salus trial. One subscription, everything included — guided sessions, sleep stories, breathing exercises, soundscapes, and more.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=1770053724">
   <style>
     .pricing-grid {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
       max-width: 900px; margin: 0 auto;
     }
     .pricing-card {
-      background: var(--white); border: 2px solid var(--light-gray);
+      background: transparent; border: 2px solid transparent;
       border-radius: 16px; padding: 40px 28px; text-align: center;
       position: relative; transition: all 0.3s ease;
     }
@@ -51,10 +51,10 @@
       text-align: center; margin-top: 32px; color: var(--mid-gray); font-size: 0.85rem;
     }
     .everything-banner {
-      background: var(--accent-light); border-radius: 12px; padding: 24px 32px;
+      background: transparent; border: none; border-radius: 12px; padding: 24px 32px;
       text-align: center; margin-bottom: 60px;
     }
-    .everything-banner h3 { color: var(--accent-dark); margin-bottom: 8px; }
+    .everything-banner h3 { color: var(--dark); margin-bottom: 8px; }
     .everything-banner p { color: var(--mid-gray); font-size: 0.9rem; }
     @media (max-width: 600px) {
       .pricing-grid { grid-template-columns: 1fr !important; max-width: 400px !important; }
@@ -71,7 +71,7 @@
 
   <nav class="nav" style="position:relative;">
     <div class="container">
-      <a href="index.html" class="nav-logo"><img src="salus-logo.png" alt="Salus" class="nav-icon" style="height:32px;border-radius:6px;margin-right:8px;">SALUS</a>
+      <a href="index.html" class="nav-logo">SALUS</a>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="sessions.html">Sessions</a></li>
@@ -83,11 +83,11 @@
         <li><a href="contact.html">Contact</a></li>
         <li><a href="newsletter.html">Newsletter</a></li>
       </ul>
-      <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+      <button class="nav-toggle" aria-label="Toggle menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     </div>
   </nav>
 
-  <section class="hero" style="padding-bottom:60px;">
+  <section class="hero hero-bg" style="padding-bottom:60px;background-image:url('content/images/heroes/apps-hero.jpg');">
     <div class="container">
       <h1 class="fade-in">One Subscription. <span>Everything Included.</span></h1>
       <p class="fade-in">No separate apps. No hidden extras. Sleep, meditation, soundscapes, breathwork — all of it.</p>
@@ -95,17 +95,17 @@
   </section>
 
   <!-- Everything Included Banner -->
-  <section style="padding:0 0 60px;">
+  <section style="padding:0 0 60px;background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%);">
     <div class="container" style="max-width:700px;">
       <div class="everything-banner fade-in">
         <h3>Why pay twice?</h3>
-        <p>Other apps charge separately for sleep and meditation. With Salus, one plan covers everything — guided sessions, sleep stories, soundscapes, breathing exercises, and all future content.</p>
+        <p>Other apps charge separately for sleep and meditation — and spend your subscription money on expensive celebrity endorsements. With Salus, one plan covers everything — guided sessions, sleep stories, soundscapes, breathing exercises, and all future content. No celebrities. Just a family who cares.</p>
       </div>
     </div>
   </section>
 
   <!-- Pricing -->
-  <section style="padding-top:0;">
+  <section style="padding-top:0;background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%);">
     <div class="container">
       <div class="section-header fade-in">
         <h2>Simple, Honest Pricing</h2>
@@ -159,7 +159,7 @@
   </section>
 
   <!-- What's Included -->
-  <section style="background:var(--off-white);">
+  <section style="background:linear-gradient(135deg,#f4f1ec 0%,#ece7e0 100%);">
     <div class="container">
       <div class="section-header fade-in">
         <h2>What's Inside Premium</h2>
@@ -167,32 +167,32 @@
       </div>
       <div class="feature-grid">
         <div class="feature-card fade-in">
-          <div class="feature-icon">&#127911;</div>
+          <div style="height:120px;border-radius:10px;margin-bottom:16px;overflow:hidden;background:linear-gradient(135deg,rgba(13,27,42,0.7),rgba(27,67,50,0.6)),url('content/images/heroes/sessions-hero.jpg');background-size:cover;background-position:center;"></div>
           <h3>Guided Sessions</h3>
           <p>Hundreds of meditations for sleep, anxiety, focus, self-compassion, and more. New content added weekly.</p>
         </div>
         <div class="feature-card fade-in">
-          <div class="feature-icon">&#127769;</div>
+          <div style="height:120px;border-radius:10px;margin-bottom:16px;overflow:hidden;background:linear-gradient(135deg,rgba(30,30,60,0.7),rgba(42,100,80,0.5)),url('content/images/heroes/timer-hero.jpg');background-size:cover;background-position:center;"></div>
           <h3>Sleep Stories</h3>
           <p>Calming narrated stories and ambient soundscapes designed to ease you into restful sleep.</p>
         </div>
         <div class="feature-card fade-in" style="cursor:pointer;" onclick="window.location.href='breathe.html'">
-          <div class="feature-icon">&#9201;</div>
+          <div style="height:120px;border-radius:10px;margin-bottom:16px;overflow:hidden;background:linear-gradient(135deg,rgba(42,157,143,0.7),rgba(13,27,42,0.5)),url('content/images/heroes/breathe-hero.jpg');background-size:cover;background-position:center;"></div>
           <h3>Breathing Exercises</h3>
           <p>Six tailored techniques with visual guides — relax, focus, sleep, energise, calm, and unwind.</p>
         </div>
         <div class="feature-card fade-in">
-          <div class="feature-icon">&#127912;</div>
+          <div style="height:120px;border-radius:10px;margin-bottom:16px;overflow:hidden;background:linear-gradient(135deg,rgba(3,4,94,0.7),rgba(0,119,182,0.5)),url('content/images/heroes/soundscapes-hero.jpg');background-size:cover;background-position:center;"></div>
           <h3>Soundscapes</h3>
           <p>20+ ambient sounds with mixing, sleep timer, and curated combinations. Rain, forest, ocean, and more.</p>
         </div>
         <div class="feature-card fade-in">
-          <div class="feature-icon">&#128218;</div>
+          <div style="height:120px;border-radius:10px;margin-bottom:16px;overflow:hidden;background:linear-gradient(135deg,rgba(27,67,50,0.7),rgba(79,109,245,0.5)),url('content/images/heroes/education-hero.jpg');background-size:cover;background-position:center;"></div>
           <h3>Learn</h3>
           <p>Articles, science, and practical tips from our clinical consultant to deepen your understanding.</p>
         </div>
         <div class="feature-card fade-in">
-          <div class="feature-icon">&#128101;</div>
+          <div style="height:120px;border-radius:10px;margin-bottom:16px;overflow:hidden;background:linear-gradient(135deg,rgba(42,100,80,0.7),rgba(13,27,42,0.5)),url('content/images/heroes/about-hero.jpg');background-size:cover;background-position:center;"></div>
           <h3>Family Sharing</h3>
           <p>Share your annual subscription with up to 5 family members. Mindfulness for everyone under one roof.</p>
         </div>
@@ -202,8 +202,8 @@
 
   <section class="cta-banner">
     <div class="container">
-      <h2 class="fade-in">Start your free trial today</h2>
-      <p class="fade-in">7 days of full access. No credit card required to browse. Cancel anytime.</p>
+      <h2 class="fade-in">Join the Salus family</h2>
+      <p class="fade-in">We're not a corporation — we're a family who built this because we needed it ourselves. Try it free for 7 days.</p>
       <a href="#stripe-monthly" class="btn fade-in">Get Salus Premium</a>
     </div>
   </section>
@@ -253,6 +253,6 @@
     </div>
   </footer>
 
-  <script src="js/main.js"></script>
+  <script src="js/main.js?v=1770053724"></script>
 </body>
 </html>

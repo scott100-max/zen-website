@@ -7,10 +7,10 @@
   <meta name="description" content="Learn about Salus's mission to make mindfulness accessible to everyone. Meet our clinical psychologist and discover our evidence-based approach.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=1770053724">
   <style>
     .about-values { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
-    .about-value { background: var(--off-white); border-radius: 12px; padding: 32px; text-align: center; }
+    .about-value { background: transparent; border-radius: 12px; padding: 32px; text-align: center; border: none; }
     .about-value .icon { font-size: 2rem; margin-bottom: 12px; }
     .about-value h3 { margin-bottom: 8px; font-size: 1.05rem; }
     .about-value p { color: var(--mid-gray); font-size: 0.9rem; line-height: 1.7; }
@@ -58,7 +58,7 @@
 
   <nav class="nav" style="position:relative;">
     <div class="container">
-      <a href="index.html" class="nav-logo"><img src="salus-logo.png" alt="Salus" class="nav-icon" style="height:32px;border-radius:6px;margin-right:8px;">SALUS</a>
+      <a href="index.html" class="nav-logo">SALUS</a>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="sessions.html">Sessions</a></li>
@@ -70,12 +70,12 @@
         <li><a href="contact.html">Contact</a></li>
         <li><a href="newsletter.html">Newsletter</a></li>
       </ul>
-      <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+      <button class="nav-toggle" aria-label="Toggle menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     </div>
   </nav>
 
   <!-- Hero -->
-  <section class="hero" style="padding-bottom:60px;">
+  <section class="hero hero-bg" style="padding-bottom:60px;background-image:url('content/images/heroes/about-hero.jpg');">
     <div class="container">
       <h1 class="fade-in">Our <span>Story</span></h1>
       <p class="fade-in" style="font-style:italic;color:var(--mid-gray);font-size:0.9rem;margin-bottom:12px;letter-spacing:0.5px;opacity:0.7;"><em>salus</em> &nbsp;/&#712;sa.lus/ &nbsp; Latin for health, safety &amp; well-being &nbsp;&middot;&nbsp; Sleep. Relax. Restore.</p>
@@ -84,11 +84,11 @@
   </section>
 
   <!-- The Story -->
-  <section>
+  <section style="background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%);">
     <div class="container" style="max-width:760px;">
       <div class="fade-in" style="color:var(--mid-gray);line-height:1.9;font-size:1.05rem;">
         <p style="margin-bottom:20px;">Salus didn't start in a boardroom. It started in a family living room.</p>
-        <p style="margin-bottom:20px;">Our founder's journey with meditation, stress management, and therapy spans over 40 years — long before mindfulness apps existed, before the iPhone, before "wellness" was an industry. Through decades of personal experience with meditation, ASMR, CBT, counselling, and every relaxation technique imaginable, one thing became clear: <strong>these tools genuinely work</strong>. But finding them shouldn't require a subscription to a faceless corporation.</p>
+        <p style="margin-bottom:20px;">Scott Ripley's journey with meditation, stress management, and therapy spans over 40 years — long before mindfulness apps existed, before the iPhone, before "wellness" was an industry. Through decades of personal experience with meditation, ASMR, CBT, counselling, and every relaxation technique imaginable, one thing became clear: <strong>these tools genuinely work</strong>. But finding them shouldn't require a subscription to a faceless corporation backed by expensive celebrity endorsements.</p>
         <p style="margin-bottom:20px;">When our daughter Ella completed her BSc (Hons) and MSc in Psychology, something clicked. We had the lived experience <em>and</em> the clinical expertise under one roof. We could build something different — something that combined decades of personal understanding with rigorous academic knowledge.</p>
         <p style="margin-bottom:20px;">That's Salus. A family project built with love, lived experience, and proper psychology. Every session is clinically reviewed. Every technique is evidence-based. And every message you send us is read and answered by a real person.</p>
         <p style="font-size:1.1rem;color:var(--dark);font-weight:500;">We're not here to take your money and disappear. We're here because we know what it's like to struggle with anxiety, sleeplessness, and stress — and we know these tools can help, because they helped us first.</p>
@@ -97,24 +97,24 @@
   </section>
 
   <!-- Values -->
-  <section style="background:var(--white);">
+  <section style="background:linear-gradient(135deg,#f4f1ec 0%,#ece7e0 100%);">
     <div class="container">
       <div class="section-header fade-in">
         <h2>What We Stand For</h2>
       </div>
       <div class="about-values">
         <div class="about-value fade-in">
-          <div class="icon">&#127793;</div>
+          <div style="height:120px;border-radius:10px;margin-bottom:16px;overflow:hidden;position:relative;background:linear-gradient(135deg,rgba(13,27,42,0.7),rgba(42,157,143,0.6)),url('content/images/heroes/education-hero.jpg');background-size:cover;background-position:center;"></div>
           <h3>Evidence-Based</h3>
           <p>Every session is grounded in peer-reviewed research. We work with psychologists to ensure clinical accuracy and safety.</p>
         </div>
         <div class="about-value fade-in">
-          <div class="icon">&#128275;</div>
+          <div style="height:120px;border-radius:10px;margin-bottom:16px;overflow:hidden;position:relative;background:linear-gradient(135deg,rgba(27,67,50,0.7),rgba(79,109,245,0.5)),url('content/images/heroes/mindfulness-hero.jpg');background-size:cover;background-position:center;"></div>
           <h3>Accessible</h3>
           <p>Meditation shouldn't be gatekept. We offer free sessions alongside premium content so everyone can start their journey.</p>
         </div>
         <div class="about-value fade-in">
-          <div class="icon">&#129309;</div>
+          <div style="height:120px;border-radius:10px;margin-bottom:16px;overflow:hidden;position:relative;background:linear-gradient(135deg,rgba(42,100,80,0.7),rgba(13,27,42,0.5)),url('content/images/heroes/contact-hero.jpg');background-size:cover;background-position:center;"></div>
           <h3>Human-First</h3>
           <p>No gamification, no streaks, no guilt. Salus is designed to support you — not exploit your attention.</p>
         </div>
@@ -123,44 +123,91 @@
   </section>
 
   <!-- Clinical Consultant -->
-  <section style="padding:80px 0;background:var(--off-white);">
-    <div class="container" style="max-width:960px;">
+  <section style="padding:80px 0;background:linear-gradient(135deg,var(--forest-mid) 0%,var(--forest) 100%);">
+    <div class="container" style="max-width:800px;text-align:center;">
       <div class="section-header fade-in">
-        <h2>Clinical Consultant</h2>
-        <p>Every Salus session is reviewed for psychological safety and clinical accuracy.</p>
+        <h2 style="color:#fff;">Clinical Consultant</h2>
+        <p style="color:rgba(255,255,255,0.7);">Every Salus session is reviewed for psychological safety and clinical accuracy.</p>
       </div>
-      <div class="consultant-card fade-in">
-        <div style="border-radius:16px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.1);">
-          <video controls playsinline preload="metadata" style="width:100%;display:block;"
-                 poster="content/video/ella-ripley-intro-thumb.jpg">
-            <source src="content/video/ella-ripley-intro.mp4" type="video/mp4">
-          </video>
+      <blockquote class="fade-in" style="font-size:1.2rem;font-style:italic;color:rgba(255,255,255,0.9);line-height:1.8;max-width:680px;margin:0 auto 24px;">
+        “My father spent over 40 years searching for ways to manage stress, anxiety, and sleeplessness — through mindfulness, meditation, cognitive behavioural therapy, breathwork, acupuncture, and every technique he could find. When I completed my psychology degrees, we realised we could combine his lived experience with clinical knowledge to help others. Salus is that vision: evidence-based mindfulness, built by a family who truly understands what it means to struggle — and to heal.”
+      </blockquote>
+      <div class="fade-in">
+        <p style="color:#fff;font-weight:600;font-size:1.05rem;">Ella Ripley</p>
+        <p style="color:var(--accent-light);font-size:0.9rem;">BSc (Hons) Psychology &middot; MSc Psychology</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blend from dark to cream -->
+  <div style="height:40px;background:linear-gradient(to bottom,var(--forest),#f8f6f3);"></div>
+
+  <!-- Meet the Founder -->
+  <section style="background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%);padding-top:0;">
+    <div class="container" style="max-width:760px;">
+      <div class="section-header fade-in">
+        <h2>Meet Our Founder</h2>
+        <p>The person behind Salus.</p>
+      </div>
+      <div class="fade-in" style="display:flex;gap:40px;align-items:center;flex-wrap:wrap;">
+        <div style="flex-shrink:0;">
+          <div style="width:180px;height:180px;border-radius:50%;background:linear-gradient(135deg,rgba(13,27,42,0.6),rgba(42,157,143,0.4));display:flex;align-items:center;justify-content:center;"><svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
         </div>
-        <div class="consultant-bio">
-          <h3>Ella Ripley</h3>
-          <div class="credentials">BSc (Hons) Psychology &middot; MSc Psychology</div>
-          <p>Ella is the clinical consultant behind every Salus session. With a first-class honours degree and a master's in psychology, she brings rigorous academic knowledge to the practice of mindfulness and meditation.</p>
-          <p>Her work ensures that Salus content is not only calming and effective but also grounded in the latest psychological research — from cognitive behavioural principles to vagal nerve theory.</p>
-          <p>Ella specialises in anxiety management, sleep psychology, and evidence-based relaxation techniques.</p>
-          <ul class="specialisms">
-            <li>Anxiety &amp; Stress</li>
-            <li>Sleep Psychology</li>
-            <li>Cognitive Behavioural Therapy</li>
-            <li>Breathwork Science</li>
-            <li>Mindfulness Research</li>
-            <li>Neuroplasticity</li>
-          </ul>
+        <div style="flex:1;min-width:280px;">
+          <h3 style="font-size:1.3rem;margin-bottom:4px;">Scott Ripley</h3>
+          <p style="color:var(--accent);font-weight:500;font-size:0.9rem;margin-bottom:16px;">Founder</p>
+          <p style="color:var(--mid-gray);line-height:1.8;font-size:0.95rem;margin-bottom:12px;">With over 40 years of personal experience with mindfulness, meditation, cognitive behavioural therapy, counselling, breathwork, visualisation, progressive relaxation, acupuncture, and ASMR, Scott Ripley built Salus from lived experience — not a business plan.</p>
+          <p style="color:var(--mid-gray);line-height:1.8;font-size:0.95rem;margin-bottom:12px;">Long before mindfulness apps existed, before the iPhone, before "wellness" became an industry — the journey had already begun. Decades of searching, practising, and learning what actually works.</p>
+          <p style="color:var(--mid-gray);line-height:1.8;font-size:0.95rem;">Salus is the result of all that experience, combined with clinical expertise from daughter Ella. A family project, built with love. No expensive celebrities. No venture capital. Just real tools that work, because they worked for us first.</p>
+        </div>
+      </div>
+      <div class="section-header fade-in" style="margin-top:60px;">
+        <h2>Meet Our Psychologist</h2>
+        <p>The clinical mind behind every session.</p>
+      </div>
+      <div class="fade-in" style="display:flex;gap:40px;align-items:center;flex-wrap:wrap;">
+        <div style="flex-shrink:0;">
+          <div style="width:180px;height:180px;border-radius:50%;background:linear-gradient(135deg,rgba(13,27,42,0.6),rgba(42,157,143,0.4));display:flex;align-items:center;justify-content:center;"><svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        </div>
+        <div style="flex:1;min-width:280px;">
+          <h3 style="font-size:1.3rem;margin-bottom:4px;">Ella Ripley</h3>
+          <p style="color:var(--accent);font-weight:500;font-size:0.9rem;margin-bottom:16px;">Clinical Consultant &middot; BSc (Hons) &middot; MSc Psychology</p>
+          <p style="color:var(--mid-gray);line-height:1.8;font-size:0.95rem;margin-bottom:12px;">Ella is the clinical mind behind Salus. With a BSc (Hons) and MSc in Psychology, she reviews every session for psychological safety, clinical accuracy, and therapeutic integrity.</p>
+          <p style="color:var(--mid-gray);line-height:1.8;font-size:0.95rem;margin-bottom:12px;">Growing up watching her father's decades-long journey with meditation and therapy, Ella saw first-hand how these tools could transform someone's life. Her academic training gave her the framework to understand why — and the expertise to ensure Salus does it properly.</p>
+          <p style="color:var(--mid-gray);line-height:1.8;font-size:0.95rem;">She's not just a consultant. She's family. And that's exactly why the science behind Salus is something you can trust.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Voice -->
+  <section style="background:linear-gradient(135deg,#f4f1ec 0%,#ece7e0 100%);">
+    <div class="container" style="max-width:760px;">
+      <div class="section-header fade-in">
+        <h2>Meet Our Voice</h2>
+        <p>The person behind every Salus session.</p>
+      </div>
+      <div class="fade-in" style="display:flex;gap:40px;align-items:center;flex-wrap:wrap;">
+        <div style="flex-shrink:0;">
+          <div style="width:180px;height:180px;border-radius:50%;background:linear-gradient(135deg,rgba(13,27,42,0.6),rgba(42,157,143,0.4)),url('content/images/narrator-marco.jpg');background-size:cover;background-position:center;"></div>
+        </div>
+        <div style="flex:1;min-width:280px;">
+          <h3 style="font-size:1.3rem;margin-bottom:4px;">Marco Santi</h3>
+          <p style="color:var(--accent);font-weight:500;font-size:0.9rem;margin-bottom:16px;">Narrator &amp; Voice Artist</p>
+          <p style="color:var(--mid-gray);line-height:1.8;font-size:0.95rem;margin-bottom:12px;">Marco is the voice you'll hear across every Salus session — from guided meditations and sleep stories to breathing exercises and educational content. His warm, grounded tone has a way of making you feel like you're being guided by someone who genuinely cares.</p>
+          <p style="color:var(--mid-gray);line-height:1.8;font-size:0.95rem;margin-bottom:12px;">With a background in vocal performance and a lifelong interest in mindfulness, Marco brings a calm presence that listeners describe as both reassuring and deeply personal. He's not reading scripts — he's sharing something he believes in.</p>
+          <p style="color:var(--mid-gray);line-height:1.8;font-size:0.95rem;">Over time, we hope you'll come to feel like you know him. That's the point. Salus isn't faceless. It's personal — and Marco is a big part of that.</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Contact Directly -->
-  <section>
+  <section style="background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%);">
     <div class="container" style="text-align:center;max-width:600px;">
       <div class="section-header fade-in">
         <h2>Talk to Us</h2>
-        <p>We're not a helpdesk. We're a family. If you need support, have a question, or just want to say hello — we'd love to hear from you.</p>
+        <p>We're not a helpdesk. We're a family. If you need support, have a question, or just want to say hello — we'd love to hear from you. We're also open to ideas. If there's something you'd like to see in Salus, let us know. This is a personal project, not a corporation — your voice genuinely shapes what we build next.</p>
       </div>
       <a href="contact.html" class="btn fade-in">Contact Us Directly</a>
     </div>
@@ -169,8 +216,8 @@
   <!-- CTA -->
   <section class="cta-banner">
     <div class="container">
-      <h2 class="fade-in">Join the Salus community</h2>
-      <p class="fade-in">Start your practice today — it only takes a few minutes.</p>
+      <h2 class="fade-in">Join our family</h2>
+      <p class="fade-in">We're not a corporation. We're a family who built something we believe in. Come be part of it.</p>
       <a href="apps.html" class="btn fade-in">Start Free Trial</a>
     </div>
   </section>
@@ -221,6 +268,6 @@
     </div>
   </footer>
 
-  <script src="js/main.js"></script>
+  <script src="js/main.js?v=1770053724"></script>
 </body>
 </html>

@@ -7,7 +7,7 @@
   <meta name="description" content="Frequently asked questions about Salus. Find answers about subscriptions, features, and getting started.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=1770053724">
   <style>
     .faq-item { border-bottom: 1px solid var(--light-gray); padding: 24px 0; }
     .faq-item:first-child { border-top: 1px solid var(--light-gray); }
@@ -34,7 +34,7 @@
 
   <nav class="nav" style="position:relative;">
     <div class="container">
-      <a href="index.html" class="nav-logo"><img src="salus-logo.png" alt="Salus" class="nav-icon" style="height:32px;border-radius:6px;margin-right:8px;">SALUS</a>
+      <a href="index.html" class="nav-logo">SALUS</a>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="sessions.html">Sessions</a></li>
@@ -46,18 +46,18 @@
         <li><a href="contact.html">Contact</a></li>
         <li><a href="newsletter.html">Newsletter</a></li>
       </ul>
-      <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+      <button class="nav-toggle" aria-label="Toggle menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     </div>
   </nav>
 
-  <section class="hero" style="padding-bottom:60px;">
+  <section class="hero hero-bg" style="padding-bottom:60px;background-image:url('content/images/heroes/faq-hero.jpg');">
     <div class="container">
       <h1 class="fade-in">Frequently Asked <span>Questions</span></h1>
       <p class="fade-in">Everything you need to know about Salus.</p>
     </div>
   </section>
 
-  <section>
+  <section style="background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%);">
     <div class="container" style="max-width:760px;">
       <div class="fade-in">
 
@@ -121,7 +121,7 @@
     </div>
   </footer>
 
-  <script src="js/main.js"></script>
+  <script src="js/main.js?v=1770053724"></script>
   <script>
     document.querySelectorAll('.faq-q').forEach(function(q) {
       q.addEventListener('click', function() {

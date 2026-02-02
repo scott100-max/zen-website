@@ -17,7 +17,7 @@ sessions = [
         "desc": "A deeply calming meditation designed to guide you from wakefulness to restful sleep. Using progressive relaxation, gentle visualisation, and slow breathing cues, this session helps quiet the racing mind and prepare your body for a full night's rest.",
         "learn": ["Progressive muscle relaxation techniques", "Visualisation for sleep onset", "How to quiet racing thoughts at bedtime", "Building a pre-sleep wind-down routine"],
         "best_for": "Insomnia, difficulty switching off, restless nights",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "moonlight-body-scan",
@@ -29,7 +29,7 @@ sessions = [
         "desc": "Journey through your entire body under the soft glow of imagined moonlight. Each body part is gently acknowledged, relaxed, and released — creating a wave of calm that carries you toward sleep.",
         "learn": ["Full-body awareness scanning", "Systematic tension release", "Breath-synchronised relaxation", "Transitioning from awareness to sleep"],
         "best_for": "Physical tension, body-held stress, difficulty falling asleep",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "sleep-stories-forest",
@@ -41,7 +41,7 @@ sessions = [
         "desc": "A slow, meandering narrative that takes you on a walk through an ancient forest at dusk. The story is deliberately gentle and uneventful — designed to bore your overactive mind into peaceful sleep.",
         "learn": ["Using narrative to distract from anxious thoughts", "Engaging the imagination for sleep", "Slow-paced listening as a wind-down tool"],
         "best_for": "Overthinking at bedtime, anxiety-related insomnia",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "sleep-stories-ocean",
@@ -53,7 +53,7 @@ sessions = [
         "desc": "Drift across a calm ocean on a warm evening as the gentle rhythm of waves rocks you to sleep. A soothing narrative with ambient ocean sounds woven throughout.",
         "learn": ["Rhythmic breathing synchronised to waves", "Visualisation techniques for deep relaxation", "Using ambient sound for sleep onset"],
         "best_for": "Restlessness, needing a mental escape, light sleepers",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "rainfall-sleep-journey",
@@ -65,7 +65,7 @@ sessions = [
         "desc": "Drift off to the sound of gentle rain with a soothing narrative guiding you to rest. The rainfall gradually takes over as the narration fades, leaving you in a cocoon of natural white noise.",
         "learn": ["Rain-synchronised breathing", "Using natural sounds as a sleep anchor", "Letting go of the day's events"],
         "best_for": "Difficulty falling asleep, noise-sensitive sleepers, travel",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "counting-down-to-sleep",
@@ -77,7 +77,7 @@ sessions = [
         "desc": "A gentle countdown technique that quiets the mind and eases you into deep sleep. Starting from 300 and breathing with each number, your attention narrows until sleep arrives naturally.",
         "learn": ["Countdown meditation technique", "Breath counting for sleep", "Mental focus narrowing", "When to use counting vs. body scan"],
         "best_for": "Racing mind, first-time meditators, jet lag",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "lucid-dream-preparation",
@@ -89,7 +89,7 @@ sessions = [
         "desc": "Techniques to maintain awareness as you fall asleep, opening the door to lucid dreaming. Combines MILD and WILD techniques with guided relaxation to help you recognise when you're dreaming.",
         "learn": ["MILD technique (Mnemonic Induction of Lucid Dreams)", "Reality testing habits", "Maintaining awareness during sleep onset", "Dream journalling practices"],
         "best_for": "Experienced meditators, dream exploration, creative problem solving",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "gratitude-before-sleep",
@@ -101,7 +101,7 @@ sessions = [
         "desc": "End your day by reflecting on what you're grateful for, easing into peaceful rest. Research shows gratitude practices before bed improve both sleep quality and duration.",
         "learn": ["Structured gratitude reflection", "Replacing negative thought loops with appreciation", "The science of gratitude and sleep quality", "Building a nightly gratitude habit"],
         "best_for": "Negative thought spirals at bedtime, building positive habits",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "morning-energy",
@@ -113,7 +113,7 @@ sessions = [
         "desc": "Replace your morning scroll with 10 minutes of energising breathwork and intention-setting. This session uses stimulating breath patterns to wake up your body and a short visualisation to set your focus for the day ahead.",
         "learn": ["Energising breath techniques (Kapalabhati)", "Morning intention-setting", "Replacing screen habits with mindful ones", "Creating energy without caffeine"],
         "best_for": "Groggy mornings, low motivation, building a morning routine",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "laser-focus",
@@ -125,7 +125,7 @@ sessions = [
         "desc": "Sharpen your concentration with a practice designed for knowledge workers. Using a single-point focus technique, this session trains your attention to stay on task and gently return when it wanders.",
         "learn": ["Single-point concentration (Samatha)", "Recognising and managing distractions", "The attention muscle — how focus improves with practice", "Transitioning from meditation to deep work"],
         "best_for": "Before study sessions, creative work, or deep focus tasks",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "creative-flow",
@@ -137,7 +137,7 @@ sessions = [
         "desc": "Open the channels of creativity with a meditation that combines open awareness with gentle visualisation. Ideal before writing, designing, brainstorming, or any creative endeavour.",
         "learn": ["Open monitoring meditation for creativity", "Releasing perfectionism and self-judgement", "Accessing flow state through relaxed attention", "The neuroscience of creativity and meditation"],
         "best_for": "Creative blocks, brainstorming, artistic work, writing",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "exam-preparation",
@@ -149,7 +149,7 @@ sessions = [
         "desc": "A pre-performance meditation to calm nerves, sharpen recall, and boost confidence. Use this 10 minutes before any high-pressure situation to arrive calm and mentally prepared.",
         "learn": ["Performance anxiety management", "Confidence visualisation techniques", "Calming the nervous system before pressure", "Quick grounding when stakes are high"],
         "best_for": "Exams, job interviews, presentations, performances",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "peak-performance",
@@ -161,7 +161,7 @@ sessions = [
         "desc": "Mental preparation for high-stakes moments. Combines breathwork, visualisation, and positive reinforcement to help you perform at your best when it matters most.",
         "learn": ["Pre-performance mental routines", "Visualising success without pressure", "Managing adrenaline constructively", "Techniques used by elite athletes"],
         "best_for": "Sports, competitions, presentations, auditions",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "deep-work-mode",
@@ -173,7 +173,7 @@ sessions = [
         "desc": "A quick mental reset to enter a state of focused, uninterrupted concentration. Five minutes to clear mental clutter and prime your brain for sustained attention.",
         "learn": ["Rapid mental clearing technique", "Setting a focus intention", "Creating a distraction-free mindset", "Pairing meditation with productivity systems"],
         "best_for": "Before deep work blocks, after meetings, task switching",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "anxiety-relief",
@@ -185,7 +185,7 @@ sessions = [
         "desc": "When anxiety strikes, this session meets you where you are. Beginning with grounding techniques to bring you into the present moment, it then guides you through calming breathwork and a body-based release of anxious energy.",
         "learn": ["5-4-3-2-1 grounding technique", "Physiological sigh for instant calm", "Recognising anxiety vs. danger", "Building an anxiety toolkit"],
         "best_for": "Generalised anxiety, panic onset, overwhelming moments",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "stress-dissolve",
@@ -197,7 +197,7 @@ sessions = [
         "desc": "A comprehensive stress-release session that works through the body, breath, and mind. Particularly effective after a difficult day — it helps you process what happened and let it go before it accumulates.",
         "learn": ["Three-stage stress release (body, breath, mind)", "Processing difficult events mindfully", "Preventing stress accumulation", "The cortisol cycle and how to complete it"],
         "best_for": "End-of-day decompression, chronic stress, burnout prevention",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "self-compassion",
@@ -209,7 +209,7 @@ sessions = [
         "desc": "We're often our own harshest critics. This session guides you through a loving-kindness meditation focused inward — learning to treat yourself with the same kindness you'd offer a close friend.",
         "learn": ["Loving-kindness (Metta) meditation", "Replacing self-criticism with self-compassion", "The three components of self-compassion", "Research on self-compassion and mental health"],
         "best_for": "Self-criticism, perfectionism, low self-esteem, grief",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "worry-release",
@@ -221,7 +221,7 @@ sessions = [
         "desc": "A targeted meditation for when your mind is caught in worry loops. Using a 'catch, label, release' technique, you'll learn to notice worrying thoughts without feeding them.",
         "learn": ["The catch-label-release technique", "Understanding productive vs. unproductive worry", "Cognitive defusion (unhooking from thoughts)", "When to seek professional support"],
         "best_for": "Rumination, catastrophising, health anxiety, future worry",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "releasing-tension",
@@ -233,7 +233,7 @@ sessions = [
         "desc": "A guided progressive muscle relaxation to physically release the stress you're carrying. Systematically tense and release each muscle group, teaching your body the difference between tension and relaxation.",
         "learn": ["Progressive muscle relaxation (PMR)", "Identifying where you hold tension", "The tension-release cycle", "Using PMR as a daily stress management tool"],
         "best_for": "Physical tension, headaches, jaw clenching, shoulder pain",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "calm-reset",
@@ -245,7 +245,7 @@ sessions = [
         "desc": "An emergency calm-down for overwhelming moments. Five minutes to reset your nervous system using the physiological sigh and grounding techniques. Keep this one bookmarked.",
         "learn": ["The physiological sigh (double inhale + long exhale)", "30-second grounding technique", "Vagal tone activation", "Building a personal emergency calm toolkit"],
         "best_for": "Panic moments, before difficult conversations, overwhelm",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "anger-frustration-release",
@@ -257,7 +257,7 @@ sessions = [
         "desc": "Channel and release intense emotions through breathwork and guided visualisation. This session doesn't ask you to suppress anger — it helps you feel it fully and let it pass safely.",
         "learn": ["Safe emotional release techniques", "Breath of fire for processing intensity", "Visualisation for releasing anger", "The difference between expressing and processing anger"],
         "best_for": "After arguments, workplace frustration, road rage recovery",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "introduction-to-mindfulness",
@@ -269,7 +269,7 @@ sessions = [
         "desc": "Your first step into mindful awareness. This session explains what mindfulness actually is (and isn't), then guides you through a simple practice of noticing your breath and surroundings without judgement.",
         "learn": ["What mindfulness really means", "The difference between mindfulness and meditation", "A simple 3-step mindfulness practice", "Common misconceptions debunked"],
         "best_for": "Complete beginners, the curious, those who've tried and given up",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "body-scan-meditation",
@@ -281,7 +281,7 @@ sessions = [
         "desc": "Gently move your attention through each part of your body, from the crown of your head to the tips of your toes. Notice sensations without trying to change them — simply observe and release.",
         "learn": ["Systematic body awareness", "Noticing sensation without reaction", "The connection between body and emotion", "Using body scan for pain management"],
         "best_for": "Physical tension, chronic pain, disconnection from body, pre-sleep",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "mindful-breathing",
@@ -293,7 +293,7 @@ sessions = [
         "desc": "Anchor your attention on the breath — the most fundamental mindfulness practice. Learn to follow each inhale and exhale with gentle curiosity, returning patiently each time your mind wanders.",
         "learn": ["Breath as an anchor for attention", "The wandering mind is normal — not failure", "Three styles of breath awareness", "Building from 5 to 15 minutes of practice"],
         "best_for": "Daily practice, building concentration, stress reduction",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "letting-go-of-thoughts",
@@ -305,7 +305,7 @@ sessions = [
         "desc": "Learn to observe your thoughts without attachment. Using the 'leaves on a stream' technique, you'll practise placing each thought on a leaf and watching it float away — building distance between you and your mental chatter.",
         "learn": ["Leaves on a stream visualisation", "Cognitive defusion techniques", "The difference between thinking and awareness", "Why fighting thoughts makes them louder"],
         "best_for": "Overthinking, rumination, difficulty meditating, busy minds",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "open-awareness",
@@ -317,7 +317,7 @@ sessions = [
         "desc": "Expand your attention to include all sensations, sounds, and thoughts simultaneously. Rather than focusing on one thing, you become aware of everything at once — a practice sometimes called 'choiceless awareness'.",
         "learn": ["Open monitoring meditation", "Expanding from narrow to wide attention", "Choiceless awareness technique", "When to use focused vs. open awareness"],
         "best_for": "Experienced meditators, deepening practice, creative thinking",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "mindful-walking",
@@ -329,7 +329,7 @@ sessions = [
         "desc": "Bring awareness to each step — the lift, the movement, the placement. A moving meditation for when sitting still feels difficult or when you want to bring mindfulness into everyday activity.",
         "learn": ["Walking meditation technique", "Mindfulness in movement", "Bringing meditation off the cushion", "Using walks as mini mindfulness sessions"],
         "best_for": "Restless meditators, lunch breaks, nature walks, ADHD",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "mindfulness-at-work",
@@ -341,7 +341,7 @@ sessions = [
         "desc": "Quick reset for the workplace. Calm your mind before meetings, presentations, or difficult conversations. Designed to be done at your desk with your eyes open if needed.",
         "learn": ["Desk-friendly meditation techniques", "Managing workplace anxiety", "Mindful transitions between tasks", "The 3-breath reset for meetings"],
         "best_for": "Pre-meeting anxiety, workplace stress, difficult colleagues, burnout",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "observing-emotions",
@@ -353,7 +353,7 @@ sessions = [
         "desc": "Develop the skill of sitting with difficult emotions without reacting or suppressing them. Learn to name what you feel, locate it in your body, and watch it change — building emotional resilience over time.",
         "learn": ["RAIN technique (Recognise, Allow, Investigate, Nurture)", "Emotional labelling for regulation", "Where emotions live in the body", "Building emotional resilience through observation"],
         "best_for": "Emotional reactivity, mood swings, anger management, grief",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "morning-mindfulness",
@@ -365,7 +365,7 @@ sessions = [
         "desc": "Set an intentional tone for the day ahead with this gentle morning awareness practice. Before the rush begins, take seven minutes to arrive in your body and choose how you want to show up today.",
         "learn": ["Morning intention setting", "Waking up mindfully vs. reactively", "A simple gratitude-awareness practice", "Building a morning mindfulness habit"],
         "best_for": "Starting the day well, replacing phone scrolling, building habits",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "mindful-eating",
@@ -377,7 +377,7 @@ sessions = [
         "desc": "Transform mealtimes into moments of presence. This guided practice walks you through eating a single meal (or snack) with full attention — noticing taste, texture, temperature, and gratitude.",
         "learn": ["The raisin exercise (classic mindfulness practice)", "Eating with all five senses", "Recognising hunger vs. emotional eating", "Slowing down to improve digestion"],
         "best_for": "Emotional eating, rushed meals, digestive issues, food appreciation",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "meditation-for-beginners",
@@ -389,7 +389,7 @@ sessions = [
         "desc": "Never meditated before? Start here. A gentle, no-pressure introduction that takes just five minutes. No special position required — sit however you're comfortable. We'll simply practise noticing the breath.",
         "learn": ["What to actually do when you meditate", "Why your mind wandering is not failure", "Finding a comfortable position", "The only instruction you really need"],
         "best_for": "Absolute beginners, the sceptical, those who think they can't meditate",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "building-a-daily-practice",
@@ -401,7 +401,7 @@ sessions = [
         "desc": "You know meditation works — but how do you make it stick? This session is part meditation, part coaching. Learn the science of habit formation applied specifically to a daily meditation practice.",
         "learn": ["The habit loop: cue, routine, reward", "Why 2 minutes beats 20 (at first)", "Anchoring meditation to existing habits", "What to do when you miss a day"],
         "best_for": "Anyone who starts and stops, building consistency",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "meditation-foundations",
@@ -413,7 +413,7 @@ sessions = [
         "desc": "The essential techniques every meditator needs. This session covers posture, breath, attention, and attitude — the four pillars that support every meditation style from mindfulness to mantra.",
         "learn": ["The four pillars of meditation", "Common posture mistakes and fixes", "Three breath techniques for different goals", "The attitude of gentle curiosity"],
         "best_for": "Beginners ready to deepen, self-taught meditators wanting foundations",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "seven-day-mindfulness-course",
@@ -425,7 +425,7 @@ sessions = [
         "desc": "A structured week-long programme to build your mindfulness habit from scratch. Each day introduces a new concept and practice, gradually building your skills and confidence over seven days.",
         "learn": ["Day 1: Breath awareness", "Day 2: Body scan basics", "Day 3: Noting thoughts", "Day 4: Emotional awareness", "Day 5: Mindful movement", "Day 6: Loving-kindness", "Day 7: Integration and daily life"],
         "best_for": "Structured learners, complete beginners, building a 7-day streak",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "yoga-nidra",
@@ -437,7 +437,7 @@ sessions = [
         "desc": "The ancient practice of yogic sleep — profound rest while remaining fully conscious. One session of Yoga Nidra is said to be equivalent to several hours of sleep. This extended practice takes you through all five layers of being (koshas).",
         "learn": ["The five koshas (layers of being)", "Sankalpa: setting a heartfelt resolve", "Rotation of consciousness technique", "The hypnagogic state and its benefits"],
         "best_for": "Deep rest, burnout recovery, spiritual practice, insomnia",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "loving-kindness",
@@ -449,7 +449,7 @@ sessions = [
         "desc": "Systematically cultivate feelings of warmth and goodwill — first toward yourself, then loved ones, then neutral people, and finally difficult people. A transformative practice backed by extensive research.",
         "learn": ["The four stages of Metta meditation", "Generating genuine warmth on demand", "Working with resistance and difficult people", "Research: Metta changes brain structure in 8 weeks"],
         "best_for": "Relationship difficulties, self-criticism, expanding empathy, loneliness",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "transcendental-stillness",
@@ -461,7 +461,7 @@ sessions = [
         "desc": "An extended silent meditation with minimal guidance. After a brief settling-in period, you'll sit in stillness with only occasional gentle reminders. For practitioners ready to sit with themselves.",
         "learn": ["Extended silent sitting", "Working with discomfort and restlessness", "Finding the stillness beneath thought", "Why silence is the deepest teacher"],
         "best_for": "Experienced meditators wanting less guidance, retreats, deepening practice",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "vipassana-insight",
@@ -473,7 +473,7 @@ sessions = [
         "desc": "An extended insight meditation practice rooted in the Buddhist Theravada tradition. Observe the three characteristics of experience — impermanence, unsatisfactoriness, and non-self — through direct investigation.",
         "learn": ["The three marks of existence", "Noting practice (Mahasi style)", "Investigating impermanence in real-time", "The stages of insight"],
         "best_for": "Serious practitioners, Buddhist meditation path, retreat preparation",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "chakra-alignment",
@@ -485,7 +485,7 @@ sessions = [
         "desc": "Journey through each of the seven energy centres with breath, visualisation, and intention. Whether you approach chakras as literal energy or useful metaphors, this practice offers deep self-exploration.",
         "learn": ["The seven chakras and their qualities", "Breath and colour visualisation for each centre", "Recognising blocked vs. balanced energy", "Integrating chakra work into daily life"],
         "best_for": "Energy work, holistic practice, self-exploration, yoga practitioners",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
     {
         "slug": "non-dual-awareness",
@@ -497,7 +497,7 @@ sessions = [
         "desc": "Explore the space between observer and observed. This practice points you toward the awareness that is always present — before thought, beneath emotion, beyond the sense of a separate self.",
         "learn": ["What non-dual awareness means", "Self-inquiry: 'Who is aware?'", "The difference between experience and the experiencer", "Practices from Advaita Vedanta and Dzogchen traditions"],
         "best_for": "Advanced meditators, philosophical inquiry, spiritual deepening",
-        "narrator": "Lily",
+        "narrator": "Marco Santi",
     },
 ]
 

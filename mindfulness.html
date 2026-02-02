@@ -7,13 +7,13 @@
   <meta name="description" content="Discover mindfulness: what it is, the science behind it, core practices, and how to start. A comprehensive guide from Salus.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=1770053724">
   <style>
     .practice-grid {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;
     }
     .practice-card {
-      background: var(--white); border: 1px solid var(--light-gray);
+      background: transparent; border: none;
       border-radius: 12px; padding: 32px 24px; text-align: center;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
@@ -29,7 +29,7 @@
       display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px;
     }
     .science-card {
-      background: var(--white); border: 1px solid var(--light-gray);
+      background: transparent; border: none;
       border-radius: 12px; padding: 32px;
     }
     .science-card h4 { font-size: 1.05rem; margin-bottom: 10px; }
@@ -43,7 +43,7 @@
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
     }
     .stat-card {
-      background: var(--white); border: 1px solid var(--light-gray);
+      background: transparent; border: none;
       border-radius: 12px; padding: 28px; text-align: center;
     }
     .stat-number {
@@ -71,7 +71,7 @@
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
     }
     .daily-card {
-      background: var(--white); border: 1px solid var(--light-gray);
+      background: transparent; border: none;
       border-radius: 12px; padding: 28px;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
@@ -83,7 +83,7 @@
     .daily-card p { color: var(--mid-gray); font-size: 0.85rem; line-height: 1.6; }
 
     .faq-item {
-      background: var(--white); border: 1px solid var(--light-gray);
+      background: transparent; border: none;
       border-radius: 12px; margin-bottom: 12px; overflow: hidden;
     }
     .faq-question {
@@ -121,7 +121,7 @@
 
   <nav class="nav" style="position:relative;">
     <div class="container">
-      <a href="index.html" class="nav-logo"><img src="salus-logo.png" alt="Salus" class="nav-icon" style="height:32px;border-radius:6px;margin-right:8px;">SALUS</a>
+      <a href="index.html" class="nav-logo">SALUS</a>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="sessions.html">Sessions</a></li>
@@ -133,12 +133,12 @@
         <li><a href="contact.html">Contact</a></li>
         <li><a href="newsletter.html">Newsletter</a></li>
       </ul>
-      <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+      <button class="nav-toggle" aria-label="Toggle menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     </div>
   </nav>
 
   <!-- Hero -->
-  <section class="hero" style="padding-bottom:60px;">
+  <section class="hero hero-bg" style="padding-bottom:60px;background-image:url('content/images/heroes/mindfulness-hero.jpg');">
     <div class="container">
       <h1 class="fade-in"><span>Mindfulness</span></h1>
       <p class="fade-in" style="font-style:italic;color:var(--mid-gray);font-size:0.9rem;margin-bottom:12px;letter-spacing:0.5px;opacity:0.7;"><em>salus</em> &nbsp;/&#712;sa.lus/ &nbsp; health &middot; safety &middot; well-being</p>
@@ -146,23 +146,27 @@
     </div>
   </section>
 
-  <!-- Video -->
-  <section>
+  <!-- Listen: Guided Mindfulness -->
+  <section style="background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%)">
     <div class="container">
       <div class="section-header fade-in">
-        <h2>Watch: The Science of Mindfulness</h2>
-        <p>A guided exploration of how mindfulness changes your brain and body.</p>
+        <h2>Listen: 10-Minute Mindfulness</h2>
+        <p>A guided mindfulness practice. Press play, close your eyes, and follow along.</p>
       </div>
-      <div style="max-width:800px;margin:0 auto;">
-        <video controls preload="none" poster="content/video/04-science-of-mindfulness-thumb.jpg" style="width:100%;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.15);">
-          <source src="content/video/04-science-of-mindfulness.mp4" type="video/mp4">
-        </video>
+      <div style="max-width:600px;margin:0 auto;">
+        <div class="custom-player" data-src="content/audio/04-science-of-mindfulness.mp3" style="margin-top:8px;">
+          <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
+            <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">&#9654;</button>
+            <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+            <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- What is Mindfulness -->
-  <section>
+  <section style="background:linear-gradient(135deg,#f4f1ec 0%,#ece7e0 100%)">
     <div class="container">
       <div class="section-header fade-in">
         <h2>What is Mindfulness?</h2>
@@ -176,7 +180,7 @@
   </section>
 
   <!-- The Science -->
-  <section>
+  <section style="background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%)">
     <div class="container">
       <div class="section-header fade-in">
         <h2>The Science</h2>
@@ -208,8 +212,8 @@
 
       <div class="science-grid">
         <div class="science-card fade-in">
-          <h4>The Amygdala Shrinks</h4>
-          <p>The amygdala is your brain's fear centre — the alarm system that triggers fight-or-flight responses. After 8 weeks of mindfulness practice, researchers at Harvard found that grey matter density in the amygdala decreased. Participants became measurably less reactive to stress, even outside of meditation sessions.</p>
+          <h4>Stress Response Shifts</h4>
+          <p>The amygdala is your brain's alarm system, triggering fight-or-flight responses. After 8 weeks of mindfulness practice, Harvard researchers found participants became measurably less reactive to stress — even outside of meditation sessions. The brain learns to respond rather than react.</p>
           <div class="source">H&ouml;lzel et al., "Mindfulness practice leads to increases in regional brain gray matter density," Psychiatry Research: Neuroimaging, 2011</div>
         </div>
         <div class="science-card fade-in">
@@ -232,7 +236,7 @@
   </section>
 
   <!-- Core Practices -->
-  <section>
+  <section style="background:linear-gradient(135deg,#f4f1ec 0%,#ece7e0 100%)">
     <div class="container">
       <div class="section-header fade-in">
         <h2>Core Practices</h2>
@@ -240,32 +244,32 @@
       </div>
       <div class="practice-grid">
         <div class="practice-card fade-in">
-          <div class="practice-icon">&#129504;</div>
+          <div style="height:100px;border-radius:10px;margin-bottom:14px;overflow:hidden;background:linear-gradient(135deg,rgba(13,27,42,0.7),rgba(42,157,143,0.5)),url('content/images/heroes/timer-hero.jpg');background-size:cover;background-position:center;"></div>
           <h4>Body Scan</h4>
           <p>Slowly move your attention from head to toe (or toe to head), noticing sensations in each part of your body without trying to change anything. This builds interoceptive awareness and helps release tension you didn't know you were holding.</p>
         </div>
         <div class="practice-card fade-in">
-          <div class="practice-icon">&#127744;</div>
+          <div style="height:100px;border-radius:10px;margin-bottom:14px;overflow:hidden;background:linear-gradient(135deg,rgba(27,67,50,0.7),rgba(42,100,80,0.5)),url('content/images/heroes/breathe-hero.jpg');background-size:cover;background-position:center;"></div>
           <h4>Mindful Breathing</h4>
           <p>Focus your full attention on the natural rhythm of your breath — the inhale, the pause, the exhale. When your mind wanders, gently return. This is the foundation of almost all mindfulness practice and can be done anywhere, any time.</p>
         </div>
         <div class="practice-card fade-in">
-          <div class="practice-icon">&#128694;</div>
+          <div style="height:100px;border-radius:10px;margin-bottom:14px;overflow:hidden;background:linear-gradient(135deg,rgba(3,4,94,0.7),rgba(0,119,182,0.5)),url('content/images/heroes/soundscapes-hero.jpg');background-size:cover;background-position:center;"></div>
           <h4>Walking Meditation</h4>
           <p>Walk slowly and deliberately, paying attention to the sensation of each step — the lift, the movement, the placement. Walking meditation is ideal for people who find sitting still difficult and brings mindfulness into physical movement.</p>
         </div>
         <div class="practice-card fade-in">
-          <div class="practice-icon">&#127860;</div>
+          <div style="height:100px;border-radius:10px;margin-bottom:14px;overflow:hidden;background:linear-gradient(135deg,rgba(42,100,80,0.7),rgba(13,27,42,0.5)),url('content/images/heroes/media-hero.jpg');background-size:cover;background-position:center;"></div>
           <h4>Mindful Eating</h4>
           <p>Eat one meal (or even one bite) with full attention. Notice the colour, texture, smell, and taste of your food. Chew slowly. This practice transforms a routine activity into a rich sensory experience and improves your relationship with food.</p>
         </div>
         <div class="practice-card fade-in">
-          <div class="practice-icon">&#128156;</div>
+          <div style="height:100px;border-radius:10px;margin-bottom:14px;overflow:hidden;background:linear-gradient(135deg,rgba(173,20,87,0.6),rgba(233,30,99,0.5)),url('content/images/heroes/about-hero.jpg');background-size:cover;background-position:center;"></div>
           <h4>Loving-Kindness</h4>
           <p>Silently repeat phrases of compassion — first toward yourself, then a loved one, a neutral person, a difficult person, and finally all beings. This practice strengthens empathy, reduces self-criticism, and has been shown to increase positive emotions over time.</p>
         </div>
         <div class="practice-card fade-in">
-          <div class="practice-icon">&#127807;</div>
+          <div style="height:100px;border-radius:10px;margin-bottom:14px;overflow:hidden;background:linear-gradient(135deg,rgba(42,157,143,0.7),rgba(27,67,50,0.5)),url('content/images/heroes/faq-hero.jpg');background-size:cover;background-position:center;"></div>
           <h4>Mindful Observation</h4>
           <p>Choose a natural object — a leaf, a cloud, a flame — and give it your complete attention for two minutes. Notice every detail as if seeing it for the first time. This deceptively simple practice trains your brain to find richness in ordinary moments.</p>
         </div>
@@ -274,7 +278,7 @@
   </section>
 
   <!-- How to Start -->
-  <section>
+  <section style="background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%)">
     <div class="container">
       <div class="section-header fade-in">
         <h2>How to Start</h2>
@@ -328,7 +332,7 @@
   </section>
 
   <!-- Mindfulness in Daily Life -->
-  <section>
+  <section style="background:linear-gradient(135deg,#f4f1ec 0%,#ece7e0 100%)">
     <div class="container">
       <div class="section-header fade-in">
         <h2>Mindfulness in Daily Life</h2>
@@ -336,27 +340,27 @@
       </div>
       <div class="daily-grid">
         <div class="daily-card fade-in">
-          <h4>&#9749; Morning Routine</h4>
+          <h4>Morning Routine</h4>
           <p>Instead of reaching for your phone immediately, take three conscious breaths before getting out of bed. Drink your first cup of tea or coffee without any screens — just notice the warmth, the taste, the quiet.</p>
         </div>
         <div class="daily-card fade-in">
-          <h4>&#128692; Commuting</h4>
+          <h4>Commuting</h4>
           <p>Whether walking, driving, or on the train, use your commute as practice. Feel your feet on the ground. Notice the sounds around you. If driving, feel your hands on the wheel. Arrive at your destination having actually experienced the journey.</p>
         </div>
         <div class="daily-card fade-in">
-          <h4>&#128172; Conversations</h4>
+          <h4>Conversations</h4>
           <p>Practice truly listening. When someone speaks, give them your full attention instead of planning your response. Notice when your mind drifts and gently bring it back. This alone transforms relationships.</p>
         </div>
         <div class="daily-card fade-in">
-          <h4>&#128187; Work Breaks</h4>
+          <h4>Work Breaks</h4>
           <p>Set a gentle reminder every 90 minutes to pause. Take three deep breaths. Notice any tension in your shoulders, jaw, or hands. Briefly scan your emotional state. These micro-pauses prevent stress from accumulating.</p>
         </div>
         <div class="daily-card fade-in">
-          <h4>&#127869; Mealtimes</h4>
+          <h4>Mealtimes</h4>
           <p>Eat at least one meal a day without your phone, TV, or laptop. Chew slowly. Notice flavours and textures. Put your fork down between bites. Mindful eating improves digestion and helps you recognise when you're full.</p>
         </div>
         <div class="daily-card fade-in">
-          <h4>&#127769; Before Sleep</h4>
+          <h4>Before Sleep</h4>
           <p>Spend the last five minutes before bed in stillness. Do a brief body scan from head to toe. Notice where you're holding tension and consciously let it go. Let the day be done. Tomorrow can wait.</p>
         </div>
       </div>
@@ -364,7 +368,7 @@
   </section>
 
   <!-- FAQ -->
-  <section>
+  <section style="background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%)">
     <div class="container">
       <div class="section-header fade-in">
         <h2>Frequently Asked Questions</h2>
@@ -405,8 +409,8 @@
   <!-- CTA -->
   <section class="cta-banner">
     <div class="container">
-      <h2 class="fade-in">Ready to begin?</h2>
-      <p class="fade-in">Try a guided mindfulness session or use our breathing timer — free for 7 days.</p>
+      <h2 class="fade-in">Join the Salus family</h2>
+      <p class="fade-in">We're a family, not a corporation. Try guided mindfulness sessions and breathing tools — free for 7 days.</p>
       <div class="fade-in" style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
         <a href="sessions.html" class="btn">Explore Sessions</a>
         <a href="breathe.html" class="btn" style="background:transparent;border:2px solid var(--white);color:var(--white);">Breathing Timer</a>
@@ -459,6 +463,6 @@
     </div>
   </footer>
 
-  <script src="js/main.js"></script>
+  <script src="js/main.js?v=1770053724"></script>
 </body>
 </html>

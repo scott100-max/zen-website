@@ -7,7 +7,7 @@
   <meta name="description" content="Salus is a family-run meditation and mindfulness platform, developed with a clinical psychologist. Sleep. Relax. Restore.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=1770053724">
 </head>
 <body>
 
@@ -20,7 +20,7 @@
   <!-- Nav -->
   <nav class="nav" style="position:relative;">
     <div class="container">
-      <a href="index.html" class="nav-logo"><img src="salus-logo.png" alt="Salus" class="nav-icon" style="height:48px;margin-right:12px;"><span style="font-family:'Cormorant Garamond',serif;font-size:2rem;">SALUS</span></a>
+      <a href="index.html" class="nav-logo"><span style="font-family:'Cormorant Garamond',serif;font-size:2rem;">SALUS</span></a>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="sessions.html">Sessions</a></li>
@@ -32,34 +32,29 @@
         <li><a href="contact.html">Contact</a></li>
         <li><a href="newsletter.html">Newsletter</a></li>
       </ul>
-      <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+      <button class="nav-toggle" aria-label="Toggle menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     </div>
   </nav>
 
   <!-- Hero -->
-  <section class="hero" style="position:relative;padding:0;overflow:hidden;">
-    <div style="position:relative;width:100%;">
-      <video id="heroVideo" autoplay muted loop playsinline style="width:100%;display:block;min-height:500px;object-fit:cover;">
-        <source src="salus-video.mp4" type="video/mp4">
-      </video>
-      <button id="muteToggle" onclick="var v=document.getElementById('heroVideo');v.muted=!v.muted;this.textContent=v.muted?'🔇 Unmute':'🔊 Mute'" style="position:absolute;bottom:20px;right:20px;z-index:10;background:rgba(0,0,0,0.5);color:#fff;border:none;border-radius:50px;padding:10px 18px;font-size:0.85rem;cursor:pointer;backdrop-filter:blur(4px);transition:background 0.3s;">🔇 Unmute</button>
-      <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;">
-        <div style="text-align:center;padding:24px;position:relative;">
-          <h1 class="fade-in" style="color:#fff;position:relative;z-index:1;">Your journey to<br><span style="color:var(--accent-light);">inner calm</span> starts here</h1>
-          <p class="fade-in" style="color:rgba(255,255,255,0.7);font-style:italic;font-size:1rem;margin-bottom:24px;letter-spacing:1px;">Sleep. Relax. Restore.</p>
-          <p class="fade-in" style="color:rgba(255,255,255,0.85);max-width:560px;margin:0 auto 32px;font-size:1.1rem;">A family-run mindfulness platform developed with a clinical psychologist. Real experience. Real expertise. Real results.</p>
-          <div class="btn-group fade-in">
-            <a href="sessions.html" class="btn btn-primary">Explore Sessions</a>
-            <a href="about.html" class="btn btn-outline" style="color:#fff;border-color:#fff;">Our Story</a>
-          </div>
-          <p id="soundHint" style="font-size:0.85rem;color:rgba(255,255,255,0.6);margin-top:16px;">Click anywhere to enable sound</p>
+  <section class="hero" style="position:relative;padding:0;overflow:hidden;min-height:600px;background:url('images/meditation-woman-outdoor.jpg') center/cover no-repeat;">
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(13,27,42,0.7) 0%, rgba(26,38,56,0.6) 50%, rgba(13,27,42,0.5) 70%, rgba(255,255,255,0) 100%);"></div>
+    <div style="position:absolute;bottom:0;left:0;right:0;height:160px;background:linear-gradient(to bottom, transparent, var(--white));z-index:1;"></div>
+    <div style="position:relative;z-index:2;display:flex;align-items:center;justify-content:center;min-height:600px;padding:120px 24px 100px;">
+      <div style="text-align:center;">
+        <h1 class="fade-in" style="color:#fff;font-family:'Cormorant Garamond',Georgia,serif;font-size:3.8rem;font-weight:700;letter-spacing:-1px;line-height:1.1;text-shadow:0 4px 30px rgba(0,0,0,0.4);margin-bottom:16px;">Your journey to<br><span style="color:var(--accent-light);">inner calm</span> starts here</h1>
+        <p class="fade-in" style="color:rgba(255,255,255,0.7);font-style:italic;font-size:1rem;margin-bottom:24px;letter-spacing:2px;text-transform:uppercase;">Sleep &middot; Relax &middot; Restore</p>
+        <p class="fade-in" style="color:rgba(255,255,255,0.85);max-width:560px;margin:0 auto 36px;font-size:1.1rem;line-height:1.7;text-shadow:0 1px 8px rgba(0,0,0,0.3);">A family-run mindfulness platform developed with a clinical psychologist. Real experience. Real expertise. Real results.</p>
+        <div class="btn-group fade-in">
+          <a href="sessions.html" class="btn btn-primary">Explore Sessions</a>
+          <a href="about.html" class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,0.6);">Our Story</a>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Welcome -->
-  <section style="background:var(--white);text-align:center;padding:100px 0;">
+  <section style="background:linear-gradient(180deg, #f8f6f3 0%, #ffffff 100%);text-align:center;padding:100px 0;">
     <div class="container" style="max-width:720px;">
       <h2 class="fade-in" style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;margin-bottom:8px;">Welcome to Salus</h2>
       <p class="fade-in" style="font-style:italic;color:var(--mid-gray);font-size:0.9rem;margin-bottom:24px;letter-spacing:0.5px;opacity:0.7;"><em>salus</em> &nbsp;/&#712;sa.lus/ &nbsp; Latin for health, safety &amp; well-being &nbsp;&middot;&nbsp; Sleep. Relax. Restore.</p>
@@ -67,7 +62,7 @@
         Life moves fast. Your mind doesn't have to. Salus is a meditation and mindfulness platform built to help you slow down, breathe, and reconnect with what matters most.
       </p>
       <p class="fade-in" style="font-size:1.15rem;color:var(--mid-gray);line-height:1.9;margin-bottom:20px;">
-        We're a family. Not a corporation. Our founder has over 40 years of personal experience with meditation, stress management, ASMR, CBT, and therapy. Our clinical consultant holds a BSc (Hons) and MSc in Psychology. We didn't build Salus to fill a gap in the market — we built it because these tools changed our lives, and we believe they can change yours too.
+        We're a family. Not a corporation. Scott Ripley has over 40 years of personal experience with mindfulness, meditation, cognitive behavioural therapy, counselling, breathwork, acupuncture, and ASMR. Our clinical consultant holds a BSc (Hons) and MSc in Psychology. No expensive celebrities. No venture capital. No boardroom. We built Salus because these tools changed our lives, and we believe they can change yours too.
       </p>
       <p class="fade-in" style="font-size:1.15rem;color:var(--mid-gray);line-height:1.9;">
         This isn't a subscription service that takes your money and forgets your name. We are genuinely here to help. You can reach out to us directly, anytime. This is Salus — your space to sleep, relax, and restore.
@@ -75,146 +70,165 @@
     </div>
   </section>
 
+  <!-- From Our Founder -->
+  <section style="padding:80px 0;background:linear-gradient(135deg,var(--forest-mid) 0%,var(--forest) 100%);">
+    <div class="container" style="max-width:760px;text-align:center;">
+      <h2 class="fade-in" style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:2rem;margin-bottom:24px;">From Our Founder</h2>
+      <blockquote class="fade-in" style="font-size:1.1rem;font-style:italic;color:rgba(255,255,255,0.9);line-height:1.9;margin:0 auto 20px;max-width:680px;">
+        "I've spent over 40 years on this journey — through mindfulness, meditation, cognitive behavioural therapy, breathwork, acupuncture, ASMR, and every technique I could find. Some worked. Some didn't. But the ones that did genuinely changed my life. When my daughter Ella completed her psychology degrees, we knew we could build something different — something that combined decades of lived experience with proper clinical knowledge."
+      </blockquote>
+      <blockquote class="fade-in" style="font-size:1.1rem;font-style:italic;color:rgba(255,255,255,0.9);line-height:1.9;margin:0 auto 20px;max-width:680px;">
+        "Salus isn't a corporation. It's personal. Every session is reviewed by Ella. Every message you send is read by a real person. And we're always open to ideas — if there's something you'd like to see, tell us. You're not a user to us. You're part of this."
+      </blockquote>
+      <div class="fade-in" style="margin-top:24px;">
+        <p style="color:#fff;font-weight:600;font-size:1rem;">S. Riple</p>
+        <p style="color:rgba(255,255,255,0.6);font-size:0.85rem;">Founder, Salus</p>
+      </div>
+    </div>
+  </section>
+
   <!-- What Makes Us Different -->
-  <section style="background:var(--off-white);">
+  <section style="background:linear-gradient(180deg, #f0ece4 0%, #f8f6f3 100%);">
     <div class="container">
       <div class="section-header fade-in">
         <h2>Why We're Different</h2>
         <p>We're not another faceless app. We're a family who've lived this.</p>
       </div>
-      <div class="feature-grid" style="grid-template-columns:repeat(5,1fr);">
-        <div class="feature-card fade-in">
-          <div class="feature-icon">&#128106;</div>
-          <h3>Family-Run</h3>
-          <p>Founded by a family with decades of personal experience in meditation, therapy, and mental health.</p>
+      <div class="feature-grid" style="grid-template-columns:repeat(3,1fr);max-width:960px;margin:0 auto;">
+        <div class="feature-card fade-in" style="padding:0;overflow:hidden;">
+          <div style="height:120px;background:linear-gradient(135deg,rgba(13,27,42,0.7),rgba(42,157,143,0.6)),url('content/images/heroes/about-hero.jpg');background-size:cover;background-position:center;"></div>
+          <div style="padding:20px;">
+            <h3>Family-Run</h3>
+            <p>Founded by a family with decades of personal experience in meditation, therapy, and mental health.</p>
+          </div>
         </div>
-        <div class="feature-card fade-in">
-          <div class="feature-icon">&#127891;</div>
-          <h3>Clinically Reviewed</h3>
-          <p>Every session reviewed by our consultant psychologist, Ella Ripley BSc (Hons), MSc Psychology.</p>
+        <div class="feature-card fade-in" style="padding:0;overflow:hidden;">
+          <div style="height:120px;background:linear-gradient(135deg,rgba(26,26,62,0.7),rgba(90,103,216,0.6)),url('content/images/heroes/education-hero.jpg');background-size:cover;background-position:center;"></div>
+          <div style="padding:20px;">
+            <h3>Clinically Reviewed</h3>
+            <p>Every session reviewed by our consultant psychologist, Ella Ripley BSc (Hons), MSc Psychology.</p>
+          </div>
         </div>
-        <div class="feature-card fade-in">
-          <div class="feature-icon">&#128172;</div>
-          <h3>Reach Us Directly</h3>
-          <p>We're real people. Contact us anytime — we read and respond to every message personally.</p>
+        <div class="feature-card fade-in" style="padding:0;overflow:hidden;">
+          <div style="height:120px;background:linear-gradient(135deg,rgba(74,42,10,0.7),rgba(231,111,81,0.6)),url('content/images/heroes/contact-hero.jpg');background-size:cover;background-position:center;"></div>
+          <div style="padding:20px;">
+            <h3>Reach Us Directly</h3>
+            <p>We're real people. Contact us anytime — we read and respond to every message personally.</p>
+          </div>
         </div>
-        <div class="feature-card fade-in">
-          <div class="feature-icon">&#128151;</div>
-          <h3>40+ Years Experience</h3>
-          <p>Our founder's journey started before the iPhone era — through every meditation method, therapy, and technique.</p>
+      </div>
+      <div class="feature-grid" style="grid-template-columns:repeat(2,1fr);max-width:640px;margin:24px auto 0;">
+        <div class="feature-card fade-in" style="padding:0;overflow:hidden;">
+          <div style="height:120px;background:linear-gradient(135deg,rgba(36,0,70,0.7),rgba(157,78,221,0.6)),url('content/images/heroes/mindfulness-hero.jpg');background-size:cover;background-position:center;"></div>
+          <div style="padding:20px;">
+            <h3>40+ Years Experience</h3>
+            <p>Scott Ripley's journey started before the iPhone era — through every meditation method, therapy, and technique.</p>
+          </div>
         </div>
-        <div class="feature-card fade-in">
-          <div class="feature-icon">&#9989;</div>
-          <h3>Everything Included</h3>
-          <p>One subscription. Sleep, meditation, soundscapes, breathwork — all of it. No hidden extras, no separate apps.</p>
+        <div class="feature-card fade-in" style="padding:0;overflow:hidden;">
+          <div style="height:120px;background:linear-gradient(135deg,rgba(3,4,94,0.7),rgba(0,119,182,0.6)),url('content/images/heroes/soundscapes-hero.jpg');background-size:cover;background-position:center;"></div>
+          <div style="padding:20px;">
+            <h3>Everything Included</h3>
+            <p>One subscription. Sleep, meditation, soundscapes, breathwork — all of it. No hidden extras, no separate apps.</p>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Features -->
-  <section>
+  <section style="background:linear-gradient(180deg, #eef2f7 0%, #f8f9fb 100%);">
     <div class="container">
       <div class="section-header fade-in">
         <h2>What's Inside</h2>
         <p>New content added regularly. Something for everyone.</p>
       </div>
       <div class="feature-grid">
-        <a href="sessions.html" class="feature-card fade-in" style="text-decoration:none;color:inherit;">
-          <div class="feature-icon">&#127807;</div>
-          <h3>Guided Sessions</h3>
-          <p>Hundreds of guided meditations for sleep, focus, stress relief, and personal growth — from 3 to 60 minutes.</p>
+        <a href="sessions.html" class="feature-card fade-in" style="text-decoration:none;color:inherit;padding:0;overflow:hidden;">
+          <div style="height:140px;background:linear-gradient(135deg,rgba(13,27,42,0.7),rgba(27,67,50,0.6)),url('content/images/heroes/sessions-hero.jpg');background-size:cover;background-position:center;"></div>
+          <div style="padding:20px;">
+            <h3>Guided Sessions</h3>
+            <p>Hundreds of guided meditations for sleep, focus, stress relief, and personal growth — from 3 to 60 minutes.</p>
+          </div>
         </a>
-        <a href="soundscapes.html" class="feature-card fade-in" style="text-decoration:none;color:inherit;">
-          <div class="feature-icon">&#127912;</div>
-          <h3>Soundscapes</h3>
-          <p>Immersive audio environments — rain, forest, ocean, and ambient music to help you relax or concentrate.</p>
+        <a href="soundscapes.html" class="feature-card fade-in" style="text-decoration:none;color:inherit;padding:0;overflow:hidden;">
+          <div style="height:140px;background:linear-gradient(135deg,rgba(3,4,94,0.7),rgba(0,119,182,0.6)),url('content/images/heroes/media-hero.jpg');background-size:cover;background-position:center;"></div>
+          <div style="padding:20px;">
+            <h3>Soundscapes</h3>
+            <p>Immersive audio environments — rain, forest, ocean, and ambient music to help you relax or concentrate.</p>
+          </div>
         </a>
-        <a href="education.html" class="feature-card fade-in" style="text-decoration:none;color:inherit;">
-          <div class="feature-icon">&#128218;</div>
-          <h3>Learn</h3>
-          <p>Articles, science, and practical tips to understand mindfulness and build a lasting practice.</p>
+        <a href="education.html" class="feature-card fade-in" style="text-decoration:none;color:inherit;padding:0;overflow:hidden;">
+          <div style="height:140px;background:linear-gradient(135deg,rgba(36,0,70,0.7),rgba(90,24,154,0.6)),url('content/images/heroes/timer-hero.jpg');background-size:cover;background-position:center;"></div>
+          <div style="padding:20px;">
+            <h3>Learn</h3>
+            <p>Articles, science, and practical tips to understand mindfulness and build a lasting practice.</p>
+          </div>
         </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Lifestyle Gallery -->
-  <section style="padding:80px 0;background:var(--white);">
-    <div class="container">
-      <div class="section-header fade-in">
-        <h2>Your Practice, Your Way</h2>
-        <p>Meditation fits into every life. Morning routines, lunch breaks, bedtime wind-downs.</p>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;" class="lifestyle-grid">
-        <div class="fade-in" style="border-radius:12px;overflow:hidden;aspect-ratio:1;"><img src="images/meditation-woman-outdoor.jpg" alt="Woman meditating outdoors" style="width:100%;height:100%;object-fit:cover;"></div>
-        <div class="fade-in" style="border-radius:12px;overflow:hidden;aspect-ratio:1;"><img src="images/sleeping-man-peaceful.jpg" alt="Man sleeping peacefully" style="width:100%;height:100%;object-fit:cover;"></div>
-        <div class="fade-in" style="border-radius:12px;overflow:hidden;aspect-ratio:1;"><img src="images/yoga-nature-forest.jpg" alt="Yoga in nature" style="width:100%;height:100%;object-fit:cover;"></div>
-        <div class="fade-in" style="border-radius:12px;overflow:hidden;aspect-ratio:1;"><img src="images/relaxing-woman-headphones.jpg" alt="Woman relaxing with headphones" style="width:100%;height:100%;object-fit:cover;"></div>
       </div>
     </div>
   </section>
 
   <!-- Testimonials -->
-  <section style="background:var(--off-white);">
+  <section style="background:linear-gradient(160deg, #1b2838 0%, #0d1b2a 100%);color:#fff;">
     <div class="container">
       <div class="section-header fade-in">
-        <h2>What people are saying</h2>
+        <h2 style="color:#fff;">What people are saying</h2>
       </div>
       <div class="testimonial-grid">
-        <div class="testimonial fade-in">
+        <div class="testimonial fade-in" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px;">
           <div style="color:var(--accent);margin-bottom:8px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
           <p>"Salus has completely changed my morning routine. I feel more focused and grounded throughout the day. The guided sessions are beautifully paced."</p>
-          <div class="author">— Sarah M., London</div>
+          <div class="author" style="color:rgba(255,255,255,0.6);">— Sarah M., London</div>
         </div>
-        <div class="testimonial fade-in">
+        <div class="testimonial fade-in" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px;">
           <div style="color:var(--accent);margin-bottom:8px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
           <p>"The sleep meditations are incredible. After years of insomnia, I fall asleep faster and wake up feeling genuinely rested. Life-changing."</p>
-          <div class="author">— James T., Manchester</div>
+          <div class="author" style="color:rgba(255,255,255,0.6);">— James T., Manchester</div>
         </div>
-        <div class="testimonial fade-in">
+        <div class="testimonial fade-in" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px;">
           <div style="color:var(--accent);margin-bottom:8px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
           <p>"I've tried other apps but Salus feels personal. You can tell real people made this, not a marketing team. The breathing exercises got me through a really tough time."</p>
-          <div class="author">— Priya K., Edinburgh</div>
+          <div class="author" style="color:rgba(255,255,255,0.6);">— Priya K., Edinburgh</div>
         </div>
-        <div class="testimonial fade-in">
+        <div class="testimonial fade-in" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px;">
           <div style="color:var(--accent);margin-bottom:8px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
           <p>"My therapist recommended mindfulness and Salus made it actually accessible. The 5-minute sessions are perfect for my lunch break at work."</p>
-          <div class="author">— David R., Bristol</div>
+          <div class="author" style="color:rgba(255,255,255,0.6);">— David R., Bristol</div>
         </div>
-        <div class="testimonial fade-in">
+        <div class="testimonial fade-in" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px;">
           <div style="color:var(--accent);margin-bottom:8px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
           <p>"As a nurse working long shifts, I needed something quick and effective. The Calm Reset session is my go-to before every shift. Absolute gem."</p>
-          <div class="author">— Emma L., Leeds</div>
+          <div class="author" style="color:rgba(255,255,255,0.6);">— Emma L., Leeds</div>
         </div>
-        <div class="testimonial fade-in">
+        <div class="testimonial fade-in" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px;">
           <div style="color:var(--accent);margin-bottom:8px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
           <p>"My whole family uses Salus now. The soundscapes help my kids wind down at bedtime and I use the anxiety sessions daily. Worth every penny."</p>
-          <div class="author">— Tom &amp; Rachel H., Birmingham</div>
+          <div class="author" style="color:rgba(255,255,255,0.6);">— Tom &amp; Rachel H., Birmingham</div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Research Backed -->
-  <section style="background:var(--white);padding:80px 0;">
+  <section style="background:linear-gradient(180deg, #f0e6d8 0%, #e8ddd0 100%);padding:80px 0;">
     <div class="container" style="max-width:900px;">
       <div class="section-header fade-in">
         <h2>The Science Behind It</h2>
         <p>Mindfulness isn't alternative medicine. It's mainstream, evidence-based, and clinician-recommended.</p>
       </div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;" class="research-grid">
-        <div class="fade-in" style="background:var(--off-white);border-radius:12px;padding:28px;text-align:center;">
+        <div class="fade-in" style="background:transparent;border-radius:12px;padding:28px;text-align:center;">
           <div style="font-size:2rem;font-weight:700;color:var(--forest);margin-bottom:8px;">47%</div>
           <div style="color:var(--mid-gray);font-size:0.9rem;line-height:1.6;">Reduction in anxiety symptoms after 8 weeks of regular mindfulness practice</div>
           <div style="color:var(--accent);font-size:0.75rem;margin-top:8px;">Dr Elizabeth Hoge, Georgetown University Medical Center</div>
         </div>
-        <div class="fade-in" style="background:var(--off-white);border-radius:12px;padding:28px;text-align:center;">
+        <div class="fade-in" style="background:transparent;border-radius:12px;padding:28px;text-align:center;">
           <div style="font-size:2rem;font-weight:700;color:var(--forest);margin-bottom:8px;">8 weeks</div>
-          <div style="color:var(--mid-gray);font-size:0.9rem;line-height:1.6;">To measurably change brain structure — the amygdala shrinks, the prefrontal cortex thickens</div>
+          <div style="color:var(--mid-gray);font-size:0.9rem;line-height:1.6;">To measurably change brain structure — the amygdala adapts, the prefrontal cortex thickens</div>
           <div style="color:var(--accent);font-size:0.75rem;margin-top:8px;">Dr Sara Lazar, Harvard Medical School</div>
         </div>
-        <div class="fade-in" style="background:var(--off-white);border-radius:12px;padding:28px;text-align:center;">
+        <div class="fade-in" style="background:transparent;border-radius:12px;padding:28px;text-align:center;">
           <div style="font-size:2rem;font-weight:700;color:var(--forest);margin-bottom:8px;">NHS</div>
           <div style="color:var(--mid-gray);font-size:0.9rem;line-height:1.6;">Recommends mindfulness-based cognitive therapy for preventing depression relapse</div>
           <div style="color:var(--accent);font-size:0.75rem;margin-top:8px;">NICE Guidelines, Prof Mark Williams, Oxford</div>
@@ -232,7 +246,7 @@
   <!-- CTA -->
   <section class="cta-banner">
     <div class="container">
-      <h2 class="fade-in">Start your free trial today</h2>
+      <h2 class="fade-in">Join the Salus family</h2>
       <p class="fade-in">7 days of full access. No credit card required.</p>
       <a href="apps.html" class="btn fade-in">Get Salus Free</a>
     </div>
@@ -301,21 +315,12 @@
     </div>
   </div>
 
-  <script src="js/main.js"></script>
+  <script src="js/main.js?v=1770053724"></script>
   <script>
     // Cookie consent
     if (!localStorage.getItem('salus_cookies')) {
       document.getElementById('cookieConsent').style.display = 'block';
     }
-  </script>
-  <script>
-    document.addEventListener('click', function unmute() {
-      var v = document.getElementById('heroVideo');
-      if (v) { v.muted = false; }
-      var hint = document.getElementById('soundHint');
-      if (hint) { hint.style.display = 'none'; }
-      document.removeEventListener('click', unmute);
-    });
   </script>
   <script>
     (function() {
