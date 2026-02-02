@@ -157,7 +157,6 @@ def main():
             subprocess.run([
                 "ffmpeg", "-y", "-i", mp3_path,
                 "-ar", "44100", "-ac", "1",
-                "-af", "afade=t=in:d=0.05,afade=t=out:d=0.05",
                 "-acodec", "pcm_s16le", part_path
             ], capture_output=True)
         else:
