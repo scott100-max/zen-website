@@ -466,9 +466,21 @@ document.querySelectorAll('.custom-player').forEach(player => {
 
   playBtn.addEventListener('click', () => {
     if (!loaded) {
-      audio.src = src;
+      audio.src = src + '?v=' + Date.now();
       audio.preload = 'auto';
+      audio.load();
       loaded = true;
+      playBtn.innerHTML = '...';
+      audio.addEventListener('canplay', function onReady() {
+        audio.removeEventListener('canplay', onReady);
+        audio.play();
+        playBtn.innerHTML = '&#9646;&#9646;';
+      });
+      audio.addEventListener('error', () => {
+        playBtn.innerHTML = '&#9654;';
+        loaded = false;
+      });
+      return;
     }
     if (audio.paused) {
       audio.play();
