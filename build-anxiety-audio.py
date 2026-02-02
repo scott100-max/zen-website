@@ -28,7 +28,7 @@ segments = [
     ("silence", 2),
     ("text", "The first technique is called box breathing. It's used by everyone from Navy SEALs to therapists because it works quickly and reliably."),
     ("silence", 1),
-    ("text", "The pattern is simple: breathe in for four counts, hold for four, breathe out for four, hold for four. Four equal sides, like a box."),
+    ("text", "The pattern is simple: breathe in for four counts, then breathe out for four. A steady, calming rhythm."),
     ("silence", 2),
     ("text", "Let's try it. Sit comfortably. Let your shoulders drop. I'll guide you through each phase. Just follow my voice."),
     ("silence", 3),
@@ -36,11 +36,8 @@ segments = [
     # Box breathing round 1
     ("text", "Breathe in."),
     ("silence", 5),
-    ("text", "Hold."),
     ("silence", 5),
     ("text", "Breathe out."),
-    ("silence", 5),
-    ("text", "Hold."),
     ("silence", 5),
 
     ("text", "Good. Let's do three more rounds together."),
@@ -49,29 +46,20 @@ segments = [
     # Box breathing rounds 2-4
     ("text", "Breathe in."),
     ("silence", 5),
-    ("text", "Hold."),
     ("silence", 5),
     ("text", "Breathe out."),
-    ("silence", 5),
-    ("text", "Hold."),
     ("silence", 5),
 
     ("text", "Breathe in."),
     ("silence", 5),
-    ("text", "Hold."),
     ("silence", 5),
     ("text", "Breathe out."),
-    ("silence", 5),
-    ("text", "Hold."),
     ("silence", 5),
 
     ("text", "Breathe in."),
     ("silence", 5),
-    ("text", "Hold."),
     ("silence", 5),
     ("text", "Breathe out."),
-    ("silence", 5),
-    ("text", "Hold."),
     ("silence", 5),
 
     ("text", "Notice how you feel. Even after a few rounds, most people report feeling noticeably calmer. That's the vagus nerve doing its job."),
@@ -79,7 +67,7 @@ segments = [
 
     ("text", "The second technique was developed by Dr Andrew Weil and is particularly effective for acute anxiety and falling asleep."),
     ("silence", 1.5),
-    ("text", "The pattern: breathe in through your nose for four counts, hold for seven, and exhale slowly through your mouth for eight. The long exhale is what activates your relaxation response."),
+    ("text", "The pattern: breathe in through your nose for four counts, then exhale slowly through your mouth for eight. The long exhale is what activates your relaxation response."),
     ("silence", 2),
     ("text", "Let's practise. Place the tip of your tongue on the roof of your mouth, just behind your front teeth. Keep it there throughout."),
     ("silence", 3),
@@ -87,7 +75,6 @@ segments = [
     # 4-7-8 round 1
     ("text", "Breathe in."),
     ("silence", 5),
-    ("text", "Hold."),
     ("silence", 8),
     ("text", "Exhale slowly."),
     ("silence", 9),
@@ -96,25 +83,22 @@ segments = [
     ("silence", 2),
 
     # 4-7-8 rounds 2-4
-    ("text", "In."),
+    ("text", "Breathe in gently."),
     ("silence", 5),
-    ("text", "Hold."),
     ("silence", 8),
-    ("text", "Out."),
+    ("text", "And slowly breathe out."),
     ("silence", 9),
 
-    ("text", "In."),
+    ("text", "Breathe in again."),
     ("silence", 5),
-    ("text", "Hold."),
     ("silence", 8),
-    ("text", "Out."),
+    ("text", "And let it go."),
     ("silence", 9),
 
-    ("text", "In."),
+    ("text", "One more. Breathe in."),
     ("silence", 5),
-    ("text", "Hold."),
     ("silence", 8),
-    ("text", "Out."),
+    ("text", "And slowly breathe out."),
     ("silence", 9),
 
     ("silence", 2),
@@ -150,7 +134,7 @@ def generate_tts(text, output_path):
             "similarity_boost": 0.65,
             "style": 0.03,
             "use_speaker_boost": True,
-            "speed": 0.70
+            "speed": 0.90
         }
     })
     if resp.status_code != 200:
