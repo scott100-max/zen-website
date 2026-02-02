@@ -56,8 +56,8 @@
     }
     .everything-banner h3 { color: var(--accent-dark); margin-bottom: 8px; }
     .everything-banner p { color: var(--mid-gray); font-size: 0.9rem; }
-    @media (max-width: 768px) {
-      .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+    @media (max-width: 600px) {
+      .pricing-grid { grid-template-columns: 1fr !important; max-width: 400px !important; }
     }
   </style>
 </head>
@@ -112,7 +112,7 @@
         <p>Start free. Upgrade when you're ready. Cancel anytime.</p>
       </div>
 
-      <div class="pricing-grid">
+      <div class="pricing-grid" style="grid-template-columns:repeat(2,1fr);max-width:650px;">
 
         <!-- Free -->
         <div class="pricing-card fade-in">
@@ -129,14 +129,11 @@
           <a href="sessions.html" class="btn btn-outline">Try Free</a>
         </div>
 
-        <!-- Annual (featured) -->
+        <!-- Monthly (featured) -->
         <div class="pricing-card featured fade-in">
-          <h3>Annual</h3>
-          <div class="price" style="color:var(--accent);">£39.99</div>
-          <div class="price-sub">
-            per year
-            <span class="equiv">Just £3.33/month — save 44%</span>
-          </div>
+          <h3>Premium</h3>
+          <div class="price" style="color:var(--accent);">£5.99</div>
+          <div class="price-sub">per month</div>
           <ul class="pricing-features">
             <li>Everything in Free</li>
             <li>Full session library</li>
@@ -145,32 +142,16 @@
             <li>Offline downloads</li>
             <li>Family sharing (up to 5)</li>
             <li>New content weekly</li>
-          </ul>
-          <!-- REPLACE with your Stripe Payment Link -->
-          <a href="#stripe-annual" class="btn btn-primary" id="annualBtn">Start 7-Day Free Trial</a>
-        </div>
-
-        <!-- Monthly -->
-        <div class="pricing-card fade-in">
-          <h3>Monthly</h3>
-          <div class="price">£5.99</div>
-          <div class="price-sub">per month</div>
-          <ul class="pricing-features">
-            <li>Everything in Free</li>
-            <li>Full session library</li>
-            <li>All soundscapes + mixing</li>
-            <li>Sleep stories</li>
-            <li>Offline downloads</li>
             <li>Cancel anytime</li>
           </ul>
           <!-- REPLACE with your Stripe Payment Link -->
-          <a href="#stripe-monthly" class="btn btn-outline" id="monthlyBtn">Subscribe Monthly</a>
+          <a href="#stripe-monthly" class="btn btn-primary" id="monthlyBtn">Start Free Trial</a>
         </div>
 
       </div>
 
       <div class="guarantee fade-in">
-        <p style="margin-bottom:4px;font-weight:600;color:var(--dark);">7-day free trial on annual plan</p>
+        <p style="margin-bottom:4px;font-weight:600;color:var(--dark);">7-day free trial included</p>
         <p>No charge until your trial ends. Cancel anytime — no questions asked.</p>
         <p style="margin-top:12px;font-size:0.8rem;opacity:0.6;">Secure payments powered by Stripe. We never see your card details.</p>
       </div>
@@ -223,7 +204,7 @@
     <div class="container">
       <h2 class="fade-in">Start your free trial today</h2>
       <p class="fade-in">7 days of full access. No credit card required to browse. Cancel anytime.</p>
-      <a href="#stripe-annual" class="btn fade-in">Get Salus Premium</a>
+      <a href="#stripe-monthly" class="btn fade-in">Get Salus Premium</a>
     </div>
   </section>
 
