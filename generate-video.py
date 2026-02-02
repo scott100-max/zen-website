@@ -90,7 +90,7 @@ videos = [
     },
 ]
 
-LOGO = os.path.join(BASE, "Salus.PNG")
+LOGO = os.path.join(BASE, "salus-logo.png")
 XFADE_DUR = 2  # seconds for crossfade dissolve between clips
 
 
