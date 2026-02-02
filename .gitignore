@@ -4,3 +4,7 @@ content/video/backgrounds/
 # System files
 .DS_Store
 .env
+
+# Research screenshots (not for public repo)
+calm/
+Calm/
