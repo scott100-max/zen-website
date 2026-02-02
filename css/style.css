@@ -2,15 +2,15 @@
 
 :root {
   --white: #ffffff;
-  --off-white: #f8f9fa;
-  --light-gray: #e9ecef;
-  --mid-gray: #6c757d;
-  --dark: #212529;
-  --accent: #7a9e7e;
-  --accent-light: #b5cdb8;
-  --accent-dark: #5a7e5e;
-  --forest: #0f1a12;
-  --forest-mid: #1a2e1e;
+  --off-white: #f7f8fc;
+  --light-gray: #e4e7ef;
+  --mid-gray: #6b7280;
+  --dark: #111827;
+  --accent: #4f6df5;
+  --accent-light: #dbe4ff;
+  --accent-dark: #3b54c4;
+  --forest: #0f172a;
+  --forest-mid: #1e293b;
   --font-heading: 'Inter', sans-serif;
   --font-body: 'Inter', sans-serif;
   --max-width: 1140px;
@@ -376,4 +376,5 @@ section:nth-child(even) { background: var(--off-white); }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .stats-bar { grid-template-columns: repeat(2, 1fr) !important; gap: 20px !important; }
   .research-grid { grid-template-columns: 1fr !important; }
+  .lifestyle-grid { grid-template-columns: repeat(2, 1fr) !important; }
 }
