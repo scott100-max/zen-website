@@ -3,61 +3,116 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Breathing Timer — Salus</title>
-  <meta name="description" content="Interactive 4-7-8 breathing timer. Follow the animated guide to reduce stress and ease into sleep.">
+  <title>Breathing Exercises — Salus</title>
+  <meta name="description" content="Interactive breathing exercises tailored to your needs. Relax, focus, energise, or unwind with guided breathwork from Salus.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <style>
-    .breathe-container {
-      display: flex; flex-direction: column; align-items: center;
-      padding: 40px 0;
+    .intent-screen { text-align: center; padding: 60px 0; }
+    .intent-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+      max-width: 520px; margin: 32px auto 0;
     }
-    .breathe-circle-wrap {
-      position: relative; width: 260px; height: 260px;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 40px;
+    .intent-btn {
+      background: var(--off-white); border: 2px solid transparent; border-radius: 16px;
+      padding: 28px 16px; cursor: pointer; transition: all 0.3s ease; text-align: center;
     }
-    .breathe-circle {
-      width: 120px; height: 120px;
-      background: radial-gradient(circle at 40% 35%, #fff5c0, #ffd644 40%, #f7a600 70%, #e87800);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      flex-direction: column;
-      transform: scale(1);
-      box-shadow: 0 0 40px rgba(255, 180, 0, 0.4), 0 0 80px rgba(255, 140, 0, 0.2);
-    }
-    .breathe-circle.inhale  { animation: expand 4s ease-in-out forwards; }
-    .breathe-circle.hold    { transform: scale(2); }
-    .breathe-circle.exhale  { animation: contract 8s ease-in-out forwards; }
-    .breathe-circle.stopped { transform: scale(1); transition: transform 0.4s ease; }
+    .intent-btn:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+    .intent-btn.selected { border-color: var(--accent); background: var(--accent-light); }
+    .intent-emoji { font-size: 2rem; display: block; margin-bottom: 8px; }
+    .intent-label { font-weight: 600; font-size: 0.9rem; color: var(--dark); }
 
-    @keyframes expand {
-      from { transform: scale(1); }
-      to   { transform: scale(2); }
+    .breathe-fullscreen {
+      display: none; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 70vh; padding: 40px 20px; position: relative;
+      transition: background 1s ease;
     }
-    @keyframes contract {
-      from { transform: scale(2); }
-      to   { transform: scale(1); }
+    .breathe-fullscreen.active { display: flex; }
+
+    .breathe-ring-wrap {
+      position: relative; width: 280px; height: 280px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 32px;
     }
 
-    .breathe-phase {
-      font-size: 1.1rem; font-weight: 600; color: #5a2e00;
-      pointer-events: none; text-align: center;
+    /* Progress ring */
+    .progress-ring { position: absolute; top: 0; left: 0; transform: rotate(-90deg); }
+    .progress-ring circle {
+      fill: none; stroke-width: 4;
     }
-    .breathe-countdown {
-      font-size: 2rem; font-weight: 700; color: #5a2e00;
-      pointer-events: none;
+    .progress-ring .ring-bg { stroke: var(--light-gray); }
+    .progress-ring .ring-fg { stroke: var(--accent); stroke-linecap: round; transition: stroke-dashoffset 0.3s linear; }
+
+    .breathe-orb {
+      width: 140px; height: 140px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; flex-direction: column;
+      transition: transform 0.1s linear;
+      box-shadow: 0 0 60px rgba(0,0,0,0.08);
     }
-    .breathe-controls { display: flex; gap: 16px; margin-bottom: 24px; }
-    .breathe-cycles {
-      font-size: 0.95rem; color: var(--mid-gray); font-weight: 500;
+    .breathe-orb.inhale  { animation: orbExpand 4s ease-in-out forwards; }
+    .breathe-orb.hold    { transform: scale(1.8); }
+    .breathe-orb.exhale-478  { animation: orbContract 8s ease-in-out forwards; }
+    .breathe-orb.exhale-box  { animation: orbContract 4s ease-in-out forwards; }
+    .breathe-orb.exhale-calm { animation: orbContract 6s ease-in-out forwards; }
+    .breathe-orb.stopped { transform: scale(1); transition: transform 0.4s ease; }
+
+    @keyframes orbExpand  { from { transform: scale(1); } to { transform: scale(1.8); } }
+    @keyframes orbContract { from { transform: scale(1.8); } to { transform: scale(1); } }
+
+    .breathe-instruction {
+      font-size: 1.3rem; font-weight: 600; color: var(--dark); margin-bottom: 4px;
+      min-height: 1.6em;
+    }
+    .breathe-timer {
+      font-size: 2.4rem; font-weight: 700; color: var(--forest);
+      min-height: 1.2em;
+    }
+
+    .breathe-meta {
+      text-align: center; margin-top: 8px; color: var(--mid-gray); font-size: 0.85rem;
+    }
+
+    .breathe-actions { display: flex; gap: 16px; margin-top: 24px; align-items: center; }
+    .breathe-actions .btn { min-width: 120px; }
+
+    .technique-name {
+      font-size: 0.85rem; color: var(--accent); font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;
+    }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--mid-gray); font-size: 0.85rem; text-decoration: none;
+      margin-bottom: 24px; cursor: pointer; border: none; background: none;
+      font-family: inherit;
+    }
+    .back-link:hover { color: var(--dark); }
+
+    /* Colour themes per intent */
+    .theme-relax .breathe-orb   { background: radial-gradient(circle at 40% 35%, #e8f5e9, #81c784 40%, #4caf50 70%, #2e7d32); box-shadow: 0 0 50px rgba(76,175,80,0.3); }
+    .theme-focus .breathe-orb   { background: radial-gradient(circle at 40% 35%, #e3f2fd, #64b5f6 40%, #1e88e5 70%, #1565c0); box-shadow: 0 0 50px rgba(30,136,229,0.3); }
+    .theme-sleep .breathe-orb   { background: radial-gradient(circle at 40% 35%, #ede7f6, #b39ddb 40%, #7e57c2 70%, #4527a0); box-shadow: 0 0 50px rgba(126,87,194,0.3); }
+    .theme-energise .breathe-orb { background: radial-gradient(circle at 40% 35%, #fff8e1, #ffd54f 40%, #ffb300 70%, #e65100); box-shadow: 0 0 50px rgba(255,179,0,0.3); }
+    .theme-calm .breathe-orb    { background: radial-gradient(circle at 40% 35%, #fff5c0, #ffd644 40%, #f7a600 70%, #e87800); box-shadow: 0 0 50px rgba(255,180,0,0.3); }
+    .theme-unwind .breathe-orb  { background: radial-gradient(circle at 40% 35%, #fce4ec, #f48fb1 40%, #e91e63 70%, #ad1457); box-shadow: 0 0 50px rgba(233,30,99,0.3); }
+
+    .breathe-instruction, .breathe-timer { color: var(--dark); }
+
+    @media (max-width: 520px) {
+      .intent-grid { grid-template-columns: repeat(2, 1fr); }
+      .breathe-ring-wrap { width: 240px; height: 240px; }
+      .breathe-orb { width: 120px; height: 120px; }
     }
   </style>
 </head>
 <body>
 
-  <div class="promo-banner">Start your free 7-day trial<a href="apps.html">Premium</a></div>
+  <div class="promo-banner">
+    <span style="font-family:'Cormorant Garamond',serif;font-weight:600;letter-spacing:1px;">SALUS</span>
+    <span style="font-style:italic;opacity:0.7;font-size:0.8rem;margin:0 8px;">/&#712;sa.lus/ — Latin: health, safety, well-being</span>
+    <a href="apps.html">Start Free Trial</a>
+  </div>
 
   <nav class="nav" style="position:relative;">
     <div class="container">
@@ -77,164 +132,295 @@
     </div>
   </nav>
 
-  <section class="hero" style="padding-bottom:60px;">
+  <section class="hero" style="padding-bottom:40px;">
     <div class="container">
-      <h1 class="fade-in">Breathing <span>Timer</span></h1>
-      <p class="fade-in">Follow the 4-7-8 technique: Inhale for 4 seconds, hold for 7, exhale for 8. A calming rhythm to reduce stress and ease into sleep.</p>
+      <h1 class="fade-in">Breathing <span>Exercises</span></h1>
+      <p class="fade-in" style="font-style:italic;color:var(--mid-gray);font-size:0.9rem;margin-bottom:12px;letter-spacing:0.5px;opacity:0.7;">Simple exercises tailored to your specific needs.</p>
+      <p class="fade-in">Choose how you'd like to feel, and we'll guide you through the right technique.</p>
     </div>
   </section>
 
-  <section>
+  <!-- Intent Selection -->
+  <section id="intentScreen" class="intent-screen">
     <div class="container">
-      <div class="breathe-container">
-        <div class="breathe-circle-wrap">
-          <div class="breathe-circle" id="breatheCircle">
-            <span class="breathe-phase" id="breathePhase">Ready</span>
-            <span class="breathe-countdown" id="breatheCountdown"></span>
-          </div>
-        </div>
-        <div class="breathe-controls">
-          <button class="btn btn-primary" id="breatheToggle">Start</button>
-        </div>
-        <div class="breathe-cycles" id="breatheCycles">Cycles: 0</div>
+      <div class="intent-grid">
+        <button class="intent-btn" data-intent="relax" onclick="selectIntent('relax')">
+          <span class="intent-emoji">&#128524;</span>
+          <span class="intent-label">Relax</span>
+        </button>
+        <button class="intent-btn" data-intent="focus" onclick="selectIntent('focus')">
+          <span class="intent-emoji">&#127919;</span>
+          <span class="intent-label">Focus</span>
+        </button>
+        <button class="intent-btn" data-intent="sleep" onclick="selectIntent('sleep')">
+          <span class="intent-emoji">&#127769;</span>
+          <span class="intent-label">Sleep</span>
+        </button>
+        <button class="intent-btn" data-intent="energise" onclick="selectIntent('energise')">
+          <span class="intent-emoji">&#9889;</span>
+          <span class="intent-label">Energise</span>
+        </button>
+        <button class="intent-btn" data-intent="calm" onclick="selectIntent('calm')">
+          <span class="intent-emoji">&#127793;</span>
+          <span class="intent-label">Calm</span>
+        </button>
+        <button class="intent-btn" data-intent="unwind" onclick="selectIntent('unwind')">
+          <span class="intent-emoji">&#127773;</span>
+          <span class="intent-label">Unwind</span>
+        </button>
       </div>
+    </div>
+  </section>
+
+  <!-- Breathing Exercise -->
+  <section id="breatheScreen" class="breathe-fullscreen">
+    <div class="container" style="display:flex;flex-direction:column;align-items:center;">
+
+      <button class="back-link" onclick="goBack()">&#8592; Choose another</button>
+
+      <div class="technique-name" id="techniqueName"></div>
+
+      <div class="breathe-ring-wrap">
+        <svg class="progress-ring" width="280" height="280">
+          <circle class="ring-bg" cx="140" cy="140" r="132"/>
+          <circle class="ring-fg" id="ringFg" cx="140" cy="140" r="132"/>
+        </svg>
+        <div class="breathe-orb" id="breatheOrb">
+          <span class="breathe-instruction" id="breathePhase">Ready</span>
+          <span class="breathe-timer" id="breatheTimer"></span>
+        </div>
+      </div>
+
+      <div class="breathe-meta" id="breatheMeta"></div>
+
+      <div class="breathe-actions">
+        <button class="btn btn-primary" id="breatheToggle">Start</button>
+      </div>
+      <div style="margin-top:12px;font-size:0.9rem;color:var(--mid-gray);font-weight:500;" id="breatheCycles">Cycles: 0</div>
+    </div>
+  </section>
+
+  <!-- Info -->
+  <section style="background:var(--off-white);padding:60px 0;">
+    <div class="container" style="max-width:700px;text-align:center;">
+      <h2 class="fade-in" style="margin-bottom:16px;">Why Breathwork?</h2>
+      <p class="fade-in" style="color:var(--mid-gray);line-height:1.8;font-size:0.95rem;margin-bottom:16px;">
+        Controlled breathing activates the parasympathetic nervous system — your body's natural "rest and digest" response. In just a few minutes, you can lower your heart rate, reduce cortisol levels, and shift from fight-or-flight to calm.
+      </p>
+      <p class="fade-in" style="color:var(--mid-gray);line-height:1.8;font-size:0.95rem;">
+        Research by Dr Andrew Huberman (Stanford) shows that specific breathing patterns — particularly the physiological sigh — are among the fastest ways to reduce real-time stress.
+      </p>
     </div>
   </section>
 
   <section class="cta-banner">
     <div class="container">
       <h2 class="fade-in">Explore more in the Salus app</h2>
-      <p class="fade-in">Box breathing, guided sessions, sleep stories, and more.</p>
+      <p class="fade-in">Guided breathwork sessions, sleep stories, soundscapes, and more.</p>
       <a href="apps.html" class="btn fade-in">See All Features</a>
     </div>
   </section>
 
   <footer class="footer">
     <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4 style="letter-spacing:2px;">SALUS</h4>
+          <p style="font-style:italic;font-size:0.8rem;opacity:0.7;">/&#712;sa.lus/ — Latin: health, safety, well-being</p>
+          <p style="margin-top:4px;">SLEEP &middot; RELAX &middot; RESTORE</p>
+        </div>
+        <div>
+          <h4>Pages</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="sessions.html">Sessions</a></li>
+            <li><a href="soundscapes.html">Soundscapes</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="apps.html">Apps</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Support</h4>
+          <ul>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="faq.html">FAQ</a></li>
+            <li><a href="privacy.html">Privacy</a></li>
+            <li><a href="terms.html">Terms</a></li>
+            <li><a href="disclaimer.html">Health Disclaimer</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Tools</h4>
+          <ul>
+            <li><a href="breathe.html">Breathing Exercises</a></li>
+            <li><a href="timer.html">Meditation Timer</a></li>
+            <li><a href="sounds.html">Sleep Sounds</a></li>
+          </ul>
+        </div>
+      </div>
       <div class="footer-bottom">
-        &copy; 2026 Salus. All rights reserved.
+        <p>&copy; 2026 Salus. All rights reserved.</p>
+        <p style="font-size:0.75rem;opacity:0.5;margin-top:4px;">Salus is not a replacement for professional medical advice. <a href="disclaimer.html" style="color:inherit;">Health Disclaimer</a></p>
       </div>
     </div>
   </footer>
 
   <script src="js/main.js"></script>
   <script>
-    (function () {
-      var circle = document.getElementById('breatheCircle');
-      var phaseEl = document.getElementById('breathePhase');
-      var countdownEl = document.getElementById('breatheCountdown');
-      var cyclesEl = document.getElementById('breatheCycles');
-      var toggleBtn = document.getElementById('breatheToggle');
+    // Techniques mapped to intents
+    var techniques = {
+      relax:    { name: '4-7-8 Relaxation', phases: [{n:'Breathe in',d:4,c:'inhale'},{n:'Hold',d:7,c:'hold'},{n:'Breathe out',d:8,c:'exhale-478'}], desc: 'Slow your nervous system and release tension.' },
+      focus:    { name: 'Box Breathing', phases: [{n:'Breathe in',d:4,c:'inhale'},{n:'Hold',d:4,c:'hold'},{n:'Breathe out',d:4,c:'exhale-box'},{n:'Hold',d:4,c:'hold'}], desc: 'Used by Navy SEALs to sharpen concentration under pressure.' },
+      sleep:    { name: '4-7-8 Sleep', phases: [{n:'Breathe in',d:4,c:'inhale'},{n:'Hold',d:7,c:'hold'},{n:'Breathe out',d:8,c:'exhale-478'}], desc: 'Drift off naturally with this calming rhythm.' },
+      energise: { name: 'Energising Breath', phases: [{n:'Breathe in',d:4,c:'inhale'},{n:'Breathe out',d:4,c:'exhale-box'}], desc: 'Quick inhale-exhale cycles to wake up your system.' },
+      calm:     { name: 'Calming Breath', phases: [{n:'Breathe in',d:4,c:'inhale'},{n:'Hold',d:4,c:'hold'},{n:'Breathe out',d:6,c:'exhale-calm'}], desc: 'A gentle rhythm to soothe anxiety in the moment.' },
+      unwind:   { name: 'Extended Exhale', phases: [{n:'Breathe in',d:4,c:'inhale'},{n:'Breathe out',d:8,c:'exhale-478'}], desc: 'Long exhales activate your parasympathetic response.' }
+    };
 
-      if (!circle || !toggleBtn) return;
+    var currentIntent = null;
+    var running = false;
+    var cycles = 0;
+    var phaseIndex = 0;
+    var secondsLeft = 0;
+    var countdownTimer = null;
+    var phaseTimer = null;
+    var totalSeconds = 0;
+    var elapsedSeconds = 0;
 
-      // Audio: soft chime using Web Audio API
-      var audioCtx = null;
-      function playChime(freq, duration) {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        var osc = audioCtx.createOscillator();
-        var gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.type = 'sine';
-        osc.frequency.value = freq;
-        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-        osc.start();
-        osc.stop(audioCtx.currentTime + duration);
+    var orb = document.getElementById('breatheOrb');
+    var phaseEl = document.getElementById('breathePhase');
+    var timerEl = document.getElementById('breatheTimer');
+    var cyclesEl = document.getElementById('breatheCycles');
+    var toggleBtn = document.getElementById('breatheToggle');
+    var ringFg = document.getElementById('ringFg');
+    var circumference = 2 * Math.PI * 132;
+
+    ringFg.style.strokeDasharray = circumference;
+    ringFg.style.strokeDashoffset = circumference;
+
+    // Audio chimes
+    var audioCtx = null;
+    function playChime(freq, dur) {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      var osc = audioCtx.createOscillator();
+      var gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.type = 'sine'; osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+      osc.start(); osc.stop(audioCtx.currentTime + dur);
+    }
+
+    function selectIntent(intent) {
+      currentIntent = intent;
+      document.querySelectorAll('.intent-btn').forEach(function(b) { b.classList.remove('selected'); });
+      document.querySelector('[data-intent="'+intent+'"]').classList.add('selected');
+
+      // Show breathing screen
+      document.getElementById('intentScreen').style.display = 'none';
+      var screen = document.getElementById('breatheScreen');
+      screen.className = 'breathe-fullscreen active theme-' + intent;
+      document.getElementById('techniqueName').textContent = techniques[intent].name;
+      document.getElementById('breatheMeta').textContent = techniques[intent].desc;
+
+      // Calculate cycle duration for progress ring
+      var t = techniques[intent];
+      totalSeconds = 0;
+      t.phases.forEach(function(p) { totalSeconds += p.d; });
+
+      reset();
+    }
+
+    function goBack() {
+      stop();
+      document.getElementById('breatheScreen').classList.remove('active');
+      document.getElementById('breatheScreen').style.display = 'none';
+      document.getElementById('intentScreen').style.display = '';
+    }
+
+    function clearClasses() {
+      orb.classList.remove('inhale','hold','exhale-478','exhale-box','exhale-calm','stopped');
+      void orb.offsetWidth;
+    }
+
+    function updateRing() {
+      if (!running) return;
+      elapsedSeconds++;
+      var cyclePos = elapsedSeconds % totalSeconds;
+      var pct = cyclePos / totalSeconds;
+      ringFg.style.strokeDashoffset = circumference * (1 - pct);
+    }
+
+    function tick() {
+      secondsLeft--;
+      if (secondsLeft >= 1) {
+        timerEl.textContent = secondsLeft;
+      } else {
+        clearInterval(countdownTimer);
+        countdownTimer = null;
       }
-      function chimeForPhase(name) {
-        if (name === 'Inhale') playChime(528, 0.6);
-        else if (name === 'Hold') playChime(396, 0.4);
-        else if (name === 'Exhale') playChime(264, 0.8);
+    }
+
+    function nextPhase() {
+      if (!running) return;
+      var t = techniques[currentIntent];
+      phaseIndex++;
+      if (phaseIndex >= t.phases.length) {
+        phaseIndex = 0;
+        cycles++;
+        cyclesEl.textContent = 'Cycles: ' + cycles;
       }
+      runPhase();
+    }
 
-      var phases = [
-        { name: 'Inhale', duration: 4, cls: 'inhale' },
-        { name: 'Hold',   duration: 5, cls: 'hold' },
-        { name: 'Exhale', duration: 8, cls: 'exhale' }
-      ];
+    function runPhase() {
+      if (!running) return;
+      var phase = techniques[currentIntent].phases[phaseIndex];
+      secondsLeft = phase.d;
+      phaseEl.textContent = phase.n;
+      timerEl.textContent = secondsLeft;
+      playChime(phase.n.indexOf('in') > -1 ? 528 : phase.n === 'Hold' ? 396 : 264, 0.5);
+      clearClasses();
+      orb.classList.add(phase.c);
+      countdownTimer = setInterval(tick, 1000);
+      phaseTimer = setTimeout(nextPhase, phase.d * 1000);
+    }
 
-      var running = false;
-      var cycles = 0;
-      var phaseIndex = 0;
-      var secondsLeft = 0;
-      var countdownTimer = null;
-      var phaseTimer = null;
+    function stop() {
+      running = false;
+      clearInterval(countdownTimer);
+      clearTimeout(phaseTimer);
+      clearClasses();
+      orb.classList.add('stopped');
+      phaseEl.textContent = 'Ready';
+      timerEl.textContent = '';
+      toggleBtn.textContent = 'Start';
+      ringFg.style.strokeDashoffset = circumference;
+      clearInterval(ringTimer);
+    }
 
-      function clearClasses() {
-        circle.classList.remove('inhale', 'hold', 'exhale', 'stopped');
-        void circle.offsetWidth; // force reflow to restart animations
-      }
+    function reset() {
+      stop();
+      cycles = 0;
+      phaseIndex = 0;
+      elapsedSeconds = 0;
+      cyclesEl.textContent = 'Cycles: 0';
+    }
 
-      function tick() {
-        secondsLeft--;
-        if (secondsLeft >= 1) {
-          countdownEl.textContent = secondsLeft;
-          playChime(180, 0.2);
-        } else {
-          clearInterval(countdownTimer);
-          countdownTimer = null;
-        }
-      }
-
-      function nextPhase() {
-        if (!running) return;
-
-        phaseIndex++;
-        if (phaseIndex >= phases.length) {
-          phaseIndex = 0;
-          cycles++;
-          cyclesEl.textContent = 'Cycles: ' + cycles;
-        }
+    var ringTimer = null;
+    toggleBtn.addEventListener('click', function() {
+      if (running) {
+        stop();
+      } else {
+        running = true;
+        cycles = 0;
+        elapsedSeconds = 0;
+        cyclesEl.textContent = 'Cycles: 0';
+        toggleBtn.textContent = 'Stop';
+        ringTimer = setInterval(updateRing, 1000);
         runPhase();
       }
-
-      function runPhase() {
-        if (!running) return;
-
-        var phase = phases[phaseIndex];
-        secondsLeft = phase.duration;
-        phaseEl.textContent = phase.name;
-        countdownEl.textContent = secondsLeft;
-        chimeForPhase(phase.name);
-
-        clearClasses();
-        circle.classList.add(phase.cls);
-
-        // Countdown display
-        countdownTimer = setInterval(tick, 1000);
-
-        // Schedule next phase
-        phaseTimer = setTimeout(nextPhase, phase.duration * 1000);
-      }
-
-      function stop() {
-        running = false;
-        clearInterval(countdownTimer);
-        clearTimeout(phaseTimer);
-        countdownTimer = null;
-        phaseTimer = null;
-        clearClasses();
-        circle.classList.add('stopped');
-        phaseEl.textContent = 'Ready';
-        countdownEl.textContent = '';
-        toggleBtn.textContent = 'Start';
-        phaseIndex = 0;
-      }
-
-      toggleBtn.addEventListener('click', function () {
-        if (running) {
-          stop();
-        } else {
-          running = true;
-          cycles = 0;
-          cyclesEl.textContent = 'Cycles: 0';
-          toggleBtn.textContent = 'Stop';
-          runPhase();
-        }
-      });
-    })();
+    });
   </script>
 </body>
 </html>

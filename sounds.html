@@ -42,7 +42,11 @@
 </head>
 <body>
 
-  <div class="promo-banner">Start your free 7-day trial<a href="apps.html">Premium</a></div>
+  <div class="promo-banner">
+    <span style="font-family:'Cormorant Garamond',serif;font-weight:600;letter-spacing:1px;">SALUS</span>
+    <span style="font-style:italic;opacity:0.7;font-size:0.8rem;margin:0 8px;">/&#712;sa.lus/ — Latin: health, safety, well-being</span>
+    <a href="apps.html">Start Free Trial</a>
+  </div>
 
   <nav class="nav" style="position:relative;">
     <div class="container">
@@ -113,6 +117,19 @@
         <div class="master-controls">
           <button class="btn btn-primary" id="soundToggle">Play All</button>
           <button class="btn btn-outline" id="soundReset">Reset</button>
+        </div>
+        <div style="margin-top:24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;">
+          <span style="font-size:0.85rem;color:var(--mid-gray);font-weight:500;">Sleep Timer:</span>
+          <select id="sleepTimer" style="padding:8px 16px;border-radius:8px;border:1px solid var(--light-gray);font-size:0.85rem;font-family:inherit;color:var(--dark);background:var(--white);">
+            <option value="0">Off</option>
+            <option value="15">15 min</option>
+            <option value="30">30 min</option>
+            <option value="45">45 min</option>
+            <option value="60">1 hour</option>
+            <option value="90">1.5 hours</option>
+            <option value="120">2 hours</option>
+          </select>
+          <span id="timerDisplay" style="font-size:0.8rem;color:var(--accent);font-weight:600;"></span>
         </div>
       </div>
     </div>
@@ -228,6 +245,46 @@
           slider.value = 0;
           slider.dispatchEvent(new Event('input'));
         });
+      });
+
+      // Sleep timer
+      var sleepTimeout = null;
+      var sleepInterval = null;
+      var timerDisplay = document.getElementById('timerDisplay');
+      document.getElementById('sleepTimer').addEventListener('change', function() {
+        clearTimeout(sleepTimeout);
+        clearInterval(sleepInterval);
+        timerDisplay.textContent = '';
+        var mins = parseInt(this.value);
+        if (mins === 0) return;
+        var end = Date.now() + mins * 60000;
+        function updateDisplay() {
+          var left = Math.max(0, end - Date.now());
+          if (left <= 0) {
+            timerDisplay.textContent = '';
+            clearInterval(sleepInterval);
+            // Fade out all sounds
+            cards.forEach(function(card) {
+              var slider = card.querySelector('input[type="range"]');
+              slider.value = 0;
+              slider.dispatchEvent(new Event('input'));
+            });
+            return;
+          }
+          var m = Math.floor(left/60000);
+          var s = Math.floor((left%60000)/1000);
+          timerDisplay.textContent = m + ':' + (s<10?'0':'') + s;
+        }
+        updateDisplay();
+        sleepInterval = setInterval(updateDisplay, 1000);
+        sleepTimeout = setTimeout(function() {
+          cards.forEach(function(card) {
+            var slider = card.querySelector('input[type="range"]');
+            slider.value = 0;
+            slider.dispatchEvent(new Event('input'));
+          });
+          timerDisplay.textContent = '';
+        }, mins * 60000);
       });
     })();
   </script>
