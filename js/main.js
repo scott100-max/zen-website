@@ -443,3 +443,52 @@ if (contactForm) {
   });
 
 })();
+
+// ===== Custom Audio Player (full-buffer for GitHub Pages seek support) =====
+document.querySelectorAll('.custom-player').forEach(player => {
+  const src = player.dataset.src;
+  const playBtn = player.querySelector('.cp-play');
+  const seekBar = player.querySelector('.cp-seek');
+  const timeEl = player.querySelector('.cp-time');
+  const audio = new Audio();
+  let loaded = false;
+
+  function fmt(s) {
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  function updateTime() {
+    seekBar.value = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+    timeEl.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration || 0);
+  }
+
+  playBtn.addEventListener('click', () => {
+    if (!loaded) {
+      audio.src = src;
+      audio.preload = 'auto';
+      loaded = true;
+    }
+    if (audio.paused) {
+      audio.play();
+      playBtn.innerHTML = '&#9646;&#9646;';
+    } else {
+      audio.pause();
+      playBtn.innerHTML = '&#9654;';
+    }
+  });
+
+  seekBar.addEventListener('input', () => {
+    if (audio.duration) {
+      audio.currentTime = (seekBar.value / 100) * audio.duration;
+    }
+  });
+
+  audio.addEventListener('timeupdate', updateTime);
+  audio.addEventListener('loadedmetadata', updateTime);
+  audio.addEventListener('ended', () => {
+    playBtn.innerHTML = '&#9654;';
+    seekBar.value = 0;
+  });
+});
