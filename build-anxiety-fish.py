@@ -33,28 +33,28 @@ segments = [
 
     # Box breathing round 1
     ("text", "Breathe in."),
-    ("silence", 5),
+    ("silence", 4),
     ("text", "Breathe out."),
-    ("silence", 5),
+    ("silence", 4),
 
     ("text", "Good. Let's do three more rounds together."),
     ("silence", 2),
 
     # Box breathing rounds 2-4
     ("text", "Breathe in."),
-    ("silence", 5),
+    ("silence", 4),
     ("text", "Breathe out."),
-    ("silence", 5),
+    ("silence", 4),
 
     ("text", "Breathe in."),
-    ("silence", 5),
+    ("silence", 4),
     ("text", "Breathe out."),
-    ("silence", 5),
+    ("silence", 4),
 
     ("text", "Breathe in."),
-    ("silence", 5),
+    ("silence", 4),
     ("text", "Breathe out."),
-    ("silence", 5),
+    ("silence", 4),
 
     ("text", "Notice how you feel. Even after a few rounds, most people report feeling noticeably calmer. That's the vagus nerve doing its job."),
     ("silence", 3),
@@ -68,28 +68,28 @@ segments = [
 
     # 4-7-8 round 1
     ("text", "Breathe in."),
-    ("silence", 5),
+    ("silence", 4),
     ("text", "Exhale slowly."),
-    ("silence", 9),
+    ("silence", 7),
 
     ("text", "Let's do that three more times."),
     ("silence", 2),
 
     # 4-7-8 rounds 2-4
     ("text", "Breathe in gently."),
-    ("silence", 5),
+    ("silence", 4),
     ("text", "And slowly breathe out."),
-    ("silence", 9),
+    ("silence", 7),
 
     ("text", "Breathe in again."),
-    ("silence", 5),
+    ("silence", 4),
     ("text", "And let it go."),
-    ("silence", 9),
+    ("silence", 7),
 
     ("text", "One more. Breathe in."),
-    ("silence", 5),
+    ("silence", 4),
     ("text", "And slowly breathe out."),
-    ("silence", 9),
+    ("silence", 7),
 
     ("silence", 2),
     ("text", "Beautiful. You might feel a little lightheaded. That's normal when you first practise. It passes quickly."),
@@ -156,7 +156,9 @@ def main():
                 continue
             subprocess.run([
                 "ffmpeg", "-y", "-i", mp3_path,
-                "-ar", "44100", "-ac", "1", "-acodec", "pcm_s16le", part_path
+                "-ar", "44100", "-ac", "1",
+                "-af", "afade=t=in:d=0.05,afade=t=out:d=0.05",
+                "-acodec", "pcm_s16le", part_path
             ], capture_output=True)
         else:
             print(f"  [silence] {value}s")
