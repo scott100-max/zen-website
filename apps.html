@@ -3,11 +3,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Apps & Downloads — Salus</title>
-  <meta name="description" content="Download the Salus meditation app. 500+ guided sessions, sleep stories, breathing exercises, and more.">
+  <title>Pricing & Apps — Salus</title>
+  <meta name="description" content="Start your free Salus trial. One subscription, everything included — guided sessions, sleep stories, breathing exercises, soundscapes, and more.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    .pricing-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+      max-width: 900px; margin: 0 auto;
+    }
+    .pricing-card {
+      background: var(--white); border: 2px solid var(--light-gray);
+      border-radius: 16px; padding: 40px 28px; text-align: center;
+      position: relative; transition: all 0.3s ease;
+    }
+    .pricing-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
+    .pricing-card.featured {
+      border-color: var(--accent); box-shadow: 0 8px 30px rgba(79,109,245,0.15);
+    }
+    .pricing-card.featured::before {
+      content: 'Most Popular'; position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      background: var(--accent); color: #fff; padding: 4px 20px; border-radius: 50px;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    .pricing-card h3 { font-size: 1.2rem; margin-bottom: 8px; }
+    .pricing-card .price {
+      font-size: 2.8rem; font-weight: 700; margin: 16px 0 4px;
+    }
+    .pricing-card .price-sub {
+      font-size: 0.85rem; color: var(--mid-gray); margin-bottom: 24px;
+    }
+    .pricing-card .price-sub .equiv {
+      display: block; font-size: 0.8rem; margin-top: 4px; opacity: 0.7;
+    }
+    .pricing-features {
+      list-style: none; padding: 0; margin: 0 0 28px; text-align: left;
+    }
+    .pricing-features li {
+      padding: 8px 0; font-size: 0.9rem; color: var(--mid-gray);
+      border-bottom: 1px solid var(--off-white);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .pricing-features li::before { content: '✓'; color: var(--accent); font-weight: 700; }
+    .pricing-card .btn { width: 100%; text-align: center; }
+    .guarantee {
+      text-align: center; margin-top: 32px; color: var(--mid-gray); font-size: 0.85rem;
+    }
+    .everything-banner {
+      background: var(--accent-light); border-radius: 12px; padding: 24px 32px;
+      text-align: center; margin-bottom: 60px;
+    }
+    .everything-banner h3 { color: var(--accent-dark); margin-bottom: 8px; }
+    .everything-banner p { color: var(--mid-gray); font-size: 0.9rem; }
+    @media (max-width: 768px) {
+      .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+    }
+  </style>
 </head>
 <body>
 
@@ -27,7 +79,7 @@
         <li><a href="education.html">Learn</a></li>
         <li><a href="mindfulness.html">Mindfulness</a></li>
         <li><a href="about.html">About</a></li>
-        <li><a href="apps.html">Apps</a></li>
+        <li><a href="apps.html" class="active">Apps</a></li>
         <li><a href="contact.html">Contact</a></li>
         <li><a href="newsletter.html">Newsletter</a></li>
       </ul>
@@ -37,89 +89,131 @@
 
   <section class="hero" style="padding-bottom:60px;">
     <div class="container">
-      <h1 class="fade-in">Get <span>Salus</span></h1>
-      <p class="fade-in">Download the app and start your free 7-day trial. Available on all your devices.</p>
+      <h1 class="fade-in">One Subscription. <span>Everything Included.</span></h1>
+      <p class="fade-in">No separate apps. No hidden extras. Sleep, meditation, soundscapes, breathwork — all of it.</p>
     </div>
   </section>
 
-  <section class="app-section">
-    <div class="container">
-      <div class="section-header fade-in">
-        <h2>Download the App</h2>
-        <p>Salus is available on iOS, Android, and the web.</p>
-      </div>
-      <div class="store-badges fade-in">
-        <a href="#" class="store-badge">
-          <span class="badge-icon">&#63743;</span>
-          App Store
-        </a>
-        <a href="#" class="store-badge">
-          <span class="badge-icon">&#9654;</span>
-          Google Play
-        </a>
-      </div>
-
-      <div style="margin-top:80px;">
-        <div class="section-header fade-in">
-          <h2>What's Included</h2>
-          <p>Everything you need for a complete mindfulness practice.</p>
-        </div>
-        <div class="feature-grid">
-          <div class="feature-card fade-in">
-            <div class="feature-icon">&#127911;</div>
-            <h3>500+ Meditations</h3>
-            <p>Guided sessions for sleep, anxiety, focus, self-compassion, and more. New content added weekly.</p>
-          </div>
-          <div class="feature-card fade-in">
-            <div class="feature-icon">&#127769;</div>
-            <h3>Sleep Stories</h3>
-            <p>Calming narrated stories and ambient soundscapes designed to ease you into restful sleep.</p>
-          </div>
-          <div class="feature-card fade-in" style="cursor:pointer;" onclick="window.location.href='breathe.html'">
-            <div class="feature-icon">&#9201;</div>
-            <h3>Breathing Timer</h3>
-            <p>Customizable breathing exercises with visual guides — box breathing, 4-7-8, and more.</p>
-            <a href="breathe.html" class="btn btn-outline" style="margin-top:16px;padding:8px 20px;font-size:0.85rem;">Try It</a>
-          </div>
-          <div class="feature-card fade-in">
-            <div class="feature-icon">&#128276;</div>
-            <h3>Daily Reminders</h3>
-            <p>Gentle nudges to keep your practice consistent. Set custom times that fit your schedule.</p>
-          </div>
-          <div class="feature-card fade-in">
-            <div class="feature-icon">&#127760;</div>
-            <h3>Offline Access</h3>
-            <p>Download sessions and practice anywhere — no internet connection required.</p>
-          </div>
-          <div class="feature-card fade-in">
-            <div class="feature-icon">&#128101;</div>
-            <h3>Family Plan</h3>
-            <p>Share your subscription with up to 5 family members. Mindfulness for everyone.</p>
-          </div>
-        </div>
+  <!-- Everything Included Banner -->
+  <section style="padding:0 0 60px;">
+    <div class="container" style="max-width:700px;">
+      <div class="everything-banner fade-in">
+        <h3>Why pay twice?</h3>
+        <p>Other apps charge separately for sleep and meditation. With Salus, one plan covers everything — guided sessions, sleep stories, soundscapes, breathing exercises, and all future content.</p>
       </div>
     </div>
   </section>
 
   <!-- Pricing -->
-  <section>
+  <section style="padding-top:0;">
     <div class="container">
       <div class="section-header fade-in">
-        <h2>Simple Pricing</h2>
-        <p>Start free. Upgrade when you're ready.</p>
+        <h2>Simple, Honest Pricing</h2>
+        <p>Start free. Upgrade when you're ready. Cancel anytime.</p>
       </div>
-      <div class="feature-grid" style="grid-template-columns: 1fr 1fr; max-width:700px; margin:0 auto;">
-        <div class="feature-card fade-in" style="text-align:center;">
+
+      <div class="pricing-grid">
+
+        <!-- Free -->
+        <div class="pricing-card fade-in">
           <h3>Free</h3>
-          <div style="font-size:2.5rem;font-weight:700;margin:16px 0;">$0</div>
-          <p>Basic meditations, breathing timer, and daily mindfulness tips. No credit card needed.</p>
-          <a href="#" class="btn btn-outline" style="margin-top:24px;">Premium</a>
+          <div class="price">£0</div>
+          <div class="price-sub">Forever</div>
+          <ul class="pricing-features">
+            <li>2 guided sessions</li>
+            <li>Breathing exercises</li>
+            <li>4 free soundscapes</li>
+            <li>Meditation timer</li>
+            <li>Education articles</li>
+          </ul>
+          <a href="sessions.html" class="btn btn-outline">Try Free</a>
         </div>
-        <div class="feature-card fade-in" style="text-align:center;border-color:var(--accent);">
-          <h3>Premium</h3>
-          <div style="font-size:2.5rem;font-weight:700;margin:16px 0;color:var(--accent);">$9.99<span style="font-size:1rem;color:var(--mid-gray)">/mo</span></div>
-          <p>Full library, sleep stories, offline access, family plan, and new content every week.</p>
-          <a href="#" class="btn btn-primary" style="margin-top:24px;">Start Free Trial</a>
+
+        <!-- Annual (featured) -->
+        <div class="pricing-card featured fade-in">
+          <h3>Annual</h3>
+          <div class="price" style="color:var(--accent);">£39.99</div>
+          <div class="price-sub">
+            per year
+            <span class="equiv">Just £3.33/month — save 44%</span>
+          </div>
+          <ul class="pricing-features">
+            <li>Everything in Free</li>
+            <li>Full session library</li>
+            <li>All soundscapes + mixing</li>
+            <li>Sleep stories</li>
+            <li>Offline downloads</li>
+            <li>Family sharing (up to 5)</li>
+            <li>New content weekly</li>
+          </ul>
+          <!-- REPLACE with your Stripe Payment Link -->
+          <a href="#stripe-annual" class="btn btn-primary" id="annualBtn">Start 7-Day Free Trial</a>
+        </div>
+
+        <!-- Monthly -->
+        <div class="pricing-card fade-in">
+          <h3>Monthly</h3>
+          <div class="price">£5.99</div>
+          <div class="price-sub">per month</div>
+          <ul class="pricing-features">
+            <li>Everything in Free</li>
+            <li>Full session library</li>
+            <li>All soundscapes + mixing</li>
+            <li>Sleep stories</li>
+            <li>Offline downloads</li>
+            <li>Cancel anytime</li>
+          </ul>
+          <!-- REPLACE with your Stripe Payment Link -->
+          <a href="#stripe-monthly" class="btn btn-outline" id="monthlyBtn">Subscribe Monthly</a>
+        </div>
+
+      </div>
+
+      <div class="guarantee fade-in">
+        <p style="margin-bottom:4px;font-weight:600;color:var(--dark);">7-day free trial on annual plan</p>
+        <p>No charge until your trial ends. Cancel anytime — no questions asked.</p>
+        <p style="margin-top:12px;font-size:0.8rem;opacity:0.6;">Secure payments powered by Stripe. We never see your card details.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- What's Included -->
+  <section style="background:var(--off-white);">
+    <div class="container">
+      <div class="section-header fade-in">
+        <h2>What's Inside Premium</h2>
+        <p>Everything you need for a complete mindfulness practice.</p>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card fade-in">
+          <div class="feature-icon">&#127911;</div>
+          <h3>Guided Sessions</h3>
+          <p>Hundreds of meditations for sleep, anxiety, focus, self-compassion, and more. New content added weekly.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">&#127769;</div>
+          <h3>Sleep Stories</h3>
+          <p>Calming narrated stories and ambient soundscapes designed to ease you into restful sleep.</p>
+        </div>
+        <div class="feature-card fade-in" style="cursor:pointer;" onclick="window.location.href='breathe.html'">
+          <div class="feature-icon">&#9201;</div>
+          <h3>Breathing Exercises</h3>
+          <p>Six tailored techniques with visual guides — relax, focus, sleep, energise, calm, and unwind.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">&#127912;</div>
+          <h3>Soundscapes</h3>
+          <p>20+ ambient sounds with mixing, sleep timer, and curated combinations. Rain, forest, ocean, and more.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">&#128218;</div>
+          <h3>Learn</h3>
+          <p>Articles, science, and practical tips from our clinical consultant to deepen your understanding.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">&#128101;</div>
+          <h3>Family Sharing</h3>
+          <p>Share your annual subscription with up to 5 family members. Mindfulness for everyone under one roof.</p>
         </div>
       </div>
     </div>
@@ -127,16 +221,53 @@
 
   <section class="cta-banner">
     <div class="container">
-      <h2 class="fade-in">Try Salus free for 7 days</h2>
-      <p class="fade-in">No commitment. Cancel anytime.</p>
-      <a href="#" class="btn fade-in">Download Now</a>
+      <h2 class="fade-in">Start your free trial today</h2>
+      <p class="fade-in">7 days of full access. No credit card required to browse. Cancel anytime.</p>
+      <a href="#stripe-annual" class="btn fade-in">Get Salus Premium</a>
     </div>
   </section>
 
   <footer class="footer">
     <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4 style="letter-spacing:2px;">SALUS</h4>
+          <p style="font-style:italic;font-size:0.8rem;opacity:0.7;">/&#712;sa.lus/ — Latin: health, safety, well-being</p>
+          <p style="margin-top:4px;">SLEEP &middot; RELAX &middot; RESTORE</p>
+          <p style="margin-top:8px;">A family-run meditation &amp; mindfulness platform.</p>
+        </div>
+        <div>
+          <h4>Pages</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="sessions.html">Sessions</a></li>
+            <li><a href="soundscapes.html">Soundscapes</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="apps.html">Apps</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Support</h4>
+          <ul>
+            <li><a href="contact.html">Contact Us Directly</a></li>
+            <li><a href="faq.html">FAQ</a></li>
+            <li><a href="privacy.html">Privacy</a></li>
+            <li><a href="terms.html">Terms</a></li>
+            <li><a href="disclaimer.html">Health Disclaimer</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Tools</h4>
+          <ul>
+            <li><a href="breathe.html">Breathing Exercises</a></li>
+            <li><a href="timer.html">Meditation Timer</a></li>
+            <li><a href="sounds.html">Sleep Sounds</a></li>
+          </ul>
+        </div>
+      </div>
       <div class="footer-bottom">
-        &copy; 2026 Salus. All rights reserved.
+        <p>&copy; 2026 Salus. All rights reserved.</p>
+        <p style="font-size:0.75rem;opacity:0.5;margin-top:4px;">Salus is not a replacement for professional medical advice. <a href="disclaimer.html" style="color:inherit;">Health Disclaimer</a></p>
       </div>
     </div>
   </footer>
