@@ -43,13 +43,28 @@ Before a long silence (60+ seconds), narrator MUST announce it:
 
 ## Ambient Sound Levels
 
-| Element | Level (dB relative to narration) |
-|---------|----------------------------------|
-| Ambient during speech | -18 dB |
-| Ambient during short pauses (<30s) | -15 dB |
-| Ambient during long silence (30s+) | -12 dB (more present) |
-| Fade in at start | 5 seconds |
-| Fade out at end | 8 seconds |
+**Standard mix level: -15 dB** (relative to narration)
+
+This is the baseline for all ambient mixing. Provides presence without overpowering voice.
+
+| Setting | Value | Notes |
+|---------|-------|-------|
+| **Ambient volume** | -15 dB | Main mix level for all sessions |
+| **Fade in** | 5 seconds | Gentle start |
+| **Fade out** | 8 seconds | Longer tail for smooth ending |
+
+### FFmpeg command reference:
+```bash
+ffmpeg -y -i voice.mp3 \
+  -stream_loop -1 -i ambient.mp3 \
+  -filter_complex "[1:a]volume=-15dB,afade=t=in:st=0:d=5,afade=t=out:st=${fade_out}:d=8[amb];[0:a][amb]amix=inputs=2:duration=first:dropout_transition=2" \
+  -t $duration -c:a libmp3lame -q:a 2 output.mp3
+```
+
+### If ambient feels too quiet/loud:
+- Too quiet: Try -12 dB
+- Too loud: Try -18 dB
+- Standard: -15 dB (default)
 
 ---
 
@@ -90,6 +105,45 @@ Before a long silence (60+ seconds), narrator MUST announce it:
 **Closing:**
 - End with "Goodnight from Salus" (sleep sessions) or just fade out naturally
 - No need for lengthy sign-offs
+
+---
+
+## Quality Check: Pause Positions
+
+**Glitches tend to occur at splice points (start/end of pauses).** When checking a session, focus on these timestamps.
+
+To generate pause timestamps for any session, run:
+```bash
+python3 -c "
+import re
+from pathlib import Path
+
+script = Path('content/scripts/SESSION_NAME.txt').read_text()
+content = script.split('---', 1)[1] if '---' in script else script
+
+time = 0
+for line in content.split('\n'):
+    line = line.strip()
+    if line == '...':
+        print(f'{int(time//60)}:{int(time%60):02d} - pause')
+        time += 10  # approximate
+    elif re.match(r'\[PAUSE.*seconds\]', line, re.I):
+        secs = int(re.search(r'(\d+)', line).group(1))
+        print(f'{int(time//60)}:{int(time%60):02d} - {secs}s SILENCE')
+        time += secs
+    elif line:
+        time += len(line) * 0.06  # rough estimate
+"
+```
+
+### Known pause positions (key sessions):
+
+**Rainfall Sleep Journey (34 min)**
+- 22:00 - 90 second silence (announced)
+
+**Ocean Voyage (35 min)**
+- ~18:00 - 60 second silence (announced)
+- ~28:00 - 90 second silence (announced)
 
 ---
 
