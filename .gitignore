@@ -9,3 +9,8 @@ content/video/backgrounds/
 calm/
 Calm/
 content/video/*.mp4
+
+# Large audio files
+content/audio-backup/
+content/audio-extended/
+*.mp3
