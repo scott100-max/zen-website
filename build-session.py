@@ -264,16 +264,38 @@ def parse_script_segments(content, category):
     Returns list of:
         ('text', "spoken text here")
         ('pause', duration_in_seconds)
+
+    Supports explicit pause markers:
+        [PAUSE: 30 seconds] or [SILENCE: 90 seconds]
     """
     lines = content.split('\n')
     segments = []
     current_text = []
     i = 0
 
+    # Regex for explicit pause markers like [PAUSE: 30 seconds] or [SILENCE: 60 seconds]
+    pause_pattern = re.compile(r'\[(PAUSE|SILENCE):\s*(\d+)\s*seconds?\]', re.IGNORECASE)
+
     while i < len(lines):
         line = lines[i].strip()
 
-        if line == '...':
+        # Check for explicit pause marker
+        pause_match = pause_pattern.match(line)
+        if pause_match:
+            # Save any accumulated text
+            if current_text:
+                text = ' '.join(current_text).strip()
+                if text:
+                    segments.append(('text', text))
+                current_text = []
+
+            # Get explicit duration
+            duration = int(pause_match.group(2))
+            segments.append(('pause', duration))
+            print(f"    Found explicit {pause_match.group(1)}: {duration} seconds")
+            i += 1
+
+        elif line == '...':
             # Save any accumulated text
             if current_text:
                 text = ' '.join(current_text).strip()

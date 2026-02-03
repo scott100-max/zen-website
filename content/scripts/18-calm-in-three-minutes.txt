@@ -1,4 +1,9 @@
-Welcome to Salus.
+Calm in Three Minutes
+Category: stress
+Ambient: stream
+Duration: 3 minutes
+
+---
 
 Whatever's happening right now, you made a good call pressing play. That already took something. So let's work with that.
 
@@ -62,7 +67,7 @@ Hold... two... three... four.
 
 OK. You're doing well. Let your breathing return to whatever feels natural for a moment.
 
-...
+[PAUSE: 30 seconds]
 
 Now let's land you back in the room. We're going to use your senses. Just notice — don't judge, don't analyse. Just notice.
 
@@ -103,5 +108,3 @@ And let it go. Slowly. All the way out.
 Whatever was pulling at you — it's still there, and that's OK. But you've got a little more space around it now. A little more room to move.
 
 You handled that well. Whenever you need this, it's here.
-
-This has been Salus. Take care of yourself.

@@ -4,54 +4,40 @@ Guidelines for structuring meditation and sleep audio sessions.
 
 ---
 
-## Session Length Categories
+## Silence Requirements by Duration
 
-### Short (Under 5 minutes)
-- **Use case:** Quick resets, breathing exercises, micro-meditations
-- **Pauses:** Brief pauses only (3-8 seconds)
-- **Long silence:** None required
-- **Ambient:** Optional, subtle if used
+**ALL sessions have existing short pauses (5s, 10s, 15s, etc.) - these remain unchanged.**
 
-### Medium (5-10 minutes)
-- **Use case:** Daily practice, focus sessions, stress relief
-- **Pauses:** Regular pauses (5-15 seconds) between segments
-- **Long silence:** Optional - one 30-second pause if appropriate
-- **Ambient:** Recommended
+The following MUST be added based on duration:
 
-### Long (10-20 minutes)
-- **Use case:** Deep relaxation, body scans, mindfulness training
-- **Pauses:** Multiple pauses (10-30 seconds) throughout
-- **Long silence:** ONE 60-90 second silent period
-  - Narrator announces: "I'm going to leave you in silence now for a little while..."
-  - Placed around 60-70% through the session
-- **Ambient:** Required - continues through silence
+### Short Sessions (Under 10 minutes)
+- **Add ONE 30-second pause** (ambient continues so listener knows it hasn't stopped)
+- No narrator announcement needed
 
-### Extended (20-40 minutes)
-- **Use case:** Sleep stories, deep sleep, yoga nidra
-- **Pauses:** Generous pauses (15-45 seconds) between sections
-- **Long silence:** ONE 90-second silent period minimum
-  - Can include a second 60-second silence later
-  - Narrator announces silence beforehand
-- **Ambient:** Required - carries the listener through silent sections
+### Medium Sessions (10-20 minutes)
+- **Add ONE 30-second pause**
+- **Add ONE 60-second silence** with narrator announcement
+- Narrator announces: *"I'm going to be quiet for a little while now..."*
 
-### Marathon (40+ minutes)
-- **Use case:** Yoga nidra, advanced practices, overnight
-- **Pauses:** Extended pauses (20-60 seconds)
-- **Long silence:** TWO silent periods
-  - First: 90 seconds around 40% mark
-  - Second: 90-120 seconds around 75% mark
-- **Ambient:** Essential
+### Long Sessions (20+ minutes)
+- **Add ONE 30-second pause**
+- **Add ONE 60-second silence** with narrator announcement (around 40-50% mark)
+- **Add ONE 90-second silence** with narrator announcement (around 70-80% mark)
+
+**Ambient continues through ALL pauses and silences.**
 
 ---
 
 ## Silence Announcement Phrases
 
-Before a long silence, narrator should say something like:
+Before a long silence (60+ seconds), narrator MUST announce it:
 
-- "I'm going to leave you in silence now for a little while. Just rest here, breathing gently..."
-- "I'll be quiet now and let you drift. There's nothing you need to do..."
+- "I'm going to be quiet now for a little while. Just let the [rain/waves/sounds] hold you..."
+- "I'll be silent for a moment. There's nothing you need to do..."
 - "Take this time in stillness. I'll return in a moment..."
-- "Let the [rain/waves/sounds] hold you now. I'll be back soon..."
+- "Rest here now. I'll be back soon..."
+
+**IMPORTANT:** Never have extended silence without ambient sound - listener must know audio is still playing.
 
 ---
 
@@ -60,68 +46,64 @@ Before a long silence, narrator should say something like:
 | Element | Level (dB relative to narration) |
 |---------|----------------------------------|
 | Ambient during speech | -18 dB |
-| Ambient during pauses | -15 dB (slight lift) |
-| Ambient during long silence | -12 dB (more present) |
-| Fade in | 5 seconds |
-| Fade out | 8 seconds |
+| Ambient during short pauses (<30s) | -15 dB |
+| Ambient during long silence (30s+) | -12 dB (more present) |
+| Fade in at start | 5 seconds |
+| Fade out at end | 8 seconds |
 
 ---
 
 ## Ambient Sound Assignments
 
 ### Sleep Sessions
-- Ocean/waves: Beach, shore, voyage themes
-- Rain: Cozy, indoor, journey themes
-- Night crickets: Evening, stars, nature themes
+- **ocean** - Beach, shore, voyage themes
+- **rain** - Cozy, indoor, journey themes
+- **night** - Evening, stars, crickets themes
 
 ### Stress/Anxiety
-- Stream: Gentle, flowing relief
-- Rain: Grounding, present moment
-- Wind: Release, letting go
+- **stream** - Gentle, flowing relief
+- **rain** - Grounding, present moment
+- **wind** - Release, letting go
+- **waterfall** - Powerful release
 
 ### Focus
-- Library: Quiet productivity
-- Piano: Creative work
-- Birds: Morning, clarity
+- **library** - Quiet productivity
+- **piano** - Creative work
+- **birds** - Morning, clarity
 
 ### Mindfulness
-- Temple bells: Traditional practice
-- Garden: Nature awareness
-- Forest: Walking meditation
-- Wind: Open awareness
-
-### Advanced/Spiritual
-- Temple: Deep practice
-- Chimes: Chakra, energy work
-- Wind: Non-dual, spacious awareness
+- **temple** - Traditional practice
+- **garden** - Nature awareness
+- **forest** - Walking meditation
+- **wind** - Open awareness
+- **chimes** - Energy work
 
 ---
 
-## Structure Template (Long Session Example)
+## Opening & Closing
 
-```
-[0:00-1:00]   Opening - settle in, breathing
-[1:00-4:00]   Introduction - set intention
-[4:00-8:00]   Main practice begins
-              (pause 15-20 sec)
-[8:00-12:00]  Deepen practice
-              (pause 20-30 sec)
-[12:00-14:00] Transition to silence announcement
-[14:00-15:30] === LONG SILENCE (90 sec) ===
-[15:30-18:00] Gentle return, continue practice
-              (pause 15 sec)
-[18:00-20:00] Closing guidance
-[20:00-21:00] Final rest, fade out
-```
+**Opening:**
+- Do NOT say "Welcome to Salus" at the start of every session
+- Jump straight into the content or a gentle opening like "Get comfortable..." or "Close your eyes..."
+- Exception: Landing page / intro content can mention Salus
+
+**Closing:**
+- End with "Goodnight from Salus" (sleep sessions) or just fade out naturally
+- No need for lengthy sign-offs
 
 ---
 
-## Technical Notes
+## Session Checklist
 
-- Sample rate: 44100 Hz
-- Format: MP3, quality level 2 (VBR ~190 kbps)
-- Silence: Generate with ambient underneath, never true silence
-- Transitions: Always fade, never hard cut
+Before publishing any session:
+
+- [ ] Duration category identified (under 10 / 10-20 / 20+)
+- [ ] Required silences added per spec above
+- [ ] Narrator announces 60+ second silences
+- [ ] Ambient sound assigned and mixed
+- [ ] Ambient continues through ALL pauses/silences
+- [ ] No dead silence anywhere in track
+- [ ] No "Welcome to Salus" at start (unless intro content)
 
 ---
 

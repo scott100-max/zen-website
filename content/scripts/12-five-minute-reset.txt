@@ -1,10 +1,9 @@
 5-MINUTE RESET
-Category: Focus
-Duration: 5 minutes (~650 words)
+Category: focus
+Ambient: piano
+Duration: 5 minutes
 
 ---
-
-Welcome to Salus.
 
 This is your five-minute reset. Whatever has been happening in your day so far, you're pressing pause on it right now. Just five minutes. That's all you need to come back to yourself and re-engage with the rest of your day feeling clear and grounded.
 
@@ -86,6 +85,8 @@ Whatever comes to mind first is usually the right one. Hold that word in your aw
 
 ...
 
+[PAUSE: 30 seconds]
+
 That's your anchor. When the noise picks back up, and it will, you can come back to that word. It's a point of reference. A way to check in with yourself without needing another five-minute break.
 
 Alright. Let's bring you back. Start to deepen your breath again. Gently move your fingers and your toes. If your eyes are closed, let them open slowly.
@@ -97,5 +98,3 @@ Take a look around the room. Orient yourself. You're here. You're present. And y
 ...
 
 That's your reset, done. Five minutes well spent. Now go make the next few hours count.
-
-Thanks for practising with Salus. See you next time.
