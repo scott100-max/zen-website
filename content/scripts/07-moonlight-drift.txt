@@ -5,7 +5,15 @@ Ambient: night
 Style: Warm, grounded male narrator
 ---
 
-Tonight, I'm going to take you somewhere beautiful. Somewhere quiet and open and still. All you need to do is close your eyes, settle in, and come with me.
+Tonight, I'm going to take you somewhere beautiful.
+
+...
+
+Somewhere quiet and open and still.
+
+...
+
+All you need to do is close your eyes, settle in, and come with me.
 
 ...
 

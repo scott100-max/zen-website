@@ -219,11 +219,11 @@ After testing (Feb 2026):
   ...
   ```
 
-### Persistent Issues
-- **End glitch (~30s from end)**: High-frequency hiss/spike appears randomly
-  - Tried: aggressive filtering, regeneration
-  - Result: sometimes fixes, sometimes persists
-  - Decision: **Deploy at 95%+ quality** - perfect is enemy of good
+### Persistent Issues (RESOLVED)
+- **End glitch (~30s from end)**: High-frequency hiss/spike appeared randomly
+  - Fix: **Regenerate the full session** - fresh TTS generation resolved the issue
+  - The glitch was a random TTS artifact, not a systematic problem
+  - Lesson: If glitch persists after one rebuild, try again - TTS output varies
 
 ### Final Settings Used
 ```python
