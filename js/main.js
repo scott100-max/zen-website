@@ -54,7 +54,7 @@ if (contactForm) {
   playerBar.innerHTML =
     '<div class="sp-inner">' +
       '<span class="sp-track-name"></span>' +
-      '<button class="sp-play-btn" aria-label="Play/Pause">&#9654;</button>' +
+      '<button class="sp-play-btn" aria-label="Play/Pause"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>' +
       '<div class="sp-progress-wrap"><div class="sp-progress-bar"></div></div>' +
       '<span class="sp-time">0:00</span>' +
       '<button class="sp-close-btn" aria-label="Close">&times;</button>' +
@@ -153,7 +153,7 @@ if (contactForm) {
   }
 
   function updatePlayBtn() {
-    playBtn.innerHTML = persistentAudio.paused ? '&#9654;' : '&#9646;&#9646;';
+    playBtn.innerHTML = persistentAudio.paused ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>' : '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
   }
 
   // Start playing a track in the persistent player
@@ -474,20 +474,20 @@ document.querySelectorAll('.custom-player').forEach(player => {
       audio.addEventListener('canplay', function onReady() {
         audio.removeEventListener('canplay', onReady);
         audio.play();
-        playBtn.innerHTML = '&#9646;&#9646;';
+        playBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
       });
       audio.addEventListener('error', () => {
-        playBtn.innerHTML = '&#9654;';
+        playBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
         loaded = false;
       });
       return;
     }
     if (audio.paused) {
       audio.play();
-      playBtn.innerHTML = '&#9646;&#9646;';
+      playBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
     } else {
       audio.pause();
-      playBtn.innerHTML = '&#9654;';
+      playBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
     }
   });
 
@@ -500,7 +500,7 @@ document.querySelectorAll('.custom-player').forEach(player => {
   audio.addEventListener('timeupdate', updateTime);
   audio.addEventListener('loadedmetadata', updateTime);
   audio.addEventListener('ended', () => {
-    playBtn.innerHTML = '&#9654;';
+    playBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
     seekBar.value = 0;
   });
 });
