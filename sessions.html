@@ -18,18 +18,20 @@
     }
     .premium-badge {
       position: absolute; top: 12px; right: 12px;
-      background: rgba(0,0,0,0.6); color: #fff;
-      padding: 4px 10px; border-radius: 12px;
-      font-size: 0.7rem; font-weight: 600;
-      display: flex; align-items: center; gap: 4px;
+      background: rgba(255,255,255,0.95); color: #1a1a2e;
+      padding: 6px 12px; border-radius: 16px;
+      font-size: 0.7rem; font-weight: 700;
+      display: flex; align-items: center; gap: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
+    .premium-badge svg { stroke: #b8860b; }
   </style>
 </head>
 <body>
 
   <nav class="nav" style="">
     <div class="container">
-      <a href="index.html" class="nav-logo">SALUS</a>
+      <a href="index.html" class="nav-logo">SALUS<span class="latin-def">/ˈsa.lus/ — health, safety, well-being</span></a>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="sessions.html" class="active">Guided Meditations</a></li>
@@ -49,7 +51,6 @@
   <section class="hero hero-bg" style="padding-bottom:60px;background-image:url('content/images/heroes/sessions-hero.jpg');">
     <div class="container">
       <h1>Guided Meditations</h1>
-      <p style="font-style:italic;color:var(--mid-gray);font-size:0.9rem;margin-bottom:12px;letter-spacing:0.5px;opacity:0.7;"><em>salus</em> &nbsp;/&#712;sa.lus/ &nbsp; health &middot; safety &middot; well-being</p>
       <p>Meditations crafted by experts to help you sleep, focus, and find calm.</p>
     </div>
   </section>
@@ -115,7 +116,7 @@
 
       <div class="sessions-grid" id="trialGrid">
         <a href="apps.html" class="session-card fade-in" data-category="beginners" style="text-decoration:none;color:inherit;">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#006d77 0%,#83c5be 40%,#edf6f9 100%);position:relative;">
+          <div class="session-thumb" style="background:linear-gradient(180deg,rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.3) 100%),url('content/images/sessions/first-meditation.jpg');background-size:cover;background-position:center;position:relative;">
             <span class="trial-badge">Free Trial</span>
           </div>
           <div class="session-info">
@@ -126,7 +127,7 @@
         </a>
 
         <a href="apps.html" class="session-card fade-in" data-category="stress" style="text-decoration:none;color:inherit;">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#0a9396 0%,#94d2bd 40%,#e9d8a6 100%);position:relative;">
+          <div class="session-thumb" style="background:linear-gradient(180deg,rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.4) 100%),url(\'content/images/sessions/zen-stones.jpg\');background-size:cover;background-position:center;position:relative;">
             <span class="trial-badge">Free Trial</span>
           </div>
           <div class="session-info">
@@ -137,7 +138,7 @@
         </a>
 
         <a href="apps.html" class="session-card fade-in" data-category="focus" style="text-decoration:none;color:inherit;">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#9d4edd 0%,#e040fb 40%,#ff6d00 100%);position:relative;">
+          <div class="session-thumb" style="background:linear-gradient(180deg,rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.4) 100%),url(\'content/images/sessions/sunrise.jpg\');background-size:cover;background-position:center;position:relative;">
             <span class="trial-badge">Free Trial</span>
           </div>
           <div class="session-info">
@@ -148,7 +149,7 @@
         </a>
 
         <a href="apps.html" class="session-card fade-in" data-category="stress" style="text-decoration:none;color:inherit;">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#004e64 0%,#00a5cf 40%,#25a18e 100%);position:relative;">
+          <div class="session-thumb" style="background:linear-gradient(180deg,rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.4) 100%),url(\'content/images/sessions/lavender.jpg\');background-size:cover;background-position:center;position:relative;">
             <span class="trial-badge">Free Trial</span>
           </div>
           <div class="session-info">
@@ -159,7 +160,7 @@
         </a>
 
         <a href="apps.html" class="session-card fade-in" data-category="mindfulness beginners" style="text-decoration:none;color:inherit;">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#2d6a4f 0%,#40916c 40%,#74c69d 100%);position:relative;">
+          <div class="session-thumb" style="background:linear-gradient(180deg,rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.4) 100%),url(\'content/images/sessions/forest-path.jpg\');background-size:cover;background-position:center;position:relative;">
             <span class="trial-badge">Free Trial</span>
           </div>
           <div class="session-info">
@@ -170,7 +171,7 @@
         </a>
 
         <a href="apps.html" class="session-card fade-in" data-category="beginners" style="text-decoration:none;color:inherit;">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#ff92a9 0%,#ff5f8f 40%,#c9184a 100%);position:relative;">
+          <div class="session-thumb" style="background:linear-gradient(180deg,rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.4) 100%),url(\'content/images/sessions/lavender.jpg\');background-size:cover;background-position:center;position:relative;">
             <span class="trial-badge">Free Trial</span>
           </div>
           <div class="session-info">
@@ -181,7 +182,7 @@
         </a>
 
         <a href="apps.html" class="session-card fade-in" data-category="stress beginners" style="text-decoration:none;color:inherit;">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#2b2d42 0%,#8d99ae 40%,#edf2f4 100%);position:relative;">
+          <div class="session-thumb" style="background:linear-gradient(180deg,rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.4) 100%),url(\'content/images/sessions/ocean-waves.jpg\');background-size:cover;background-position:center;position:relative;">
             <span class="trial-badge">Free Trial</span>
           </div>
           <div class="session-info">
@@ -192,7 +193,7 @@
         </a>
 
         <a href="mindfulness.html" class="session-card fade-in" data-category="beginners mindfulness" style="text-decoration:none;color:inherit;">
-          <div class="session-thumb" style="background:linear-gradient(160deg,#264653 0%,#2a9d8f 40%,#e9c46a 100%);position:relative;">
+          <div class="session-thumb" style="background:linear-gradient(180deg,rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.4) 100%),url(\'content/images/sessions/mountain-mist.jpg\');background-size:cover;background-position:center;position:relative;">
             <span class="trial-badge">Days 1-3 Free</span>
           </div>
           <div class="session-info">
