@@ -5,7 +5,19 @@ Ambient: rain
 Style: Warm, grounded male narrator
 ---
 
-Tonight, it's raining. And I know that might not sound like much, but stay with me — because rain, the right kind of rain, on the right kind of night, is one of the most deeply relaxing things in the world. There's a reason people put on rain sounds to fall asleep. Tonight, we're going to lean into that completely.
+Tonight, it's raining.
+
+...
+
+And I know that might not sound like much, but stay with me.
+
+...
+
+Because rain, the right kind of rain, on the right kind of night, is one of the most deeply relaxing things in the world.
+
+...
+
+There's a reason people put on rain sounds to fall asleep. Tonight, we're going to lean into that completely.
 
 ...
 
