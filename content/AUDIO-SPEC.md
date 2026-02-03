@@ -180,6 +180,7 @@ dynaudnorm=p=0.9:m=10  # Normalize levels
 | **High-frequency hiss/glitch** | TTS artifact in specific chunk | Aggressive lowpass filter (10kHz), stronger noise reduction |
 | **Audio degradation mid-session** | Bad TTS chunk from API | Regenerate session; random API issues |
 | **Voice inconsistency** | Too many short chunks | Maintain reasonable chunk sizes (50-400 chars ideal) |
+| **Glitch near end (~30s out)** | Random TTS artifact | Regenerate; if persists, deploy at 95%+ quality |
 
 ### Script Writing Rules for TTS
 
@@ -192,9 +193,45 @@ dynaudnorm=p=0.9:m=10  # Normalize levels
 ### Recommended Ambient Levels
 
 After testing (Feb 2026):
-- **-12dB**: Louder ambient, good for rain/ocean where sound is the feature
+- **-12dB**: Louder ambient, good for rain/ocean where sound is the feature ✓ VERIFIED
 - **-14dB**: Standard, balanced mix
 - **-16dB**: Quieter ambient, voice-focused
+
+---
+
+## Production Notes: Rainfall-2 (Feb 2026)
+
+**Baseline reference session** - use these settings for similar sleep/rain sessions.
+
+### What Worked
+- **45 text blocks** for 17.7 min session (preserve all pauses)
+- **-12dB ambient** for rain - immersive without overpowering voice
+- **Temperature 0.3** - consistent voice throughout
+- **Spaced opening** - first paragraph broken into 4 short sentences:
+  ```
+  Tonight, it's raining.
+  ...
+  And I know that might not sound like much, but stay with me.
+  ...
+  Because rain, the right kind of rain, on the right kind of night...
+  ...
+  There's a reason people put on rain sounds to fall asleep...
+  ...
+  ```
+
+### Persistent Issues
+- **End glitch (~30s from end)**: High-frequency hiss/spike appears randomly
+  - Tried: aggressive filtering, regeneration
+  - Result: sometimes fixes, sometimes persists
+  - Decision: **Deploy at 95%+ quality** - perfect is enemy of good
+
+### Final Settings Used
+```python
+AMBIENT_VOLUME_DB = -12
+temperature = 0.3
+lowpass = 10000Hz
+afftdn = -25dB
+```
 
 ---
 
@@ -241,8 +278,11 @@ for line in content.split('\n'):
 
 ### Known pause positions (key sessions):
 
-**Rainfall Sleep Journey (34 min)**
-- 22:00 - 90 second silence (announced)
+**Rainfall Sleep Journey (17.7 min)** ✓ DEPLOYED
+- Multiple 8s pauses throughout
+- 30s pauses at key transitions (double `...`)
+- 60s silence at ~12:00 (announced: "I'm going to be quiet now...")
+- Known glitch point: ~30s before end
 
 **Ocean Voyage (35 min)**
 - ~18:00 - 60 second silence (announced)
