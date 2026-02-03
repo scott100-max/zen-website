@@ -233,7 +233,7 @@ section:nth-child(even) { background: var(--off-white); }
   background: transparent; border: none;
   border-radius: 12px; padding: 32px;
 }
-.testimonial p { font-style: italic; margin-bottom: 16px; color: var(--dark); }
+.testimonial p { font-style: italic; margin-bottom: 16px; color: rgba(255,255,255,0.9); }
 .testimonial .author { font-weight: 600; font-size: 0.9rem; color: var(--mid-gray); }
 
 /* ---- Contact Form ---- */
