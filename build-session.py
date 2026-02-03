@@ -45,8 +45,8 @@ FISH_VOICE_ID = "0165567b33324f518b02336ad232e31a"  # Marco voice
 
 # Audio settings
 SAMPLE_RATE = 44100
-AMBIENT_VOLUME_DB = -18  # Ambient mixed at this level below narration
-AMBIENT_FADE_IN = 5      # Seconds
+AMBIENT_VOLUME_DB = -15  # Ambient mixed at this level (matches AUDIO-SPEC.md)
+AMBIENT_FADE_IN = 15     # Seconds (15s logarithmic fade per spec)
 AMBIENT_FADE_OUT = 8     # Seconds
 
 # Pause profiles: dots -> (min_seconds, max_seconds)
@@ -424,7 +424,7 @@ def mix_ambient(voice_path, ambient_name, output_path):
         '-stream_loop', '-1', '-i', str(ambient_path),
         '-filter_complex', (
             f"[1:a]volume={AMBIENT_VOLUME_DB}dB,"
-            f"afade=t=in:st=0:d={AMBIENT_FADE_IN},"
+            f"afade=t=in:st=0:d={AMBIENT_FADE_IN}:curve=log,"
             f"afade=t=out:st={duration - AMBIENT_FADE_OUT}:d={AMBIENT_FADE_OUT}[amb];"
             f"[0:a][amb]amix=inputs=2:duration=first:dropout_transition=2"
         ),

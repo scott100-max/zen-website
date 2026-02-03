@@ -50,14 +50,14 @@ This is the baseline for all ambient mixing. Provides presence without overpower
 | Setting | Value | Notes |
 |---------|-------|-------|
 | **Ambient volume** | -15 dB | Main mix level for all sessions |
-| **Fade in** | 5 seconds | Gentle start |
+| **Fade in** | 15 seconds | Logarithmic curve - starts quiet, builds naturally |
 | **Fade out** | 8 seconds | Longer tail for smooth ending |
 
 ### FFmpeg command reference:
 ```bash
 ffmpeg -y -i voice.mp3 \
   -stream_loop -1 -i ambient.mp3 \
-  -filter_complex "[1:a]volume=-15dB,afade=t=in:st=0:d=5,afade=t=out:st=${fade_out}:d=8[amb];[0:a][amb]amix=inputs=2:duration=first:dropout_transition=2" \
+  -filter_complex "[1:a]volume=-15dB,afade=t=in:st=0:d=15:curve=log,afade=t=out:st=${fade_out}:d=8[amb];[0:a][amb]amix=inputs=2:duration=first:dropout_transition=2" \
   -t $duration -c:a libmp3lame -q:a 2 output.mp3
 ```
 
