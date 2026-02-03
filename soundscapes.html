@@ -486,7 +486,7 @@
       document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
       e.target.classList.add('active');
       var filter = e.target.getAttribute('data-filter');
-      document.querySelectorAll('.sound-card').forEach(function(card) {
+      document.querySelectorAll('[data-category]').forEach(function(card) {
         if (filter === 'all' || card.getAttribute('data-category').indexOf(filter) !== -1) {
           card.style.display = '';
         } else {

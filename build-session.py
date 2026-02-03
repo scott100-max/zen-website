@@ -45,7 +45,7 @@ FISH_VOICE_ID = "0165567b33324f518b02336ad232e31a"  # Marco voice
 
 # Audio settings
 SAMPLE_RATE = 44100
-AMBIENT_VOLUME_DB = -15  # Ambient mixed at this level (matches AUDIO-SPEC.md)
+AMBIENT_VOLUME_DB = -14  # Ambient mixed at this level (matches AUDIO-SPEC.md)
 AMBIENT_FADE_IN = 15     # Seconds (15s logarithmic fade per spec)
 AMBIENT_FADE_OUT = 8     # Seconds
 

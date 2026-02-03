@@ -43,15 +43,34 @@ Before a long silence (60+ seconds), narrator MUST announce it:
 
 ## Ambient Sound Levels
 
-**Standard mix level: -15 dB** (relative to narration)
+**Standard mix level: -14 dB** (relative to narration)
 
 This is the baseline for all ambient mixing. Provides presence without overpowering voice.
 
 | Setting | Value | Notes |
 |---------|-------|-------|
-| **Ambient volume** | -15 dB | Main mix level for all sessions |
+| **Ambient volume** | -14 dB | Main mix level during narration |
+| **Ambient during pauses** | -13 dB | Raise by 1dB during 30s+ gaps |
 | **Fade in** | 15 seconds | Logarithmic curve - starts quiet, builds naturally |
 | **Fade out** | 8 seconds | Longer tail for smooth ending |
+
+### Ambient Loop Requirements
+
+**CRITICAL: Ambient files must loop seamlessly.**
+
+- **No silence at start or end** - Even 0.5s gaps become obvious when looped
+- **Ideal length**: 5-10 minutes (long enough to avoid obvious repetition)
+- **Crossfade points**: Files should fade smoothly at boundaries
+- **Test loops**: Before using, verify with `ffmpeg -stream_loop 3 -i file.mp3 -t 600 test.mp3`
+
+To check for silence at boundaries:
+```bash
+ffmpeg -i ambient.mp3 -af "silencedetect=n=-30dB:d=0.3" -f null - 2>&1 | grep silence
+```
+
+**Known issues to avoid:**
+- Downloaded files often have silence padding at start
+- Trim with: `ffmpeg -ss 2 -i input.mp3 -c:a libmp3lame -q:a 2 output.mp3`
 
 ### FFmpeg command reference:
 ```bash
@@ -92,6 +111,25 @@ ffmpeg -y -i voice.mp3 \
 - **forest** - Walking meditation
 - **wind** - Open awareness
 - **chimes** - Energy work
+
+---
+
+## TTS Voice Consistency
+
+**Problem:** Segment-by-segment TTS generation can produce voice variations at boundaries.
+
+**Best practices:**
+- Generate larger text chunks where possible (fewer API calls = fewer boundaries)
+- Use TTS providers with better consistency (Azure, ElevenLabs > Fish)
+- Avoid very short segments (under 20 chars) which are more prone to variation
+- If voice shifts noticeably, regenerate that specific segment
+
+**Provider comparison:**
+| Provider | Consistency | Best for |
+|----------|-------------|----------|
+| Azure Speech | Excellent | Long sessions needing consistency |
+| ElevenLabs | Very good | Premium quality, natural sound |
+| Fish TTS | Variable | Quick prototyping |
 
 ---
 
@@ -144,6 +182,22 @@ for line in content.split('\n'):
 **Ocean Voyage (35 min)**
 - ~18:00 - 60 second silence (announced)
 - ~28:00 - 90 second silence (announced)
+
+---
+
+## Session Duration Guidelines
+
+**Soft limit: 30 minutes** for standard sessions to maintain TTS voice consistency.
+
+| Session Type | Target Duration | Notes |
+|--------------|-----------------|-------|
+| Focus/Stress | 5-15 min | Short, targeted |
+| Mindfulness | 10-20 min | Standard practice |
+| Beginner | 5-15 min | Accessible length |
+| Sleep/Stories | Up to 45 min | Can exceed limit, accept some variation |
+| Advanced | 20-30 min | Longer practice |
+
+Longer sessions = more TTS API calls = higher chance of voice variation at segment boundaries.
 
 ---
 
