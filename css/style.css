@@ -52,6 +52,8 @@ img { max-width: 100%; display: block; }
   font-size: 1.2rem; font-weight: 700; color: var(--dark);
   letter-spacing: 2px; display: flex; align-items: center; gap: 8px;
 }
+.latin-def { font-style: italic; opacity: 0.5; font-size: 0.75rem; margin-left: 12px; }
+@media (max-width: 900px) { .latin-def { display: none; } }
 .nav-icon { height: 64px; width: auto; }
 .nav-links { display: flex; gap: 18px; list-style: none; flex-wrap: nowrap; margin: 0 auto; }
 .nav-links a { color: var(--mid-gray); font-size: 0.85rem; font-weight: 500; white-space: nowrap; }
