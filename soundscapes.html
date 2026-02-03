@@ -10,8 +10,94 @@
   <link rel="stylesheet" href="css/style.css?v=1770053724">
   <style>
     @media (max-width: 600px) {
-      #soundGrid { grid-template-columns: 1fr !important; }
-      .cp-time { min-width: 60px !important; font-size: 0.7rem !important; }
+      #soundGrid, #moreSoundsGrid { grid-template-columns: 1fr !important; }
+    }
+    .sound-card {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .sound-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+    .sound-card-image {
+      height: 120px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    .sound-card-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.6));
+    }
+    .sound-card-title {
+      position: absolute;
+      bottom: 10px;
+      left: 12px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 1.1rem;
+      z-index: 1;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    }
+    .sound-card-category {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255,255,255,0.9);
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--dark-gray);
+      z-index: 1;
+    }
+    .sound-card-controls {
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sound-play-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .sound-play-btn:hover { background: #3d5bd9; }
+    .sound-play-btn.playing { background: #e74c3c; }
+    .sound-volume {
+      flex: 1;
+      height: 6px;
+      -webkit-appearance: none;
+      background: #e0e0e0;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .sound-volume::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      background: var(--accent);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .sound-volume-icon {
+      color: var(--mid-gray);
+      flex-shrink: 0;
     }
   </style>
 </head>
@@ -72,51 +158,51 @@
 
       <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:900px;margin:0 auto;" id="soundGrid">
 
-        <div class="fade-in" data-category="weather">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Rain</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Weather &middot; Gentle rainfall</p>
-          <div class="custom-player" data-src="content/sounds/rain.mp3?v=1770119936">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
+        <div class="sound-card fade-in" data-category="weather" data-src="content/sounds/rain.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=400&q=70');">
+            <span class="sound-card-category">Weather</span>
+            <span class="sound-card-title">Rain</span>
+          </div>
+          <div class="sound-card-controls">
+            <button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+            <svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+            <input type="range" class="sound-volume" min="0" max="100" value="80">
           </div>
         </div>
 
-        <div class="fade-in" data-category="nature">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Ocean</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Nature &middot; Gentle waves</p>
-          <div class="custom-player" data-src="content/sounds/ocean.mp3?v=1770119936">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
+        <div class="sound-card fade-in" data-category="nature" data-src="content/sounds/ocean.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=400&q=70');">
+            <span class="sound-card-category">Nature</span>
+            <span class="sound-card-title">Ocean</span>
+          </div>
+          <div class="sound-card-controls">
+            <button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+            <svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+            <input type="range" class="sound-volume" min="0" max="100" value="80">
           </div>
         </div>
 
-        <div class="fade-in" data-category="nature">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Forest</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Nature &middot; Woodland ambience</p>
-          <div class="custom-player" data-src="content/sounds/forest.mp3?v=1770119936">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
+        <div class="sound-card fade-in" data-category="nature" data-src="content/sounds/forest.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1448375240586-882707db888b?w=400&q=70');">
+            <span class="sound-card-category">Nature</span>
+            <span class="sound-card-title">Forest</span>
+          </div>
+          <div class="sound-card-controls">
+            <button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+            <svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+            <input type="range" class="sound-volume" min="0" max="100" value="80">
           </div>
         </div>
 
-        <div class="fade-in" data-category="ambient">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Fire</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Ambient &middot; Crackling fireplace</p>
-          <div class="custom-player" data-src="content/sounds/fire.mp3?v=1770119936">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
+        <div class="sound-card fade-in" data-category="ambient" data-src="content/sounds/fire.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1475552113915-6fcb52652ba2?w=400&q=70');">
+            <span class="sound-card-category">Ambient</span>
+            <span class="sound-card-title">Fire</span>
+          </div>
+          <div class="sound-card-controls">
+            <button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+            <svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+            <input type="range" class="sound-volume" min="0" max="100" value="80">
           </div>
         </div>
 
@@ -130,260 +216,124 @@
 
       <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:900px;margin:0 auto;" id="moreSoundsGrid">
 
-        <div class="fade-in" data-category="weather">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Thunder</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Weather &middot; Distant storm</p>
-          <div class="custom-player" data-src="content/sounds/thunder.mp3?v=1770124000">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
+        <div class="sound-card fade-in" data-category="weather" data-src="content/sounds/thunder.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1605727216801-e27ce1d0cc28?w=400&q=70');"><span class="sound-card-category">Weather</span><span class="sound-card-title">Thunder</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
         </div>
 
-        <div class="fade-in" data-category="nature">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Birds</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Nature &middot; Morning birdsong</p>
-          <div class="custom-player" data-src="content/sounds/birds.mp3?v=1770124000">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
+        <div class="sound-card fade-in" data-category="nature" data-src="content/sounds/birds.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1444464666168-49d633b86797?w=400&q=70');"><span class="sound-card-category">Nature</span><span class="sound-card-title">Birds</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
         </div>
 
-        <div class="fade-in" data-category="nature">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Night</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Nature &middot; Crickets &amp; evening</p>
-          <div class="custom-player" data-src="content/sounds/night.mp3?v=1770124000">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
+        <div class="sound-card fade-in" data-category="nature" data-src="content/sounds/night.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1507400492013-162706c8c05e?w=400&q=70');"><span class="sound-card-category">Nature</span><span class="sound-card-title">Night</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
         </div>
 
-        <div class="fade-in" data-category="nature">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Stream</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Nature &middot; Babbling brook</p>
-          <div class="custom-player" data-src="content/sounds/stream.mp3?v=1770124000">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
+        <div class="sound-card fade-in" data-category="nature" data-src="content/sounds/stream.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&q=70');"><span class="sound-card-category">Nature</span><span class="sound-card-title">Stream</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
         </div>
 
-        <div class="fade-in" data-category="ambient">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Cafe</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Ambient &middot; Coffee shop bustle</p>
-          <div class="custom-player" data-src="content/sounds/cafe.mp3?v=1770124000">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
+        <div class="sound-card fade-in" data-category="ambient" data-src="content/sounds/cafe.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400&q=70');"><span class="sound-card-category">Ambient</span><span class="sound-card-title">Cafe</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
         </div>
 
-        <div class="fade-in" data-category="ambient">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Keyboard</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Ambient &middot; Typing sounds</p>
-          <div class="custom-player" data-src="content/sounds/keyboard.mp3?v=1770124000">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
+        <div class="sound-card fade-in" data-category="ambient" data-src="content/sounds/keyboard.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&q=70');"><span class="sound-card-category">Ambient</span><span class="sound-card-title">Keyboard</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
         </div>
 
-        <div class="fade-in" data-category="ambient">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Train</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Ambient &middot; Railway journey</p>
-          <div class="custom-player" data-src="content/sounds/train.mp3?v=1770124000">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
+        <div class="sound-card fade-in" data-category="ambient" data-src="content/sounds/train.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=400&q=70');"><span class="sound-card-category">Ambient</span><span class="sound-card-title">Train</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
         </div>
 
-        <div class="fade-in" data-category="apothecary">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Potions</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Apothecary &middot; Bubbling cauldron</p>
-          <div class="custom-player" data-src="content/sounds/potions.mp3?v=1770124000">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
+        <div class="sound-card fade-in" data-category="apothecary" data-src="content/sounds/potions.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400&q=70');"><span class="sound-card-category">Apothecary</span><span class="sound-card-title">Potions</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
         </div>
 
-        <div class="fade-in" data-category="nature">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Waves</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Nature &middot; Crashing waves</p>
-          <div class="custom-player" data-src="content/sounds/waves.mp3?v=1770124000">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
+        <div class="sound-card fade-in" data-category="nature" data-src="content/sounds/waves.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=400&q=70');"><span class="sound-card-category">Nature</span><span class="sound-card-title">Waves</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
         </div>
 
-
-        <div class="fade-in" data-category="weather">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Wind</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Weather &middot; Gentle breeze</p>
-          <div class="custom-player" data-src="content/sounds/wind.mp3?v=1770124000">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
+        <div class="sound-card fade-in" data-category="weather" data-src="content/sounds/wind.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1505672678657-cc7037095e60?w=400&q=70');"><span class="sound-card-category">Weather</span><span class="sound-card-title">Wind</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
         </div>
 
-
-        <div class="fade-in" data-category="ambient">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Library</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Ambient &middot; Quiet study</p>
-          <div class="custom-player" data-src="content/sounds/library.mp3?v=1770124000">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
+        <div class="sound-card fade-in" data-category="ambient" data-src="content/sounds/library.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&q=70');"><span class="sound-card-category">Ambient</span><span class="sound-card-title">Library</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
         </div>
 
-        <div class="fade-in" data-category="weather">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Snowfall</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Weather &middot; Winter quiet</p>
-          <div class="custom-player" data-src="content/sounds/snow.mp3?v=1770124000">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
+        <div class="sound-card fade-in" data-category="weather" data-src="content/sounds/snow.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1457269449834-928af64c7dd4?w=400&q=70');"><span class="sound-card-category">Weather</span><span class="sound-card-title">Snowfall</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
         </div>
 
-
-        <div class="fade-in" data-category="nature">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Garden</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Nature &middot; Peaceful garden</p>
-          <div class="custom-player" data-src="content/sounds/garden.mp3?v=1770124000">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
+        <div class="sound-card fade-in" data-category="nature" data-src="content/sounds/garden.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&q=70');"><span class="sound-card-category">Nature</span><span class="sound-card-title">Garden</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
         </div>
 
-        <div class="fade-in" data-category="nature">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Waterfall</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Nature &middot; Cascading water</p>
-          <div class="custom-player" data-src="content/sounds/waterfall.mp3?v=1770124000">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
+        <div class="sound-card fade-in" data-category="nature" data-src="content/sounds/waterfall.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1432405972618-c6b0cfba8cde?w=400&q=70');"><span class="sound-card-category">Nature</span><span class="sound-card-title">Waterfall</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
         </div>
 
-        <div class="fade-in" data-category="ambient">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Piano</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Ambient &middot; Soft piano</p>
-          <div class="custom-player" data-src="content/sounds/piano.mp3?v=1770124000">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
+        <div class="sound-card fade-in" data-category="ambient" data-src="content/sounds/piano.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=400&q=70');"><span class="sound-card-category">Ambient</span><span class="sound-card-title">Piano</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
         </div>
 
-        <div class="fade-in" data-category="ambient">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Wind Chimes</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Ambient &middot; Gentle chimes</p>
-          <div class="custom-player" data-src="content/sounds/chimes.mp3?v=1770124000">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
+        <div class="sound-card fade-in" data-category="ambient" data-src="content/sounds/chimes.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1505455184862-554165e5f6ba?w=400&q=70');"><span class="sound-card-category">Ambient</span><span class="sound-card-title">Wind Chimes</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
         </div>
 
-
-        <div class="fade-in" data-category="apothecary">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Singing Bowls</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Apothecary &middot; Temple resonance</p>
-          <div class="custom-player" data-src="content/sounds/temple.mp3?v=1770124000">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
+        <div class="sound-card fade-in" data-category="apothecary" data-src="content/sounds/temple.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1545389336-cf090694435e?w=400&q=70');"><span class="sound-card-category">Apothecary</span><span class="sound-card-title">Singing Bowls</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
         </div>
 
-        <div class="fade-in" data-category="ambient">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">White Noise</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Ambient &middot; Steady static</p>
-          <div class="custom-player" data-src="content/sounds/whitenoise.mp3?v=1770124000">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
+        <div class="sound-card fade-in" data-category="ambient" data-src="content/sounds/whitenoise.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?w=400&q=70');"><span class="sound-card-category">Ambient</span><span class="sound-card-title">White Noise</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
         </div>
 
-        <div class="fade-in" data-category="nature">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Woodland</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Nature &middot; Deep forest</p>
-          <div class="custom-player" data-src="content/sounds/woodland.mp3?v=1770124000">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
+        <div class="sound-card fade-in" data-category="nature" data-src="content/sounds/woodland.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1448375240586-882707db888b?w=400&q=70');"><span class="sound-card-category">Nature</span><span class="sound-card-title">Woodland</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
         </div>
 
-        <div class="fade-in" data-category="mixes">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Rain on Cabin</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Mixes &middot; Rain + fireplace</p>
-          <div class="custom-player" data-src="content/sounds/rain-cabin.mp3?v=1770124000">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
+        <div class="sound-card fade-in" data-category="mixes" data-src="content/sounds/rain-cabin.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1449247709967-d4461a6a6103?w=400&q=70');"><span class="sound-card-category">Mixes</span><span class="sound-card-title">Rain on Cabin</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
         </div>
 
-        <div class="fade-in" data-category="mixes">
-          <h3 style="font-size:1.05rem;margin-bottom:2px;">Rain on Campervan</h3>
-          <p style="font-size:0.78rem;color:var(--mid-gray);margin-bottom:10px;">Mixes &middot; Rain + journey</p>
-          <div class="custom-player" data-src="content/sounds/rain-campervan.mp3?v=1770124000">
-            <div style="display:flex;align-items:center;gap:12px;border-radius:8px;padding:10px 0;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
+        <div class="sound-card fade-in" data-category="mixes" data-src="content/sounds/rain-campervan.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=400&q=70');"><span class="sound-card-category">Mixes</span><span class="sound-card-title">Rain on Campervan</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
+        </div>
+
+        <div class="sound-card fade-in" data-category="mixes" data-src="content/sounds/storm-fire.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1475776408506-9a5371e7a068?w=400&q=70');"><span class="sound-card-category">Mixes</span><span class="sound-card-title">Storm + Fire</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
+        </div>
+
+        <div class="sound-card fade-in" data-category="mixes" data-src="content/sounds/ocean-breeze.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=400&q=70');"><span class="sound-card-category">Mixes</span><span class="sound-card-title">Ocean Breeze</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
+        </div>
+
+        <div class="sound-card fade-in" data-category="mixes" data-src="content/sounds/rainy-morning.mp3">
+          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1428592953211-077101b2021b?w=400&q=70');"><span class="sound-card-category">Mixes</span><span class="sound-card-title">Rainy Morning</span></div>
+          <div class="sound-card-controls"><button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button><svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/></svg><input type="range" class="sound-volume" min="0" max="100" value="80"></div>
         </div>
 
         <div class="fade-in" data-category="mixes">
@@ -494,6 +444,56 @@
         }
       });
     });
+
+    // Sound card players
+    (function() {
+      var audioElements = {};
+      var playIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+      var pauseIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+
+      document.querySelectorAll('.sound-card').forEach(function(card) {
+        var src = card.getAttribute('data-src');
+        var playBtn = card.querySelector('.sound-play-btn');
+        var volumeSlider = card.querySelector('.sound-volume');
+
+        playBtn.addEventListener('click', function() {
+          // Create audio element if doesn't exist
+          if (!audioElements[src]) {
+            audioElements[src] = new Audio(src);
+            audioElements[src].loop = true;
+            audioElements[src].volume = volumeSlider.value / 100;
+          }
+          var audio = audioElements[src];
+
+          if (audio.paused) {
+            // Stop all other sounds
+            Object.keys(audioElements).forEach(function(key) {
+              if (key !== src && !audioElements[key].paused) {
+                audioElements[key].pause();
+                var otherCard = document.querySelector('[data-src="' + key + '"]');
+                if (otherCard) {
+                  otherCard.querySelector('.sound-play-btn').innerHTML = playIcon;
+                  otherCard.querySelector('.sound-play-btn').classList.remove('playing');
+                }
+              }
+            });
+            audio.play();
+            playBtn.innerHTML = pauseIcon;
+            playBtn.classList.add('playing');
+          } else {
+            audio.pause();
+            playBtn.innerHTML = playIcon;
+            playBtn.classList.remove('playing');
+          }
+        });
+
+        volumeSlider.addEventListener('input', function() {
+          if (audioElements[src]) {
+            audioElements[src].volume = this.value / 100;
+          }
+        });
+      });
+    })();
   </script>
 </body>
 </html>
