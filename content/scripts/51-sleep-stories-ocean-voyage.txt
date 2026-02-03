@@ -5,7 +5,7 @@ Ambient: ocean
 Style: Warm, grounded male narrator
 ---
 
-Welcome to Salus. Tonight, we're going on a voyage. Not a hurried one — there's no destination, no schedule, no place we need to be. Just you, a boat, and an endless, peaceful ocean stretching out in every direction. The kind of voyage where the journey itself is the whole point.
+Tonight, we're going on a voyage. Not a hurried one — there's no destination, no schedule, no place we need to be. Just you, a boat, and an endless, peaceful ocean stretching out in every direction. The kind of voyage where the journey itself is the whole point.
 
 ...
 
