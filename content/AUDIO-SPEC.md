@@ -133,6 +133,71 @@ ffmpeg -y -i voice.mp3 \
 
 ---
 
+## Fish Audio TTS Build Settings
+
+**Current voice:** Marco (ID: `0165567b33324f518b02336ad232e31a`)
+
+### API Settings
+
+| Setting | Value | Notes |
+|---------|-------|-------|
+| **temperature** | 0.3 | Lower = more consistent. 0.4-0.5 = warmer/more expressive |
+| **condition_on_previous_chunks** | true | Helps maintain voice consistency |
+| **sample_rate** | 44100 | Standard quality |
+| **format** | mp3 | |
+
+### Build Architecture
+
+**CRITICAL: Generate one TTS chunk per text block, preserving ALL pauses.**
+
+DO NOT combine text blocks to reduce API calls - this destroys the meditation rhythm.
+Each `...` marker in the script = one pause. Each text block between pauses = one TTS call.
+
+```
+Script structure:
+  Text block 1 → TTS call 1 → [pause]
+  Text block 2 → TTS call 2 → [pause]
+  ...
+```
+
+### Audio Cleanup Pipeline
+
+Applied to all TTS output before mixing:
+
+```
+highpass=f=80        # Cut low rumble
+lowpass=f=10000      # Cut high-freq hiss (aggressive)
+afftdn=nf=-25        # Noise reduction (stronger setting)
+dynaudnorm=p=0.9:m=10  # Normalize levels
+```
+
+### Known Issues & Fixes
+
+| Issue | Cause | Fix |
+|-------|-------|-----|
+| **Continuous monotone voice** | Text blocks combined, pauses lost | Generate each block separately, don't combine |
+| **Opening too fast** | First text block too long | Break opening into shorter sentences with `...` pauses between |
+| **High-frequency hiss/glitch** | TTS artifact in specific chunk | Aggressive lowpass filter (10kHz), stronger noise reduction |
+| **Audio degradation mid-session** | Bad TTS chunk from API | Regenerate session; random API issues |
+| **Voice inconsistency** | Too many short chunks | Maintain reasonable chunk sizes (50-400 chars ideal) |
+
+### Script Writing Rules for TTS
+
+1. **Break up long openings** - First 3-4 sentences should each be separate blocks with pauses
+2. **Avoid single-word blocks** - Chunks under 20 chars are unreliable
+3. **Use `...` liberally** - Each creates a natural breath/pause for meditation pacing
+4. **Double `...` = 30 sec pause** (sleep category)
+5. **Triple `...` = 60 sec pause** (sleep category)
+
+### Recommended Ambient Levels
+
+After testing (Feb 2026):
+- **-12dB**: Louder ambient, good for rain/ocean where sound is the feature
+- **-14dB**: Standard, balanced mix
+- **-16dB**: Quieter ambient, voice-focused
+
+---
+
 ## Opening & Closing
 
 **Opening:**
@@ -212,7 +277,27 @@ Before publishing any session:
 - [ ] Ambient continues through ALL pauses/silences
 - [ ] No dead silence anywhere in track
 - [ ] No "Welcome to Salus" at start (unless intro content)
+- [ ] **Opening broken into short blocks** (not one long continuous paragraph)
+- [ ] **Listen to full audio** - check for hiss/glitches especially near start and end
+- [ ] **Pauses feel natural** - rhythm matches meditation pacing
 
 ---
 
-*Last updated: February 2026*
+## Build Command Reference
+
+```bash
+# Build a session
+python3 build-session-v3.py <session-name>
+
+# Dry run (shows plan without generating)
+python3 build-session-v3.py --dry-run <session-name>
+
+# Build multiple variations for testing
+python3 build-variations.py
+```
+
+Output goes to: `content/audio/<session-name>.mp3`
+
+---
+
+*Last updated: 3 February 2026*
