@@ -1163,14 +1163,15 @@ Session                      | Analyser v3       | Human Review      | Status
 02-deep-sleep               | NEEDS RE-TEST     | PENDING           | -
 03-breathing-for-anxiety    | 1 HIGH (hiss FP)  | PASS              | DEPLOYED
 08-sleep-stories-quiet-shore| NEEDS RE-TEST     | PENDING           | -
-09-rainfall-sleep-journey   | 11 HIGH (all FP)  | PASS              | STAGING
+09-rainfall-sleep-journey   | 11 HIGH (all FP)  | PASS              | DEPLOYED
 25-introduction-to-mindfulness| 3 REPEATED (FP) | PASS              | DEPLOYED
 38-seven-day-mindfulness-day1| REBUILD 1        | PASS              | DEPLOYED
 
 FREE CONTENT DEPLOYMENT (4 February 2026):
-All 4 free sessions deployed to audio-free/ staging folder:
+All 5 free sessions deployed to audio-free/ and website:
 - 01-morning-meditation.mp3
 - 03-breathing-for-anxiety.mp3
+- 09-rainfall-sleep-journey.mp3
 - 25-introduction-to-mindfulness.mp3
 - 38-seven-day-mindfulness-day1.mp3
 
