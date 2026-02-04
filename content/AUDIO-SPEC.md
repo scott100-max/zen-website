@@ -306,6 +306,81 @@ Longer sessions = more TTS API calls = higher chance of voice variation at segme
 
 ---
 
+## Audio Quality Gate (MANDATORY)
+
+**Rule: 100% OR NO SHIP.**
+
+ANY audible glitch = FAIL. No exceptions. No "acceptable" threshold.
+One glitch destroys the meditation experience. Ship perfection or rebuild.
+
+### Quality Threshold
+
+| Metric | Pass | Fail |
+|--------|------|------|
+| Audible glitches | 0 | ANY |
+| Audible hissing/artifacts | 0 | ANY |
+| Voice breaks/distortion | 0 | ANY |
+
+**Automated analysis is PRE-SCREENING only.**
+Human review with `test-audio-player.html` is MANDATORY.
+Human ear is the final gate.
+
+### Analyzer v2 Detection Types
+
+| Type | Severity | What it detects |
+|------|----------|-----------------|
+| VOICE_SHIFT | HIGH | TTS voice tone/timbre changes between blocks |
+| HISSING | MEDIUM | Sustained high-frequency noise regions |
+| LONG_SILENCE | LOW | Pauses over 45 seconds (informational) |
+
+**Note:** Click/glitch detection removed in v2 - too many false positives at splice points.
+The cleanup filter handles splice artifacts; real issues are sustained voice changes.
+
+### Targeted Repair
+
+Instead of full rebuild, use `targeted_repair.py` to fix individual blocks:
+```bash
+python3 targeted_repair.py <block_number> <input.mp3> <output.mp3>
+```
+
+### Workflow
+
+```
+1. BUILD: Generate audio with TTS + ambient mixing
+2. ANALYZE: Run analyze_audio.py on raw master (no ambient)
+3. REVIEW: Check report for HIGH/MEDIUM issues
+4. GATE CHECK:
+   - HIGH issues = 0?
+   - MEDIUM issues ≤ 5?
+   - No glitches in opening 30 seconds?
+   → YES to all = PASS → Deploy
+   → NO to any = FAIL → Rebuild
+5. REBUILD: Regenerate full session (fresh TTS run)
+6. REPEAT: Steps 2-5 until PASS
+```
+
+### Why This Matters
+
+- TTS output is non-deterministic - same text can produce different artifacts
+- Glitches are random API artifacts, not systematic bugs
+- Rebuilding typically resolves issues within 1-3 attempts
+- Opening quality is critical - users judge in first 30 seconds
+- This system applies to ALL audio production, not just one file
+
+### Analysis Tool
+
+Location: `/Users/scottripley/Library/CloudStorage/OneDrive-Personal/Salus/Audio Quality Analysis/analyze_audio.py`
+
+```bash
+python3 analyze_audio.py <audio-file.mp3>
+```
+
+Outputs:
+- `<filename>_REPORT.txt` - Detailed issue list with timestamps
+- `<filename>_ANALYSIS.png` - Visual waveform/spectrogram
+
+---
+
 ## Session Checklist
 
 Before publishing any session:
