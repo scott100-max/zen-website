@@ -2,8 +2,8 @@
 SALUS MIND — PROJECT BIBLE
 ================================================================================
 Comprehensive Reference Document for Claude
-Version 1.1
-Last Updated: 4 February 2026 (v1.3 - Workflow Corrected)
+Version 1.4
+Last Updated: 4 February 2026 (v1.4 - Free Content Deployed)
 
 ================================================================================
 CONTENTS
@@ -20,6 +20,7 @@ CONTENTS
 10. Imagery Specifications
 11. Audio Production Methodology & Quality Gate
 12. Technical Reference
+13. Session Log
 
 ================================================================================
 1. PROJECT OVERVIEW
@@ -1257,6 +1258,61 @@ at segment boundaries.
 - Downloaded files often have silence padding at start - trim before use
 
 ================================================================================
+13. SESSION LOG
+================================================================================
+
+4 FEBRUARY 2026 — SESSION 2 (Afternoon)
+---------------------------------------
+COMPLETED:
+- Rebuilt 03-breathing-for-anxiety with Bible-compliant breathing pattern
+- Deployed 5 free content sessions to website:
+  * 01-morning-meditation
+  * 03-breathing-for-anxiety
+  * 09-rainfall-sleep-journey
+  * 25-introduction-to-mindfulness
+  * 38-seven-day-mindfulness-day1
+
+BIBLE UPDATES:
+- Added comprehensive breathing narrative guidelines (Section 4.3)
+- Clarified 4-5-6 timings are REFERENCE only, not prescribed
+- Added NARRATIVE STYLE section (loose, permissive language)
+- Set Git as single source of truth (OneDrive Bible archived)
+- Updated Section 2.3 file organisation
+
+SCRIPT FIXES:
+- 01: Added missing metadata header
+- 03: Expanded "Hold." to 20+ char blocks, corrected breathing pattern
+- 25: Expanded "In./Out." to full phrases
+- 38: Expanded "In./Out./Good." to full phrases
+
+KEY DECISIONS:
+- Breathing narratives must be loose ("when you're ready") not prescriptive
+- NO counting, NO "for X seconds" language
+- Basic breathing: NO hold after exhale (fundamental rule)
+- Scripts fixed for future builds; existing audio kept (passed human review)
+
+REMAINING WORK:
+- Sessions 02, 04-08, 10-51 (~45 files not started)
+- Analyser threshold may need tuning (50x catching some false positives)
+
+--------------------------------------------------------------------------------
+NOTE FOR FUTURE CLAUDE:
+--------------------------------------------------------------------------------
+NEXT TASK: Overlay existing narrations with ambient sounds.
+
+Some sessions have raw narration files that passed human review but need
+ambient mixing before final deployment. Check content/audio/ for *-raw.mp3
+files that need ambient overlay.
+
+PICKUP POINT FOR AUDIO REBUILDING:
+- 5 free sessions COMPLETE: 01, 03, 09, 25, 38
+- Next priority: Sessions needing ambient overlay
+- Then: Rebuild remaining ~45 sessions (02, 04-08, 10-51)
+- Use build-session-v3.py for all new builds
+- All scripts must pass Bible compliance check before building
+- Human review required for all audio before deployment
+
+================================================================================
 — END OF DOCUMENT —
-Last updated: 4 February 2026 (v1.3 - Workflow Corrected)
+Last updated: 4 February 2026 (v1.4 - Free Content Deployed)
 ================================================================================
