@@ -267,14 +267,14 @@
 
   <script src="js/main.js?v=1770053724"></script>
   <script>
-    // Techniques mapped to intents
+    // Techniques mapped to intents - each has distinct timing patterns
     var techniques = {
-      relax:    { name: '4-7-8 Relaxation', phases: [{n:'Breathe in',d:4,c:'inhale'},{n:'Hold',d:7,c:'hold'},{n:'Breathe out',d:8,c:'exhale-478'}], desc: 'Slow your nervous system and release tension.' },
-      focus:    { name: 'Box Breathing', phases: [{n:'Breathe in',d:4,c:'inhale'},{n:'Hold',d:4,c:'hold'},{n:'Breathe out',d:4,c:'exhale-box'},{n:'Hold',d:4,c:'hold'}], desc: 'Used by Navy SEALs to sharpen concentration under pressure.' },
-      sleep:    { name: '4-7-8 Sleep', phases: [{n:'Breathe in',d:4,c:'inhale'},{n:'Hold',d:7,c:'hold'},{n:'Breathe out',d:8,c:'exhale-478'}], desc: 'Drift off naturally with this calming rhythm.' },
-      energise: { name: 'Energising Breath', phases: [{n:'Breathe in',d:4,c:'inhale'},{n:'Breathe out',d:4,c:'exhale-box'}], desc: 'Quick inhale-exhale cycles to wake up your system.' },
-      calm:     { name: 'Calming Breath', phases: [{n:'Breathe in',d:4,c:'inhale'},{n:'Hold',d:4,c:'hold'},{n:'Breathe out',d:6,c:'exhale-calm'}], desc: 'A gentle rhythm to soothe anxiety in the moment.' },
-      unwind:   { name: 'Extended Exhale', phases: [{n:'Breathe in',d:4,c:'inhale'},{n:'Breathe out',d:8,c:'exhale-478'}], desc: 'Long exhales activate your parasympathetic response.' }
+      relax:    { name: 'Resonant Breathing', phases: [{n:'Breathe in',d:5,c:'inhale'},{n:'Breathe out',d:5,c:'exhale-box'}], desc: '5-5 rhythm. The "coherent breathing" pattern shown to optimise heart rate variability.' },
+      focus:    { name: 'Box Breathing', phases: [{n:'Breathe in',d:4,c:'inhale'},{n:'Hold',d:4,c:'hold'},{n:'Breathe out',d:4,c:'exhale-box'},{n:'Hold',d:4,c:'hold'}], desc: '4-4-4-4 pattern. Used by Navy SEALs to sharpen concentration under pressure.' },
+      sleep:    { name: '4-7-8 Sleep', phases: [{n:'Breathe in',d:4,c:'inhale'},{n:'Hold',d:7,c:'hold'},{n:'Breathe out',d:8,c:'exhale-478'}], desc: '4-7-8 pattern. Dr Andrew Weil\'s technique for falling asleep naturally.' },
+      energise: { name: 'Bellows Breath', phases: [{n:'Breathe in',d:2,c:'inhale'},{n:'Breathe out',d:2,c:'exhale-box'}], desc: '2-2 rapid cycles. Quick breathing to energise and wake up your system.' },
+      calm:     { name: 'Calming Breath', phases: [{n:'Breathe in',d:4,c:'inhale'},{n:'Hold',d:4,c:'hold'},{n:'Breathe out',d:6,c:'exhale-calm'}], desc: '4-4-6 pattern. Extended exhale activates your calming response.' },
+      unwind:   { name: 'Extended Exhale', phases: [{n:'Breathe in',d:4,c:'inhale'},{n:'Breathe out',d:8,c:'exhale-478'}], desc: '4-8 pattern. Double-length exhale to deeply relax the nervous system.' }
     };
 
     var currentIntent = null;

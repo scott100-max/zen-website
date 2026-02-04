@@ -432,6 +432,7 @@ section:nth-child(even) { background: var(--off-white); }
   .sound-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-grid { grid-template-columns: 1fr !important; gap: 32px; text-align: center; }
   .footer-grid ul { padding: 0; }
+  .footer-grid .newsletter-form { justify-content: center; }
   .stats-bar { grid-template-columns: repeat(2, 1fr) !important; gap: 20px !important; }
   .research-grid { grid-template-columns: 1fr !important; }
   .lifestyle-grid { grid-template-columns: repeat(2, 1fr) !important; }
