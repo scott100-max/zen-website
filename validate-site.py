@@ -285,6 +285,37 @@ def check_script_metadata(result):
     result.add_pass("SCRIPTS", f"Checked {len(scripts)} script files")
 
 
+def check_audio_closing(result):
+    """Bible 4.6: All audio must end with the standard closing phrase"""
+    print("  Checking audio closing phrases...")
+
+    if not SCRIPTS_DIR.exists():
+        return
+
+    REQUIRED_CLOSING = "thank you for practising with salus"
+
+    for script_file in SCRIPTS_DIR.glob("*.txt"):
+        if script_file.name == "TEMPLATE.txt":
+            continue
+
+        try:
+            content = script_file.read_text(encoding='utf-8').lower()
+
+            # Get the last 500 characters to check for closing
+            ending = content[-500:] if len(content) > 500 else content
+
+            if REQUIRED_CLOSING not in ending:
+                result.add_warning(
+                    "CLOSING",
+                    f"Script may be missing required closing phrase",
+                    file=script_file,
+                    fix='End with: "Thank you for practising with Salus. Sleep, relax, restore."'
+                )
+
+        except Exception as e:
+            pass
+
+
 def check_breathing_patterns(result):
     """Bible 4.3: Verify breathing exercises follow spec"""
     print("  Checking breathing pattern compliance...")
@@ -292,36 +323,88 @@ def check_breathing_patterns(result):
     if not SCRIPTS_DIR.exists():
         return
 
+    # Patterns that indicate ACTUAL breathing hold instructions (not metaphorical)
+    HOLD_BREATH_PATTERNS = [
+        r'\bhold your breath\b',
+        r'\bnow hold\b',
+        r'\band hold\b',
+        r'^hold\.$',           # Just "Hold." on its own line
+        r'^hold gently',       # Breathing instruction
+        r'\bhold it\b',        # "hold it" in breathing context
+    ]
+
+    # Patterns that are NOT breathing instructions (false positive filters)
+    IGNORE_HOLD_PATTERNS = [
+        r'hold that',          # "hold that word/thought" = metaphor
+        r'hold you',           # "let the mattress hold you" = support
+        r'stop holding',       # "muscles stop holding" = releasing tension
+        r'holding on',         # "stop holding on" = letting go
+        r'holding tension',    # body scan
+        r'holding anything',   # "you're not holding anything"
+        r'hold it in',         # "hold stomach in" = body posture
+        r'really hold',        # progressive muscle relaxation
+        r'hold the tension',   # muscle tension exercise
+        r'squeeze.*hold',      # muscle contraction
+        r'hold it tight',      # muscle tension ("hold it tight")
+        r'tighten.*hold',      # muscle contraction sequence
+    ]
+
     for script_file in SCRIPTS_DIR.glob("*.txt"):
         try:
             content = script_file.read_text(encoding='utf-8').lower()
+            lines = content.split('\n')
 
-            # Check for basic breathing with hold after exhale (FORBIDDEN)
-            # Pattern: exhale/breathe out followed by hold (without another breathe in between)
-            if "breathe out" in content or "exhale" in content:
-                # Look for "hold" appearing after exhale without "breathe in" between
-                lines = content.split('\n')
-                found_exhale = False
-                found_breathe_in = False
+            # Skip if this is box breathing (which DOES have hold after exhale)
+            if "box breathing" in content or "4-4-4-4" in content:
+                continue
 
-                for i, line in enumerate(lines):
-                    if "breathe out" in line or "exhale" in line:
-                        found_exhale = True
-                        found_breathe_in = False
-                    elif "breathe in" in line or "inhale" in line:
-                        found_breathe_in = True
-                        found_exhale = False
-                    elif found_exhale and not found_breathe_in and "hold" in line:
-                        # Check if this is box breathing (4-4-4-4) which DOES have hold after exhale
-                        if "box" not in content and "4-4-4-4" not in content:
-                            result.add_error(
-                                "BREATHING",
-                                "Basic breathing has 'hold' after exhale (Bible 4.3: FORBIDDEN)",
-                                file=script_file,
-                                line=i+1,
-                                fix="Remove hold after exhale for basic breathing pattern"
-                            )
-                        break
+            # Track breathing sequence - we need to detect: exhale → hold (bad)
+            # But NOT: exhale → inhale → hold (good, that's normal pattern)
+            # State: None, 'exhale' (just saw exhale, watching for hold)
+            state = None
+
+            for i, line in enumerate(lines):
+                # Reset state on new inhale (start of new cycle)
+                if re.search(r'\bbreath[e]?\s+in\b', line) or "inhale" in line:
+                    state = None
+                    continue
+
+                # Mark exhale state
+                if "breathe out" in line or "exhale" in line or "let it go" in line or "release" in line:
+                    state = 'exhale'
+                    continue
+
+                # Check for hold INSTRUCTION immediately after exhale
+                # This is the FORBIDDEN pattern in basic breathing
+                if state == 'exhale':
+                    # Check if this line has a breathing hold instruction
+                    is_hold_instruction = False
+                    for pattern in HOLD_BREATH_PATTERNS:
+                        if re.search(pattern, line):
+                            is_hold_instruction = True
+                            break
+
+                    # Check if this should be ignored (false positive)
+                    if is_hold_instruction:
+                        for ignore_pattern in IGNORE_HOLD_PATTERNS:
+                            if re.search(ignore_pattern, line):
+                                is_hold_instruction = False
+                                break
+
+                    if is_hold_instruction:
+                        result.add_error(
+                            "BREATHING",
+                            "Basic breathing has 'hold' after exhale (Bible 4.3: FORBIDDEN)",
+                            file=script_file,
+                            line=i+1,
+                            fix="Remove hold after exhale for basic breathing pattern"
+                        )
+                        break  # Only report once per script
+
+                    # If we see anything other than pause markers, reset state
+                    # (pause markers are just "...")
+                    if line.strip() and line.strip() != "...":
+                        state = None
 
         except Exception as e:
             pass
@@ -570,22 +653,25 @@ def main():
     print("\n[3/9] Script Metadata...")
     check_script_metadata(result)
 
-    print("\n[4/9] Breathing Patterns...")
+    print("\n[4/10] Breathing Patterns...")
     check_breathing_patterns(result)
 
-    print("\n[5/9] Premium Access...")
+    print("\n[5/10] Audio Closing Phrases...")
+    check_audio_closing(result)
+
+    print("\n[6/10] Premium Access...")
     check_premium_functionality(result)
 
-    print("\n[6/9] Stripe Configuration...")
+    print("\n[7/10] Stripe Configuration...")
     check_stripe_configuration(result)
 
-    print("\n[7/9] Audio Files...")
+    print("\n[8/10] Audio Files...")
     check_audio_files(result, quick=quick_mode)
 
-    print("\n[8/9] Navigation...")
+    print("\n[9/10] Navigation...")
     check_navigation(result)
 
-    print("\n[9/9] File Organization...")
+    print("\n[10/10] File Organization...")
     check_file_organization(result)
 
     # Print report

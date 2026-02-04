@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Morning Meditation — Salus</title>
+  <meta name="description" content="Start your day with clarity and intention. A gentle 10-minute morning meditation to set the tone for a mindful day.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css?v=1770053724">
+  <style>
+    .session-detail-hero {
+      position: relative;
+      min-height: 420px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      overflow: hidden;
+    }
+    .session-detail-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(160deg,#1b4332 0%,#2d6a4f 40%,#40916c 100%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 400'%3E%3Ccircle cx='650' cy='80' r='40' fill='%23ffffff08'/%3E%3Ccircle cx='680' cy='90' r='50' fill='%23ffffff05'/%3E%3Ccircle cx='100' cy='300' r='3' fill='%23ffffff15'/%3E%3Ccircle cx='200' cy='250' r='2' fill='%23ffffff12'/%3E%3Ccircle cx='300' cy='100' r='2.5' fill='%23ffffff10'/%3E%3Ccircle cx='500' cy='180' r='2' fill='%23ffffff12'/%3E%3Ccircle cx='700' cy='280' r='3' fill='%23ffffff08'/%3E%3Ccircle cx='150' cy='150' r='1.5' fill='%23ffffff15'/%3E%3Ccircle cx='400' cy='60' r='2' fill='%23ffffff10'/%3E%3Ccircle cx='600' cy='320' r='2' fill='%23ffffff08'/%3E%3C/svg%3E");
+      background-size: 100% 100%, 100% 100%;
+      opacity: 0.7;
+      z-index: 1;
+    }
+    .hero-fade {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 120px;
+      background: linear-gradient(to bottom, transparent, var(--bg, #fff));
+      z-index: 2;
+    }
+    .session-detail-hero .container {
+      position: relative;
+      z-index: 3;
+      padding: 100px 24px 60px;
+    }
+    .session-detail-hero h1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.4);
+    }
+    .session-detail-hero .meta {
+      opacity: 0.85;
+      font-size: 0.9rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .session-detail-hero .meta span { margin: 0 8px; }
+    .narrator-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 50px;
+      padding: 8px 18px;
+      margin-top: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+    .session-body { max-width: 720px; margin: 0 auto; padding: 48px 24px; }
+    .session-body h2 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.6rem; margin: 36px 0 16px; color: var(--forest); font-weight: 700; }
+    .session-body p { color: var(--mid-gray); line-height: 1.85; margin-bottom: 16px; font-size: 1rem; }
+    .session-body ul { color: var(--mid-gray); line-height: 2; padding-left: 24px; margin-bottom: 24px; }
+    .session-body li { margin-bottom: 4px; }
+    .best-for { background: var(--off-white); border-radius: 12px; padding: 20px 24px; margin: 24px 0; }
+    .best-for strong { color: var(--forest); }
+    .unlock-cta {
+      text-align: center; padding: 48px 24px; margin: 32px 0;
+      background: var(--off-white); border-radius: 16px;
+    }
+    .unlock-cta h2 { margin-bottom: 12px; color: var(--forest); font-family: 'Cormorant Garamond', Georgia, serif; }
+    .unlock-cta p { color: var(--mid-gray); margin-bottom: 20px; }
+    .back-link { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 24px; color: var(--accent); text-decoration: none; font-weight: 600; }
+    .back-link:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+
+  <nav class="nav" style="position:relative;">
+    <div class="container">
+      <a href="../index.html" class="nav-logo">SALUS</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../sessions.html">Guided Meditations</a></li>
+        <li><a href="../mindfulness.html">Mindfulness</a></li>
+        <li><a href="../soundscapes.html">Soundscapes</a></li>
+        <li><a href="../tools.html">Tools</a></li>
+        <li><a href="../education.html">Learn</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../newsletter.html">Newsletter</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    </div>
+  </nav>
+
+  <section class="session-detail-hero">
+    <div class="container">
+      <h1>Morning Meditation</h1>
+      <div class="meta">
+        <span>10 min</span> &middot;
+        <span>Mindfulness</span>
+      </div>
+      <div class="narrator-badge">Narrated by Marco</div>
+    </div>
+      <div class="hero-fade"></div>
+  </section>
+
+  <div class="session-body">
+    <a href="../sessions.html" class="back-link">&larr; All Sessions</a>
+
+    <h2>About This Session</h2>
+    <p>Start your day with clarity and intention. This gentle 10-minute morning meditation helps you transition from sleep to wakefulness with purpose, setting a mindful tone for the hours ahead.</p>
+
+    <h2>What You'll Learn</h2>
+    <ul>
+            <li>Setting a daily intention</li>
+            <li>Grounding breath techniques</li>
+            <li>Cultivating morning awareness</li>
+    </ul>
+
+    <div class="best-for">
+      <strong>Best for:</strong> Starting the day mindfully, establishing a morning routine, building consistency
+    </div>
+
+    <div class="unlock-cta" style="text-align:center;padding:32px 24px;margin:24px 0;background:var(--off-white);border-radius:16px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" style="margin-bottom:12px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><h3 style="margin-bottom:8px;color:var(--forest);">Premium Session</h3><p style="color:var(--mid-gray);margin-bottom:16px;">Subscribe to unlock this guided meditation and hundreds more.</p><a href="../apps.html" class="btn btn-primary">Subscribe</a></div></div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4 style="letter-spacing:2px;">SALUS</h4>
+          <p>SLEEP &middot; RELAX &middot; RESTORE</p>
+          <p style="margin-top:8px;">Meditation and mindfulness for everyday life.</p>
+        </div>
+        <div>
+          <h4>Pages</h4>
+          <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../sessions.html">Guided Meditations</a></li>
+            <li><a href="../soundscapes.html">Soundscapes</a></li>
+            <li><a href="../education.html">Learn</a></li>
+            <li><a href="../mindfulness.html">Mindfulness</a></li>
+            <li><a href="../about.html">About</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Support</h4>
+          <ul>
+            <li><a href="../contact.html">Contact</a></li>
+            <li><a href="../faq.html">FAQ</a></li>
+            <li><a href="../privacy.html">Privacy</a></li>
+            <li><a href="../terms.html">Terms</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Tools</h4>
+          <ul>
+            <li><a href="../breathe.html">Breathing Timer</a></li>
+            <li><a href="../timer.html">Meditation Timer</a></li>
+            <li><a href="../sounds.html">ASMR</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <a href="#" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to Top</a>
+        &copy; 2026 Salus. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js?v=1770053724"></script>
+</body>
+</html>
