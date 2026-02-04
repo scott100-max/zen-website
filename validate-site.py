@@ -520,6 +520,38 @@ def check_audio_files(result, quick=False):
             )
 
 
+def check_audio_links(result):
+    """Verify all audio links in HTML files point to existing files"""
+    print("  Checking audio link validity...")
+
+    broken_links = []
+
+    for html_file in SITE_ROOT.glob("*.html"):
+        content = html_file.read_text(encoding='utf-8', errors='ignore')
+
+        # Find data-src attributes pointing to audio files
+        import re
+        audio_refs = re.findall(r'data-src=["\']([^"\']*\.mp3)(?:\?[^"\']*)?["\']', content)
+
+        for ref in audio_refs:
+            # Remove query string if present
+            clean_ref = ref.split('?')[0]
+            audio_path = SITE_ROOT / clean_ref
+
+            if not audio_path.exists():
+                broken_links.append((html_file.name, clean_ref))
+
+    if broken_links:
+        for html_name, audio_ref in broken_links:
+            result.add_error(
+                "AUDIO-LINKS",
+                f"Broken audio link: {audio_ref}",
+                file=SITE_ROOT / html_name
+            )
+    else:
+        result.add_pass("AUDIO-LINKS", "All audio links point to existing files")
+
+
 def check_navigation(result):
     """Verify navigation links work"""
     print("  Checking navigation consistency...")
@@ -649,35 +681,38 @@ def main():
 
     result = ValidationResult()
 
-    print("\n[1/9] Images...")
+    print("\n[1/11] Images...")
     check_duplicate_images(result)
     check_image_quality(result)
 
-    print("\n[2/9] Content & Forbidden Phrases...")
+    print("\n[2/11] Content & Forbidden Phrases...")
     check_forbidden_phrases(result)
 
-    print("\n[3/9] Script Metadata...")
+    print("\n[3/11] Script Metadata...")
     check_script_metadata(result)
 
-    print("\n[4/10] Breathing Patterns...")
+    print("\n[4/11] Breathing Patterns...")
     check_breathing_patterns(result)
 
-    print("\n[5/10] Audio Closing Phrases...")
+    print("\n[5/11] Audio Closing Phrases...")
     check_audio_closing(result)
 
-    print("\n[6/10] Premium Access...")
+    print("\n[6/11] Premium Access...")
     check_premium_functionality(result)
 
-    print("\n[7/10] Stripe Configuration...")
+    print("\n[7/11] Stripe Configuration...")
     check_stripe_configuration(result)
 
-    print("\n[8/10] Audio Files...")
+    print("\n[8/11] Audio Files...")
     check_audio_files(result, quick=quick_mode)
 
-    print("\n[9/10] Navigation...")
+    print("\n[9/11] Audio Links...")
+    check_audio_links(result)
+
+    print("\n[10/11] Navigation...")
     check_navigation(result)
 
-    print("\n[10/10] File Organization...")
+    print("\n[11/11] File Organization...")
     check_file_organization(result)
 
     # Print report
