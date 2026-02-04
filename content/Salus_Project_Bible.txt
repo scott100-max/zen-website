@@ -1,0 +1,1252 @@
+================================================================================
+SALUS MIND — PROJECT BIBLE
+================================================================================
+Comprehensive Reference Document for Claude
+Version 1.1
+Last Updated: 4 February 2026 (v1.3 - Workflow Corrected)
+
+================================================================================
+CONTENTS
+================================================================================
+1. Project Overview
+2. Directory Structure and File Locations
+3. Audio Inventory
+4. Audio Specifications
+5. Build System
+6. Production Workflow
+7. Session Status and Priorities
+8. Quality Control (Critical)
+9. Outstanding Tasks
+10. Imagery Specifications
+11. Audio Production Methodology & Quality Gate
+12. Technical Reference
+
+================================================================================
+1. PROJECT OVERVIEW
+================================================================================
+
+Salus Mind is a meditation and mindfulness platform delivering audio content 
+across multiple categories including sleep, focus, stress relief, mindfulness, 
+and beginner programmes. The platform includes a website, premium content 
+library, and ASMR/ambient sound collection.
+
+1.1 CONTENT SUMMARY
+-------------------
+Category                      | File Count | Total Duration
+------------------------------|------------|---------------
+Premium Meditation Sessions   | 48         | ~15h 30m
+ASMR/Ambient Sounds          | 28         | ~56m
+Extended Ambient             | 3          | ~8h+
+Total Unique Content         | 79         | ~24h 30m
+
+1.2 KEY PRINCIPLES
+------------------
+- Quality benchmark: Rainfall Sleep Journey (Session 09) represents the 
+  specification standard
+- All audio must pass automated quality analysis before deployment
+- No background ambient until narrator introduction is complete
+- Failed audio files must be deleted along with all associated documentation
+
+================================================================================
+2. DIRECTORY STRUCTURE AND FILE LOCATIONS
+================================================================================
+
+2.1 REPOSITORY STRUCTURE
+------------------------
+content/
+├── scripts/           # Source scripts with metadata
+│   ├── TEMPLATE.txt   # Template for new sessions
+│   └── XX-name.txt    # Individual session scripts
+├── audio/             # Generated audio files
+│   └── ambient/       # Ambient sound loops for mixing
+├── audio-free/        # Primary audio source (premium content)
+├── sounds/            # ASMR/ambient sound library
+├── youtube-uploads/   # Upload packages for each video
+└── thumbnails/        # Visual thumbnail references
+
+2.2 KEY FILE LOCATIONS
+----------------------
+Content Type          | Location
+----------------------|------------------------------------------
+Premium Sessions      | content/audio-free/
+ASMR Sounds          | content/sounds/
+Ambient Loops        | content/audio/ambient/
+Session Scripts      | content/scripts/
+YouTube Packages     | content/youtube-uploads/
+Extended Rain (8hr)  | content/audio/ambient/rain-8hr.mp3
+
+2.3 ONEDRIVE ORGANISATION
+-------------------------
+All Salus files are stored in OneDrive under the folder Salus_Mind. A 
+Contents_Index.docx file lists all files with their OneDrive paths. A 
+dedicated folder exists for the Salus Bible document.
+
+================================================================================
+3. AUDIO INVENTORY
+================================================================================
+
+3.1 PREMIUM MEDITATION SESSIONS (48 files)
+------------------------------------------
+Total duration: approximately 15 hours 30 minutes.
+
+SLEEP SESSIONS:
+#  | Session                      | Duration  | Ambient       | Status
+---|------------------------------|-----------|---------------|----------
+05 | Body Scan for Deep Rest      | 50.2 min  | Ambient pad   | Deployed
+06 | Letting Go of the Day        | 38.5 min  | Evening ambient| Deployed
+07 | Moonlight Drift              | 52.0 min  | Night sounds  | Deployed
+08 | The Quiet Shore              | 63.4 min  | Ocean waves   | Deployed
+09 | Rainfall Sleep Journey       | 17.7 min  | Rain          | Deployed (BENCHMARK)
+11 | Lucid Dream Preparation      | 56.2 min  | Ethereal      | Deployed
+
+FOCUS SESSIONS:
+#  | Session                      | Duration  | Ambient       | Status
+---|------------------------------|-----------|---------------|----------
+12 | Five Minute Reset            | 5.9 min   | Light ambient | Needs rebuild
+13 | Flow State                   | 10.4 min  | Focus tones   | Needs rebuild
+14 | Morning Clarity              | 9.0 min   | Morning sounds| Needs rebuild
+15 | Deep Work Prep               | 10.2 min  | Minimal       | Needs rebuild
+16 | Peak Performance             | 10.1 min  | Energising    | Needs rebuild
+17 | Deep Work Mode               | 5.1 min   | Focus ambient | Needs rebuild
+
+3.2 ASMR/AMBIENT SOUND LIBRARY (28 files)
+-----------------------------------------
+Short ambient loops in content/sounds/. Total duration ~56 minutes.
+
+Sound          | Duration | Sound          | Duration
+---------------|----------|----------------|----------
+birds.mp3      | 3:29     | ocean.mp3      | 2:00
+cafe.mp3       | 2:00     | rain.mp3       | 1:57
+fire.mp3       | 1:00     | stream.mp3     | 3:00
+forest.mp3     | 1:01     | temple.mp3     | 2:33
+garden.mp3     | 1:50     | thunder.mp3    | 0:23
+library.mp3    | 0:42     | waterfall.mp3  | 1:12
+night.mp3      | 1:30     | whitenoise.mp3 | 3:00
+
+================================================================================
+4. AUDIO SPECIFICATIONS
+================================================================================
+
+4.1 SCRIPT FORMAT
+-----------------
+Every script must have a metadata header followed by content with pause markers:
+
+    SESSION TITLE
+    Duration: 10 minutes
+    Category: mindfulness
+    Ambient: ocean
+    Style: Warm, grounded male narrator
+    ---
+    Script content here...
+    ...
+    More content with pauses...
+
+METADATA FIELDS:
+Field    | Required | Options
+---------|----------|----------------------------------------------------------
+Title    | Yes      | First line (free text)
+Duration | Yes      | e.g. "10 minutes"
+Category | Yes      | sleep, focus, stress, mindfulness, beginner, advanced
+Ambient  | No       | ocean, rain, forest, birds, stream, wind, night, fire,
+         |          | garden, temple, chimes, piano, library, waterfall, none
+Style    | No       | Voice direction for narrator
+
+4.2 PAUSE MARKERS AND DURATIONS
+-------------------------------
+Use ... on its own line for pauses. More consecutive lines equal longer pauses.
+
+Category    | Short (...) | Medium (... x2) | Long (... x3)
+------------|-------------|-----------------|---------------
+sleep       | 8-15s       | 25-45s          | 60-105s
+focus       | 3-6s        | 8-15s           | 15-30s
+stress      | 5-10s       | 15-30s          | 30-60s
+mindfulness | 5-12s       | 20-40s          | 45-75s
+beginner    | 4-8s        | 12-25s          | 25-45s
+advanced    | 8-15s       | 30-60s          | 75-105s
+
+4.3 BREATHING EXERCISE SPECIFICATIONS
+================================================================================
+*****************************************************************************
+*                    CRITICAL BUILD REQUIREMENT                              *
+*        ALL BREATHING CONTENT MUST COMPLY WITH THIS SECTION                *
+*           FAILURE TO COMPLY = AUTOMATIC REJECT                            *
+*****************************************************************************
+
+HUMAN-TESTED BREATHING TIMINGS (4 February 2026):
+-------------------------------------------------
+These timings are from actual human testing - comfortable natural breathing:
+
+    BREATHE IN:   4 seconds
+    HOLD:         5 seconds
+    BREATHE OUT:  6 seconds
+
+    Total cycle: 15 seconds
+
+These are REFERENCE timings only. The narrative must NOT prescribe exact durations.
+Users breathe at their own pace - we provide the gaps, not the counts.
+
+FUNDAMENTAL RULES:
+------------------
+1. NO COUNTING in narrative - TTS reads counts too fast (2 sec vs 4-6 sec needed)
+2. Narrative is LOOSE and NON-PRESCRIPTIVE - guide, don't dictate
+3. Pauses create space for breathing - users find their own rhythm
+4. Use permissive phrases: "when you're ready", "in your own time", "slowly"
+
+NARRATIVE STYLE:
+----------------
+The narrator should be a gentle guide, not a drill instructor.
+
+GOOD (loose, permissive):
+- "Breathe in slowly"
+- "Now hold your breath"
+- "And breathe out when you're ready"
+- "Take a slow breath in"
+- "Let it go"
+
+BAD (prescriptive, rigid):
+- "Breathe in for four seconds"
+- "Hold for five"
+- "Now exhale for six seconds"
+- "One. Two. Three. Four."
+
+BASIC BREATHING PATTERN (Default for anxiety/stress relief):
+------------------------------------------------------------
+Sequence: Breathe in → Hold → Breathe out (NO second hold)
+
+    Breathe in slowly.
+    ...                     <- pause for inhale
+
+    Now hold your breath.
+    ...                     <- pause for hold
+
+    Breathe out when you're ready.
+    ...
+    ...                     <- longer pause for exhale + rest
+
+    [Repeat cycle]
+
+*****************************************************************************
+*          NEVER ADD "HOLD" AFTER "BREATHE OUT" IN BASIC BREATHING          *
+*                    THIS IS A FUNDAMENTAL ERROR                            *
+*****************************************************************************
+
+BOX BREATHING PATTERN (4-4-4-4 - all phases equal):
+---------------------------------------------------
+Sequence: Breathe in → Hold → Breathe out → Hold (HAS second hold)
+Follow the pattern structure but DO NOT prescribe exact timings.
+
+    Take a slow breath in.
+    ...                     <- pause
+
+    Hold gently.
+    ...                     <- pause
+
+    Now breathe out slowly.
+    ...                     <- pause
+
+    And hold.
+    ...                     <- pause
+
+    [Repeat cycle]
+
+4-7-8 BREATHING PATTERN (Extended hold and exhale):
+---------------------------------------------------
+Sequence: Breathe in → Hold (long) → Breathe out (longer)
+Follow the pattern structure but DO NOT prescribe exact timings.
+
+    Breathe in through your nose.
+    ...                     <- shorter pause
+
+    Now hold your breath.
+    ...
+    ...                     <- longer pause (double)
+
+    Exhale slowly through your mouth.
+    ...
+    ...
+    ...                     <- longest pause (triple)
+
+SCRIPT REQUIREMENTS CHECKLIST:
+------------------------------
+Before building ANY breathing content, verify:
+[ ] Correct pattern used (basic vs box vs 4-7-8)
+[ ] NO counting ("One. Two. Three. Four." etc)
+[ ] NO prescriptive timings ("for four seconds" etc)
+[ ] Loose, permissive language ("when you're ready", "slowly")
+[ ] Basic breathing has NO hold after exhale
+[ ] Box breathing has hold after exhale (4 phases)
+[ ] Text blocks are 20+ characters (TTS stability)
+
+FORBIDDEN:
+----------
+- Counting aloud (TTS too fast)
+- Prescriptive timing language ("for X seconds")
+- "Hold" after exhale in basic breathing
+- Rushed pacing
+- Single-word blocks under 20 characters
+
+--------------------------------------------------------------------------------
+
+4.4 SILENCE REQUIREMENTS BY DURATION
+------------------------------------
+
+SHORT SESSIONS (Under 10 minutes):
+- Add ONE 30-second pause (ambient continues)
+- No narrator announcement needed
+
+MEDIUM SESSIONS (10-20 minutes):
+- Add ONE 30-second pause
+- Add ONE 60-second silence with narrator announcement
+
+LONG SESSIONS (20+ minutes):
+- Add ONE 30-second pause
+- Add ONE 60-second silence with announcement (around 40-50% mark)
+- Add ONE 90-second silence with announcement (around 70-80% mark)
+
+SILENCE ANNOUNCEMENT PHRASES:
+Before any silence of 60+ seconds, the narrator must announce it:
+- "I'm going to be quiet now for a little while. Just let the [rain/waves/sounds] hold you..."
+- "I'll be silent for a moment. There's nothing you need to do..."
+- "Take this time in stillness. I'll return in a moment..."
+- "Rest here now. I'll be back soon..."
+
+CRITICAL: Never have extended silence without ambient sound. The listener must 
+always know audio is still playing.
+
+4.4 AMBIENT SOUND LEVELS
+------------------------
+Setting                    | Value      | Notes
+---------------------------|------------|--------------------------------
+Standard mix level         | -14 dB     | Baseline for all ambient mixing
+Sleep sessions (verified)  | -12 dB     | Louder ambient, good for rain/ocean
+Voice-focused sessions     | -16 dB     | Quieter ambient
+During pauses (30s+)       | -13 dB     | Raise by 1dB during gaps
+Fade in                    | 15 seconds | Logarithmic curve
+Fade out                   | 8 seconds  | Longer tail for smooth ending
+
+AMBIENT SOUND ASSIGNMENTS:
+Category      | Recommended Sounds        | Best For
+--------------|---------------------------|----------------------------------
+Sleep         | ocean, rain, night        | Beach themes, cozy indoor, evening
+Stress/Anxiety| stream, rain, wind, waterfall | Gentle relief, grounding, release
+Focus         | library, piano, birds     | Quiet productivity, creative work
+Mindfulness   | temple, garden, forest, wind, chimes | Traditional practice, nature awareness
+
+4.5 TTS VOICE SETTINGS
+----------------------
+Current Voice: Marco (Fish Audio ID: 0165567b33324f518b02336ad232e31a)
+
+Setting                        | Value  | Notes
+-------------------------------|--------|---------------------------
+temperature                    | 0.3    | Lower = more consistent
+condition_on_previous_chunks   | true   | Helps maintain voice consistency
+sample_rate                    | 44100  | Standard quality
+format                         | mp3    |
+
+AUDIO CLEANUP PIPELINE (applied to all TTS output before mixing):
+    highpass=f=80        # Cut low rumble
+    lowpass=f=10000      # Cut high-freq hiss (aggressive)
+    afftdn=nf=-25        # Noise reduction (stronger setting)
+    dynaudnorm=p=0.9:m=10  # Normalise levels
+
+4.6 OPENING AND CLOSING RULES
+-----------------------------
+
+OPENING:
+- Do NOT say "Welcome to Salus" at the start of every session
+- Jump straight into content or use a gentle opening like "Get comfortable..." 
+  or "Close your eyes..."
+- Break opening into short blocks: first 3-4 sentences should each be separate 
+  blocks with pauses between
+- Exception: Landing page/intro content can mention Salus
+
+CLOSING:
+- Sleep sessions: End with "Goodnight from Salus"
+- Other sessions: Fade out naturally
+- No lengthy sign-offs required
+
+================================================================================
+5. BUILD SYSTEM
+================================================================================
+
+5.1 ENVIRONMENT SETUP
+---------------------
+
+ENVIRONMENT VARIABLES:
+Create a .env file:
+    FISH_API_KEY=your_fish_api_key_here
+
+SYSTEM DEPENDENCIES:
+- Python 3.8+
+- ffmpeg (for audio processing)
+- requests library (pip install requests)
+
+5.2 BUILD COMMANDS
+------------------
+Command                                  | Purpose
+-----------------------------------------|--------------------------------
+python build-session.py XX-name          | Build a single session
+python build-session.py --all            | Build all sessions
+python build-session.py --list           | List all sessions
+python build-session.py --mix-only XX    | Mix ambient only (no TTS regeneration)
+python build-session.py --dry-run XX     | Show plan without generating
+
+5.3 ADDING A NEW SESSION
+------------------------
+1. Create script: content/scripts/XX-session-name.txt
+2. Add metadata header with Category and Ambient
+3. Write content with ... pause markers
+4. Run: python build-session.py XX-session-name
+5. Commit: git add content/audio/XX-session-name.mp3 && git commit
+6. Push: git push origin main
+
+5.4 BUILD ARCHITECTURE (CRITICAL)
+---------------------------------
+Generate one TTS chunk per text block, preserving ALL pauses. Do NOT combine 
+text blocks to reduce API calls as this destroys the meditation rhythm.
+
+    Text block 1 → TTS call 1 → [pause]
+    Text block 2 → TTS call 2 → [pause]
+    ...
+
+Each ... marker in the script equals one pause. Each text block between pauses 
+equals one TTS call.
+
+================================================================================
+6. PRODUCTION WORKFLOW
+================================================================================
+
+Three steps, approximately 10 minutes per video. Claude does everything else 
+(scripts, YouTube metadata, Canva prompts, website updates).
+
+STEP 1: GENERATE VOICE (~2 minutes)
+-----------------------------------
+1. Go to elevenlabs.io
+2. Open the .txt script file from content/scripts/
+3. Paste the full text in
+4. Pick a calm voice (use the same one every time for brand consistency)
+5. Click Generate. Download the MP3.
+
+STEP 2: CREATE VIDEO (~5 minutes)
+---------------------------------
+1. Go to canva.com
+2. Create new: YouTube Video (1920x1080)
+3. Open the upload file from content/youtube-uploads/ for this video
+4. Paste the Canva AI prompt into Magic Media to generate a background visual
+5. Upload your ElevenLabs MP3 as the audio
+6. Set page duration to match audio length
+7. Export as MP4
+
+STEP 3: UPLOAD TO YOUTUBE (~3 minutes)
+--------------------------------------
+1. Go to YouTube Studio (studio.youtube.com)
+2. Upload your MP4
+3. Open the same upload file from content/youtube-uploads/
+4. Copy-paste the title, description, and tags
+5. Create a thumbnail in Canva (1280x720) using the thumbnail notes
+6. Publish
+
+After uploading: Give Claude the YouTube video IDs and the website will be 
+updated automatically.
+
+================================================================================
+7. SESSION STATUS AND PRIORITIES
+================================================================================
+
+Benchmark: Rainfall Sleep Journey (09) - spec-compliant, deployed February 2026
+
+7.1 SPEC-COMPLIANT SESSIONS (13 deployed)
+-----------------------------------------
+These sessions have been rebuilt with the new specification: spaced openings, 
+proper metadata headers, -12dB ambient (sleep), temperature 0.3, noise 
+reduction applied.
+
+#  | Session                      | Duration  | Category    | Status
+---|------------------------------|-----------|-------------|----------
+05 | Body Scan for Deep Rest      | 50.2 min  | Sleep       | Deployed
+06 | Letting Go of the Day        | 38.5 min  | Sleep       | Deployed
+07 | Moonlight Drift              | 52.0 min  | Sleep       | Deployed
+08 | The Quiet Shore              | 63.4 min  | Sleep       | Deployed
+09 | Rainfall Sleep Journey       | 17.7 min  | Sleep       | Deployed (BENCHMARK)
+11 | Lucid Dream Preparation      | 56.2 min  | Advanced    | Deployed
+18 | Calm in Three Minutes        | 5.2 min   | Stress      | Deployed
+19 | Release and Restore          | 13.7 min  | Stress      | Deployed
+23 | The Calm Reset               | 5.8 min   | Stress      | Deployed
+25 | Introduction to Mindfulness  | 8.2 min   | Beginner    | Deployed
+29 | Open Awareness               | 11.4 min  | Mindfulness | Deployed
+32 | Observing Emotions           | 9.4 min   | Mindfulness | Deployed
+43 | Non-Dual Awareness           | 20.1 min  | Advanced    | Deployed
+
+7.2 REBUILD PRIORITY ORDER
+--------------------------
+Approximately 40 sessions need rebuild. These have pre-spec audio and need: 
+fixed opening, proper headers, correct settings.
+
+HIGH PRIORITY (Core sleep and stress):
+1. Deep Sleep (02)
+2. Breathing for Anxiety (03)
+3. Counting Down to Sleep (10)
+4. Anxiety Unravelled (21)
+5. Your First Meditation (35)
+6. Ocean Voyage (51)
+
+MEDIUM PRIORITY:
+- Focus sessions (12-17)
+- Stress sessions (20, 22, 24)
+- Mindfulness sessions (26-28, 31, 33, 36)
+- Beginner sessions (37, 38-50)
+- Morning Meditation (01)
+
+LOW PRIORITY:
+- Landing Page (00)
+- Science of Mindfulness (04)
+- Walking/Eating mindfulness (30, 34)
+- Advanced sessions (39, 41, 42, 44)
+
+================================================================================
+8. QUALITY CONTROL (CRITICAL)
+================================================================================
+
+*** THIS IS THE HIGHEST PRIORITY ITEM ***
+*** Project viability depends on solving automated quality analysis ***
+
+8.1 THE PROBLEM
+---------------
+- Over 50 hours of audio content requiring quality checks
+- One person cannot manually review - not sustainable
+- Failure of audio quality undermines the entire project
+- Considerable resource already deployed - heading to failure without solution
+
+8.2 REQUIREMENTS
+----------------
+Claude must:
+- Automatically analyse audio files for defects
+- Detect voice changes mid-file
+- Detect hissing/audio artifacts
+- Detect wrong speeds/tempo issues
+- Write new code/tools as required
+
+BENCHMARK FILE: Rainfall Sleep Journey (09) - analyse first as quality benchmark
+
+8.3 SESSION CHECKLIST
+---------------------
+Before publishing any session, verify:
+- Duration category identified (under 10 / 10-20 / 20+)
+- Required silences added per spec
+- Narrator announces 60+ second silences
+- Ambient sound assigned and mixed at correct level
+- Ambient continues through ALL pauses/silences
+- No dead silence anywhere in track
+- No "Welcome to Salus" at start (unless intro content)
+- Opening broken into short blocks
+- Full audio listened to - check for hiss/glitches especially near start and end
+- Pauses feel natural - rhythm matches meditation pacing
+
+8.4 FAILED AUDIO RULE
+---------------------
+When a file fails quality checks:
+1. Delete the file
+2. Delete from index
+3. Remove all documentation/narrative
+
+8.5 KNOWN ISSUES AND FIXES
+--------------------------
+Issue                | Cause                  | Fix
+---------------------|------------------------|----------------------------------
+Continuous monotone  | Text blocks combined   | Generate each block separately
+Opening too fast     | First block too long   | Break into shorter sentences with ... pauses
+High-frequency hiss  | TTS artifact           | Aggressive lowpass (10kHz), stronger noise reduction
+Audio degradation    | Bad TTS chunk          | Regenerate session; random API issues
+Voice inconsistency  | Too many short chunks  | Maintain chunk sizes (50-400 chars ideal)
+Glitch near end      | Random TTS artifact    | Regenerate; deploy at 95%+ quality if persists
+
+================================================================================
+9. OUTSTANDING TASKS
+================================================================================
+
+9.1 WEBSITE FIXES — COMPLETED 4 FEBRUARY 2026
+---------------------------------------------
+All 16 website fixes have been completed.
+
+[HISTORICAL REFERENCE - ALL DONE]
+#  | Task                                          | Status
+---|-----------------------------------------------|----------
+1  | Home Page - "Why We're Different" mobile      | ✓ DONE
+2  | Home Page - NHS Mindfulness claim             | ✓ DONE
+3  | Home Page - Join button mobile alignment      | ✓ DONE
+4  | Home Page - Remove Latin under Salus          | ✓ DONE
+5  | ASMR Page - Volume controllers                | ✓ DONE
+6  | About Us Page - Bold text                     | ✓ DONE
+7  | About Us Page - Remove text                   | ✓ DONE
+8  | About Us Page - Tuskibi bowl                  | ✓ DONE
+9  | Remove "Clinical" references site-wide        | ✓ DONE
+10 | Add "Back to Top" link                        | ✓ DONE
+11 | Timer circles mobile alignment                | ✓ DONE
+12 | Footer - Tools link correction                | ✓ DONE
+13 | Lock premium content                          | ✓ DONE
+14 | Subscription Page terminology                 | ✓ DONE
+15 | Footer - Salus section                        | ✓ DONE
+16 | Learn Page - Remove content                   | ✓ DONE
+
+9.2 FILE ORGANISATION TASKS
+---------------------------
+- Create imagery deposit folder in OneDrive for Scott to deposit imagery
+- Create Raw_Material_Register.docx cataloguing all downloads and links
+- Set up master folder for narrations - only files that have passed quality approval
+
+9.3 AMBIENT SOUND RULE (CURRENT)
+--------------------------------
+FOR NOW: Remove all background ambient sounds from all meditations. Background 
+ambient must not fade in until narrator introduction is complete.
+
+================================================================================
+10. IMAGERY SPECIFICATIONS
+================================================================================
+
+All imagery across the Salus website must adhere to the following mandatory rules:
+
+10.1 NO DUPLICATE IMAGES
+------------------------
+No image may appear more than once across the entire website. Every page, 
+section, and article must use unique imagery. Before adding any image, verify 
+it is not already in use elsewhere on the site.
+
+- Each page must have its own distinct visual identity
+- Reusing images diminishes perceived quality and professionalism
+- Code should flag and prevent duplicate image usage
+
+10.2 ULTRA HIGH DEFINITION ONLY
+-------------------------------
+Only ultra high definition images are permitted site-wide. Low resolution, 
+pixelated, or compressed images are not acceptable under any circumstances.
+
+- Minimum resolution requirements must be enforced
+- Images must remain crisp and clear on all screen sizes including retina displays
+- Reject any image that shows compression artefacts or blurring
+
+10.3 CONTEXTUAL RELEVANCE
+-------------------------
+Images must be relevant to the text they accompany. Generic or decorative 
+images that do not support the content should be replaced with contextually 
+appropriate alternatives.
+
+Example: The Learn/Articles section currently has mountain imagery which, 
+whilst pleasant, is not relevant to the content. Such images should be 
+identified and replaced site-wide.
+
+10.4 IMAGERY DEPOSIT FOLDER
+---------------------------
+An imagery deposit folder exists in OneDrive for Scott to upload new images. 
+When images are required for any part of the site:
+
+- Review the imagery deposit folder first for available assets
+- Check images meet the UHD quality requirement before use
+- Verify the image is not already in use elsewhere on the site
+- Confirm contextual relevance before implementing
+
+================================================================================
+11. AUDIO PRODUCTION METHODOLOGY & QUALITY GATE
+================================================================================
+
+*** RULE: 100% OR NO SHIP ***
+Any audible glitch = FAIL. No exceptions. No "acceptable" threshold.
+
+One enormous glitch destroys the entire meditation experience. We are not
+shipping 95% quality. We ship perfection or we rebuild.
+
+*** STATUS: ANALYSER v3 DEPLOYED — 4 February 2026 ***
+Analyser v3 now detects different voices, repeated phrases, and duration mismatches.
+Human review still recommended as final gate.
+
+--------------------------------------------------------------------------------
+11.1 ANALYSER v3 — CRITICAL FIX DEPLOYED
+--------------------------------------------------------------------------------
+Date: 4 February 2026
+Problem: Analyser v2 passed a file that was CATASTROPHICALLY BROKEN
+
+THE FAILURE (v2):
+- Rainfall Sleep Journey raw file was 32.4 minutes (expected: 17.7 minutes)
+- A completely different script with ambient had been spliced in at ~16:01
+- v2 Result: PASS (0 issues detected) — CATASTROPHIC FAILURE
+
+Issues v2 MISSED:
+- 14:37 — Loud hiss
+- 14:42 — Loud hiss
+- 14:42-14:45 — Words repeated ("everything is perfect right here")
+- 16:01 — DIFFERENT VOICE AND SCRIPT ENTIRELY (15+ minutes of wrong content!)
+- 83% duration mismatch
+
+THE FIX (v3):
+Analyser v3 now includes:
+1. BASELINE VOICE SIGNATURE — Establishes voice fingerprint from first 60 seconds
+2. DIFFERENT VOICE DETECTION — Compares ALL blocks against baseline (not just consecutive)
+3. STRICTER MFCC THRESHOLD — 0.35 vs 0.6 (much more sensitive to voice changes)
+4. DURATION VALIDATION — Flags files >50% off expected as CRITICAL
+5. REPEATED PHRASE DETECTION — Audio fingerprinting to catch TTS repeating content
+6. IMPROVED HISSING DETECTION — Baseline-relative thresholds
+
+v3 TEST RESULTS:
+File                              | Expected  | Actual   | v2 Result | v3 Result
+----------------------------------|-----------|----------|-----------|------------------
+Rainfall Sleep Journey (BAD)      | 17.7 min  | 32.4 min | PASS      | CRITICAL FAIL
+Calm in Three Minutes (GOOD)      | 5.2 min   | 5.8 min  | -         | PASS (0 issues)
+
+v3 correctly identified:
+- 7 CRITICAL issues (duration mismatch + 6 different voice detections)
+- 110 HIGH issues (hissing + repeated phrases)
+- Known-good file passes with 0 issues
+
+--------------------------------------------------------------------------------
+11.2 FAILURE TYPES
+--------------------------------------------------------------------------------
+Any of the following equals automatic FAIL:
+- Voice shifts
+- Repeated words/phrases
+- Different voice/speaker
+- Loud hissing
+- Wrong script content
+
+--------------------------------------------------------------------------------
+11.3 QUALITY THRESHOLD
+--------------------------------------------------------------------------------
+Metric                    | Pass | Fail
+--------------------------|------|------
+Audible glitches          | 0    | ANY
+Audible hissing/artifacts | 0    | ANY
+Voice breaks/distortion   | 0    | ANY
+
+CRITICAL: Automated analysis is PRE-SCREENING only. Human review with 
+test-audio-player.html is MANDATORY. Human ear is the final gate. If you 
+hear it, it fails.
+
+--------------------------------------------------------------------------------
+11.4 QUALITY GATE WORKFLOW
+--------------------------------------------------------------------------------
+PHASE 1: BUILD RAW NARRATION
+   python3 build-session-v3.py XX-session-name
+   → Outputs: XX-session-name-raw.mp3 (narration only, NO ambient)
+   → Also outputs: XX-session-name.mp3 (with ambient, but DO NOT USE YET)
+
+PHASE 2: ANALYSE RAW NARRATION
+   cd /Users/scottripley/Library/CloudStorage/OneDrive-Personal/Salus/Audio\ Quality\ Analysis
+   python3 analyze_audio_v3.py <path-to-raw.mp3> . <expected_seconds>
+   → Outputs: _REPORT_v3.txt, _VISUAL_v3.png
+
+PHASE 3: CHECK REPORT
+   - CRITICAL issues → FAIL, rebuild immediately
+   - HIGH issues → Human review required
+   - 0 issues → Proceed to human review (spot check)
+
+PHASE 4: HUMAN REVIEW (using test-audio-player.html)
+   cd /Users/scottripley/salus-website
+   python3 range_server.py &
+   → Open: http://localhost:8080/test-audio-player.html
+   → Update reviewData.issues with flagged timestamps
+   → Click Auto-Review, mark each OK or X
+   → Copy results back to Claude
+
+PHASE 5: GATE DECISION
+   - All issues OK (false positives) → PASS
+   - Any real issues → FAIL, rebuild (goto Phase 1)
+
+PHASE 6: MIX AMBIENT (only after raw passes)
+   The build script already created the ambient version. Verify it exists:
+   content/audio/XX-session-name.mp3
+
+PHASE 7: DEPLOY TO STAGING
+   cp content/audio/XX-session-name.mp3 content/audio-free/
+   rm content/audio/XX-session-name-raw.mp3  (cleanup)
+   NOTE: audio-free/ is STAGING, not live website
+
+PHASE 8: DEPLOY TO WEBSITE
+   Separate step required to push from staging to live website
+   (Website deployment process TBD)
+
+PHASE 9: UPDATE BIBLE
+   Record the session status in Section 11.20 CURRENT TESTING STATUS
+
+--------------------------------------------------------------------------------
+11.5 WHAT ANALYSER v3 DETECTS
+--------------------------------------------------------------------------------
+Issue Type         | Severity | Description
+-------------------|----------|--------------------------------------------------
+DURATION_MISMATCH  | CRITICAL | File duration >50% different from expected
+DIFFERENT_VOICE    | CRITICAL | Voice differs significantly from baseline (MFCC >0.35)
+DIFFERENT_VOICE    | HIGH     | Voice differs from baseline (pitch/brightness)
+REPEATED_PHRASE    | HIGH     | Audio segment correlation >0.85 with earlier content
+HISSING            | HIGH     | Sustained high-frequency noise >75x baseline
+AMBIENT_INTRUSION  | HIGH     | Sudden ambient/background detected after opening
+
+SEVERITY LEVELS:
+- CRITICAL: File is likely corrupted or contains wrong content — DO NOT DEPLOY
+- HIGH: Requires human review and likely rebuild
+- MEDIUM: May be acceptable, human review recommended
+
+--------------------------------------------------------------------------------
+11.6 GAPS ADDRESSED IN v3
+--------------------------------------------------------------------------------
+The following issues that v2 MISSED are now DETECTED by v3:
+
+DIFFERENT SPEAKER/VOICE: ✓ FIXED
+- v3 establishes baseline voice signature from first 60 seconds
+- Compares ALL blocks against baseline using MFCC cosine distance
+- Threshold lowered from 0.6 to 0.35 for much better sensitivity
+
+REPEATED WORDS/PHRASES: ✓ FIXED
+- v3 uses audio fingerprinting (chromagram correlation)
+- Detects repeated 5-second segments with correlation >0.85
+
+DURATION MISMATCH: ✓ FIXED
+- v3 accepts expected duration as parameter
+- Flags >50% difference as CRITICAL, >20% as HIGH
+
+REMAINING GAPS (still require human review):
+- Wrong script content (different words, same voice)
+- Subtle quality issues (slightly off pacing, minor artifacts)
+- Context-dependent issues (wrong ambient for category)
+
+--------------------------------------------------------------------------------
+11.7 TOOLS AND LOCATIONS
+--------------------------------------------------------------------------------
+Tool                  | Location
+----------------------|----------------------------------------------------------
+Analysis Script       | OneDrive/Salus/Audio Quality Analysis/analyze_audio.py
+Rebuild Script        | OneDrive/Salus/Audio Quality Analysis/rebuild_rainfall_v2.py
+Raw Narration Builder | OneDrive/Salus/Audio Quality Analysis/build_raw_narrations.py
+Targeted Repair       | OneDrive/Salus/Audio Quality Analysis/targeted_repair.py
+Auto-Repair Pipeline  | OneDrive/Salus/Audio Quality Analysis/auto_repair.py
+Human Review Player   | salus-website/test-audio-player.html
+Audio Spec            | salus-website/content/AUDIO-SPEC.md
+Scripts               | salus-website/content/scripts/
+Ambient Files         | salus-website/content/audio/ambient/
+
+HUMAN REVIEW PROCEDURE:
+After analyser flags issues (or after 4 rebuild attempts), use the Human Review Player:
+
+1. LAUNCH THE PLAYER:
+   cd /Users/scottripley/salus-website
+   python3 range_server.py &
+   Then open: http://localhost:8080/test-audio-player.html
+
+   IMPORTANT: Must use range_server.py (not python -m http.server) for audio
+   seeking to work. The standard server doesn't support Range requests.
+
+2. UPDATE THE PLAYER (in test-audio-player.html):
+   - Set the file path in reviewData.file
+   - Set expected/actual duration
+   - Copy flagged issues from the _REPORT_v3.txt into reviewData.issues array
+   - Format: { time: "MM:SS", seconds: N, severity: "critical/high", type: "TYPE", desc: "..." }
+
+3. REVIEW THE FILE:
+   - Click timestamp buttons to jump to flagged issues
+   - Large timer (96px) shows current position
+   - Listen for: voice changes, hissing, repeated words, artifacts
+   - CRITICAL issues must be verified - may be false positives
+   - Hissing in first 90 seconds is common TTS artifact
+
+4. VERDICT:
+   - PASS: Click "PASS - Deploy" → Copy final file (with ambient) to audio-free folder
+   - FAIL: Click "FAIL - Rebuild" → Note worst timestamp → Rebuild session
+
+COMMAND REFERENCE (v3):
+    # Basic usage
+    python3 analyze_audio.py <audio-file.mp3>
+
+    # With expected duration (RECOMMENDED for catching wrong content)
+    python3 analyze_audio.py <audio-file.mp3> <output_dir> <expected_seconds>
+
+    # Example: 17.7 minute session = 1062 seconds
+    python3 analyze_audio.py 09-rainfall.mp3 . 1062
+
+Outputs:
+- <filename>_REPORT_v3.txt — Detailed issue list with timestamps and severity
+- <filename>_VISUAL_v3.png — Waveform, pitch, flatness, MFCC distance visualisation
+
+HUMAN REVIEW PLAYER:
+Features: Large timer display (72px) for precise timestamp tracking, lists all 
+flagged timestamps, dark UI for comfortable listening sessions.
+
+To use: Update the audio src path in the HTML file, open in browser, play and 
+watch timer while checking flagged timestamps. May need to serve locally if 
+browser blocks file:// URLs.
+
+--------------------------------------------------------------------------------
+11.8 FILE STRUCTURE
+--------------------------------------------------------------------------------
+/Audio Quality Analysis/
+├── TESTING_STATUS.txt        <- Current progress tracker
+├── AUDIO_QUALITY_GATE.txt    <- Methodology doc (in Bible folder)
+├── analyze_audio.py          <- Analyser script
+├── build_raw_narrations.py   <- Raw narration builder
+├── targeted_repair.py        <- Single block repair
+├── auto_repair.py            <- Automated repair loop
+│
+├── 01-morning-meditation/
+│     ├── raw_narration.mp3
+│     ├── raw_narration_REPORT.txt
+│     ├── raw_narration_VISUAL.png
+│     └── build_log.txt
+│
+└── {session-name}/           <- Same structure for each session
+
+--------------------------------------------------------------------------------
+11.9 KEY FINDINGS FROM TESTING (FEBRUARY 2026)
+--------------------------------------------------------------------------------
+
+TTS GLITCHES CONCENTRATED IN OPENING:
+- Fish TTS produces random click/pop artifacts
+- Artifacts cluster at splice points (block boundaries)
+- The opening 30-60 seconds typically has the most issues
+- Same text can produce different results on each run (TTS is non-deterministic)
+
+Solution: Rebuild entire session (fresh API calls). Each rebuild has different 
+random artifacts. Typically 1-3 rebuilds achieve quality. Do NOT try to "fix" 
+individual glitches — regenerate all.
+
+LONG SILENCES FLAGGED AS PROBLEMS:
+These are FALSE POSITIVES. The analyser flags pauses over 8 seconds, but for 
+meditation content, long pauses are INTENTIONAL per spec. Ignore LOW severity 
+LONG_SILENCE issues — these are by design for meditation pacing.
+
+ANALYSER V3 CHANGES (4 FEBRUARY 2026):
+- ADDED: Baseline voice signature (compares ALL blocks to first 60 seconds)
+- ADDED: Duration validation with expected duration parameter
+- ADDED: Repeated phrase detection using chromagram correlation
+- ADDED: Ambient intrusion detection (sudden background appearing)
+- CHANGED: MFCC threshold lowered from 0.6 to 0.35 (much more sensitive)
+- CHANGED: Hissing threshold now baseline-relative (3x baseline)
+- RESULT: Correctly catches different voice/script that v2 completely missed
+
+ANALYSER V2 (DEPRECATED):
+v2 failed to detect a completely different script spliced into a file.
+v2 code preserved as analyze_audio_v2_backup.py for reference.
+
+ZERO FALSE POSITIVES PRINCIPLE:
+The analyser's job is to ELIMINATE the 18-minute full listen. A false positive 
+wastes human time checking nothing. Better to miss an issue than flag non-issues. 
+If user has to "quick scrub" the whole file, the analyser has FAILED.
+
+Tuning philosophy: Set thresholds HIGH (6x std dev, large minimums), accept some 
+missed detections, zero tolerance for false positives, continuous tuning based 
+on human feedback.
+
+--------------------------------------------------------------------------------
+11.10 TTS SETTINGS (FISH AUDIO)
+--------------------------------------------------------------------------------
+Voice: Marco
+Voice ID: 0165567b33324f518b02336ad232e31a
+
+RECOMMENDED API SETTINGS:
+Setting                        | Value  | Notes
+-------------------------------|--------|---------------------------
+temperature                    | 0.3    | Lower = more consistent
+condition_on_previous_chunks   | true   | Helps voice consistency
+sample_rate                    | 44100  | Standard quality
+format                         | mp3    |
+
+TEXT BLOCK GUIDELINES:
+Parameter | Guideline
+----------|------------------------------------------
+Minimum   | 20 characters (shorter = unstable)
+Ideal     | 50-400 characters
+Maximum   | No strict limit, but very long = monotone
+
+--------------------------------------------------------------------------------
+11.11 AUDIO CLEANUP PIPELINE
+--------------------------------------------------------------------------------
+Applied to all TTS output before mixing:
+
+    highpass=f=80        # Cut low rumble
+    lowpass=f=10000      # Cut high-freq hiss (aggressive for sleep content)
+    afftdn=nf=-25        # Noise reduction
+    dynaudnorm=p=0.9:m=10  # Normalise levels
+
+For sleep/meditation content, more aggressive cleanup is acceptable since we 
+prioritise smoothness over perfect fidelity.
+
+--------------------------------------------------------------------------------
+11.12 AMBIENT MIXING
+--------------------------------------------------------------------------------
+
+STANDARD SETTINGS:
+Setting         | Value          | Notes
+----------------|----------------|-------------------------
+Ambient volume  | -12dB to -14dB | Relative to narration
+Fade in         | 15 seconds     | Logarithmic curve
+Fade out        | 8 seconds      |
+Loop requirement| Seamless       | Check for boundary silence
+
+CATEGORY-SPECIFIC LEVELS:
+- Rain/Ocean sessions: -12dB (ambient is a feature)
+- Voice-focused sessions: -16dB (ambient is background)
+
+CRITICAL: Ambient continues through ALL pauses. No dead silence ever.
+
+--------------------------------------------------------------------------------
+11.13 SCRIPT STRUCTURE FOR TTS
+--------------------------------------------------------------------------------
+MUST preserve exact pause structure from script:
+
+    Text block here.
+    ...              <- 8 second pause
+    Next text block.
+    ...
+    ...              <- 30 second pause (double)
+    Another block.
+    ...
+    ...
+    ...              <- 60 second pause (triple)
+
+BUILD PROCESS:
+1. Parse script preserving every ... marker
+2. Generate TTS for each text block separately
+3. Generate silence files for each pause
+4. Concatenate: block1.mp3 + silence1.mp3 + block2.mp3 + ...
+
+DO NOT combine text blocks to reduce API calls — this destroys pacing.
+
+--------------------------------------------------------------------------------
+11.14 REPAIR WORKFLOWS
+--------------------------------------------------------------------------------
+
+TARGETED REPAIR (SINGLE BLOCK):
+Full rebuild wastes time and API costs. When analyser finds issue and human confirms:
+1. Identify which block contains the issue (use block timing calculator)
+2. Run: python3 targeted_repair.py <block_num> <input.mp3> <output.mp3>
+3. New TTS generated for just that block
+4. Spliced into original file at correct timestamp
+5. Re-analyse to verify fix
+
+AUTO-REPAIR PIPELINE (FULLY AUTOMATED):
+Runs analyse → repair → re-analyse loop until 100% clean. No user intervention 
+until final human review.
+
+    python3 auto_repair.py <audio_file.mp3>
+
+Process: Analyses audio for voice shifts, repairs first issue found, re-analyses 
+repaired file, repeats until clean or max cycles (10) reached, opens 
+test-audio-player.html for final human review.
+
+Output: <filename>_CLEAN.mp3 (final repaired audio), audit_log_<timestamp>.txt 
+(full audit trail).
+
+AUDIT LOGGING:
+Every run creates a timestamped log file in /Audio Quality Analysis/
+audit_log_YYYYMMDD_HHMMSS.txt containing: input file details, each analysis 
+cycle results, all issues detected with metrics (pitch_diff, mfcc_distance), 
+repairs attempted, final status, human review instructions.
+
+--------------------------------------------------------------------------------
+11.15 THREE STRIKES RULE (HARD GATE)
+--------------------------------------------------------------------------------
+
+*** After 3 failed quality checks on the same build → DELETE ALL FILES → START 100% FRESH ***
+
+This is a HARD rule. No exceptions.
+
+RATIONALE:
+- Prevents endless loops of minor variations
+- Forces complete regeneration, not incremental fixes
+- TTS artifacts are random — fresh start often succeeds immediately
+- Sunk cost fallacy kills quality
+
+WHAT "100% FRESH" MEANS:
+1. Delete all generated audio files for that session
+2. Delete all temporary files
+3. Clear any cached API responses
+4. Start build from scratch — new API calls, new everything
+
+STRIKE TRACKING:
+Strike           | Action
+-----------------|--------------------------------------------------
+Strike 1         | First failed quality check → Rebuild
+Strike 2         | Second failed quality check → Rebuild
+Strike 3         | Third failed quality check → DESTROY AND RESTART
+After destruction| Counter resets to 0
+
+STOP RULE (4 REBUILDS):
+After 4 total rebuild attempts (including post-destruction): STOP automated 
+process, ASK USER for intervention, play the file for human review, user 
+decides: continue rebuilding, deploy anyway, or investigate root cause.
+
+Rationale: Automated detection may flag false positives. Human ear is final arbiter.
+
+--------------------------------------------------------------------------------
+11.16 REBUILD EXPECTATIONS
+--------------------------------------------------------------------------------
+
+TYPICAL RESULTS (AFTER FRESH START):
+Build   | Failure Chance | Notes
+--------|----------------|---------------------------
+Build 1 | 60%            | Initial generation
+Build 2 | 40%            | Second attempt
+Build 3 | Usually passes | OR triggers destruction
+
+IF CYCLING THROUGH DESTRUCTION REPEATEDLY, CHECK:
+- Script for very short blocks (combine them)
+- TTS API status (may have degraded service)
+- Alternative TTS provider (ElevenLabs, Azure)
+- Lowpass filter settings (too aggressive/not aggressive enough)
+
+AVERAGE TIME PER REBUILD:
+- 17-minute session: ~5 minutes build + ~3 minutes analysis
+- Full destruction and restart: ~10 minutes total
+
+--------------------------------------------------------------------------------
+11.17 DEPLOYMENT CHECKLIST
+--------------------------------------------------------------------------------
+Before deploying any audio file:
+- Quality analysis run on raw master (no ambient)
+- HIGH severity issues = 0
+- MEDIUM severity issues ≤ 5
+- No glitches in first 30 seconds
+- Correct duration (within 10% of expected)
+- Pauses present and correctly timed
+- Ambient loops seamlessly
+- Ambient fades in/out smoothly
+- Final listen-through (spot check opening, middle, end)
+
+--------------------------------------------------------------------------------
+11.18 HUMAN REVIEW CHECKLIST
+--------------------------------------------------------------------------------
+For each file, manually verify:
+- No voice tone shifts
+- No repeated words or phrases
+- No wrong/unexpected content
+- No different voice/speaker
+- No loud hissing or noise
+- Pauses feel natural
+- Overall quality acceptable
+
+--------------------------------------------------------------------------------
+11.19 ANALYSER IMPROVEMENTS STATUS
+--------------------------------------------------------------------------------
+Updates as of 4 February 2026:
+
+Priority | Improvement Required                                    | Status
+---------|--------------------------------------------------------|--------
+CRITICAL | Repeated phrase detection                               | ✓ DONE
+CRITICAL | Speaker identity verification (baseline comparison)     | ✓ DONE
+HIGH     | Improve hissing detection (baseline-relative)           | ✓ DONE
+HIGH     | Duration validation (catch wrong content)               | ✓ DONE
+MEDIUM   | Content verification (compare audio to script)          | PENDING
+
+REMAINING WORK:
+- Content verification requires speech-to-text integration (complex)
+- For now, human review catches script mismatches
+
+--------------------------------------------------------------------------------
+11.20 CURRENT TESTING STATUS
+--------------------------------------------------------------------------------
+Last Updated: 4 February 2026
+Status: ANALYSER v3 DEPLOYED — Ready to resume testing
+
+ANALYSER v3 VALIDATION:
+File                         | v2 Result    | v3 Result        | Correct?
+-----------------------------|--------------|------------------|----------
+09-rainfall (BAD - 32min)    | PASS         | CRITICAL FAIL    | ✓ YES
+18-calm-in-three (GOOD)      | -            | PASS (0 issues)  | ✓ YES
+
+RAW NARRATION BUILD STATUS:
+Session                      | Analyser v3       | Human Review      | Status
+-----------------------------|-------------------|-------------------|--------
+01-morning-meditation        | 11 HIGH (all FP)  | PASS              | DEPLOYED
+02-deep-sleep               | NEEDS RE-TEST     | PENDING           | -
+03-breathing-for-anxiety    | 1 HIGH (hiss FP)  | PASS              | DEPLOYED
+08-sleep-stories-quiet-shore| NEEDS RE-TEST     | PENDING           | -
+09-rainfall-sleep-journey   | 11 HIGH (all FP)  | PASS              | STAGING
+25-introduction-to-mindfulness| 3 REPEATED (FP) | PASS              | DEPLOYED
+38-seven-day-mindfulness-day1| REBUILD 1        | PASS              | DEPLOYED
+
+FREE CONTENT DEPLOYMENT (4 February 2026):
+All 4 free sessions deployed to audio-free/ staging folder:
+- 01-morning-meditation.mp3
+- 03-breathing-for-anxiety.mp3
+- 25-introduction-to-mindfulness.mp3
+- 38-seven-day-mindfulness-day1.mp3
+
+Not started: Sessions 04-07, 10-51 (~45 files remaining)
+
+NEXT STEPS:
+1. ✓ FIX ANALYSER — v3 deployed with voice/phrase/duration detection
+2. ✓ REBUILD 09-rainfall-sleep-journey — Rebuilt 4 Feb, human review PASS, deployed
+3. RE-TEST all previous "PASS" files with v3 (may catch issues v2 missed)
+4. Human review all v3 PASS files
+5. Continue building raw narrations for remaining ~45 free files
+
+--------------------------------------------------------------------------------
+11.21 DEPLOYED SESSIONS TEST SUMMARY
+--------------------------------------------------------------------------------
+All 13 spec-compliant sessions have passed the quality gate:
+
+#  | Session                      | Voice | Artifacts | Overall
+---|------------------------------|-------|-----------|----------
+05 | Body Scan for Deep Rest      | PASS  | PASS      | PASS
+06 | Letting Go of the Day        | PASS  | PASS      | PASS
+07 | Moonlight Drift              | PASS  | PASS      | PASS
+08 | The Quiet Shore              | PASS  | PASS      | PASS
+09 | Rainfall Sleep Journey       | PASS  | PASS      | BENCHMARK
+11 | Lucid Dream Preparation      | PASS  | PASS      | PASS
+18 | Calm in Three Minutes        | PASS  | PASS      | PASS
+19 | Release and Restore          | PASS  | PASS      | PASS
+23 | The Calm Reset               | PASS  | PASS      | PASS
+25 | Introduction to Mindfulness  | PASS  | PASS      | PASS
+29 | Open Awareness               | PASS  | PASS      | PASS
+32 | Observing Emotions           | PASS  | PASS      | PASS
+43 | Non-Dual Awareness           | PASS  | PASS      | PASS
+
+================================================================================
+12. TECHNICAL REFERENCE
+================================================================================
+
+12.1 FFMPEG COMMANDS
+--------------------
+
+MIX AMBIENT WITH VOICE:
+    ffmpeg -y -i voice.mp3 \
+      -stream_loop -1 -i ambient.mp3 \
+      -filter_complex "[1:a]volume=-15dB,afade=t=in:st=0:d=15:curve=log,
+        afade=t=out:st=${fade_out}:d=8[amb];
+        [0:a][amb]amix=inputs=2:duration=first:dropout_transition=2" \
+      -t $duration -c:a libmp3lame -q:a 2 output.mp3
+
+CHECK FOR SILENCE AT BOUNDARIES:
+    ffmpeg -i ambient.mp3 -af "silencedetect=n=-30dB:d=0.3" -f null - 2>&1 | grep silence
+
+TEST AMBIENT LOOPS:
+    ffmpeg -stream_loop 3 -i file.mp3 -t 600 test.mp3
+
+TRIM SILENCE FROM START:
+    ffmpeg -ss 2 -i input.mp3 -c:a libmp3lame -q:a 2 output.mp3
+
+12.2 FISH TTS API
+-----------------
+Endpoint: https://api.fish.audio/v1/tts
+Voice ID: 0165567b33324f518b02336ad232e31a (Marco)
+Uses pay-as-you-go TTS billing.
+
+12.3 SESSION DURATION GUIDELINES
+--------------------------------
+Session Type  | Target Duration | Notes
+--------------|-----------------|----------------------------------
+Focus/Stress  | 5-15 min        | Short, targeted
+Mindfulness   | 10-20 min       | Standard practice
+Beginner      | 5-15 min        | Accessible length
+Sleep/Stories | Up to 45 min    | Can exceed limit, accept some voice variation
+Advanced      | 20-30 min       | Longer practice
+
+Soft limit: 30 minutes for standard sessions to maintain TTS voice consistency. 
+Longer sessions mean more TTS API calls and higher chance of voice variation 
+at segment boundaries.
+
+12.4 AMBIENT LOOP REQUIREMENTS
+------------------------------
+- Files must loop seamlessly - no silence at start or end
+- Ideal length: 5-10 minutes (long enough to avoid obvious repetition)
+- Crossfade points: Files should fade smoothly at boundaries
+- Downloaded files often have silence padding at start - trim before use
+
+================================================================================
+— END OF DOCUMENT —
+Last updated: 4 February 2026 (v1.3 - Workflow Corrected)
+================================================================================
