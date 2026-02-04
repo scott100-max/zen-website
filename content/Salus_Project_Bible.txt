@@ -75,11 +75,20 @@ Session Scripts      | content/scripts/
 YouTube Packages     | content/youtube-uploads/
 Extended Rain (8hr)  | content/audio/ambient/rain-8hr.mp3
 
-2.3 ONEDRIVE ORGANISATION
--------------------------
-All Salus files are stored in OneDrive under the folder Salus_Mind. A 
-Contents_Index.docx file lists all files with their OneDrive paths. A 
-dedicated folder exists for the Salus Bible document.
+2.3 FILE ORGANISATION
+---------------------
+SOURCE OF TRUTH: Git repository (salus-website)
+- Bible: content/Salus_Project_Bible.txt
+- Scripts: content/scripts/
+- All code and documentation
+
+OneDrive (large binary assets only):
+- Raw audio files awaiting processing
+- Extended ambient files (8hr versions)
+- Image source files
+- Audio analysis reports/visuals
+
+DO NOT duplicate Bible or scripts in OneDrive - Git is canonical.
 
 ================================================================================
 3. AUDIO INVENTORY
