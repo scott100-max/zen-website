@@ -44,6 +44,33 @@ if (contactForm) {
   });
 }
 
+// ===== Premium Access Check =====
+(function() {
+  var isPremium = localStorage.getItem('salus_premium') === 'true';
+
+  // Handle premium unlock on session pages
+  var unlockCta = document.querySelector('.unlock-cta');
+  if (unlockCta && isPremium) {
+    // Replace lock CTA with premium player
+    unlockCta.innerHTML = '<div style="text-align:center;padding:24px;">' +
+      '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" style="margin-bottom:12px;"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>' +
+      '<h3 style="margin-bottom:8px;color:var(--forest);">Premium Unlocked</h3>' +
+      '<p style="color:var(--mid-gray);margin-bottom:16px;">Audio player coming soon. Thank you for subscribing!</p>' +
+      '</div>';
+    unlockCta.style.background = 'linear-gradient(135deg, #f0f7f4 0%, #e8f4ec 100%)';
+    unlockCta.style.border = '2px solid var(--accent)';
+  }
+
+  // Update nav subscribe button for premium users
+  if (isPremium) {
+    var subBtn = document.querySelector('.nav a[href="apps.html"], .nav a[href="../apps.html"]');
+    if (subBtn && subBtn.textContent.trim() === 'Subscribe') {
+      subBtn.textContent = 'Premium';
+      subBtn.style.background = 'linear-gradient(135deg, var(--accent), var(--accent-dark))';
+    }
+  }
+})();
+
 // ===== Persistent Audio Player =====
 (function() {
   var STORAGE_KEY = 'salus_player';
