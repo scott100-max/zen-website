@@ -40,6 +40,13 @@
       outline: none; border-color: var(--accent);
     }
     .timer-controls { display: flex; gap: 16px; }
+    @media (max-width: 520px) {
+      .timer-display { font-size: 3.5rem; }
+      .timer-settings { flex-direction: column; gap: 16px; }
+      .timer-setting select { width: 100%; min-width: 200px; }
+      .timer-controls { flex-direction: column; width: 100%; max-width: 200px; }
+      .timer-controls .btn { width: 100%; }
+    }
   </style>
 </head>
 <body>
@@ -126,6 +133,7 @@
   <footer class="footer">
     <div class="container">
       <div class="footer-bottom">
+        <a href="#" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to Top</a>
         &copy; 2026 Salus. All rights reserved.
       </div>
     </div>

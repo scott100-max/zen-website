@@ -83,17 +83,35 @@
       flex: 1;
       height: 6px;
       -webkit-appearance: none;
-      background: #e0e0e0;
+      appearance: none;
+      background: linear-gradient(to right, var(--accent) 0%, var(--accent) 80%, #e0e0e0 80%, #e0e0e0 100%);
       border-radius: 3px;
       cursor: pointer;
+      outline: none;
     }
     .sound-volume::-webkit-slider-thumb {
       -webkit-appearance: none;
+      appearance: none;
       width: 16px;
       height: 16px;
       background: var(--accent);
       border-radius: 50%;
       cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .sound-volume::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      background: var(--accent);
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .sound-volume::-moz-range-track {
+      height: 6px;
+      background: #e0e0e0;
+      border-radius: 3px;
     }
     .sound-volume-icon {
       color: var(--mid-gray);
@@ -398,11 +416,12 @@
           <ul>
             <li><a href="breathe.html">Breathing Timer</a></li>
             <li><a href="timer.html">Meditation Timer</a></li>
-            <li><a href="sounds.html">Sleep Sounds</a></li>
+            <li><a href="sounds.html">ASMR</a></li>
           </ul>
         </div>
       </div>
       <div class="footer-bottom">
+        <a href="#" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to Top</a>
         &copy; 2026 Salus. All rights reserved.
       </div>
     </div>
@@ -467,7 +486,17 @@
           }
         });
 
+        // Update slider visual on input
+        function updateSliderBackground(slider) {
+          var val = slider.value;
+          slider.style.background = 'linear-gradient(to right, var(--accent) 0%, var(--accent) ' + val + '%, #e0e0e0 ' + val + '%, #e0e0e0 100%)';
+        }
+
+        // Initialize slider background
+        updateSliderBackground(volumeSlider);
+
         volumeSlider.addEventListener('input', function() {
+          updateSliderBackground(this);
           if (audioElements[src]) {
             audioElements[src].volume = this.value / 100;
           }
