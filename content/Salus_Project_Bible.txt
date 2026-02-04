@@ -2,8 +2,8 @@
 SALUS MIND — PROJECT BIBLE
 ================================================================================
 Comprehensive Reference Document for Claude
-Version 1.4
-Last Updated: 4 February 2026 (v1.4 - Free Content Deployed)
+Version 1.5
+Last Updated: 4 February 2026 (v1.5 - Stripe Payments Section Added)
 
 ================================================================================
 CONTENTS
@@ -20,7 +20,8 @@ CONTENTS
 10. Imagery Specifications
 11. Audio Production Methodology & Quality Gate
 12. Technical Reference
-13. Session Log
+13. Stripe Payments & Premium Access
+14. Session Log
 
 ================================================================================
 1. PROJECT OVERVIEW
@@ -1258,7 +1259,103 @@ at segment boundaries.
 - Downloaded files often have silence padding at start - trim before use
 
 ================================================================================
-13. SESSION LOG
+13. STRIPE PAYMENTS & PREMIUM ACCESS
+================================================================================
+
+13.1 OVERVIEW
+-------------
+Salus uses Stripe Payment Links for subscription billing. After successful
+payment, users are redirected to thank-you.html which sets a localStorage
+flag to unlock premium content.
+
+IMPORTANT: This is a client-side solution for a static site. The localStorage
+flag can be manually set by users - true security requires a backend with
+Stripe webhook verification. Current implementation provides UX convenience,
+not access control.
+
+13.2 STRIPE CONFIGURATION
+-------------------------
+Account: Stripe Live Mode
+API Key Location: .env (STRIPE_SECRET_KEY)
+
+PAYMENT LINKS:
+Plan     | Link ID                          | URL
+---------|----------------------------------|----------------------------------------
+Monthly  | plink_1Swc5rAIwCqKZOfVINjJcc2y   | https://buy.stripe.com/aFacN46Yr4kmffLec0eAg01
+Yearly   | plink_1Swc5rAIwCqKZOfVW7WqKfjf   | https://buy.stripe.com/8x24gy4Qj9EGffL8RGeAg02
+
+SUCCESS REDIRECT: https://salus-mind.com/thank-you.html
+
+13.3 PREMIUM ACCESS FLOW
+------------------------
+1. User clicks Subscribe on apps.html
+2. Stripe Checkout opens (hosted by Stripe)
+3. User completes payment
+4. Stripe redirects to https://salus-mind.com/thank-you.html
+5. thank-you.html sets localStorage:
+   - salus_premium = "true"
+   - salus_premium_date = ISO timestamp
+6. main.js checks for salus_premium flag on page load
+7. If premium: hides .unlock-cta, shows premium content/player
+
+13.4 KEY FILES
+--------------
+File                | Purpose
+--------------------|--------------------------------------------------
+apps.html           | Pricing page with Stripe Payment Link buttons
+thank-you.html      | Post-payment landing, sets premium localStorage
+js/main.js          | Premium detection, UI updates for subscribers
+
+13.5 STRIPE API COMMANDS
+------------------------
+List payment links:
+    curl -s https://api.stripe.com/v1/payment_links \
+      -u "$STRIPE_SECRET_KEY:"
+
+Update redirect URL:
+    curl -s https://api.stripe.com/v1/payment_links/{LINK_ID} \
+      -u "$STRIPE_SECRET_KEY:" \
+      -d "after_completion%5Btype%5D=redirect" \
+      -d "after_completion%5Bredirect%5D%5Burl%5D=https://salus-mind.com/thank-you.html"
+
+13.6 PREMIUM UI BEHAVIOUR
+-------------------------
+When salus_premium = "true" in localStorage:
+
+SESSION PAGES (.unlock-cta present):
+- Lock icon and "Subscribe" CTA replaced with "Premium Unlocked" message
+- Green accent border indicates premium status
+- Audio player placeholder shown (full player integration pending)
+
+NAV BAR:
+- "Subscribe" button text changes to "Premium"
+- Button style updated to premium gradient
+
+13.7 TROUBLESHOOTING
+--------------------
+ISSUE: User subscribed but content not unlocked
+CAUSE: Stripe redirect URL was pointing to GitHub Pages URL instead of
+       salus-mind.com custom domain
+FIX: Updated payment links via Stripe API (4 February 2026)
+
+MANUAL UNLOCK (for testing):
+    localStorage.setItem('salus_premium', 'true');
+    location.reload();
+
+CLEAR PREMIUM (for testing):
+    localStorage.removeItem('salus_premium');
+    localStorage.removeItem('salus_premium_date');
+    location.reload();
+
+13.8 FUTURE IMPROVEMENTS
+------------------------
+- [ ] Wire up actual audio players in 41 session pages
+- [ ] Add Stripe webhook endpoint for server-side verification (requires backend)
+- [ ] Add subscription management portal link
+- [ ] Handle subscription cancellation/expiry (currently premium is permanent once set)
+
+================================================================================
+14. SESSION LOG
 ================================================================================
 
 4 FEBRUARY 2026 — SESSION 2 (Afternoon)
@@ -1314,5 +1411,5 @@ PICKUP POINT FOR AUDIO REBUILDING:
 
 ================================================================================
 — END OF DOCUMENT —
-Last updated: 4 February 2026 (v1.4 - Free Content Deployed)
+Last updated: 4 February 2026 (v1.5 - Stripe Payments Section Added)
 ================================================================================
