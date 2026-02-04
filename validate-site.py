@@ -552,6 +552,65 @@ def check_audio_links(result):
         result.add_pass("AUDIO-LINKS", "All audio links point to existing files")
 
 
+def check_free_content(result):
+    """Bible 11.20: Verify all 5 free sessions have audio + HTML pages"""
+    print("  Checking free content completeness...")
+
+    # Free sessions per Bible 11.20
+    FREE_SESSIONS = [
+        ("01", "morning-meditation"),
+        ("03", "breathing-for-anxiety"),
+        ("09", "rainfall-sleep-journey"),
+        ("25", "introduction-to-mindfulness"),
+        ("38", "seven-day-mindfulness-day1"),
+    ]
+
+    missing = []
+    for num, name in FREE_SESSIONS:
+        audio_file = AUDIO_DIR / f"{num}-{name}.mp3"
+        html_file = SESSIONS_DIR / f"{name}.html"
+
+        if not audio_file.exists():
+            missing.append(f"Audio: {num}-{name}.mp3")
+        if not html_file.exists():
+            missing.append(f"HTML: sessions/{name}.html")
+
+    if missing:
+        for item in missing:
+            result.add_error("FREE-CONTENT", f"Missing free content: {item}")
+    else:
+        result.add_pass("FREE-CONTENT", "All 5 free sessions have audio and HTML pages")
+
+
+def check_asmr_sounds(result):
+    """Bible 3.2: Verify ASMR sound library exists"""
+    print("  Checking ASMR sound library...")
+
+    SOUNDS_DIR = CONTENT_DIR / "sounds"
+
+    # Expected sounds per Bible 3.2
+    EXPECTED_SOUNDS = [
+        "birds.mp3", "cafe.mp3", "fire.mp3", "forest.mp3", "garden.mp3",
+        "library.mp3", "night.mp3", "ocean.mp3", "rain.mp3", "stream.mp3",
+        "temple.mp3", "thunder.mp3", "waterfall.mp3", "whitenoise.mp3"
+    ]
+
+    if not SOUNDS_DIR.exists():
+        result.add_error("ASMR", "Sounds directory not found: content/sounds/")
+        return
+
+    missing_sounds = []
+    for sound in EXPECTED_SOUNDS:
+        if not (SOUNDS_DIR / sound).exists():
+            missing_sounds.append(sound)
+
+    if missing_sounds:
+        for sound in missing_sounds:
+            result.add_warning("ASMR", f"Missing ASMR sound: {sound}")
+    else:
+        result.add_pass("ASMR", f"All {len(EXPECTED_SOUNDS)} core ASMR sounds present")
+
+
 def check_navigation(result):
     """Verify navigation links work"""
     print("  Checking navigation consistency...")
@@ -681,38 +740,44 @@ def main():
 
     result = ValidationResult()
 
-    print("\n[1/11] Images...")
+    print("\n[1/13] Images...")
     check_duplicate_images(result)
     check_image_quality(result)
 
-    print("\n[2/11] Content & Forbidden Phrases...")
+    print("\n[2/13] Content & Forbidden Phrases...")
     check_forbidden_phrases(result)
 
-    print("\n[3/11] Script Metadata...")
+    print("\n[3/13] Script Metadata...")
     check_script_metadata(result)
 
-    print("\n[4/11] Breathing Patterns...")
+    print("\n[4/13] Breathing Patterns...")
     check_breathing_patterns(result)
 
-    print("\n[5/11] Audio Closing Phrases...")
+    print("\n[5/13] Audio Closing Phrases...")
     check_audio_closing(result)
 
-    print("\n[6/11] Premium Access...")
+    print("\n[6/13] Premium Access...")
     check_premium_functionality(result)
 
-    print("\n[7/11] Stripe Configuration...")
+    print("\n[7/13] Stripe Configuration...")
     check_stripe_configuration(result)
 
-    print("\n[8/11] Audio Files...")
+    print("\n[8/13] Audio Files...")
     check_audio_files(result, quick=quick_mode)
 
-    print("\n[9/11] Audio Links...")
+    print("\n[9/13] Audio Links...")
     check_audio_links(result)
 
-    print("\n[10/11] Navigation...")
+    print("\n[10/13] Free Content...")
+    check_free_content(result)
+
+    print("\n[11/13] ASMR Sounds...")
+    check_asmr_sounds(result)
+
+    print("\n[12/13] Navigation...")
     check_navigation(result)
 
-    print("\n[11/11] File Organization...")
+    print("\n[13/13] File Organization...")
     check_file_organization(result)
 
     # Print report

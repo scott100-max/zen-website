@@ -2,8 +2,8 @@
 SALUS MIND — PROJECT BIBLE
 ================================================================================
 Comprehensive Reference Document for Claude
-Version 1.5
-Last Updated: 4 February 2026 (v1.5 - Stripe Payments Section Added)
+Version 1.6
+Last Updated: 4 February 2026 (v1.6 - Validator Coverage Documented)
 
 ================================================================================
 CONTENTS
@@ -1453,6 +1453,41 @@ LESSON: Simple keyword matching fails for natural language meditation scripts.
 Context matters. Always test validator changes against known-good content.
 
 --------------------------------------------------------------------------------
+VALIDATOR COVERAGE (4 February 2026):
+--------------------------------------------------------------------------------
+The validator (validate-site.py) checks these Bible rules:
+
+CHECK                         | BIBLE SECTION | STATUS
+------------------------------|---------------|--------
+No duplicate images           | 10.1          | PASS/FAIL
+UHD images (min size)         | 10.2          | PASS/FAIL
+Script metadata headers       | 4.1           | PASS/FAIL
+No prescriptive timing        | 4.3           | PASS/FAIL
+No counting in breathing      | 4.3           | PASS/FAIL
+Basic breathing pattern       | 4.3           | PASS/FAIL
+No "Welcome to Salus"         | 4.6           | PASS/FAIL
+Closing phrase required       | 4.6           | PASS/FAIL
+No "clinical" references      | 9.1 #9        | PASS/FAIL
+Premium access config         | 13            | PASS/FAIL
+Stripe payment links          | 13.2          | PASS/FAIL
+Audio files exist             | 3             | INFO
+Audio links valid             | -             | PASS/FAIL
+Free content complete         | 11.20         | PASS/FAIL
+ASMR sounds present           | 3.2           | PASS/FAIL
+Navigation pages exist        | -             | PASS/FAIL
+File organization             | 2             | PASS/FAIL
+
+KNOWN EXCEPTIONS:
+- education.html: Can have prescriptive timing (educational content)
+- thank-you.html: Excluded from content checks
+
+NOT AUTOMATED (requires human review):
+- Image contextual relevance (10.3)
+- Audio quality/artifacts (11)
+- Correct ambient for category (11.12)
+- Script content accuracy
+
+--------------------------------------------------------------------------------
 PICKUP POINT FOR AUDIO REBUILDING:
 --------------------------------------------------------------------------------
 - 5 free sessions COMPLETE: 01, 03, 09, 25, 38
@@ -1466,5 +1501,5 @@ PICKUP POINT FOR AUDIO REBUILDING:
 
 ================================================================================
 — END OF DOCUMENT —
-Last updated: 4 February 2026 (v1.5 - Stripe Payments Section Added)
+Last updated: 4 February 2026 (v1.6 - Validator Coverage Documented)
 ================================================================================
