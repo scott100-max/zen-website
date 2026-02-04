@@ -1177,6 +1177,20 @@ All 5 free sessions deployed to audio-free/ and website:
 - 25-introduction-to-mindfulness.mp3
 - 38-seven-day-mindfulness-day1.mp3
 
+FREE CONTENT SCRIPT VALIDATION (4 February 2026):
+Run via: python3 validate-site.py --fix
+
+#  | Title                              | Audio  | Script | Issue
+---|------------------------------------+--------|--------|----------------------------------
+01 | Morning Meditation                 | PASS   | FAIL   | Hold after exhale (line 210)
+03 | Breathing for Anxiety              | PASS   | PASS   | —
+09 | Rainfall Sleep Journey             | PASS   | FAIL   | Hold after exhale (line 95)
+25 | Introduction to Mindfulness        | PASS   | PASS   | —
+38 | 7-Day Mindfulness Course: Day 1    | PASS   | FAIL   | Missing Category metadata
+
+NOTE: Audio PASS = deployed and human-reviewed. Script FAIL = source script violates
+Bible rules. Script fixes required before any REBUILD of these sessions.
+
 Not started: Sessions 04-07, 10-51 (~45 files remaining)
 
 NEXT STEPS:
