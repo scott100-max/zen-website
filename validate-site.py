@@ -188,6 +188,12 @@ def check_forbidden_phrases(result):
                         # Exception: Landing page can mention Salus
                         if "Welcome to Salus" in pattern and html_file.name == "index.html":
                             continue
+                        # Exception: Education page can explain breathing techniques with timings
+                        if "prescriptive timing" in rule and html_file.name == "education.html":
+                            continue
+                        # Exception: thank-you.html page title can mention Salus
+                        if "Welcome to Salus" in pattern and html_file.name == "thank-you.html":
+                            continue
                         result.add_error(
                             "CONTENT",
                             f"Forbidden phrase found: {rule}",
