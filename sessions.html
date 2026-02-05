@@ -14,91 +14,137 @@
   <style>
     .session-list { max-width: 800px; margin: 0 auto; }
     .session-item {
-      background: linear-gradient(135deg, #ffffff 0%, #faf9f7 50%, #f5f3ef 100%);
-      border-radius: 16px;
-      padding: 28px 28px 28px 32px;
+      border-radius: 24px;
+      padding: 32px;
       margin-bottom: 20px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.02);
       position: relative;
       overflow: hidden;
-      border: 1px solid rgba(0,0,0,0.03);
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    /* Soft accent bar on left */
+    .session-item:hover {
+      transform: translateY(-6px) scale(1.02);
+    }
+    /* Floating orb decorations */
     .session-item::before {
       content: '';
       position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 4px;
-      background: linear-gradient(180deg, var(--accent) 0%, #7c8cf5 100%);
-      border-radius: 4px 0 0 4px;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.4;
+      top: -80px;
+      right: -60px;
+      pointer-events: none;
     }
-    /* Subtle organic shape in corner */
     .session-item::after {
       content: '';
       position: absolute;
-      top: -30px;
-      right: -30px;
-      width: 100px;
-      height: 100px;
-      background: radial-gradient(circle, rgba(79,109,245,0.04) 0%, transparent 70%);
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
+      filter: blur(40px);
+      opacity: 0.3;
+      bottom: -40px;
+      left: -20px;
       pointer-events: none;
     }
+    /* Beginners - Teal/Cyan theme */
+    .session-item[data-category="beginners"] {
+      background: linear-gradient(135deg, #0d3d4a 0%, #1a5568 50%, #0f4c5c 100%);
+      box-shadow: 0 20px 60px rgba(6,182,212,0.25), 0 8px 24px rgba(0,0,0,0.15);
+    }
+    .session-item[data-category="beginners"]::before { background: #06b6d4; }
+    .session-item[data-category="beginners"]::after { background: #22d3ee; }
+    .session-item[data-category="beginners"]:hover { box-shadow: 0 30px 80px rgba(6,182,212,0.35), 0 12px 32px rgba(0,0,0,0.2); }
+    /* Stress - Green/Emerald theme */
+    .session-item[data-category="stress"] {
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%);
+      box-shadow: 0 20px 60px rgba(16,185,129,0.25), 0 8px 24px rgba(0,0,0,0.15);
+    }
+    .session-item[data-category="stress"]::before { background: #10b981; }
+    .session-item[data-category="stress"]::after { background: #34d399; }
+    .session-item[data-category="stress"]:hover { box-shadow: 0 30px 80px rgba(16,185,129,0.35), 0 12px 32px rgba(0,0,0,0.2); }
+    /* Sleep - Purple/Indigo theme */
+    .session-item[data-category="sleep"] {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #3730a3 100%);
+      box-shadow: 0 20px 60px rgba(99,102,241,0.25), 0 8px 24px rgba(0,0,0,0.15);
+    }
+    .session-item[data-category="sleep"]::before { background: #818cf8; }
+    .session-item[data-category="sleep"]::after { background: #a78bfa; }
+    .session-item[data-category="sleep"]:hover { box-shadow: 0 30px 80px rgba(99,102,241,0.35), 0 12px 32px rgba(0,0,0,0.2); }
+    /* Focus - Amber/Orange theme */
+    .session-item[data-category="focus"] {
+      background: linear-gradient(135deg, #451a03 0%, #78350f 50%, #92400e 100%);
+      box-shadow: 0 20px 60px rgba(245,158,11,0.25), 0 8px 24px rgba(0,0,0,0.15);
+    }
+    .session-item[data-category="focus"]::before { background: #f59e0b; }
+    .session-item[data-category="focus"]::after { background: #fbbf24; }
+    .session-item[data-category="focus"]:hover { box-shadow: 0 30px 80px rgba(245,158,11,0.35), 0 12px 32px rgba(0,0,0,0.2); }
+    /* Text styling for dark backgrounds */
     .session-item h3 {
-      font-size: 1.15rem;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.5rem;
       margin-bottom: 6px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       font-weight: 600;
+      color: #ffffff;
+      position: relative;
+      z-index: 1;
     }
     .session-item h3 .premium-tag {
-      font-size: 0.65rem;
-      background: linear-gradient(135deg, #f5efe6 0%, #ebe4d8 100%);
-      color: #8b7355;
-      padding: 4px 10px;
-      border-radius: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.55rem;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+      color: rgba(255,255,255,0.9);
+      padding: 4px 12px;
+      border-radius: 20px;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
+      border: 1px solid rgba(255,255,255,0.15);
     }
     .session-meta {
       font-size: 0.8rem;
-      color: var(--mid-gray);
+      color: rgba(255,255,255,0.7);
       margin-bottom: 10px;
-      letter-spacing: 0.3px;
+      font-weight: 500;
+      position: relative;
+      z-index: 1;
     }
     .session-item p {
-      color: var(--mid-gray);
-      font-size: 0.92rem;
+      color: rgba(255,255,255,0.85);
+      font-size: 0.95rem;
       margin: 0;
-      line-height: 1.6;
+      line-height: 1.7;
+      position: relative;
+      z-index: 1;
     }
     .session-item a {
       text-decoration: none;
       color: inherit;
       display: block;
     }
-    .session-item:hover {
-      box-shadow: 0 8px 32px rgba(0,0,0,0.08), 0 2px 8px rgba(79,109,245,0.06);
-      transform: translateY(-2px);
-      border-color: rgba(79,109,245,0.1);
+    /* Player styling on dark backgrounds */
+    .session-item .custom-player > div,
+    .session-item .premium-player > a {
+      background: rgba(255,255,255,0.1) !important;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
     }
-    /* Category-specific accent colors */
-    .session-item[data-category="sleep"]::before {
-      background: linear-gradient(180deg, #6366f1 0%, #8b5cf6 100%);
+    .session-item .cp-time,
+    .session-item .premium-player span {
+      color: rgba(255,255,255,0.8) !important;
     }
-    .session-item[data-category="stress"]::before {
-      background: linear-gradient(180deg, #10b981 0%, #34d399 100%);
+    .session-item .cp-play,
+    .session-item .premium-player button {
+      background: rgba(255,255,255,0.25) !important;
     }
-    .session-item[data-category="focus"]::before {
-      background: linear-gradient(180deg, #f59e0b 0%, #fbbf24 100%);
-    }
-    .session-item[data-category="beginners"]::before {
-      background: linear-gradient(180deg, #06b6d4 0%, #22d3ee 100%);
+    .session-item input[type="range"] {
+      opacity: 0.8;
     }
   </style>
 </head>
