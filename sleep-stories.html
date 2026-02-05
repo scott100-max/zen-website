@@ -11,62 +11,109 @@
   <style>
     .stories-grid {
       display: grid;
-      grid-template-columns: repeat(13, 1fr);
-      gap: 12px;
-      max-width: 900px;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 16px;
+      max-width: 1000px;
       margin: 0 auto;
     }
     .story-book {
-      aspect-ratio: 0.7;
-      background: linear-gradient(135deg, #2a3f5f 0%, #1a2a3f 100%);
-      border-radius: 4px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15), 2px 0 4px rgba(0,0,0,0.1);
+      aspect-ratio: 0.65;
+      border-radius: 3px 8px 8px 3px;
       position: relative;
       cursor: pointer;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
+      overflow: visible;
+      transform-style: preserve-3d;
+      box-shadow:
+        6px 6px 12px rgba(0,0,0,0.2),
+        2px 0 0 #e8e4dc,
+        4px 0 0 #f0ece4,
+        6px 0 0 #f5f2eb;
+    }
+    .story-book::before {
+      content: '';
+      position: absolute;
+      right: -6px;
+      top: 2px;
+      bottom: 2px;
+      width: 6px;
+      background: linear-gradient(to right, #d8d4cc, #f5f2eb);
+      border-radius: 0 2px 2px 0;
+      box-shadow: inset -1px 0 2px rgba(0,0,0,0.1);
+    }
+    .story-book::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 3px 6px 6px 3px;
+      background: linear-gradient(90deg, rgba(0,0,0,0.15) 0%, transparent 20%, transparent 80%, rgba(255,255,255,0.1) 100%);
+      pointer-events: none;
     }
     .story-book:hover {
-      transform: translateY(-4px) scale(1.05);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      transform: translateY(-6px) rotateY(-5deg);
+      box-shadow:
+        10px 12px 20px rgba(0,0,0,0.25),
+        2px 0 0 #e8e4dc,
+        4px 0 0 #f0ece4,
+        6px 0 0 #f5f2eb;
     }
     .story-book.locked {
-      opacity: 0.4;
+      opacity: 0.5;
+      filter: saturate(0.3);
       cursor: default;
     }
     .story-book.locked:hover {
       transform: none;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      box-shadow:
+        6px 6px 12px rgba(0,0,0,0.2),
+        2px 0 0 #e8e4dc,
+        4px 0 0 #f0ece4,
+        6px 0 0 #f5f2eb;
     }
     .story-book .week-num {
-      font-size: 0.7rem;
+      font-size: 0.85rem;
       font-weight: 700;
-      color: rgba(255,255,255,0.8);
+      color: rgba(255,255,255,0.9);
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      z-index: 1;
     }
     .story-book .lock-icon {
       position: absolute;
-      bottom: 4px;
-      right: 4px;
-      opacity: 0.5;
+      bottom: 6px;
+      right: 8px;
+      opacity: 0.6;
+      z-index: 1;
     }
+    /* Colorful book covers */
+    .story-book:nth-child(13n+1) { background: linear-gradient(145deg, #1e3a5f 0%, #0d1b2a 100%); }
+    .story-book:nth-child(13n+2) { background: linear-gradient(145deg, #5c3d2e 0%, #2d1f17 100%); }
+    .story-book:nth-child(13n+3) { background: linear-gradient(145deg, #2d4a3e 0%, #1a2e25 100%); }
+    .story-book:nth-child(13n+4) { background: linear-gradient(145deg, #4a3b5c 0%, #2a2236 100%); }
+    .story-book:nth-child(13n+5) { background: linear-gradient(145deg, #5c4a3b 0%, #362a22 100%); }
+    .story-book:nth-child(13n+6) { background: linear-gradient(145deg, #3b4a5c 0%, #222a36 100%); }
+    .story-book:nth-child(13n+7) { background: linear-gradient(145deg, #4a5c3b 0%, #2a3622 100%); }
+    .story-book:nth-child(13n+8) { background: linear-gradient(145deg, #5c3b4a 0%, #36222a 100%); }
+    .story-book:nth-child(13n+9) { background: linear-gradient(145deg, #3b5c4a 0%, #22362a 100%); }
+    .story-book:nth-child(13n+10) { background: linear-gradient(145deg, #4a3b3b 0%, #2a2222 100%); }
+    .story-book:nth-child(13n+11) { background: linear-gradient(145deg, #3b3b5c 0%, #222236 100%); }
+    .story-book:nth-child(13n+12) { background: linear-gradient(145deg, #5c5c3b 0%, #363622 100%); }
+    .story-book:nth-child(13n+13) { background: linear-gradient(145deg, #3b5c5c 0%, #223636 100%); }
     .story-book.available {
-      background: linear-gradient(135deg, #4f6d8f 0%, #2a4a6f 100%);
+      filter: saturate(1.2) brightness(1.1);
     }
-    .story-book.available .week-num {
-      color: #fff;
-    }
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
       .stories-grid {
         grid-template-columns: repeat(7, 1fr);
-        gap: 8px;
+        gap: 14px;
       }
     }
-    @media (max-width: 480px) {
+    @media (max-width: 600px) {
       .stories-grid {
         grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
       }
     }
   </style>
