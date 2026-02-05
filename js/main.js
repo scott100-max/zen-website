@@ -45,7 +45,16 @@ if (contactForm) {
 }
 
 // ===== Premium Access Check =====
+// Note: Primary premium check is now handled by auth.js (SalusAuth.isPremium())
+// This provides a fallback for pages where auth.js may not be loaded
 (function() {
+  // Check if SalusAuth is available - if so, let it handle everything
+  if (typeof SalusAuth !== 'undefined') {
+    // SalusAuth will handle premium UI updates via updateNavUI()
+    return;
+  }
+
+  // Fallback: Use localStorage check for backwards compatibility
   var isPremium = localStorage.getItem('salus_premium') === 'true';
 
   // Handle premium unlock on session pages

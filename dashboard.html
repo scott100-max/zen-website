@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Account — Salus</title>
+  <meta name="description" content="Manage your Salus account and subscription.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=1770053724">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/auth.js"></script>
+  <style>
+    .dashboard-container {
+      min-height: calc(100vh - 200px);
+      padding: 120px 24px 60px;
+      background: linear-gradient(135deg, #f8f6f3 0%, #f0ebe4 100%);
+    }
+    .dashboard-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .dashboard-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem;
+      margin-bottom: 8px;
+    }
+    .dashboard-header .subtitle {
+      color: var(--mid-gray);
+      font-size: 1rem;
+    }
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    @media (max-width: 600px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+    }
+    .dashboard-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+    .dashboard-card h2 {
+      font-size: 1.1rem;
+      margin-bottom: 16px;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .dashboard-card h2 svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--accent);
+    }
+    .dashboard-card p {
+      color: var(--mid-gray);
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+    }
+    .dashboard-card .value {
+      font-weight: 600;
+      color: var(--dark);
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .status-active {
+      background: #d1fae5;
+      color: #047857;
+    }
+    .status-inactive {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+    .status-free {
+      background: var(--off-white);
+      color: var(--mid-gray);
+    }
+    .dashboard-actions {
+      margin-top: 24px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .dashboard-card .btn {
+      padding: 10px 20px;
+      font-size: 0.9rem;
+    }
+    .full-width {
+      grid-column: 1 / -1;
+    }
+    .quick-links {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+    @media (max-width: 600px) {
+      .quick-links { grid-template-columns: 1fr; }
+    }
+    .quick-link {
+      display: block;
+      padding: 20px;
+      background: var(--off-white);
+      border-radius: 12px;
+      text-decoration: none;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .quick-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .quick-link h3 {
+      font-size: 0.95rem;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+    .quick-link p {
+      font-size: 0.8rem;
+      color: var(--mid-gray);
+      margin: 0;
+    }
+    .loading {
+      text-align: center;
+      padding: 60px;
+      color: var(--mid-gray);
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav" style="position:relative;">
+    <div class="container">
+      <a href="index.html" class="nav-logo" style="display:flex;flex-direction:column;align-items:flex-start;line-height:1;"><span style="font-family:'Cormorant Garamond',serif;font-size:2rem;">SALUS</span><span style="font-size:0.6rem;letter-spacing:1.5px;opacity:0.6;margin-top:2px;">LATIN: HEALTH</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="sessions.html">Guided Meditations</a></li>
+        <li><a href="mindfulness.html">Mindfulness</a></li>
+        <li><a href="soundscapes.html">ASMR</a></li>
+        <li><a href="tools.html">Tools</a></li>
+        <li><a href="education.html">Learn</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="reading.html">Reading</a></li>
+        <li><a href="newsletter.html">Newsletter</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <a href="apps.html" class="btn btn-primary" style="padding:8px 18px;font-size:0.85rem;margin-left:16px;">Subscribe</a>
+      <a href="dashboard.html" class="btn btn-outline nav-auth-btn" style="padding:8px 18px;font-size:0.85rem;margin-left:8px;">Account</a>
+      <button class="nav-toggle" aria-label="Toggle menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    </div>
+  </nav>
+
+  <div class="dashboard-container">
+    <div class="container">
+      <div class="loading" id="loadingState">Loading your account...</div>
+
+      <div id="dashboardContent" style="display:none;">
+        <div class="dashboard-header">
+          <h1>Welcome back, <span id="userName">Friend</span></h1>
+          <p class="subtitle">Manage your account and subscription</p>
+        </div>
+
+        <div class="dashboard-grid">
+          <!-- Account Info -->
+          <div class="dashboard-card">
+            <h2>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Account
+            </h2>
+            <p>Email: <span class="value" id="userEmail">—</span></p>
+            <p>Member since: <span class="value" id="memberSince">—</span></p>
+          </div>
+
+          <!-- Subscription Status -->
+          <div class="dashboard-card">
+            <h2>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+              Subscription
+            </h2>
+            <p>Status: <span id="subscriptionStatus"></span></p>
+            <p id="planTypeRow" style="display:none;">Plan: <span class="value" id="planType">—</span></p>
+            <p id="renewsRow" style="display:none;">Renews: <span class="value" id="renewsDate">—</span></p>
+            <div class="dashboard-actions" id="subscriptionActions">
+              <!-- Dynamic content -->
+            </div>
+          </div>
+
+          <!-- Quick Links -->
+          <div class="dashboard-card full-width">
+            <h2>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+              Quick Links
+            </h2>
+            <div class="quick-links">
+              <a href="sessions.html" class="quick-link">
+                <h3>Guided Meditations</h3>
+                <p>Explore all sessions</p>
+              </a>
+              <a href="soundscapes.html" class="quick-link">
+                <h3>ASMR</h3>
+                <p>Relaxing soundscapes</p>
+              </a>
+              <a href="breathe.html" class="quick-link">
+                <h3>Breathing Exercises</h3>
+                <p>Calm your mind</p>
+              </a>
+            </div>
+          </div>
+
+          <!-- Account Actions -->
+          <div class="dashboard-card full-width">
+            <h2>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              Account Settings
+            </h2>
+            <div class="dashboard-actions">
+              <a href="reset-password.html" class="btn btn-outline">Change Password</a>
+              <button class="btn btn-outline" id="logoutBtn" style="background:transparent;">Log Out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <a href="#" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to Top</a>
+        &copy; 2026 Salus. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js?v=1770053724"></script>
+  <script>
+    (function() {
+      var loadingEl = document.getElementById('loadingState');
+      var contentEl = document.getElementById('dashboardContent');
+
+      document.addEventListener('DOMContentLoaded', async function() {
+        await SalusAuth.init();
+
+        // Check if logged in
+        if (!SalusAuth.isLoggedIn()) {
+          window.location.href = 'login.html';
+          return;
+        }
+
+        // Populate dashboard
+        var user = SalusAuth.getUser();
+        var subscription = SalusAuth.getSubscription();
+        var isPremium = SalusAuth.isPremium();
+
+        // User info
+        var fullName = user.user_metadata?.full_name || user.email.split('@')[0];
+        document.getElementById('userName').textContent = fullName;
+        document.getElementById('userEmail').textContent = user.email;
+
+        var createdAt = new Date(user.created_at);
+        document.getElementById('memberSince').textContent = createdAt.toLocaleDateString('en-GB', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+
+        // Subscription status
+        var statusEl = document.getElementById('subscriptionStatus');
+        var actionsEl = document.getElementById('subscriptionActions');
+
+        if (subscription && subscription.status === 'active') {
+          statusEl.innerHTML = '<span class="status-badge status-active">Premium Active</span>';
+          document.getElementById('planTypeRow').style.display = 'block';
+          document.getElementById('planType').textContent = subscription.plan_type === 'yearly' ? 'Yearly' : 'Monthly';
+
+          if (subscription.current_period_end) {
+            document.getElementById('renewsRow').style.display = 'block';
+            var endDate = new Date(subscription.current_period_end);
+            document.getElementById('renewsDate').textContent = endDate.toLocaleDateString('en-GB', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            });
+          }
+
+          actionsEl.innerHTML = '<a href="contact.html" class="btn btn-outline">Manage Subscription</a>';
+        } else if (isPremium) {
+          // Has localStorage premium but no Supabase subscription
+          statusEl.innerHTML = '<span class="status-badge status-active">Premium (Legacy)</span>';
+          actionsEl.innerHTML =
+            '<p style="font-size:0.85rem;color:var(--mid-gray);margin-bottom:12px;">Your premium access is currently stored on this device only. To sync across devices, contact us with your original purchase email.</p>' +
+            '<a href="contact.html" class="btn btn-outline">Contact Support</a>';
+        } else {
+          statusEl.innerHTML = '<span class="status-badge status-free">Free Plan</span>';
+          actionsEl.innerHTML =
+            '<p style="font-size:0.85rem;color:var(--mid-gray);margin-bottom:12px;">Upgrade to Premium to unlock all content.</p>' +
+            '<a href="apps.html" class="btn btn-primary">Upgrade to Premium</a>';
+        }
+
+        // Show content
+        loadingEl.style.display = 'none';
+        contentEl.style.display = 'block';
+      });
+
+      // Logout handler
+      document.getElementById('logoutBtn').addEventListener('click', async function() {
+        await SalusAuth.signOut();
+        window.location.href = 'index.html';
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -8,6 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=1770053724">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/auth.js"></script>
   <style>
     .pricing-grid {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
@@ -79,6 +82,7 @@
         <li><a href="newsletter.html">Newsletter</a></li>
         <li><a href="contact.html">Contact</a></li>
       </ul>
+      <a href="login.html" class="btn btn-outline nav-auth-btn" style="padding:8px 18px;font-size:0.85rem;margin-left:16px;">Log In</a>
       <button class="nav-toggle" aria-label="Toggle menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     </div>
   </nav>
@@ -128,7 +132,7 @@
             <li>New content weekly</li>
             <li>Cancel anytime</li>
           </ul>
-          <a href="https://buy.stripe.com/aFacN46Yr4kmffLec0eAg01" class="btn btn-outline">Subscribe</a>
+          <a href="https://buy.stripe.com/aFacN46Yr4kmffLec0eAg01" class="btn btn-outline stripe-subscribe-btn">Subscribe</a>
         </div>
 
         <!-- Yearly (featured) -->
@@ -142,7 +146,7 @@
             <li>Priority support</li>
             <li>Best value</li>
           </ul>
-          <a href="https://buy.stripe.com/8x24gy4Qj9EGffL8RGeAg02" class="btn btn-primary">Subscribe</a>
+          <a href="https://buy.stripe.com/8x24gy4Qj9EGffL8RGeAg02" class="btn btn-primary stripe-subscribe-btn">Subscribe</a>
         </div>
 
       </div>
@@ -245,5 +249,31 @@
   </footer>
 
   <script src="js/main.js?v=1770053724"></script>
+  <script>
+    // Handle subscribe buttons based on login state
+    (async function() {
+      if (typeof SalusAuth !== 'undefined') {
+        await SalusAuth.init();
+        var buttons = document.querySelectorAll('.stripe-subscribe-btn');
+
+        if (SalusAuth.isLoggedIn()) {
+          // Logged in: Update Stripe links with user ID and email
+          buttons.forEach(function(link) {
+            link.href = SalusAuth.getStripeCheckoutUrl(link.href);
+          });
+        } else {
+          // Not logged in: Replace with "Create Account" buttons
+          buttons.forEach(function(link) {
+            var newBtn = document.createElement('a');
+            newBtn.href = 'signup.html?redirect=apps.html';
+            newBtn.className = link.className;
+            newBtn.textContent = 'Create Account to Subscribe';
+            newBtn.style.fontSize = '0.85rem';
+            link.parentNode.replaceChild(newBtn, link);
+          });
+        }
+      }
+    })();
+  </script>
 </body>
 </html>

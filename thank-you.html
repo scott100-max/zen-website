@@ -8,6 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=1770053724">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/auth.js"></script>
 </head>
 <body>
 
@@ -26,6 +29,7 @@
         <li><a href="newsletter.html">Newsletter</a></li>
         <li><a href="contact.html">Contact</a></li>
       </ul>
+      <a href="dashboard.html" class="btn btn-outline nav-auth-btn" style="padding:8px 18px;font-size:0.85rem;margin-left:16px;">Account</a>
       <button class="nav-toggle" aria-label="Toggle menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     </div>
   </nav>
@@ -42,6 +46,15 @@
       <p style="font-size:1rem;color:var(--mid-gray);line-height:1.8;margin-bottom:32px;">
         You now have full access to our complete library of guided meditations, sleep stories, soundscapes, and all future content. We're so glad you're here.
       </p>
+      <!-- Account creation prompt for non-logged-in users -->
+      <div id="createAccountPrompt" style="display:none;background:linear-gradient(135deg,#1e293b,#0f172a);color:#fff;padding:24px;border-radius:12px;margin-bottom:32px;text-align:left;">
+        <h3 style="margin:0 0 12px;font-size:1.1rem;">Sync Your Subscription Across Devices</h3>
+        <p style="margin:0 0 16px;font-size:0.95rem;opacity:0.9;line-height:1.6;">
+          Create a free account using the <strong>same email you just paid with</strong> to access your premium content on any device.
+        </p>
+        <a href="signup.html" class="btn btn-primary" style="background:#fff;color:var(--accent-dark);">Create Account</a>
+      </div>
+
       <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
         <a href="sessions.html" class="btn btn-primary">Explore Sessions</a>
         <a href="soundscapes.html" class="btn btn-outline">Browse Soundscapes</a>
@@ -63,9 +76,25 @@
 
   <script src="js/main.js?v=1770053724"></script>
   <script>
-    // Set premium access flag
+    // Set premium access flag (localStorage for backwards compatibility)
     localStorage.setItem('salus_premium', 'true');
     localStorage.setItem('salus_premium_date', new Date().toISOString());
+
+    // Handle account status
+    (async function() {
+      if (typeof SalusAuth !== 'undefined') {
+        await SalusAuth.init();
+        if (SalusAuth.isLoggedIn()) {
+          // Logged in: refresh subscription from Supabase
+          setTimeout(async function() {
+            await SalusAuth.refreshSubscription();
+          }, 2000);
+        } else {
+          // Not logged in: show account creation prompt
+          document.getElementById('createAccountPrompt').style.display = 'block';
+        }
+      }
+    })();
   </script>
 </body>
 </html>
