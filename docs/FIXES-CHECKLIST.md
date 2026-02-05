@@ -91,19 +91,19 @@ Last verified: 5 February 2026
 | # | Item | Status |
 |---|------|--------|
 | 9 | NHS logo and NHS fact check | ✓ RESOLVED |
-| 50 | Claude Code verification gate – independent verification system | ✗ PENDING |
+| 50 | Claude Code verification gate – independent verification system | ✓ DONE |
 
 ---
 
 ## SUMMARY
 
 ```
-DONE:       30 items
-PENDING:     3 items  ← WORK REMAINING
+DONE:       31 items
+PENDING:     2 items  ← WORK REMAINING
 DEFERRED:    1 item   (account system - separate project)
 ─────────────────────
 TOTAL:      34 items
-COMPLETION: 88%
+COMPLETION: 91%
 ```
 
 ### Outstanding Work
@@ -111,9 +111,6 @@ COMPLETION: 88%
 **Audio (2 items):**
 - Apply de-esser for sibilance (#42)
 - Improve audio QA pipeline (#45)
-
-**Process (1 item):**
-- Independent verification gate (#50) — current self-validation is insufficient
 
 ---
 
