@@ -14,7 +14,7 @@ for line in open('.env'):
 
 API_KEY = os.environ.get("FISH_API_KEY", "")
 VOICE_ID = "0165567b33324f518b02336ad232e31a"  # Calm voice
-OUTPUT = "content/audio/01-morning-meditation.mp3"
+OUTPUT = "content/audio-free/01-morning-meditation.mp3"
 
 segments = [
     ("text", "Welcome to Salus."),
@@ -144,7 +144,7 @@ def generate_tts(text, output_path):
 def generate_silence(seconds, output_path):
     subprocess.run([
         "ffmpeg", "-y", "-f", "lavfi", "-i",
-        f"anullsrc=r=44100:cl=mono", "-t", str(seconds),
+        f"anullsrc=r=44100:cl=stereo", "-t", str(seconds),
         "-acodec", "pcm_s16le", output_path
     ], capture_output=True)
 
@@ -168,7 +168,7 @@ def main():
                 continue
             subprocess.run([
                 "ffmpeg", "-y", "-i", mp3_path,
-                "-ar", "44100", "-ac", "1", "-acodec", "pcm_s16le", part_path
+                "-ar", "44100", "-ac", "2", "-acodec", "pcm_s16le", part_path
             ], capture_output=True)
         else:
             print(f"  [silence] {value}s")
@@ -188,9 +188,11 @@ def main():
     ], capture_output=True)
 
     os.makedirs(os.path.dirname(OUTPUT), exist_ok=True)
+    # Normalize to -24 LUFS with -2 dBTP ceiling, encode at 128kbps stereo
     subprocess.run([
         "ffmpeg", "-y", "-i", concat_wav,
-        "-codec:a", "libmp3lame", "-b:a", "192k", OUTPUT
+        "-af", "loudnorm=I=-24:TP=-2:LRA=11",
+        "-codec:a", "libmp3lame", "-b:a", "128k", OUTPUT
     ], capture_output=True)
 
     result = subprocess.run([

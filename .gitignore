@@ -24,3 +24,5 @@ content/audio/ambient/rain-8hr.mp3
 test-*.py
 build-*.py
 transcripts by others/
+*.wav
+audio-analysis/
