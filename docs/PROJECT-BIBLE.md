@@ -331,6 +331,39 @@ git push origin main
 
 ---
 
+### 5 February 2026 — UI Cleanup & Sleep Stories
+
+**Colored Tiles Removed Site-Wide:**
+
+| Page | Section | Status |
+|------|---------|--------|
+| index.html | "Why We're Different" cards | Removed gradient headers |
+| index.html | "What's Inside" cards | Removed gradient headers |
+| about.html | "What We Stand For" cards | Removed gradient headers |
+| apps.html | "What's Inside Premium" cards | Removed gradient headers |
+| sessions.html | Premium session cards | Converted to player UI style |
+
+**Sessions Page Redesign:**
+- Removed all colored "session-card" boxes
+- Premium sessions now display with player bar UI (play button + progress bar)
+- Matches the sample sessions design
+- Cards link to individual session pages when clicked
+
+**Sleep Stories Page:**
+- Page exists at `/sleep-stories.html` (Coming Soon)
+- Linked from homepage "What's Inside" section
+- NOT in main navigation (nav was too crowded with 11 items)
+- 52-book library preview with weeks 1-4 "available", 5-52 locked
+
+**Navigation:**
+- Sleep Stories removed from nav to reduce crowding
+- Current nav items: Home, Guided Meditations, Mindfulness, ASMR, Tools, Learn, About, Reading, Newsletter, Contact
+
+**Design Rule Added:**
+- No colored gradient tiles/boxes on cards - use simple white cards with text only
+
+---
+
 ## Common Issues & Lessons Learned
 
 ### Page Visibility Checklist (Feb 2026)
