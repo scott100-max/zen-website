@@ -495,8 +495,20 @@ python3 targeted_repair.py <block_number> <input.mp3> <output.mp3>
    → YES to all = PASS → Deploy
    → NO to any = FAIL → Rebuild
 5. REBUILD: Regenerate full session (fresh TTS run)
-6. REPEAT: Steps 2-5 until PASS
+6. REPEAT: Steps 2-5 until PASS or 3 attempts reached
+7. ESCALATE: After 3 failed rebuilds → STOP and escalate to human review
 ```
+
+### 3-Strike Rule
+
+**After 3 failed rebuild attempts, STOP automated retries.**
+
+Escalate to human review because repeated failures indicate:
+- Script issue (sentence structure, problematic words)
+- Voice model issue (certain phrases trigger artifacts)
+- Systematic problem that rebuilding won't fix
+
+Human must investigate root cause before further attempts.
 
 ### Why This Matters
 
