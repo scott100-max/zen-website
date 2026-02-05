@@ -331,4 +331,37 @@ git push origin main
 
 ---
 
+## Common Issues & Lessons Learned
+
+### Page Visibility Checklist (Feb 2026)
+**Issue:** Sleep Stories page existed but wasn't accessible - no links from nav or homepage.
+**Root cause:** Page was created and deployed but never linked anywhere visible.
+
+**Prevention:** When creating any new page:
+1. Add to navigation on ALL HTML files (~70 root + 44 sessions)
+2. Add to homepage "What's Inside" section if it's a main content type
+3. Add to relevant footer sections
+4. Verify at least one link exists before marking complete
+
+**Quick nav update command:**
+```bash
+# Root pages
+sed -i '' 's|Guided Meditations</a></li>|Guided Meditations</a></li>\n        <li><a href="NEW-PAGE.html">New Page</a></li>|' *.html
+# Session pages (use ../ prefix)
+sed -i '' 's|../sessions.html">Guided Meditations</a></li>|../sessions.html">Guided Meditations</a></li>\n        <li><a href="../NEW-PAGE.html">New Page</a></li>|' sessions/*.html
+```
+
+### Deployment Verification
+- GitHub Pages auto-deploys on push to main
+- Check `gh run list --limit 3` for deployment status
+- Always verify live URL after claiming changes are deployed
+- Use `WebFetch` to confirm live site content matches expectations
+
+### Large Files in Git
+- Never commit audio/video files over 100MB to git
+- Test files, debug files, and downloads should be in `.gitignore`
+- Current exclusions: `content/audio/test-*/`, `content/audio/debug-*/`, `*.py`
+
+---
+
 *Last updated: 5 February 2026*
