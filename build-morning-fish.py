@@ -2,8 +2,13 @@
 """
 Build 10-minute morning meditation audio using Fish Audio TTS.
 Generates each segment, splices with FFmpeg silence.
+
+v2 improvements:
+- Auto-retry failed TTS (up to 3 attempts)
+- Duration validation (expected vs actual)
+- Timing manifest for debugging
 """
-import os, subprocess, requests, tempfile, shutil
+import os, subprocess, requests, tempfile, shutil, json, time
 
 # Load .env
 for line in open('.env'):
@@ -122,52 +127,75 @@ segments = [
 ]
 
 
-def generate_tts(text, output_path):
-    """Generate TTS audio via Fish Audio with validation."""
-    resp = requests.post(
-        "https://api.fish.audio/v1/tts",
-        headers={
-            "Authorization": f"Bearer {API_KEY}",
-            "model": "s1",
-            "Content-Type": "application/json",
-        },
-        json={"text": text, "format": "mp3", "reference_id": VOICE_ID},
-    )
-    if resp.status_code != 200:
-        print(f"  ERROR: {resp.status_code} - {resp.text[:200]}")
-        return False, 0
+def estimate_duration(text):
+    """Estimate expected TTS duration based on text length.
+    Meditation pace: ~0.065 seconds per character (slower than normal speech).
+    """
+    return len(text) * 0.065
 
-    with open(output_path, 'wb') as f:
-        f.write(resp.content)
+def generate_tts(text, output_path, max_retries=3):
+    """Generate TTS audio via Fish Audio with validation and retry."""
+    expected_duration = estimate_duration(text)
 
-    # VALIDATE: Check file exists and has audio
-    if not os.path.exists(output_path):
-        print(f"  ERROR: TTS file not created!")
-        return False, 0
+    for attempt in range(1, max_retries + 1):
+        if attempt > 1:
+            print(f"    Retry {attempt}/{max_retries}...")
+            time.sleep(1)  # Brief pause before retry
 
-    file_size = os.path.getsize(output_path)
-    if file_size < 1000:  # Less than 1KB is suspicious
-        print(f"  ERROR: TTS file too small ({file_size} bytes)")
-        return False, 0
+        resp = requests.post(
+            "https://api.fish.audio/v1/tts",
+            headers={
+                "Authorization": f"Bearer {API_KEY}",
+                "model": "s1",
+                "Content-Type": "application/json",
+            },
+            json={"text": text, "format": "mp3", "reference_id": VOICE_ID},
+        )
 
-    # Get duration
-    result = subprocess.run([
-        "ffprobe", "-v", "error", "-show_entries", "format=duration",
-        "-of", "default=noprint_wrappers=1:nokey=1", output_path
-    ], capture_output=True, text=True)
+        if resp.status_code != 200:
+            print(f"    API error: {resp.status_code}")
+            continue
 
-    try:
-        duration = float(result.stdout.strip())
-    except:
-        print(f"  ERROR: Could not get TTS duration")
-        return False, 0
+        with open(output_path, 'wb') as f:
+            f.write(resp.content)
 
-    # Minimum 0.5s for any speech
-    if duration < 0.5:
-        print(f"  ERROR: TTS too short ({duration:.2f}s)")
-        return False, 0
+        # VALIDATE: Check file exists and has audio
+        if not os.path.exists(output_path):
+            print(f"    File not created!")
+            continue
 
-    return True, duration
+        file_size = os.path.getsize(output_path)
+        if file_size < 1000:
+            print(f"    File too small ({file_size} bytes)")
+            continue
+
+        # Get duration
+        result = subprocess.run([
+            "ffprobe", "-v", "error", "-show_entries", "format=duration",
+            "-of", "default=noprint_wrappers=1:nokey=1", output_path
+        ], capture_output=True, text=True)
+
+        try:
+            duration = float(result.stdout.strip())
+        except:
+            print(f"    Could not get duration")
+            continue
+
+        # Minimum 0.5s for any speech
+        if duration < 0.5:
+            print(f"    Too short ({duration:.2f}s)")
+            continue
+
+        # Check if duration is reasonable (within 50% of expected)
+        if duration < expected_duration * 0.5:
+            print(f"    Suspiciously short: {duration:.1f}s (expected ~{expected_duration:.1f}s)")
+            # Don't fail, but warn - TTS can vary
+
+        return True, duration, expected_duration
+
+    # All retries failed
+    print(f"    *** ALL {max_retries} ATTEMPTS FAILED ***")
+    return False, 0, expected_duration
 
 
 def generate_silence(seconds, output_path):
@@ -185,25 +213,35 @@ def main():
     part_files = []
     text_count = 0
     total_tts_duration = 0
-    failed_segments = []
+    total_expected_duration = 0
+    manifest = []  # Track all segments for debugging
+    cumulative_time = 0
 
     for i, (stype, value) in enumerate(segments):
         part_path = os.path.join(tmpdir, f"part_{i:03d}.wav")
+        segment_info = {"index": i, "type": stype, "start_time": cumulative_time}
 
         if stype == "text":
             text_count += 1
             mp3_path = os.path.join(tmpdir, f"tts_{i:03d}.mp3")
             print(f"  [{text_count}] TTS: {value[:50]}...")
-            success, duration = generate_tts(value, mp3_path)
+            success, duration, expected = generate_tts(value, mp3_path)
             if not success:
                 print(f"    *** FAILED! BUILD ABORTED ***")
-                failed_segments.append((text_count, value[:40]))
                 shutil.rmtree(tmpdir)
                 print(f"\nBUILD FAILED - TTS generation failed for segment {text_count}")
                 print(f"Text: {value[:60]}...")
                 return
-            print(f"    OK ({duration:.2f}s)")
+            print(f"    OK ({duration:.2f}s, expected ~{expected:.1f}s)")
             total_tts_duration += duration
+            total_expected_duration += expected
+
+            segment_info["text"] = value
+            segment_info["duration"] = duration
+            segment_info["expected_duration"] = expected
+            segment_info["variance"] = duration - expected
+            cumulative_time += duration
+
             # Convert to stereo WAV
             subprocess.run([
                 "ffmpeg", "-y", "-i", mp3_path,
@@ -212,11 +250,26 @@ def main():
         else:
             print(f"  [silence] {value}s")
             generate_silence(value, part_path)
+            segment_info["duration"] = value
+            cumulative_time += value
 
+        segment_info["end_time"] = cumulative_time
+        manifest.append(segment_info)
         part_files.append(part_path)
 
     print(f"\nAll {text_count} TTS segments generated successfully")
-    print(f"Total TTS duration: {total_tts_duration:.1f}s")
+    print(f"Total TTS duration: {total_tts_duration:.1f}s (expected ~{total_expected_duration:.1f}s)")
+
+    # Save manifest for debugging
+    manifest_path = OUTPUT.replace('.mp3', '_manifest.json')
+    with open(manifest_path, 'w') as f:
+        json.dump({
+            "generated": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "total_tts_duration": total_tts_duration,
+            "total_expected_duration": total_expected_duration,
+            "segments": manifest
+        }, f, indent=2)
+    print(f"Manifest saved: {manifest_path}")
 
     concat_list = os.path.join(tmpdir, "concat.txt")
     with open(concat_list, 'w') as f:
