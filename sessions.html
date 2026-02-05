@@ -14,25 +14,53 @@
   <style>
     .session-list { max-width: 800px; margin: 0 auto; }
     .session-item {
-      background: #fff;
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      background: linear-gradient(135deg, #ffffff 0%, #faf9f7 50%, #f5f3ef 100%);
+      border-radius: 16px;
+      padding: 28px 28px 28px 32px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.02);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.03);
+      transition: all 0.3s ease;
+    }
+    /* Soft accent bar on left */
+    .session-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--accent) 0%, #7c8cf5 100%);
+      border-radius: 4px 0 0 4px;
+    }
+    /* Subtle organic shape in corner */
+    .session-item::after {
+      content: '';
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, rgba(79,109,245,0.04) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
     }
     .session-item h3 {
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       margin-bottom: 6px;
       display: flex;
       align-items: center;
       gap: 10px;
+      font-weight: 600;
     }
     .session-item h3 .premium-tag {
       font-size: 0.65rem;
-      background: #f0e6d3;
+      background: linear-gradient(135deg, #f5efe6 0%, #ebe4d8 100%);
       color: #8b7355;
-      padding: 3px 8px;
-      border-radius: 10px;
+      padding: 4px 10px;
+      border-radius: 12px;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -40,12 +68,14 @@
     .session-meta {
       font-size: 0.8rem;
       color: var(--mid-gray);
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      letter-spacing: 0.3px;
     }
     .session-item p {
       color: var(--mid-gray);
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       margin: 0;
+      line-height: 1.6;
     }
     .session-item a {
       text-decoration: none;
@@ -53,7 +83,22 @@
       display: block;
     }
     .session-item:hover {
-      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08), 0 2px 8px rgba(79,109,245,0.06);
+      transform: translateY(-2px);
+      border-color: rgba(79,109,245,0.1);
+    }
+    /* Category-specific accent colors */
+    .session-item[data-category="sleep"]::before {
+      background: linear-gradient(180deg, #6366f1 0%, #8b5cf6 100%);
+    }
+    .session-item[data-category="stress"]::before {
+      background: linear-gradient(180deg, #10b981 0%, #34d399 100%);
+    }
+    .session-item[data-category="focus"]::before {
+      background: linear-gradient(180deg, #f59e0b 0%, #fbbf24 100%);
+    }
+    .session-item[data-category="beginners"]::before {
+      background: linear-gradient(180deg, #06b6d4 0%, #22d3ee 100%);
     }
   </style>
 </head>
@@ -67,6 +112,7 @@
         <li><a href="sessions.html" class="active">Guided Meditations</a></li>
         <li><a href="mindfulness.html">Mindfulness</a></li>
         <li><a href="soundscapes.html">ASMR</a></li>
+        <li><a href="sleep-stories.html">Sleep Stories</a></li>
         <li><a href="tools.html">Tools</a></li>
         <li><a href="education.html">Learn</a></li>
         <li><a href="about.html">About</a></li>
@@ -101,7 +147,7 @@
       </div>
 
       <div class="session-list">
-        <div class="session-item fade-in">
+        <div class="session-item fade-in" data-category="beginners">
           <h3>Morning Meditation</h3>
           <div class="session-meta">10 min · Beginners</div>
           <p>Start your day with intention and clarity. A gentle guided practice to ground yourself before the day begins.</p>
@@ -114,7 +160,7 @@
           </div>
         </div>
 
-        <div class="session-item fade-in">
+        <div class="session-item fade-in" data-category="stress">
           <h3>Breathing for Anxiety</h3>
           <div class="session-meta">12 min · Stress</div>
           <p>Learn box breathing and the 4-7-8 technique to calm your nervous system fast.</p>
@@ -135,7 +181,7 @@
       </div>
 
       <div class="session-list">
-        <div class="session-item fade-in">
+        <div class="session-item fade-in" data-category="beginners">
           <h3>Your First Meditation <span class="premium-tag">Premium</span></h3>
           <div class="session-meta">5 min · Beginners</div>
           <p>Never meditated before? Start here. A gentle, no-pressure introduction.</p>
@@ -148,7 +194,7 @@
           </div>
         </div>
 
-        <div class="session-item fade-in">
+        <div class="session-item fade-in" data-category="stress">
           <h3>The Calm Reset <span class="premium-tag">Premium</span></h3>
           <div class="session-meta">5 min · Stress</div>
           <p>An emergency calm-down for overwhelming moments. Five minutes to reset.</p>
@@ -161,7 +207,7 @@
           </div>
         </div>
 
-        <div class="session-item fade-in">
+        <div class="session-item fade-in" data-category="beginners">
           <h3>Introduction to Mindfulness <span class="premium-tag">Premium</span></h3>
           <div class="session-meta">10 min · Mindfulness</div>
           <p>Your first step into mindful awareness. Learn the foundations of present-moment attention.</p>
@@ -174,7 +220,7 @@
           </div>
         </div>
 
-        <div class="session-item fade-in">
+        <div class="session-item fade-in" data-category="beginners">
           <h3>Loving-Kindness Intro <span class="premium-tag">Premium</span></h3>
           <div class="session-meta">10 min · Beginners</div>
           <p>Learn the practice of sending compassion to yourself and others.</p>
@@ -187,7 +233,7 @@
           </div>
         </div>
 
-        <div class="session-item fade-in">
+        <div class="session-item fade-in" data-category="beginners">
           <h3>7-Day Mindfulness Course <span class="premium-tag">Premium</span></h3>
           <div class="session-meta">7 sessions · ~70 min total</div>
           <p>A complete week-long programme. Day 1 free, full course with Premium.</p>
@@ -200,7 +246,7 @@
           </div>
         </div>
 
-        <div class="session-item fade-in">
+        <div class="session-item fade-in" data-category="sleep">
           <h3>Body Scan for Deep Rest <span class="premium-tag">Premium</span></h3>
           <div class="session-meta">35 min · Sleep</div>
           <p>Release tension from head to toe as you drift into a deep, restorative sleep.</p>
@@ -213,7 +259,7 @@
           </div>
         </div>
 
-        <div class="session-item fade-in">
+        <div class="session-item fade-in" data-category="sleep">
           <h3>Rainfall Sleep Journey <span class="premium-tag">Premium</span></h3>
           <div class="session-meta">45 min · Sleep</div>
           <p>Drift off to the sound of gentle rain with a soothing narrative guiding you to rest.</p>
@@ -226,7 +272,7 @@
           </div>
         </div>
 
-        <div class="session-item fade-in">
+        <div class="session-item fade-in" data-category="sleep">
           <h3>Moonlight Drift <span class="premium-tag">Premium</span></h3>
           <div class="session-meta">40 min · Sleep</div>
           <p>A soothing visualisation journey under starlit skies to ease you into sleep.</p>
@@ -239,7 +285,7 @@
           </div>
         </div>
 
-        <div class="session-item fade-in">
+        <div class="session-item fade-in" data-category="sleep">
           <h3>Yoga Nidra: Deep Rest <span class="premium-tag">Premium</span></h3>
           <div class="session-meta">45 min · Advanced</div>
           <p>The ancient practice of yogic sleep — profound rest while remaining fully conscious.</p>
@@ -252,7 +298,7 @@
           </div>
         </div>
 
-        <div class="session-item fade-in">
+        <div class="session-item fade-in" data-category="focus">
           <h3>Non-Dual Awareness <span class="premium-tag">Premium</span></h3>
           <div class="session-meta">30 min · Advanced</div>
           <p>Explore the nature of consciousness itself. A practice for experienced meditators.</p>
@@ -287,6 +333,7 @@
             <li><a href="index.html">Home</a></li>
             <li><a href="sessions.html">Guided Meditations</a></li>
             <li><a href="soundscapes.html">ASMR</a></li>
+        <li><a href="sleep-stories.html">Sleep Stories</a></li>
             <li><a href="about.html">About</a></li>
           </ul>
         </div>
