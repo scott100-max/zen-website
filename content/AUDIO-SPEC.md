@@ -57,66 +57,23 @@ All Salus audio uses these standardised silence lengths:
 ### Required Silences by Production Length
 
 **Ambient continues through ALL silences.**
+**Silences 60s+ MUST be announced.**
 
-#### 5-minute production
-| Silence | Quantity | Placement |
-|---------|----------|-----------|
-| 5s | 8-12x | Throughout, between sentences |
-| 10s | 3-4x | Section transitions |
-| 15s | 1-2x | Key moments |
+| Silence | 5 min | 10 min | 15 min | 20 min | 30 min | 45 min+ |
+|---------|-------|--------|--------|--------|--------|---------|
+| 5s | 8-12x | 15-20x | 20-30x | 25-35x | 35-50x | 50-70x |
+| 10s | 3-4x | 5-6x | 6-8x | 8-10x | 10-12x | 12-15x |
+| 15s | 2-3x | 4-5x | 5-6x | 6-7x | 7-9x | 9-11x |
+| 30s | 2x | 2x | 3x | 3-4x | 4-5x | 5-6x |
+| 45s | - | 2x | 2x | 2-3x | 3x | 3-4x |
+| 60s | - | 2x | 2x | 2x | 2-3x | 3x |
+| 75s | - | 2x | 2x | 2x | 2x | 2-3x |
+| 90s | - | - | 2x | 2x | 2x | 2-3x |
+| 120s | - | - | - | 2x | 2x | 2x |
+| **Max** | 30s | 75s | 90s | 120s | 120s | 120s |
+| **Total %** | 20-30% | 35-45% | 35-45% | 35-45% | 35-45% | 35-45% |
 
-#### 10-minute production
-| Silence | Quantity | Placement |
-|---------|----------|-----------|
-| 5s | 15-20x | Throughout |
-| 10s | 5-6x | Section transitions |
-| 15s | 3-4x | Key moments |
-| 30s | 1x | Around 60% mark |
-
-#### 15-minute production
-| Silence | Quantity | Placement |
-|---------|----------|-----------|
-| 5s | 20-30x | Throughout |
-| 10s | 6-8x | Section transitions |
-| 15s | 4-5x | Key moments |
-| 30s | 2x | At 40% and 70% |
-| 45s | 1x | Around 50% |
-| 60s | 1x | Around 75% — announce |
-
-#### 20-minute production
-| Silence | Quantity | Placement |
-|---------|----------|-----------|
-| 5s | 25-35x | Throughout |
-| 10s | 8-10x | Section transitions |
-| 15s | 5-6x | Key moments |
-| 30s | 2-3x | Distributed |
-| 45s | 1-2x | Mid-session |
-| 60s | 1x | Around 60% — announce |
-| 75s | 1x | Around 80% — announce |
-
-#### 30-minute production
-| Silence | Quantity | Placement |
-|---------|----------|-----------|
-| 5s | 35-50x | Throughout |
-| 10s | 10-12x | Section transitions |
-| 15s | 6-8x | Key moments |
-| 30s | 3-4x | Distributed |
-| 45s | 2x | At 35% and 55% |
-| 60s | 1-2x | At 45% and 70% — announce |
-| 75s | 1x | Around 80% — announce |
-| 90s | 1x | Around 85% — announce |
-
-#### 45-minute+ production (Sleep/Stories)
-| Silence | Quantity | Placement |
-|---------|----------|-----------|
-| 5s | 50-70x | Throughout |
-| 10s | 12-15x | Section transitions |
-| 15s | 8-10x | Key moments |
-| 30s | 4-5x | Distributed |
-| 45s | 2-3x | Distributed |
-| 60s | 2x | At 40% and 65% — announce |
-| 75s | 1-2x | At 75% and 85% — announce |
-| 90s | 1x | Around 90% — announce |
+*Updated Feb 2026 after Calm benchmarking (they use 2x 120s in 10-min sessions = 40% silence)*
 
 ### Silence Distribution Formula
 
@@ -267,7 +224,43 @@ ffmpeg -y -i voice.mp3 \
 
 ## Fish Audio TTS Build Settings
 
-**Current voice:** Marco (ID: `0165567b33324f518b02336ad232e31a`)
+**Current voice:** Marco - "Calm male" by ANGEL NSEKUYE
+**Voice ID:** `0165567b33324f518b02336ad232e31a`
+**API:** `https://api.fish.audio/v1/tts`
+
+### CRITICAL: TTS Non-Determinism
+
+**Fish Audio TTS is non-deterministic.** The same text can produce:
+- Different voice characteristics between segments
+- Slight timing variations
+- Occasional artifacts/glitches
+
+**Implications:**
+- Rebuilding often fixes issues (fresh TTS generation)
+- Some builds will fail quality gate - this is normal
+- Auto-rebuild loop is essential (expect 1-3 attempts)
+- Perfect first-build is luck, not skill
+
+### What Works
+
+| Approach | Result |
+|----------|--------|
+| Fresh rebuild | Usually fixes voice changes and glitches |
+| Auto-retry on TTS failure | Catches transient API errors |
+| Build-time validation | Catches missing/corrupt segments early |
+| Manifest generation | Enables timing comparison in analyzer |
+
+### What Doesn't Work
+
+| Approach | Problem |
+|----------|---------|
+| Splicing/repairing segments | Audible transitions, worse than rebuild |
+| Audio processing to fix voice changes | Can't fix what's baked into TTS |
+| Silence trimming filters | Cuts into speech, destroys audio |
+| Speed adjustment (atempo) | Amplifies existing issues |
+| ElevenLabs voice cloning | Captures resonance but not character |
+
+**Lesson:** Fresh rebuild > any repair attempt
 
 ### API Settings
 
@@ -464,39 +457,131 @@ One glitch destroys the meditation experience. Ship perfection or rebuild.
 Human review with `test-audio-player.html` is MANDATORY.
 Human ear is the final gate.
 
-### Analyzer v2 Detection Types
+### Analyzer v5 (Current - Feb 2026)
 
-| Type | Severity | What it detects |
-|------|----------|-----------------|
-| VOICE_SHIFT | HIGH | TTS voice tone/timbre changes between blocks |
-| HISSING | MEDIUM | Sustained high-frequency noise regions |
-| LONG_SILENCE | LOW | Pauses over 45 seconds (informational) |
+**Location:** `/Users/scottripley/salus-website/analyze_audio_v5.py`
 
-**Note:** Click/glitch detection removed in v2 - too many false positives at splice points.
-The cleanup filter handles splice artifacts; real issues are sustained voice changes.
+| Detection | Severity | What it detects |
+|-----------|----------|-----------------|
+| VOICE_CHANGE | CRITICAL | TTS voice tone/timbre changes (MFCC-based) |
+| UNEXPECTED_SILENCE | CRITICAL | Silences 1.8-2.8s (between speech pauses and intentional gaps) |
+| TEMPO_SPEEDUP | LOW | [EXPERIMENTAL] Speech >40% faster than baseline - BPM-based, needs tuning |
+| TEMPO_SLOWDOWN | LOW | [EXPERIMENTAL] Speech >45% slower than baseline - BPM-based, needs tuning |
+| SEGMENT_TOO_SHORT | HIGH | TTS segment <50% of expected duration |
+| SEGMENT_TOO_LONG | MEDIUM | TTS segment >180% of expected duration |
+| SIBILANCE | HIGH | Harsh 's' sounds (often false positives - human verify) |
+| HISSING | HIGH | High-frequency noise (often false positives - human verify) |
 
-### Targeted Repair
+**Key improvement:** v5 loads the build manifest (if available) to compare expected vs actual segment timings.
 
-Instead of full rebuild, use `targeted_repair.py` to fix individual blocks:
 ```bash
-python3 targeted_repair.py <block_number> <input.mp3> <output.mp3>
+# Run analyzer
+python3 analyze_audio_v5.py <audio-file.mp3>
+
+# Outputs:
+# - <filename>_REPORT_v4.txt - Detailed issue list
+# - Console summary with timestamps
 ```
 
-### Workflow
+**Pass criteria:**
+- VOICE_CHANGE = 0 (mandatory)
+- UNEXPECTED_SILENCE = 0 (mandatory)
+- TEMPO_SPEEDUP = warnings for human review (TTS sometimes rushes "thank you", closing phrases)
+- Other issues are warnings for human review
+
+**Tempo detection notes (EXPERIMENTAL):**
+- Uses librosa BPM estimation with 10-second sliding windows
+- BPM-based detection is designed for music, not speech - results are approximate
+- Thresholds set high (40%/45%) to minimize false positives
+- Marked as LOW severity - informational only, human ear is the final judge
+- Future improvement: consider speech rate analysis (phonemes/second) instead of BPM
+
+### Build Script v2 (Current - Feb 2026)
+
+**Location:** `/Users/scottripley/salus-website/build-morning-fish.py`
+
+**Improvements over v1:**
+1. **Auto-retry** - Failed TTS segments retry up to 3 times
+2. **Duration validation** - Each segment shows expected vs actual duration
+3. **Manifest generation** - Saves `_manifest.json` with all segment timings
+4. **Better logging** - Shows validation status per segment
+
+```bash
+# Run build
+python3 build-morning-fish.py
+
+# Outputs:
+# - content/audio-free/01-morning-meditation.mp3
+# - content/audio-free/01-morning-meditation_manifest.json
+```
+
+**Manifest format:**
+```json
+{
+  "generated": "2026-02-05 14:30:00",
+  "total_tts_duration": 196.5,
+  "total_expected_duration": 172.6,
+  "segments": [
+    {"index": 0, "type": "text", "text": "...", "duration": 1.7, "expected_duration": 1.2, ...},
+    {"index": 1, "type": "silence", "duration": 3, ...}
+  ]
+}
+```
+
+### Human Review Tool
+
+**Location:** `/Users/scottripley/salus-website/test-audio-player.html`
+
+Open in browser for timestamp-based review. Seek to flagged timestamps and verify by ear.
+
+### Workflow (Updated Feb 2026)
 
 ```
-1. BUILD: Generate audio with TTS + ambient mixing
-2. ANALYZE: Run analyze_audio.py on raw master (no ambient)
-3. REVIEW: Check report for HIGH/MEDIUM issues
-4. GATE CHECK:
-   - HIGH issues = 0?
-   - MEDIUM issues ≤ 5?
-   - No glitches in opening 30 seconds?
-   → YES to all = PASS → Deploy
-   → NO to any = FAIL → Rebuild
-5. REBUILD: Regenerate full session (fresh TTS run)
-6. REPEAT: Steps 2-5 until PASS or 3 attempts reached
-7. ESCALATE: After 3 failed rebuilds → STOP and escalate to human review
+1. BUILD: Run build script (e.g., build-morning-fish.py)
+   - Script validates each TTS segment (>0.5s, >1KB)
+   - Auto-retries failed segments up to 3 times
+   - Generates timing manifest for debugging
+
+2. ANALYZE: Run analyze_audio_v5.py
+   - Loads manifest for timing comparison
+   - Checks for voice changes (MFCC-based)
+   - Checks for unexpected silences
+
+3. GATE CHECK:
+   - VOICE_CHANGE = 0? (mandatory)
+   - UNEXPECTED_SILENCE = 0? (mandatory)
+   → PASS = Proceed to human review
+   → FAIL = Auto-rebuild
+
+4. AUTO-REBUILD LOOP:
+   for attempt in 1..N:
+     BUILD → ANALYZE → GATE CHECK
+     if PASS: break
+
+   Default: N=3 (3-Strike Rule)
+   Override: Can extend if user directs
+
+5. HUMAN REVIEW:
+   - Open test-audio-player.html
+   - Listen to FULL audio (no shortcuts)
+   - Check flagged timestamps
+   - Verdict: PASS or specific failure (timestamp + description)
+
+6. DEPLOY or REBUILD based on human verdict
+```
+
+### Auto-Rebuild Loop (Script Pattern)
+
+```bash
+for attempt in 1 2 3; do
+  python3 build-morning-fish.py 2>&1 | grep "Duration:"
+  VOICE=$(python3 analyze_audio_v5.py file.mp3 2>/dev/null | grep "Found.*voice change" | grep -oE "[0-9]+" | head -1)
+  echo "Attempt $attempt: voice=$VOICE"
+  if [ "$VOICE" = "0" ]; then
+    echo "*** PASS ***"
+    break
+  fi
+done
 ```
 
 ### 3-Strike Rule
@@ -509,6 +594,27 @@ Escalate to human review because repeated failures indicate:
 - Systematic problem that rebuilding won't fix
 
 Human must investigate root cause before further attempts.
+
+### 3-Strike Override
+
+**When user explicitly directs, the 3-Strike limit can be overridden.**
+
+Valid reasons to override:
+- TTS is known to be "having a bad day" (API issues)
+- Previous builds were close to passing
+- User has time and wants to keep trying
+
+Override by extending the loop limit:
+```bash
+for attempt in 1 2 3 4 5 6 7 8 9 10; do
+  # ... build and check ...
+done
+```
+
+**Do NOT override if:**
+- Same specific issue persists across all attempts (systematic)
+- Script has problematic phrases that trigger issues
+- Analyzer is producing false positives (fix analyzer first)
 
 ### Why This Matters
 
@@ -755,4 +861,25 @@ Output goes to: `content/audio/<session-name>.mp3`
 
 ---
 
-*Last updated: 5 February 2026*
+---
+
+## Claude Session Management
+
+**NO MEMORY FILES.** All project knowledge lives in this bible.
+
+Future Claude sessions should:
+1. Read this bible at session start
+2. Update this bible with learnings at session end
+3. Never create separate memory files
+
+**Key file locations:**
+| File | Path |
+|------|------|
+| Build script (v2) | `/Users/scottripley/salus-website/build-morning-fish.py` |
+| Analyzer (v5) | `/Users/scottripley/salus-website/analyze_audio_v5.py` |
+| Human review player | `/Users/scottripley/salus-website/test-audio-player.html` |
+| This bible | `/Users/scottripley/salus-website/content/AUDIO-SPEC.md` |
+
+---
+
+*Last updated: 5 February 2026 - Added analyzer v5 (with experimental tempo detection), build script v2, workflow improvements, TTS non-determinism lessons, no-memory-files rule*

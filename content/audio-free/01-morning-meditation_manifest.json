@@ -1,6 +1,6 @@
 {
-  "generated": "2026-02-05 16:36:34",
-  "total_tts_duration": 194.29745000000003,
+  "generated": "2026-02-05 16:43:46",
+  "total_tts_duration": 196.98788800000008,
   "total_expected_duration": 172.57500000000002,
   "segments": [
     {
@@ -25,850 +25,850 @@
       "type": "text",
       "start_time": 4.619563,
       "text": "This is your ten-minute morning meditation \u2014 a gentle way to start your day with clarity and intention.",
-      "duration": 5.92975,
+      "duration": 6.34775,
       "expected_duration": 6.695,
-      "variance": -0.76525,
-      "end_time": 10.549313000000001
+      "variance": -0.3472500000000007,
+      "end_time": 10.967313
     },
     {
       "index": 3,
       "type": "silence",
-      "start_time": 10.549313000000001,
+      "start_time": 10.967313,
       "duration": 4,
-      "end_time": 14.549313000000001
+      "end_time": 14.967313
     },
     {
       "index": 4,
       "type": "text",
-      "start_time": 14.549313000000001,
+      "start_time": 14.967313,
       "text": "Find a comfortable position. You can sit upright or lie down \u2014 whatever feels right for you this morning.",
-      "duration": 6.870188,
+      "duration": 6.269375,
       "expected_duration": 6.825,
-      "variance": 0.04518799999999956,
-      "end_time": 21.419501
+      "variance": -0.555625,
+      "end_time": 21.236688
     },
     {
       "index": 5,
       "type": "silence",
-      "start_time": 21.419501,
+      "start_time": 21.236688,
       "duration": 4,
-      "end_time": 25.419501
+      "end_time": 25.236688
     },
     {
       "index": 6,
       "type": "text",
-      "start_time": 25.419501,
+      "start_time": 25.236688,
       "text": "Let your hands rest naturally. Close your eyes when you're ready.",
-      "duration": 4.5975,
+      "duration": 4.493063,
       "expected_duration": 4.2250000000000005,
-      "variance": 0.3724999999999996,
-      "end_time": 30.017001
+      "variance": 0.2680629999999997,
+      "end_time": 29.729751
     },
     {
       "index": 7,
       "type": "silence",
-      "start_time": 30.017001,
+      "start_time": 29.729751,
       "duration": 5,
-      "end_time": 35.017001
+      "end_time": 34.729751
     },
     {
       "index": 8,
       "type": "text",
-      "start_time": 35.017001,
+      "start_time": 34.729751,
       "text": "Take a deep breath in through your nose.",
-      "duration": 3.108563,
+      "duration": 2.638313,
       "expected_duration": 2.6,
-      "variance": 0.5085630000000001,
-      "end_time": 38.125564
+      "variance": 0.03831300000000004,
+      "end_time": 37.368064000000004
     },
     {
       "index": 9,
       "type": "silence",
-      "start_time": 38.125564,
+      "start_time": 37.368064000000004,
       "duration": 5,
-      "end_time": 43.125564
+      "end_time": 42.368064000000004
     },
     {
       "index": 10,
       "type": "text",
-      "start_time": 43.125564,
+      "start_time": 42.368064000000004,
       "text": "And slowly out through your mouth.",
-      "duration": 2.0375,
+      "duration": 1.98525,
       "expected_duration": 2.21,
-      "variance": -0.17249999999999988,
-      "end_time": 45.163064
+      "variance": -0.22475,
+      "end_time": 44.353314000000005
     },
     {
       "index": 11,
       "type": "silence",
-      "start_time": 45.163064,
+      "start_time": 44.353314000000005,
       "duration": 5,
-      "end_time": 50.163064
+      "end_time": 49.353314000000005
     },
     {
       "index": 12,
       "type": "text",
-      "start_time": 50.163064,
+      "start_time": 49.353314000000005,
       "text": "Again. Breathe in, filling your lungs completely.",
-      "duration": 4.5975,
+      "duration": 4.728125,
       "expected_duration": 3.185,
-      "variance": 1.4125,
-      "end_time": 54.760564
+      "variance": 1.5431250000000003,
+      "end_time": 54.081439
     },
     {
       "index": 13,
       "type": "silence",
-      "start_time": 54.760564,
+      "start_time": 54.081439,
       "duration": 5,
-      "end_time": 59.760564
+      "end_time": 59.081439
     },
     {
       "index": 14,
       "type": "text",
-      "start_time": 59.760564,
+      "start_time": 59.081439,
       "text": "And release, letting go of anything you carried from sleep.",
-      "duration": 4.414688,
+      "duration": 3.996688,
       "expected_duration": 3.835,
-      "variance": 0.579688,
-      "end_time": 64.175252
+      "variance": 0.16168799999999983,
+      "end_time": 63.078127
     },
     {
       "index": 15,
       "type": "silence",
-      "start_time": 64.175252,
+      "start_time": 63.078127,
       "duration": 6,
-      "end_time": 70.175252
+      "end_time": 69.078127
     },
     {
       "index": 16,
       "type": "text",
-      "start_time": 70.175252,
+      "start_time": 69.078127,
       "text": "Begin to notice your body.",
-      "duration": 1.802438,
+      "duration": 1.906938,
       "expected_duration": 1.69,
-      "variance": 0.11243800000000004,
-      "end_time": 71.97769
+      "variance": 0.21693800000000008,
+      "end_time": 70.98506499999999
     },
     {
       "index": 17,
       "type": "silence",
-      "start_time": 71.97769,
+      "start_time": 70.98506499999999,
       "duration": 3,
-      "end_time": 74.97769
+      "end_time": 73.98506499999999
     },
     {
       "index": 18,
       "type": "text",
-      "start_time": 74.97769,
+      "start_time": 73.98506499999999,
       "text": "Feel the weight of your head. Your shoulders. Let them soften.",
-      "duration": 5.564063,
+      "duration": 4.728125,
       "expected_duration": 4.03,
-      "variance": 1.5340629999999997,
-      "end_time": 80.541753
+      "variance": 0.6981250000000001,
+      "end_time": 78.71319
     },
     {
       "index": 19,
       "type": "silence",
-      "start_time": 80.541753,
+      "start_time": 78.71319,
       "duration": 5,
-      "end_time": 85.541753
+      "end_time": 83.71319
     },
     {
       "index": 20,
       "type": "text",
-      "start_time": 85.541753,
+      "start_time": 83.71319,
       "text": "Feel the support beneath you \u2014 the chair, the floor, the bed.",
-      "duration": 5.381188,
+      "duration": 4.911,
       "expected_duration": 3.9650000000000003,
-      "variance": 1.4161879999999996,
-      "end_time": 90.922941
+      "variance": 0.9459999999999993,
+      "end_time": 88.62419
     },
     {
       "index": 21,
       "type": "silence",
-      "start_time": 90.922941,
+      "start_time": 88.62419,
       "duration": 4,
-      "end_time": 94.922941
+      "end_time": 92.62419
     },
     {
       "index": 22,
       "type": "text",
-      "start_time": 94.922941,
+      "start_time": 92.62419,
       "text": "You're held. You're safe.",
-      "duration": 3.108563,
+      "duration": 2.40325,
       "expected_duration": 1.625,
-      "variance": 1.4835630000000002,
-      "end_time": 98.031504
+      "variance": 0.7782499999999999,
+      "end_time": 95.02744
     },
     {
       "index": 23,
       "type": "silence",
-      "start_time": 98.031504,
+      "start_time": 95.02744,
       "duration": 5,
-      "end_time": 103.031504
+      "end_time": 100.02744
     },
     {
       "index": 24,
       "type": "text",
-      "start_time": 103.031504,
+      "start_time": 100.02744,
       "text": "Scan down through your arms. Your hands.",
-      "duration": 3.709375,
+      "duration": 3.57875,
       "expected_duration": 2.6,
-      "variance": 1.109375,
-      "end_time": 106.74087899999999
+      "variance": 0.9787499999999998,
+      "end_time": 103.60619
     },
     {
       "index": 25,
       "type": "silence",
-      "start_time": 106.74087899999999,
+      "start_time": 103.60619,
       "duration": 4,
-      "end_time": 110.74087899999999
+      "end_time": 107.60619
     },
     {
       "index": 26,
       "type": "text",
-      "start_time": 110.74087899999999,
+      "start_time": 107.60619,
       "text": "Notice any tension and let it dissolve with your next exhale.",
-      "duration": 4.127313,
+      "duration": 4.362438,
       "expected_duration": 3.9650000000000003,
-      "variance": 0.1623129999999997,
-      "end_time": 114.868192
+      "variance": 0.39743799999999974,
+      "end_time": 111.968628
     },
     {
       "index": 27,
       "type": "silence",
-      "start_time": 114.868192,
+      "start_time": 111.968628,
       "duration": 6,
-      "end_time": 120.868192
+      "end_time": 117.968628
     },
     {
       "index": 28,
       "type": "text",
-      "start_time": 120.868192,
+      "start_time": 117.968628,
       "text": "Move your awareness down through your torso. Your hips. Your legs. All the way to your feet.",
-      "duration": 6.2955,
+      "duration": 6.713438,
       "expected_duration": 5.98,
-      "variance": 0.3154999999999992,
-      "end_time": 127.163692
+      "variance": 0.7334379999999996,
+      "end_time": 124.68206599999999
     },
     {
       "index": 29,
       "type": "silence",
-      "start_time": 127.163692,
+      "start_time": 124.68206599999999,
       "duration": 5,
-      "end_time": 132.163692
+      "end_time": 129.682066
     },
     {
       "index": 30,
       "type": "text",
-      "start_time": 132.163692,
+      "start_time": 129.682066,
       "text": "Just noticing. No need to change anything.",
-      "duration": 3.343625,
+      "duration": 3.36975,
       "expected_duration": 2.73,
-      "variance": 0.6136249999999999,
-      "end_time": 135.507317
+      "variance": 0.6397499999999998,
+      "end_time": 133.051816
     },
     {
       "index": 31,
       "type": "silence",
-      "start_time": 135.507317,
+      "start_time": 133.051816,
       "duration": 7,
-      "end_time": 142.507317
+      "end_time": 140.051816
     },
     {
       "index": 32,
       "type": "text",
-      "start_time": 142.507317,
+      "start_time": 140.051816,
       "text": "Now bring your attention to your breath.",
-      "duration": 2.220375,
+      "duration": 2.08975,
       "expected_duration": 2.6,
-      "variance": -0.3796249999999999,
-      "end_time": 144.727692
+      "variance": -0.5102500000000001,
+      "end_time": 142.141566
     },
     {
       "index": 33,
       "type": "silence",
-      "start_time": 144.727692,
+      "start_time": 142.141566,
       "duration": 4,
-      "end_time": 148.727692
+      "end_time": 146.141566
     },
     {
       "index": 34,
       "type": "text",
-      "start_time": 148.727692,
+      "start_time": 146.141566,
       "text": "Don't try to control it \u2014 just observe.",
-      "duration": 2.50775,
+      "duration": 3.160813,
       "expected_duration": 2.535,
-      "variance": -0.027249999999999996,
-      "end_time": 151.23544199999998
+      "variance": 0.625813,
+      "end_time": 149.302379
     },
     {
       "index": 35,
       "type": "silence",
-      "start_time": 151.23544199999998,
+      "start_time": 149.302379,
       "duration": 5,
-      "end_time": 156.23544199999998
+      "end_time": 154.302379
     },
     {
       "index": 36,
       "type": "text",
-      "start_time": 156.23544199999998,
+      "start_time": 154.302379,
       "text": "Notice the cool air entering your nostrils. The gentle rise of your chest. The warm air leaving your body.",
-      "duration": 8.202438,
+      "duration": 7.41875,
       "expected_duration": 6.890000000000001,
-      "variance": 1.3124380000000002,
-      "end_time": 164.43787999999998
+      "variance": 0.5287499999999996,
+      "end_time": 161.721129
     },
     {
       "index": 37,
       "type": "silence",
-      "start_time": 164.43787999999998,
+      "start_time": 161.721129,
       "duration": 8,
-      "end_time": 172.43787999999998
+      "end_time": 169.721129
     },
     {
       "index": 38,
       "type": "text",
-      "start_time": 172.43787999999998,
+      "start_time": 169.721129,
       "text": "Each breath is a small beginning.",
-      "duration": 2.220375,
+      "duration": 2.324875,
       "expected_duration": 2.145,
-      "variance": 0.07537500000000019,
-      "end_time": 174.65825499999997
+      "variance": 0.179875,
+      "end_time": 172.04600399999998
     },
     {
       "index": 39,
       "type": "silence",
-      "start_time": 174.65825499999997,
+      "start_time": 172.04600399999998,
       "duration": 4,
-      "end_time": 178.65825499999997
+      "end_time": 176.04600399999998
     },
     {
       "index": 40,
       "type": "text",
-      "start_time": 178.65825499999997,
+      "start_time": 176.04600399999998,
       "text": "Each inhale is an invitation.",
-      "duration": 2.40325,
+      "duration": 2.586063,
       "expected_duration": 1.885,
-      "variance": 0.5182499999999999,
-      "end_time": 181.06150499999995
+      "variance": 0.7010629999999998,
+      "end_time": 178.63206699999998
     },
     {
       "index": 41,
       "type": "silence",
-      "start_time": 181.06150499999995,
+      "start_time": 178.63206699999998,
       "duration": 4,
-      "end_time": 185.06150499999995
+      "end_time": 182.63206699999998
     },
     {
       "index": 42,
       "type": "text",
-      "start_time": 185.06150499999995,
+      "start_time": 182.63206699999998,
       "text": "Each exhale is a release.",
-      "duration": 3.056313,
+      "duration": 2.690563,
       "expected_duration": 1.625,
-      "variance": 1.4313129999999998,
-      "end_time": 188.11781799999994
+      "variance": 1.065563,
+      "end_time": 185.32262999999998
     },
     {
       "index": 43,
       "type": "silence",
-      "start_time": 188.11781799999994,
+      "start_time": 185.32262999999998,
       "duration": 8,
-      "end_time": 196.11781799999994
+      "end_time": 193.32262999999998
     },
     {
       "index": 44,
       "type": "text",
-      "start_time": 196.11781799999994,
+      "start_time": 193.32262999999998,
       "text": "If your mind wanders \u2014 and it will \u2014 that's perfectly natural.",
-      "duration": 5.0155,
+      "duration": 4.127313,
       "expected_duration": 4.03,
-      "variance": 0.9855,
-      "end_time": 201.13331799999995
+      "variance": 0.09731299999999976,
+      "end_time": 197.44994299999996
     },
     {
       "index": 45,
       "type": "silence",
-      "start_time": 201.13331799999995,
+      "start_time": 197.44994299999996,
       "duration": 4,
-      "end_time": 205.13331799999995
+      "end_time": 201.44994299999996
     },
     {
       "index": 46,
       "type": "text",
-      "start_time": 205.13331799999995,
+      "start_time": 201.44994299999996,
       "text": "Simply notice where it went, and gently guide your attention back to the breath.",
-      "duration": 5.851375,
+      "duration": 5.668563,
       "expected_duration": 5.2,
-      "variance": 0.6513749999999998,
-      "end_time": 210.98469299999994
+      "variance": 0.4685629999999996,
+      "end_time": 207.11850599999997
     },
     {
       "index": 47,
       "type": "silence",
-      "start_time": 210.98469299999994,
+      "start_time": 207.11850599999997,
       "duration": 4,
-      "end_time": 214.98469299999994
+      "end_time": 211.11850599999997
     },
     {
       "index": 48,
       "type": "text",
-      "start_time": 214.98469299999994,
+      "start_time": 211.11850599999997,
       "text": "No judgment. Just returning.",
-      "duration": 3.056313,
+      "duration": 2.586063,
       "expected_duration": 1.82,
-      "variance": 1.2363129999999998,
-      "end_time": 218.04100599999992
+      "variance": 0.7660629999999997,
+      "end_time": 213.70456899999996
     },
     {
       "index": 49,
       "type": "silence",
-      "start_time": 218.04100599999992,
+      "start_time": 213.70456899999996,
       "duration": 10,
-      "end_time": 228.04100599999992
+      "end_time": 223.70456899999996
     },
     {
       "index": 50,
       "type": "text",
-      "start_time": 228.04100599999992,
+      "start_time": 223.70456899999996,
       "text": "You're doing beautifully. Stay with the breath.",
-      "duration": 3.78775,
+      "duration": 3.5265,
       "expected_duration": 3.055,
-      "variance": 0.7327499999999998,
-      "end_time": 231.8287559999999
+      "variance": 0.4714999999999998,
+      "end_time": 227.23106899999996
     },
     {
       "index": 51,
       "type": "silence",
-      "start_time": 231.8287559999999,
+      "start_time": 227.23106899999996,
       "duration": 15,
-      "end_time": 246.8287559999999
+      "end_time": 242.23106899999996
     },
     {
       "index": 52,
       "type": "text",
-      "start_time": 246.8287559999999,
+      "start_time": 242.23106899999996,
       "text": "Now, keeping your eyes closed, I'd like you to think about the day ahead.",
-      "duration": 3.57875,
+      "duration": 5.381188,
       "expected_duration": 4.745,
-      "variance": -1.1662500000000002,
-      "end_time": 250.40750599999993
+      "variance": 0.6361879999999998,
+      "end_time": 247.61225699999997
     },
     {
       "index": 53,
       "type": "silence",
-      "start_time": 250.40750599999993,
+      "start_time": 247.61225699999997,
       "duration": 4,
-      "end_time": 254.40750599999993
+      "end_time": 251.61225699999997
     },
     {
       "index": 54,
       "type": "text",
-      "start_time": 254.40750599999993,
+      "start_time": 251.61225699999997,
       "text": "Not the tasks or the schedule \u2014 just the feeling you want to carry with you.",
-      "duration": 4.5975,
+      "duration": 5.616313,
       "expected_duration": 4.94,
-      "variance": -0.34250000000000025,
-      "end_time": 259.0050059999999
+      "variance": 0.6763129999999995,
+      "end_time": 257.22857
     },
     {
       "index": 55,
       "type": "silence",
-      "start_time": 259.0050059999999,
+      "start_time": 257.22857,
       "duration": 6,
-      "end_time": 265.0050059999999
+      "end_time": 263.22857
     },
     {
       "index": 56,
       "type": "text",
-      "start_time": 265.0050059999999,
+      "start_time": 263.22857,
       "text": "Maybe it's calm.",
-      "duration": 1.28,
+      "duration": 1.384438,
       "expected_duration": 1.04,
-      "variance": 0.24,
-      "end_time": 266.2850059999999
+      "variance": 0.344438,
+      "end_time": 264.613008
     },
     {
       "index": 57,
       "type": "silence",
-      "start_time": 266.2850059999999,
+      "start_time": 264.613008,
       "duration": 3,
-      "end_time": 269.2850059999999
+      "end_time": 267.613008
     },
     {
       "index": 58,
       "type": "text",
-      "start_time": 269.2850059999999,
+      "start_time": 267.613008,
       "text": "Maybe it's focus.",
-      "duration": 1.671813,
+      "duration": 1.619563,
       "expected_duration": 1.105,
-      "variance": 0.566813,
-      "end_time": 270.9568189999999
+      "variance": 0.5145630000000001,
+      "end_time": 269.232571
     },
     {
       "index": 59,
       "type": "silence",
-      "start_time": 270.9568189999999,
+      "start_time": 269.232571,
       "duration": 3,
-      "end_time": 273.9568189999999
+      "end_time": 272.232571
     },
     {
       "index": 60,
       "type": "text",
-      "start_time": 273.9568189999999,
+      "start_time": 272.232571,
       "text": "Maybe it's kindness \u2014 toward yourself and others.",
-      "duration": 3.004063,
+      "duration": 3.996688,
       "expected_duration": 3.185,
-      "variance": -0.18093700000000013,
-      "end_time": 276.96088199999986
+      "variance": 0.8116879999999997,
+      "end_time": 276.229259
     },
     {
       "index": 61,
       "type": "silence",
-      "start_time": 276.96088199999986,
+      "start_time": 276.229259,
       "duration": 5,
-      "end_time": 281.96088199999986
+      "end_time": 281.229259
     },
     {
       "index": 62,
       "type": "text",
-      "start_time": 281.96088199999986,
+      "start_time": 281.229259,
       "text": "Choose one word. One intention. Let it settle in your mind like a stone in still water.",
-      "duration": 5.982,
+      "duration": 7.471,
       "expected_duration": 5.655,
-      "variance": 0.32699999999999996,
-      "end_time": 287.9428819999999
+      "variance": 1.8159999999999998,
+      "end_time": 288.700259
     },
     {
       "index": 63,
       "type": "silence",
-      "start_time": 287.9428819999999,
+      "start_time": 288.700259,
       "duration": 8,
-      "end_time": 295.9428819999999
+      "end_time": 296.700259
     },
     {
       "index": 64,
       "type": "text",
-      "start_time": 295.9428819999999,
+      "start_time": 296.700259,
       "text": "Hold that word gently. Don't grip it \u2014 just let it be there.",
-      "duration": 4.127313,
+      "duration": 4.414688,
       "expected_duration": 3.9000000000000004,
-      "variance": 0.22731299999999965,
-      "end_time": 300.0701949999999
+      "variance": 0.5146879999999996,
+      "end_time": 301.11494700000003
     },
     {
       "index": 65,
       "type": "silence",
-      "start_time": 300.0701949999999,
+      "start_time": 301.11494700000003,
       "duration": 5,
-      "end_time": 305.0701949999999
+      "end_time": 306.11494700000003
     },
     {
       "index": 66,
       "type": "text",
-      "start_time": 305.0701949999999,
+      "start_time": 306.11494700000003,
       "text": "This is your anchor for the day. When things feel rushed or uncertain, you can return to this word.",
-      "duration": 6.687313,
+      "duration": 6.452188,
       "expected_duration": 6.4350000000000005,
-      "variance": 0.2523129999999991,
-      "end_time": 311.7575079999999
+      "variance": 0.017187999999999093,
+      "end_time": 312.567135
     },
     {
       "index": 67,
       "type": "silence",
-      "start_time": 311.7575079999999,
+      "start_time": 312.567135,
       "duration": 4,
-      "end_time": 315.7575079999999
+      "end_time": 316.567135
     },
     {
       "index": 68,
       "type": "text",
-      "start_time": 315.7575079999999,
+      "start_time": 316.567135,
       "text": "It's always there for you.",
-      "duration": 1.906938,
+      "duration": 1.619563,
       "expected_duration": 1.69,
-      "variance": 0.21693800000000008,
-      "end_time": 317.66444599999994
+      "variance": -0.07043699999999986,
+      "end_time": 318.18669800000004
     },
     {
       "index": 69,
       "type": "silence",
-      "start_time": 317.66444599999994,
+      "start_time": 318.18669800000004,
       "duration": 8,
-      "end_time": 325.66444599999994
+      "end_time": 326.18669800000004
     },
     {
       "index": 70,
       "type": "text",
-      "start_time": 325.66444599999994,
+      "start_time": 326.18669800000004,
       "text": "Before we begin to close, take a moment to feel grateful.",
-      "duration": 4.127313,
+      "duration": 4.414688,
       "expected_duration": 3.705,
-      "variance": 0.42231299999999994,
-      "end_time": 329.79175899999996
+      "variance": 0.7096879999999999,
+      "end_time": 330.60138600000005
     },
     {
       "index": 71,
       "type": "silence",
-      "start_time": 329.79175899999996,
+      "start_time": 330.60138600000005,
       "duration": 4,
-      "end_time": 333.79175899999996
+      "end_time": 334.60138600000005
     },
     {
       "index": 72,
       "type": "text",
-      "start_time": 333.79175899999996,
+      "start_time": 334.60138600000005,
       "text": "Not for anything specific \u2014 though you can if you'd like \u2014 but simply for this moment.",
-      "duration": 4.493063,
+      "duration": 6.03425,
       "expected_duration": 5.59,
-      "variance": -1.0969369999999996,
-      "end_time": 338.28482199999996
+      "variance": 0.44425000000000026,
+      "end_time": 340.63563600000003
     },
     {
       "index": 73,
       "type": "silence",
-      "start_time": 338.28482199999996,
+      "start_time": 340.63563600000003,
       "duration": 4,
-      "end_time": 342.28482199999996
+      "end_time": 344.63563600000003
     },
     {
       "index": 74,
       "type": "text",
-      "start_time": 342.28482199999996,
+      "start_time": 344.63563600000003,
       "text": "For the fact that you chose to be here, to begin your day with stillness.",
-      "duration": 4.362438,
+      "duration": 4.414688,
       "expected_duration": 4.745,
-      "variance": -0.38256200000000007,
-      "end_time": 346.64725999999996
+      "variance": -0.33031200000000016,
+      "end_time": 349.05032400000005
     },
     {
       "index": 75,
       "type": "silence",
-      "start_time": 346.64725999999996,
+      "start_time": 349.05032400000005,
       "duration": 6,
-      "end_time": 352.64725999999996
+      "end_time": 355.05032400000005
     },
     {
       "index": 76,
       "type": "text",
-      "start_time": 352.64725999999996,
+      "start_time": 355.05032400000005,
       "text": "Gratitude has a way of softening us. It opens a small door that lets light in.",
-      "duration": 5.92975,
+      "duration": 6.0865,
       "expected_duration": 5.07,
-      "variance": 0.85975,
-      "end_time": 358.57701
+      "variance": 1.0164999999999997,
+      "end_time": 361.13682400000005
     },
     {
       "index": 77,
       "type": "silence",
-      "start_time": 358.57701,
+      "start_time": 361.13682400000005,
       "duration": 4,
-      "end_time": 362.57701
+      "end_time": 365.13682400000005
     },
     {
       "index": 78,
       "type": "text",
-      "start_time": 362.57701,
+      "start_time": 365.13682400000005,
       "text": "Even on difficult days, this moment is yours.",
       "duration": 3.892188,
       "expected_duration": 2.9250000000000003,
       "variance": 0.9671879999999997,
-      "end_time": 366.46919799999995
+      "end_time": 369.029012
     },
     {
       "index": 79,
       "type": "silence",
-      "start_time": 366.46919799999995,
+      "start_time": 369.029012,
       "duration": 8,
-      "end_time": 374.46919799999995
+      "end_time": 377.029012
     },
     {
       "index": 80,
       "type": "text",
-      "start_time": 374.46919799999995,
+      "start_time": 377.029012,
       "text": "Now, gently begin to bring your awareness back to the room.",
-      "duration": 3.57875,
+      "duration": 3.709375,
       "expected_duration": 3.835,
-      "variance": -0.2562500000000001,
-      "end_time": 378.04794799999996
+      "variance": -0.12562499999999988,
+      "end_time": 380.73838700000005
     },
     {
       "index": 81,
       "type": "silence",
-      "start_time": 378.04794799999996,
+      "start_time": 380.73838700000005,
       "duration": 4,
-      "end_time": 382.04794799999996
+      "end_time": 384.73838700000005
     },
     {
       "index": 82,
       "type": "text",
-      "start_time": 382.04794799999996,
+      "start_time": 384.73838700000005,
       "text": "Feel the surface beneath you.",
-      "duration": 1.98525,
+      "duration": 2.220375,
       "expected_duration": 1.885,
-      "variance": 0.10024999999999995,
-      "end_time": 384.03319799999997
+      "variance": 0.3353750000000002,
+      "end_time": 386.95876200000004
     },
     {
       "index": 83,
       "type": "silence",
-      "start_time": 384.03319799999997,
+      "start_time": 386.95876200000004,
       "duration": 3,
-      "end_time": 387.03319799999997
+      "end_time": 389.95876200000004
     },
     {
       "index": 84,
       "type": "text",
-      "start_time": 387.03319799999997,
+      "start_time": 389.95876200000004,
       "text": "Notice any sounds around you \u2014 the hum of the morning.",
-      "duration": 4.362438,
+      "duration": 4.414688,
       "expected_duration": 3.5100000000000002,
-      "variance": 0.8524379999999998,
-      "end_time": 391.39563599999997
+      "variance": 0.9046879999999997,
+      "end_time": 394.37345000000005
     },
     {
       "index": 85,
       "type": "silence",
-      "start_time": 391.39563599999997,
+      "start_time": 394.37345000000005,
       "duration": 5,
-      "end_time": 396.39563599999997
+      "end_time": 399.37345000000005
     },
     {
       "index": 86,
       "type": "text",
-      "start_time": 396.39563599999997,
+      "start_time": 399.37345000000005,
       "text": "Wiggle your fingers and toes.",
-      "duration": 2.220375,
+      "duration": 2.08975,
       "expected_duration": 1.885,
-      "variance": 0.3353750000000002,
-      "end_time": 398.61601099999996
+      "variance": 0.20475,
+      "end_time": 401.46320000000003
     },
     {
       "index": 87,
       "type": "silence",
-      "start_time": 398.61601099999996,
+      "start_time": 401.46320000000003,
       "duration": 4,
-      "end_time": 402.61601099999996
+      "end_time": 405.46320000000003
     },
     {
       "index": 88,
       "type": "text",
-      "start_time": 402.61601099999996,
+      "start_time": 405.46320000000003,
       "text": "Take one more deep breath in.",
-      "duration": 1.98525,
+      "duration": 2.0375,
       "expected_duration": 1.885,
-      "variance": 0.10024999999999995,
-      "end_time": 404.60126099999997
+      "variance": 0.15250000000000008,
+      "end_time": 407.50070000000005
     },
     {
       "index": 89,
       "type": "silence",
-      "start_time": 404.60126099999997,
+      "start_time": 407.50070000000005,
       "duration": 5,
-      "end_time": 409.60126099999997
+      "end_time": 412.50070000000005
     },
     {
       "index": 90,
       "type": "text",
-      "start_time": 409.60126099999997,
+      "start_time": 412.50070000000005,
       "text": "And a long, slow exhale.",
-      "duration": 3.186938,
+      "duration": 1.98525,
       "expected_duration": 1.56,
-      "variance": 1.626938,
-      "end_time": 412.78819899999996
+      "variance": 0.4252499999999999,
+      "end_time": 414.48595000000006
     },
     {
       "index": 91,
       "type": "silence",
-      "start_time": 412.78819899999996,
+      "start_time": 414.48595000000006,
       "duration": 6,
-      "end_time": 418.78819899999996
+      "end_time": 420.48595000000006
     },
     {
       "index": 92,
       "type": "text",
-      "start_time": 418.78819899999996,
+      "start_time": 420.48595000000006,
       "text": "When you're ready, open your eyes.",
-      "duration": 2.40325,
+      "duration": 1.98525,
       "expected_duration": 2.21,
-      "variance": 0.19324999999999992,
-      "end_time": 421.191449
+      "variance": -0.22475,
+      "end_time": 422.47120000000007
     },
     {
       "index": 93,
       "type": "silence",
-      "start_time": 421.191449,
+      "start_time": 422.47120000000007,
       "duration": 4,
-      "end_time": 425.191449
+      "end_time": 426.47120000000007
     },
     {
       "index": 94,
       "type": "text",
-      "start_time": 425.191449,
+      "start_time": 426.47120000000007,
       "text": "Take in the light.",
-      "duration": 1.488938,
+      "duration": 2.40325,
       "expected_duration": 1.17,
-      "variance": 0.31893800000000017,
-      "end_time": 426.680387
+      "variance": 1.23325,
+      "end_time": 428.8744500000001
     },
     {
       "index": 95,
       "type": "silence",
-      "start_time": 426.680387,
+      "start_time": 428.8744500000001,
       "duration": 5,
-      "end_time": 431.680387
+      "end_time": 433.8744500000001
     },
     {
       "index": 96,
       "type": "text",
-      "start_time": 431.680387,
+      "start_time": 433.8744500000001,
       "text": "You've given yourself a gift this morning \u2014 ten minutes of stillness that will carry through the hours ahead.",
-      "duration": 6.2955,
+      "duration": 5.616313,
       "expected_duration": 7.085,
-      "variance": -0.7895000000000003,
-      "end_time": 437.975887
+      "variance": -1.468687,
+      "end_time": 439.4907630000001
     },
     {
       "index": 97,
       "type": "silence",
-      "start_time": 437.975887,
+      "start_time": 439.4907630000001,
       "duration": 5,
-      "end_time": 442.975887
+      "end_time": 444.4907630000001
     },
     {
       "index": 98,
       "type": "text",
-      "start_time": 442.975887,
+      "start_time": 444.4907630000001,
       "text": "Thank you for practising with Salus.",
-      "duration": 2.324875,
+      "duration": 2.40325,
       "expected_duration": 2.34,
-      "variance": -0.015124999999999833,
-      "end_time": 445.300762
+      "variance": 0.06325000000000003,
+      "end_time": 446.8940130000001
     },
     {
       "index": 99,
       "type": "silence",
-      "start_time": 445.300762,
+      "start_time": 446.8940130000001,
       "duration": 3,
-      "end_time": 448.300762
+      "end_time": 449.8940130000001
     },
     {
       "index": 100,
       "type": "text",
-      "start_time": 448.300762,
+      "start_time": 449.8940130000001,
       "text": "Sleep. Relax. Restore.",
-      "duration": 3.996688,
+      "duration": 5.093875,
       "expected_duration": 1.4300000000000002,
-      "variance": 2.5666879999999996,
-      "end_time": 452.29745
+      "variance": 3.6638749999999995,
+      "end_time": 454.9878880000001
     },
     {
       "index": 101,
       "type": "silence",
-      "start_time": 452.29745,
+      "start_time": 454.9878880000001,
       "duration": 3,
-      "end_time": 455.29745
+      "end_time": 457.9878880000001
     }
   ]
 }
