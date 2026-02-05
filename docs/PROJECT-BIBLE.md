@@ -314,4 +314,19 @@ fi
 
 ---
 
-*Last updated: 5 February 2026, 08:30 GMT*
+## Deployment
+
+**Repository:** `https://github.com/scott100-max/Salus-Website.git`
+**Live site:** `https://salus-mind.com`
+**Branch:** `main`
+
+**To deploy changes:**
+```bash
+git add <files>
+git commit -m "Description"
+git push origin main
+```
+
+---
+
+*Last updated: 5 February 2026*
