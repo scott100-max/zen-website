@@ -21,16 +21,16 @@
 | 01 | morning-meditation.txt | ✓ PRODUCED | Focus | Morning routine |
 | 02 | deep-sleep.txt | ✓ PRODUCED | Sleep | Quick sleep induction |
 | 03 | breathing-for-anxiety.txt | ⏳ PENDING | Stress | Anxiety relief — DELETED for rebuild |
-| 04 | science-of-mindfulness.txt | ✓ PRODUCED | Education | Educational |
+| 04 | science-of-mindfulness.txt | ⏳ PENDING | Education | REWRITTEN for liability — audio deleted, needs regeneration |
 | 05 | body-scan-deep-rest.txt | ✓ PRODUCED | Sleep | Body scan |
 | 06 | letting-go-of-the-day.txt | ✓ PRODUCED | Sleep | Evening decompression |
 | 07 | moonlight-drift.txt | ✓ PRODUCED | Sleep | Long-form sleep |
-| 08 | sleep-stories-quiet-shore.txt | ✓ PRODUCED | Sleep Story | Narrative |
-| 09 | rainfall-sleep-journey.txt | ✓ PRODUCED | Sleep | Rain ambient |
+| 08 | sleep-stories-quiet-shore.txt | ⏳ PENDING | Sleep Story | HAD AMBIENT — audio deleted, regenerate voice-only |
+| 09 | rainfall-sleep-journey.txt | ⏳ PENDING | Sleep | HAD AMBIENT — audio deleted, regenerate voice-only |
 | 10 | counting-down-to-sleep.txt | ✓ PRODUCED | Sleep | Countdown technique |
 | 11 | lucid-dream-preparation.txt | ✓ PRODUCED | Advanced | Lucid dreaming |
 | 12 | five-minute-reset.txt | ✓ PRODUCED | Focus | Quick reset |
-| 13 | flow-state.txt | ✓ PRODUCED | Focus | Productivity |
+| 13 | flow-state.txt | ⏳ PENDING | Focus | MODIFIED for liability — audio deleted, needs regeneration |
 | 14 | morning-clarity.txt | ✓ PRODUCED | Focus | Morning clarity |
 | 15 | deep-work-prep.txt | ✓ PRODUCED | Focus | Pre-work |
 | 16 | peak-performance.txt | ✓ PRODUCED | Focus | Performance |
@@ -48,12 +48,12 @@
 | 28 | letting-go-of-thoughts.txt | ✓ PRODUCED | Mindfulness | Thought observation |
 | 29 | open-awareness.txt | ✓ PRODUCED | Mindfulness | Expansive |
 | 30 | mindful-walking.txt | ✓ PRODUCED | Mindfulness | Walking |
-| 31 | mindfulness-at-work.txt | ✓ PRODUCED | Mindfulness | Workplace |
+| 31 | mindfulness-at-work.txt | ⏳ PENDING | Mindfulness | HAD AMBIENT — audio deleted, regenerate voice-only |
 | 32 | observing-emotions.txt | ✓ PRODUCED | Mindfulness | Emotions |
 | 33 | morning-mindfulness.txt | ✓ PRODUCED | Mindfulness | Morning |
 | 34 | mindful-eating.txt | ✓ PRODUCED | Mindfulness | Eating |
-| 35 | your-first-meditation.txt | ✓ PRODUCED | Beginner | Complete beginner |
-| 36 | loving-kindness-intro.txt | ✓ PRODUCED | Compassion | Metta intro |
+| 35 | your-first-meditation.txt | ⏳ PENDING | Beginner | HAD AMBIENT — audio deleted, regenerate voice-only |
+| 36 | loving-kindness-intro.txt | ⏳ PENDING | Compassion | HAD AMBIENT — audio deleted, regenerate voice-only |
 | 37 | building-a-daily-practice.txt | ✓ PRODUCED | Beginner | Habit building |
 | 38 | seven-day-mindfulness-day1.txt | ⏳ PENDING | Course | 7-day Day 1 "The Foundation" — DELETED for rebuild (hiss @5:20, glitch @9:40) |
 | 39 | yoga-nidra.txt | ⏳ PENDING | Advanced | Yogic sleep |
@@ -68,7 +68,7 @@
 | 48 | seven-day-mindfulness-day5.txt | ✓ PRODUCED | Course | 7-day Day 5 |
 | 49 | seven-day-mindfulness-day6.txt | ✓ PRODUCED | Course | 7-day Day 6 |
 | 50 | seven-day-mindfulness-day7.txt | ✓ PRODUCED | Course | 7-day Day 7 |
-| 51 | sleep-stories-ocean-voyage.txt | ✓ PRODUCED | Sleep Story | Ocean voyage |
+| 51 | sleep-stories-ocean-voyage.txt | ⏳ PENDING | Sleep Story | HAD AMBIENT — audio deleted, regenerate voice-only |
 | — | founder-intro.txt | ⏳ PENDING | Special | Scott introduction |
 
 ---
@@ -95,8 +95,8 @@
 ## SUMMARY
 
 ```
-PRODUCED:     46 scripts with audio
-PENDING:       5 scripts awaiting production
+PRODUCED:     38 scripts with audio
+PENDING:      13 scripts awaiting production
 VARIANTS:      2 alternative versions
 UTILITY:       3 system files
 ─────────────────────────────────
@@ -107,11 +107,24 @@ TOTAL:        56 files in /content/scripts/
 
 ## SCRIPTS AWAITING AUDIO PRODUCTION
 
+### Quality/Liability Issues (regenerate)
 1. **03-breathing-for-anxiety.txt** — Anxiety relief (deleted for rebuild)
-2. **38-seven-day-mindfulness-day1.txt** — 7-day Day 1 "The Foundation" (deleted: hiss @5:20, glitch @9:40)
-3. **39-yoga-nidra.txt** — Advanced yogic sleep practice
-4. **41-vipassana-insight.txt** — Buddhist insight meditation
-5. **founder-intro.txt** — Scott's personal introduction
+2. **04-science-of-mindfulness.txt** — Educational (REWRITTEN for liability)
+3. **13-flow-state.txt** — Focus (MODIFIED for liability)
+4. **38-seven-day-mindfulness-day1.txt** — 7-day Day 1 (deleted: hiss/glitch)
+
+### Had Ambient Background (regenerate voice-only)
+5. **08-sleep-stories-quiet-shore.txt** — Sleep Story (had ocean ambient)
+6. **09-rainfall-sleep-journey.txt** — Sleep (had rain ambient)
+7. **31-mindfulness-at-work.txt** — Mindfulness (had ambient)
+8. **35-your-first-meditation.txt** — Beginner (had ambient)
+9. **36-loving-kindness-intro.txt** — Compassion (had ambient)
+10. **51-sleep-stories-ocean-voyage.txt** — Sleep Story (had ocean ambient)
+
+### Not Yet Produced
+11. **39-yoga-nidra.txt** — Advanced yogic sleep practice
+12. **41-vipassana-insight.txt** — Buddhist insight meditation
+13. **founder-intro.txt** — Scott's personal introduction
 
 ---
 

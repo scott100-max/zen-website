@@ -81,8 +81,8 @@ Last verified: 5 February 2026
 | 44 | Ambient sounds rule – subtle, fade in after intro, no looping, user directs | ✓ DONE |
 | 45 | Audio QA pipeline – tighten existing system, introduce new tools | ✗ PENDING |
 | 46 | Ensure all scripts are filed and ordered correctly | ✓ DONE |
-| 48 | Add liability checker to Bible/QA process | ✗ PENDING |
-| 49 | Review ALL existing scripts against liability checker | ✗ PENDING |
+| 48 | Add liability checker to Bible/QA process | ✓ DONE |
+| 49 | Review ALL existing scripts against liability checker | ✓ DONE |
 
 ---
 
@@ -98,20 +98,19 @@ Last verified: 5 February 2026
 ## SUMMARY
 
 ```
-DONE:       28 items
-PENDING:     5 items  ← WORK REMAINING
+DONE:       30 items
+PENDING:     3 items  ← WORK REMAINING
 DEFERRED:    1 item   (account system - separate project)
 ─────────────────────
 TOTAL:      34 items
-COMPLETION: 82%
+COMPLETION: 88%
 ```
 
 ### Outstanding Work
 
-**Audio (4 items):**
+**Audio (2 items):**
 - Apply de-esser for sibilance (#42)
 - Improve audio QA pipeline (#45)
-- Create liability checker (#48, #49)
 
 **Process (1 item):**
 - Independent verification gate (#50) — current self-validation is insufficient

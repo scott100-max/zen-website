@@ -513,6 +513,195 @@ Outputs:
 
 ---
 
+## Liability Checker (MANDATORY)
+
+**Rule: All scripts MUST pass liability review BEFORE audio production.**
+
+Salus provides relaxation and mindfulness content, not medical treatment. Scripts must never contain language that could alarm listeners, imply medical outcomes, or create liability for Salus.
+
+### Banned Language Categories
+
+| Category | Why Banned | Example of Violation |
+|----------|------------|----------------------|
+| **Brain structure claims** | Alarming even if true | "Part of your brain will shrink" |
+| **Medical diagnoses** | We're not doctors | "This will cure your anxiety" |
+| **Treatment promises** | Creates expectation | "After 21 days you'll be free of depression" |
+| **Specific health outcomes** | Unmeasurable claims | "Your cortisol levels will drop" |
+| **Alarming science** | Scares listeners | "Stress is literally killing your cells" |
+| **Comparative medicine** | Implies medical parity | "Better than medication" |
+| **Urgency/fear language** | Creates anxiety | "If you don't do this, your stress will..." |
+| **Absolute claims** | Unprovable | "This will always work" / "Guaranteed results" |
+
+### Specific Banned Phrases
+
+These exact phrases or similar constructions must NEVER appear:
+
+```
+❌ "shrink" + "brain" (in any combination)
+❌ "cure" / "treat" / "heal" (medical context)
+❌ "scientifically proven to..."
+❌ "studies show this will..."
+❌ "your [organ] will..."
+❌ "reverse the damage"
+❌ "repair your..."
+❌ "fix your..."
+❌ "clinical" / "therapeutic" / "treatment"
+❌ "prescription" / "dose" / "therapy"
+❌ "diagnosis" / "symptoms" / "condition"
+❌ "guaranteed" / "certain" / "definitely will"
+```
+
+### Approved Alternatives
+
+| Instead of... | Write... |
+|---------------|----------|
+| "This will cure anxiety" | "This may help you feel calmer" |
+| "Reduces cortisol" | "Many find this relaxing" |
+| "Proven to help depression" | "A moment of peace for difficult days" |
+| "Heals your mind" | "A gentle practice for your wellbeing" |
+| "Scientifically backed" | "Inspired by mindfulness traditions" |
+| "Part of your brain shrinks" | (Remove entirely - no alternative) |
+| "Reverses stress damage" | "Gives your mind a rest" |
+| "Clinical meditation" | "Guided relaxation" |
+
+### Approved Framing
+
+**DO use:**
+- "May help you feel..."
+- "Many people find..."
+- "A practice for..."
+- "Inspired by..."
+- "Take a moment to..."
+- "Give yourself permission to..."
+- "Some find this helpful for..."
+
+**DO NOT use:**
+- "Will make you..."
+- "Proven to..."
+- "Scientifically..."
+- "Clinically..."
+- "Treats..."
+- "Cures..."
+
+### Educational Content Rules
+
+When discussing science/research in educational tracks:
+
+1. **Never state outcomes as certain** — Use "research suggests" not "science proves"
+2. **Avoid alarming facts** — Even true facts can scare (e.g., brain shrinkage)
+3. **Focus on positive framing** — What mindfulness offers, not what stress destroys
+4. **No medical comparisons** — Never compare to medication or therapy effectiveness
+5. **Source vaguely** — "Many practitioners find" not "Oxford study showed 47%..."
+
+### Liability Review Process
+
+**Before generating ANY audio:**
+
+1. Run script through liability check (manual or automated)
+2. Flag any banned phrases or categories
+3. Rewrite flagged sections using approved alternatives
+4. Verify no medical claims, outcome promises, or alarming language
+5. Sign off on script before TTS generation
+
+### Quick Scan Patterns
+
+Use these grep patterns to scan scripts for potential issues:
+
+```bash
+# Medical/treatment language
+grep -in "cure\|treat\|heal\|therapy\|clinical\|prescription\|diagnosis\|symptom" script.txt
+
+# Brain/body claims
+grep -in "brain\|cortisol\|hormone\|cell\|neural\|nervous system" script.txt
+
+# Outcome promises
+grep -in "will make\|will help\|proven\|guaranteed\|definitely\|always\|scientific" script.txt
+
+# Alarming language
+grep -in "damage\|destroy\|kill\|shrink\|deteriorat\|harm" script.txt
+```
+
+### Liability Checker Script
+
+Run before audio production:
+
+```bash
+#!/bin/bash
+# liability-check.sh - Scan script for problematic language
+
+SCRIPT="$1"
+if [ -z "$SCRIPT" ]; then
+    echo "Usage: liability-check.sh <script.txt>"
+    exit 1
+fi
+
+echo "=== LIABILITY CHECK: $SCRIPT ==="
+echo ""
+
+ISSUES=0
+
+# Medical language
+echo "--- Medical/Treatment Terms ---"
+FOUND=$(grep -in "cure\|treat\|heal\|therap\|clinical\|prescription\|diagnosis\|symptom\|medication\|dose" "$SCRIPT" | head -20)
+if [ -n "$FOUND" ]; then
+    echo "$FOUND"
+    ISSUES=$((ISSUES + $(echo "$FOUND" | wc -l)))
+else
+    echo "None found ✓"
+fi
+
+echo ""
+echo "--- Brain/Body Claims ---"
+FOUND=$(grep -in "brain\|cortisol\|hormone\|neural\|nervous system\|amygdala\|prefrontal" "$SCRIPT" | head -20)
+if [ -n "$FOUND" ]; then
+    echo "$FOUND"
+    ISSUES=$((ISSUES + $(echo "$FOUND" | wc -l)))
+else
+    echo "None found ✓"
+fi
+
+echo ""
+echo "--- Outcome Promises ---"
+FOUND=$(grep -in "will make\|will help you\|proven\|guaranteed\|definitely\|always work\|scientific" "$SCRIPT" | head -20)
+if [ -n "$FOUND" ]; then
+    echo "$FOUND"
+    ISSUES=$((ISSUES + $(echo "$FOUND" | wc -l)))
+else
+    echo "None found ✓"
+fi
+
+echo ""
+echo "--- Alarming Language ---"
+FOUND=$(grep -in "damage\|destroy\|kill\|shrink\|deteriorat\|harm\|toxic\|poison" "$SCRIPT" | head -20)
+if [ -n "$FOUND" ]; then
+    echo "$FOUND"
+    ISSUES=$((ISSUES + $(echo "$FOUND" | wc -l)))
+else
+    echo "None found ✓"
+fi
+
+echo ""
+echo "================================"
+if [ "$ISSUES" -gt 0 ]; then
+    echo "⚠ REVIEW NEEDED: $ISSUES potential issues found"
+    echo "Review each flagged line and rewrite if necessary."
+    exit 1
+else
+    echo "✓ PASSED: No liability issues detected"
+    exit 0
+fi
+```
+
+Save as `/Users/scottripley/salus-website/content/scripts/liability-check.sh`
+
+### The Golden Rule
+
+**When in doubt, remove it.**
+
+If a sentence makes you pause and wonder "could someone take this the wrong way?" — delete it. The meditation will work without it. No scientific fact is worth a lawsuit.
+
+---
+
 ## Session Checklist
 
 Before publishing any session:
@@ -547,4 +736,4 @@ Output goes to: `content/audio/<session-name>.mp3`
 
 ---
 
-*Last updated: 3 February 2026*
+*Last updated: 5 February 2026*
