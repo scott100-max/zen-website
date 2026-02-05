@@ -397,4 +397,76 @@ sed -i '' 's|../sessions.html">Guided Meditations</a></li>|../sessions.html">Gui
 
 ---
 
+---
+
+### 5 February 2026 — UI Redesign & Navigation Overhaul
+
+**Two-Row Navigation:**
+- Main nav split into two rows for better organization
+- Row 1: Sessions, Mindfulness, ASMR, Sleep Stories, Learn, About
+- Row 2: Tools, Reading, Newsletter, Contact (smaller, gray text)
+- Applied to ALL HTML pages via Python script
+- Second row uses `gap:32px` and `font-size:0.9rem`
+
+**Latin Phrase Placement:**
+- Removed "LATIN: HEALTH" from under logo
+- Added "Salūs — Latin: health, safety, well-being" under hero sections on all pages
+- On light backgrounds: `color:var(--mid-gray);opacity:0.7`
+- On dark/hero backgrounds: `color:rgba(255,255,255,0.6)`
+
+**Atmospheric Card Design Pattern:**
+- Used on: Sessions, Tools, Education tiles
+- Full gradient backgrounds (category-specific colors)
+- Floating glowing orbs using `filter:blur(40px)` and `opacity:0.4-0.5`
+- White text on dark backgrounds
+- Glassmorphism elements: `backdrop-filter:blur(10px)`, `rgba(255,255,255,0.15)` backgrounds
+- Deep colored shadows: `box-shadow: 0 20px 60px rgba(COLOR,0.25)`
+
+**Category Color Scheme:**
+| Category | Primary Gradient | Orb Colors |
+|----------|-----------------|------------|
+| Beginners/Teal | #0d3d4a → #1a5568 → #0f4c5c | #06b6d4, #22d3ee |
+| Stress/Green | #064e3b → #065f46 → #047857 | #10b981, #34d399 |
+| Sleep/Purple | #1e1b4b → #312e81 → #3730a3 | #818cf8, #a78bfa |
+| Focus/Amber | #451a03 → #78350f → #92400e | #f59e0b, #fbbf24 |
+
+**Image Optimization:**
+- Large images (>1MB) cause browser rendering issues
+- Created optimized web versions at 600x600px
+- Example: `ella.jpg` (10MB, 4006x5008) → `ella-web.jpg` (75KB, 600x600)
+- Always add cache-buster: `?v=YYYYMMDD`
+
+**Sleep Stories Updates:**
+- Changed "new story every week" → "new material unlocked each week"
+- Removed misleading "Unlock them all" text (stories unlock progressively, not all at once)
+- Books display in 6-column grid (reduced from 10) for better visibility
+- 3D book effect with page edges: `box-shadow` for stacked pages, `::before` for spine
+
+**Education Tiles Redesign:**
+- White card backgrounds with shadow
+- Gradient header with centered icon in frosted glass circle
+- "Click to read" button with arrow icon
+- Hover: scale(1.02), increased shadow, icon scales 1.1
+
+**Tools Tiles Equal Height Fix:**
+- Grid: `align-items:stretch`
+- Links: `display:flex`
+- Inner divs: `flex:1;display:flex;flex-direction:column`
+
+**Section Background Blending:**
+- Avoid hard color lines between sections
+- End color of Section A should match start color of Section B
+- Example: Cream (#f4f1ec) → Blue-tint (#eef1f5) creates smooth transition
+
+**Files Modified:**
+- All ~70 HTML pages (navigation)
+- `sessions.html` — Atmospheric card design
+- `tools.html` — Equal height tiles, atmospheric design
+- `education.html` — Tile redesign with icons
+- `sleep-stories.html` — Text updates, larger books
+- `about.html` — Optimized Ella image
+- `index.html` — Section blending, nav alignment
+
+---
+
 *Last updated: 5 February 2026*
