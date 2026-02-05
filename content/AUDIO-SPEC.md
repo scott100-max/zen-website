@@ -4,40 +4,172 @@ Guidelines for structuring meditation and sleep audio sessions.
 
 ---
 
+## Sentence Length Rules
+
+**Shorter sentences = calmer delivery.** Long sentences rush the listener and create anxiety.
+
+### Maximum Word Counts
+
+| Sentence Type | Max Words | Example |
+|---------------|-----------|---------|
+| **Opening sentences** | 8-10 | "Welcome. Get comfortable. Close your eyes." |
+| **Standard narration** | 15-18 | "Now bring your attention to the breath moving in and out." |
+| **Instructional** | 20 | "When you notice your mind has wandered, gently bring your attention back to the breath." |
+| **Absolute maximum** | 25 | Never exceed — split into two sentences |
+
+### Breaking Long Sentences
+
+**Before (too long — 32 words):**
+> "As you settle into this moment and allow your body to relax into the surface beneath you, notice how the weight of your body is fully supported and there's nothing you need to do."
+
+**After (split — 12 + 15 words):**
+> "Settle into this moment. Allow your body to relax into the surface beneath you."
+> ...
+> "Notice how your weight is fully supported. There's nothing you need to do."
+
+### Script Writing Rules
+
+1. **One idea per sentence** — Don't chain concepts with "and"
+2. **Use periods, not commas** — Each thought gets its own sentence
+3. **Count words** — If over 20, split it
+4. **Read aloud** — If you run out of breath, it's too long
+5. **Add pauses liberally** — Use `...` between sentences for natural breathing rhythm
+
+---
+
 ## Silence Requirements by Duration
 
-**ALL sessions have existing short pauses (5s, 10s, 15s, etc.) - these remain unchanged.**
+### Standard Silence Durations
 
-The following MUST be added based on duration:
+All Salus audio uses these standardised silence lengths:
 
-### Short Sessions (Under 10 minutes)
-- **Add ONE 30-second pause** (ambient continues so listener knows it hasn't stopped)
-- No narrator announcement needed
+| Duration | Script Notation | Use |
+|----------|-----------------|-----|
+| 5s | `...` | Brief breath pause between sentences |
+| 10s | `[10 second pause]` | End of thought/section |
+| 15s | `[15 second pause]` | Transition between themes |
+| 30s | `[30 second pause]` | Reflective pause (no announcement needed) |
+| 45s | `[45 second pause]` | Extended reflection |
+| 60s | `[60 second pause]` | Deep pause — MUST announce |
+| 75s | `[75 second pause]` | Extended deep pause — MUST announce |
+| 90s | `[90 second pause]` | Maximum silence — MUST announce |
 
-### Medium Sessions (10-20 minutes)
-- **Add ONE 30-second pause**
-- **Add ONE 60-second silence** with narrator announcement
-- Narrator announces: *"I'm going to be quiet for a little while now..."*
+### Required Silences by Production Length
 
-### Long Sessions (20+ minutes)
-- **Add ONE 30-second pause**
-- **Add ONE 60-second silence** with narrator announcement (around 40-50% mark)
-- **Add ONE 90-second silence** with narrator announcement (around 70-80% mark)
+**Ambient continues through ALL silences.**
 
-**Ambient continues through ALL pauses and silences.**
+#### 5-minute production
+| Silence | Quantity | Placement |
+|---------|----------|-----------|
+| 5s | 8-12x | Throughout, between sentences |
+| 10s | 3-4x | Section transitions |
+| 15s | 1-2x | Key moments |
+
+#### 10-minute production
+| Silence | Quantity | Placement |
+|---------|----------|-----------|
+| 5s | 15-20x | Throughout |
+| 10s | 5-6x | Section transitions |
+| 15s | 3-4x | Key moments |
+| 30s | 1x | Around 60% mark |
+
+#### 15-minute production
+| Silence | Quantity | Placement |
+|---------|----------|-----------|
+| 5s | 20-30x | Throughout |
+| 10s | 6-8x | Section transitions |
+| 15s | 4-5x | Key moments |
+| 30s | 2x | At 40% and 70% |
+| 45s | 1x | Around 50% |
+| 60s | 1x | Around 75% — announce |
+
+#### 20-minute production
+| Silence | Quantity | Placement |
+|---------|----------|-----------|
+| 5s | 25-35x | Throughout |
+| 10s | 8-10x | Section transitions |
+| 15s | 5-6x | Key moments |
+| 30s | 2-3x | Distributed |
+| 45s | 1-2x | Mid-session |
+| 60s | 1x | Around 60% — announce |
+| 75s | 1x | Around 80% — announce |
+
+#### 30-minute production
+| Silence | Quantity | Placement |
+|---------|----------|-----------|
+| 5s | 35-50x | Throughout |
+| 10s | 10-12x | Section transitions |
+| 15s | 6-8x | Key moments |
+| 30s | 3-4x | Distributed |
+| 45s | 2x | At 35% and 55% |
+| 60s | 1-2x | At 45% and 70% — announce |
+| 75s | 1x | Around 80% — announce |
+| 90s | 1x | Around 85% — announce |
+
+#### 45-minute+ production (Sleep/Stories)
+| Silence | Quantity | Placement |
+|---------|----------|-----------|
+| 5s | 50-70x | Throughout |
+| 10s | 12-15x | Section transitions |
+| 15s | 8-10x | Key moments |
+| 30s | 4-5x | Distributed |
+| 45s | 2-3x | Distributed |
+| 60s | 2x | At 40% and 65% — announce |
+| 75s | 1-2x | At 75% and 85% — announce |
+| 90s | 1x | Around 90% — announce |
+
+### Silence Distribution Formula
+
+**Quick calculation for any duration:**
+
+```
+5s pauses:  ~4 per minute of content
+10s pauses: ~1 per 2 minutes
+15s pauses: ~1 per 3 minutes
+30s+ pauses: See tables above
+```
+
+**Total silence should be 15-25% of production length.**
+- 10 min production → 1.5-2.5 min total silence
+- 20 min production → 3-5 min total silence
+- 45 min production → 7-11 min total silence
 
 ---
 
 ## Silence Announcement Phrases
 
-Before a long silence (60+ seconds), narrator MUST announce it:
+**Silences of 60 seconds or longer MUST be announced.** Otherwise listeners think audio has stopped.
+
+Announcement phrases:
 
 - "I'm going to be quiet now for a little while. Just let the [rain/waves/sounds] hold you..."
 - "I'll be silent for a moment. There's nothing you need to do..."
 - "Take this time in stillness. I'll return in a moment..."
 - "Rest here now. I'll be back soon..."
+- "Let's sit together in silence for a while..."
+- "I'm going to stop talking now. Just breathe..."
 
-**IMPORTANT:** Never have extended silence without ambient sound - listener must know audio is still playing.
+**IMPORTANT:** Never have extended silence without ambient sound — listener must know audio is still playing.
+
+---
+
+## Ambient Sound Rules
+
+### CRITICAL: User Direction Required
+
+**NO ambient sound is applied automatically.**
+
+Scott will direct ambient usage per track. Do not assume ambient is needed.
+
+| Rule | Detail |
+|------|--------|
+| **Application** | Only when Scott directs |
+| **Volume** | Subtle — gentle background, not prominent |
+| **Fade in** | After intro, not from the start |
+| **During silence** | Raise slightly so listener knows audio is playing |
+| **Looping** | One continuous run preferred over obvious loops |
+
+If in doubt, produce WITHOUT ambient. It can be added later; removing it requires rebuild.
 
 ---
 

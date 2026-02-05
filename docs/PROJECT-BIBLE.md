@@ -105,4 +105,138 @@ Session images used in cards:
 
 ---
 
-*Last updated: 4 February 2026, 17:00 GMT*
+---
+
+### 5 February 2026 — Quick Wins from salus-website-fixes.txt
+
+**Copy & Content Changes:**
+
+| # | Page | Change | Status |
+|---|------|--------|--------|
+| 6 | index.html | Deleted "takes your money and forgets your name" from Welcome section | DONE |
+| 11 | tools.html | Removed "Free" from hero ("Free Tools" → "Tools"), updated meta description | DONE |
+| 18 | Site-wide | Added "LATIN: HEALTH" subtitle under nav logo on main pages | DONE |
+| 25 | index.html | Founder statement now opens with "Hello and welcome to Salus. I'm so pleased you have found us." + added "journey to inner peace" | DONE |
+| 26 | index.html | Added American testimonials: Michelle R., Austin TX and Kevin M., San Francisco CA (replaced 2 UK testimonials) | DONE |
+| 27 | soundscapes.html | Changed all "Subscribe to unlock" to "Premium" (21 instances) | DONE |
+| 39 | contact.html | Reframed intro to "We're a small family team and we actually read these. One inbox, real people, real responses." | DONE |
+
+**Files Modified:**
+- `index.html` — Founder statement, testimonials, logo
+- `tools.html` — Hero heading, meta description, logo
+- `contact.html` — Hero text, logo
+- `soundscapes.html` — Premium text (21 instances), logo
+- `about.html` — Logo
+- `sessions.html` — Logo
+- `apps.html` — Logo
+- `thank-you.html` — Logo
+- `mindfulness.html` — Logo
+- `education.html` — Logo
+- `reading.html` — Logo
+- `newsletter.html` — Logo
+- `docs/PROJECT-BIBLE.md` — Updated
+
+**Note:** Emma testimonial (#8) mentions "Calm Reset" which exists at `sessions/calm-reset.html` — no change needed.
+
+---
+
+### 5 February 2026 — UI/Visual Fixes & 21-Day Course
+
+**Issues Completed:**
+
+| # | Page | Change | Status |
+|---|------|--------|--------|
+| 10 | mindfulness.html | Fixed play button not round - added `flex-shrink:0` to prevent flexbox compression | DONE |
+| 13 | breathe.html | Fixed ring/countdown sync - replaced dual-timer system with single unified `mainTimer` | DONE |
+| 12 | tools.html | Simplified tool buttons - removed gradient circles, now simple SVG icons with accent color | DONE |
+| 5 | about.html | Profile pictures consistent - Ella & Marco now use `<img>` tags like Scott, removed gradient overlay from Marco | DONE |
+| 2 | css/style.css | Session cards look like players - added play button overlay, reduced thumbnail height to 120px | DONE |
+| — | mindfulness.html | Added 21-Day Mindfulness Course teaser card below 7-day course | DONE |
+| — | mindfulness-21-day.html | NEW PAGE: 21-day course with 3 weeks structure, Day 1 free, Days 2-21 locked | DONE |
+
+**Files Modified:**
+- `mindfulness.html` — Play button fix, 21-day teaser
+- `breathe.html` — Unified timer system
+- `tools.html` — Simplified buttons
+- `about.html` — Consistent profile pictures
+- `css/style.css` — Session card play overlays
+- `mindfulness-21-day.html` — NEW FILE
+- `validate-fixes.sh` — NEW FILE (validation script)
+- `docs/PROJECT-BIBLE.md` — Updated
+
+---
+
+## Self-Validation Process
+
+### CRITICAL: Validation Must Check FULL Request, Not Just Completed Work
+
+**Lesson learned (5 Feb 2026):** Self-validation reported "16/16 passed" while 11 items remained unresolved. The validation only checked work that was done, not work that was requested. This is a fundamental flaw.
+
+### Validation Rules
+
+1. **Source of truth:** `docs/FIXES-CHECKLIST.md` — not the validation script
+2. **No "SKIPPED" status:** Items are DONE, PENDING, or DEFERRED (with justification)
+3. **DEFERRED requires approval:** Only for items needing separate project scope
+4. **Report honestly:** State completion percentage against FULL original request
+5. **Pending items must be listed:** Every report must show outstanding work
+
+### Two-Stage Validation
+
+**Stage 1: Code Verification** (validate-fixes.sh)
+```bash
+cd /Users/scottripley/salus-website
+./validate-fixes.sh
+```
+This checks code changes were implemented correctly. It does NOT confirm all requested work is complete.
+
+**Stage 2: Checklist Verification** (manual)
+1. Open `docs/FIXES-CHECKLIST.md`
+2. Compare against original request
+3. Confirm every item has accurate status
+4. Calculate true completion percentage
+5. List all PENDING items in final report
+
+### Final Report Format
+
+Every completion report MUST include:
+
+```
+COMPLETION REPORT
+─────────────────
+Done:     X items
+Pending:  Y items  ← WORK REMAINING
+Deferred: Z items
+
+Completion: XX%
+
+Outstanding:
+- Item description (#number)
+- Item description (#number)
+```
+
+### Validation Script Usage
+
+The script verifies code changes only:
+
+```bash
+# Check something EXISTS:
+if grep -q 'expected-pattern' filename.html; then
+    check "Description" "true"
+fi
+
+# Check something was REMOVED:
+if grep -q 'old-pattern' filename.html; then
+    check "Old pattern removed" "false"
+fi
+
+# Check file EXISTS:
+if [ -f "new-file.html" ]; then
+    check "New file created" "true"
+fi
+```
+
+**Remember:** Script passes ≠ Job complete. Always verify against checklist.
+
+---
+
+*Last updated: 5 February 2026, 14:00 GMT*

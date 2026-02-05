@@ -116,7 +116,7 @@
 
   <nav class="nav" style="position:relative;">
     <div class="container">
-      <a href="index.html" class="nav-logo">SALUS</a>
+      <a href="index.html" class="nav-logo" style="display:flex;flex-direction:column;align-items:flex-start;line-height:1;"><span style="font-family:'Cormorant Garamond',serif;font-size:2rem;">SALUS</span><span style="font-size:0.6rem;letter-spacing:1.5px;opacity:0.6;margin-top:2px;">LATIN: HEALTH</span></a>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="sessions.html">Guided Meditations</a></li>
@@ -281,11 +281,11 @@
     var running = false;
     var cycles = 0;
     var phaseIndex = 0;
-    var secondsLeft = 0;
-    var countdownTimer = null;
-    var phaseTimer = null;
     var totalSeconds = 0;
-    var elapsedSeconds = 0;
+    var cycleElapsed = 0;
+    var phaseElapsed = 0;
+    var currentPhaseDuration = 0;
+    var mainTimer = null;
 
     var orb = document.getElementById('breatheOrb');
     var phaseEl = document.getElementById('breathePhase');
@@ -343,21 +343,25 @@
       void orb.offsetWidth;
     }
 
-    function updateRing() {
+    // Single unified tick function for both countdown and ring
+    function tick() {
       if (!running) return;
-      elapsedSeconds++;
-      var cyclePos = elapsedSeconds % totalSeconds;
+
+      phaseElapsed++;
+      cycleElapsed++;
+
+      // Update countdown display
+      var remaining = currentPhaseDuration - phaseElapsed;
+      timerEl.textContent = remaining > 0 ? remaining : 1;
+
+      // Update ring progress (synced with countdown)
+      var cyclePos = cycleElapsed % totalSeconds;
       var pct = cyclePos / totalSeconds;
       ringFg.style.strokeDashoffset = circumference * (1 - pct);
-    }
 
-    function tick() {
-      secondsLeft--;
-      if (secondsLeft >= 1) {
-        timerEl.textContent = secondsLeft;
-      } else {
-        clearInterval(countdownTimer);
-        countdownTimer = null;
+      // Move to next phase when countdown reaches 0
+      if (phaseElapsed >= currentPhaseDuration) {
+        nextPhase();
       }
     }
 
@@ -370,55 +374,54 @@
         cycles++;
         cyclesEl.textContent = 'Cycles: ' + cycles;
       }
-      runPhase();
+      startPhase();
     }
 
-    function runPhase() {
+    function startPhase() {
       if (!running) return;
       var phase = techniques[currentIntent].phases[phaseIndex];
-      secondsLeft = phase.d;
+      currentPhaseDuration = phase.d;
+      phaseElapsed = 0;
       phaseEl.textContent = phase.n;
-      timerEl.textContent = secondsLeft;
+      timerEl.textContent = phase.d;
       playChime(phase.n.indexOf('in') > -1 ? 528 : phase.n === 'Hold' ? 396 : 264, 0.5);
       clearClasses();
       orb.classList.add(phase.c);
-      countdownTimer = setInterval(tick, 1000);
-      phaseTimer = setTimeout(nextPhase, phase.d * 1000);
     }
 
     function stop() {
       running = false;
-      clearInterval(countdownTimer);
-      clearTimeout(phaseTimer);
+      clearInterval(mainTimer);
+      mainTimer = null;
       clearClasses();
       orb.classList.add('stopped');
       phaseEl.textContent = 'Ready';
       timerEl.textContent = '';
       toggleBtn.textContent = 'Start';
       ringFg.style.strokeDashoffset = circumference;
-      clearInterval(ringTimer);
     }
 
     function reset() {
       stop();
       cycles = 0;
       phaseIndex = 0;
-      elapsedSeconds = 0;
+      cycleElapsed = 0;
+      phaseElapsed = 0;
       cyclesEl.textContent = 'Cycles: 0';
     }
 
-    var ringTimer = null;
     toggleBtn.addEventListener('click', function() {
       if (running) {
         stop();
       } else {
         running = true;
         cycles = 0;
-        elapsedSeconds = 0;
+        cycleElapsed = 0;
+        phaseIndex = 0;
         cyclesEl.textContent = 'Cycles: 0';
         toggleBtn.textContent = 'Stop';
-        ringTimer = setInterval(updateRing, 1000);
-        runPhase();
+        startPhase();
+        mainTimer = setInterval(tick, 1000);
       }
     });
   </script>
