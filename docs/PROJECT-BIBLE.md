@@ -239,4 +239,77 @@ fi
 
 ---
 
-*Last updated: 5 February 2026, 14:00 GMT*
+---
+
+### 5 February 2026 — Supabase Authentication System
+
+**Overview:** Implemented cross-device user accounts using Supabase to replace localStorage-based premium system.
+
+**Architecture:**
+
+| File | Purpose |
+|------|---------|
+| `/js/supabase-config.js` | Supabase client initialization |
+| `/js/auth.js` | Auth module: signUp, signIn, signOut, isPremium, updateNavUI |
+| `/login.html` | Email/password login page |
+| `/signup.html` | Registration page |
+| `/dashboard.html` | Account overview, subscription status |
+| `/reset-password.html` | Password reset flow |
+| `/supabase/functions/stripe-webhook/index.ts` | Stripe payment event handler |
+| `/supabase/migrations/001_create_auth_tables.sql` | Database schema |
+
+**Supabase Credentials:**
+- **Project URL:** `https://egywowuyixfqytaucihf.supabase.co`
+- **Project ID:** `egywowuyixfqytaucihf`
+- **IMPORTANT:** Use the **Legacy** JWT anon key (starts with `eyJ...`), NOT the new `sb_publishable_` format
+
+**Database Tables:**
+- `profiles` — User data (auto-created on signup via trigger)
+- `subscriptions` — Stripe subscription data (user_id, stripe_customer_id, status, plan_type)
+
+**Premium Logic (in order):**
+1. Check Supabase `subscriptions` table for active subscription (cross-device)
+2. Fall back to localStorage `salus_premium` (legacy/single-device)
+3. Migration banner prompts localStorage-only users to create accounts
+
+**Stripe Webhook Integration:**
+- Endpoint: `https://egywowuyixfqytaucihf.supabase.co/functions/v1/stripe-webhook`
+- Events handled:
+  - `checkout.session.completed` → Create subscription
+  - `customer.subscription.updated` → Update status
+  - `customer.subscription.deleted` → Mark expired
+  - `invoice.payment_succeeded` → Renew period
+  - `invoice.payment_failed` → Mark past_due
+
+**Auth Flow:**
+1. User signs up → Supabase creates `auth.users` + `profiles` record
+2. User logs in → Redirected to dashboard (or original page via `?redirect=` param)
+3. User subscribes → Stripe checkout includes `client_reference_id={user_id}`
+4. Payment completes → Webhook creates `subscriptions` record
+5. User logs in anywhere → `SalusAuth.isPremium()` returns true
+
+**UI Changes:**
+- All ~70 HTML pages updated with:
+  - Supabase scripts in `<head>`
+  - "Log In" button in navigation (changes to "Account" when logged in)
+- `apps.html`: Non-logged-in users see "Create Account to Subscribe"
+- `thank-you.html`: Shows account creation prompt if paid without logging in
+
+**Files Modified:**
+- All HTML pages (70+) — Supabase scripts, nav auth button
+- `js/main.js` — Premium check defers to auth.js when available
+- `apps.html` — Require account before subscribing
+- `thank-you.html` — Account creation prompt for non-logged-in users
+
+**Stripe Account:**
+- Business name changed from "zenscape" to "Salus"
+- Webhook configured with signing secret in Supabase secrets
+
+**Tech Notes:**
+- Supabase CLI installed via Homebrew
+- Edge functions deployed with `--no-verify-jwt` flag for webhooks
+- Secrets set: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`
+
+---
+
+*Last updated: 5 February 2026, 08:30 GMT*
