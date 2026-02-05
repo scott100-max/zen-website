@@ -294,6 +294,8 @@ fi
   - "Log In" button in navigation (changes to "Account" when logged in)
 - `apps.html`: Non-logged-in users see "Create Account to Subscribe"
 - `thank-you.html`: Shows account creation prompt if paid without logging in
+- `signup.html`: Subtitle changed to "Start your Salus journey"
+- `login.html` & `signup.html`: Support `?redirect=` param to return user to original page after auth
 
 **Files Modified:**
 - All HTML pages (70+) — Supabase scripts, nav auth button
