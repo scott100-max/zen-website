@@ -316,6 +316,7 @@ fi
 
 ## Deployment
 
+**Hosting:** GitHub Pages (auto-deploys on push)
 **Repository:** `https://github.com/scott100-max/Salus-Website.git`
 **Live site:** `https://salus-mind.com`
 **Branch:** `main`
@@ -325,6 +326,7 @@ fi
 git add <files>
 git commit -m "Description"
 git push origin main
+# Changes go live automatically within 1-2 minutes
 ```
 
 ---
