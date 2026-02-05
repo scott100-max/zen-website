@@ -253,8 +253,14 @@
       document.addEventListener('DOMContentLoaded', async function() {
         await SalusAuth.init();
 
+        // Debug info
+        var debugInfo = 'isLoggedIn: ' + SalusAuth.isLoggedIn() +
+          ', localStorage userId: ' + localStorage.getItem('salus_user_id') +
+          ', URL: ' + window.location.search;
+
         // Check if logged in
         if (!SalusAuth.isLoggedIn()) {
+          alert('DEBUG: Not logged in. ' + debugInfo);
           window.location.href = 'login.html';
           return;
         }

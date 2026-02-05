@@ -201,11 +201,13 @@
           submitBtn.textContent = 'Log In';
           submitBtn.disabled = false;
         } else {
-          successEl.textContent = 'Success! Redirecting...';
+          // Debug: show what we stored
+          var storedId = localStorage.getItem('salus_user_id');
+          successEl.innerHTML = 'Success! User ID stored: ' + (storedId ? storedId.substring(0,8) + '...' : 'NONE') + '<br>Redirecting in 3 seconds...';
           successEl.style.display = 'block';
           setTimeout(function() {
-            window.location.href = redirect;
-          }, 500);
+            window.location.href = redirect + '?loggedin=1';
+          }, 3000);
         }
       });
     })();

@@ -7,44 +7,63 @@ var SalusAuth = (function() {
   var supabase = null;
   var currentUser = null;
   var subscription = null;
-  var initialized = false;
+  var initPromise = null;
 
   // Initialize auth module
   async function init() {
-    if (initialized) return;
-    initialized = true;
+    // If already initializing or initialized, return the existing promise
+    if (initPromise) return initPromise;
 
-    supabase = window.salusSupabase;
-    if (!supabase) {
-      console.warn('Supabase not available. Using localStorage fallback.');
-      updateNavUI();
-      return;
-    }
-
-    // Get current session
-    try {
-      var { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        currentUser = session.user;
-        await loadSubscription();
+    initPromise = (async function() {
+      supabase = window.salusSupabase;
+      if (!supabase) {
+        console.warn('Supabase not available. Using localStorage fallback.');
+        updateNavUI();
+        return;
       }
-    } catch (err) {
-      console.error('Error getting session:', err);
-    }
 
-    // Listen for auth state changes
-    supabase.auth.onAuthStateChange(async function(event, session) {
-      if (session) {
-        currentUser = session.user;
-        await loadSubscription();
-      } else {
-        currentUser = null;
-        subscription = null;
+      // Get current session
+      try {
+        var { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          currentUser = session.user;
+          await loadSubscription();
+        } else {
+          // Check localStorage backup (fallback if Supabase session lost)
+          var backupUserId = localStorage.getItem('salus_user_id');
+          var backupEmail = localStorage.getItem('salus_user_email');
+          if (backupUserId && backupEmail) {
+            currentUser = { id: backupUserId, email: backupEmail };
+          }
+        }
+      } catch (err) {
+        console.error('Error getting session:', err);
+        // Check localStorage backup on error too
+        var backupUserId = localStorage.getItem('salus_user_id');
+        var backupEmail = localStorage.getItem('salus_user_email');
+        if (backupUserId && backupEmail) {
+          currentUser = { id: backupUserId, email: backupEmail };
+        }
       }
-      updateNavUI();
-    });
 
-    updateNavUI();
+      // Listen for auth state changes (for future updates)
+      supabase.auth.onAuthStateChange(function(event, session) {
+        if (session) {
+          currentUser = session.user;
+          loadSubscription().then(function() {
+            updateNavUI();
+          });
+        } else {
+          currentUser = null;
+          subscription = null;
+          updateNavUI();
+        }
+      });
+
+      updateNavUI();
+    })();
+
+    return initPromise;
   }
 
   // Load user's subscription from database
@@ -117,7 +136,15 @@ var SalusAuth = (function() {
       }
 
       currentUser = data.user;
-      await loadSubscription();
+      // Store login state as backup
+      localStorage.setItem('salus_user_id', data.user.id);
+      localStorage.setItem('salus_user_email', data.user.email);
+      // Load subscription in background - don't block login
+      loadSubscription().then(function() {
+        updateNavUI();
+      }).catch(function(err) {
+        console.error('Failed to load subscription:', err);
+      });
       updateNavUI();
 
       return { data: data };
@@ -140,6 +167,9 @@ var SalusAuth = (function() {
 
       currentUser = null;
       subscription = null;
+      // Clear localStorage backup
+      localStorage.removeItem('salus_user_id');
+      localStorage.removeItem('salus_user_email');
       updateNavUI();
 
       return { data: true };
@@ -250,13 +280,19 @@ var SalusAuth = (function() {
     var authBtn = document.querySelector('.nav-auth-btn');
     var subscribeBtn = document.querySelector('.nav a[href="apps.html"], .nav a[href="../apps.html"]');
 
+    // Detect if we're in a subdirectory by checking existing href pattern
+    var pathPrefix = '';
+    if (authBtn && authBtn.href.includes('../')) {
+      pathPrefix = '../';
+    }
+
     if (authBtn) {
       if (currentUser) {
         authBtn.textContent = 'Account';
-        authBtn.href = 'dashboard.html';
+        authBtn.href = pathPrefix + 'dashboard.html';
       } else {
         authBtn.textContent = 'Log In';
-        authBtn.href = 'login.html';
+        authBtn.href = pathPrefix + 'login.html';
       }
     }
 
