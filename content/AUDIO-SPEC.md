@@ -863,6 +863,26 @@ Output goes to: `content/audio/<session-name>.mp3`
 
 ---
 
+## Scanner Baseline (Approved Audio Reference)
+
+**01-morning-meditation.mp3** - Approved 5 Feb 2026
+
+Scanner results for human-approved audio (benchmark for expected false positives):
+
+| Detection | Count | Notes |
+|-----------|-------|-------|
+| VOICE_CHANGE | 0 | Must be 0 to pass |
+| UNEXPECTED_SILENCE | 0 | Must be 0 to pass |
+| TEMPO_SPEEDUP | 14 | LOW severity, experimental - ignore |
+| SIBILANCE | 30 | Mostly first 40s - normal TTS 's' sounds |
+| HISSING | 12 | Scattered - acceptable levels |
+| CLICK_GLITCH | 8 | First 21s - speech transients, not artifacts |
+| SEGMENT_TOO_LONG | 2 | MEDIUM - acceptable |
+
+**Key insight:** Sibilance, hissing, and click detections are often false positives. The mandatory gates are VOICE_CHANGE=0 and UNEXPECTED_SILENCE=0. Everything else is informational for human review.
+
+---
+
 ## Claude Session Management
 
 **NO MEMORY FILES.** All project knowledge lives in this bible.

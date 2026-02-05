@@ -4,7 +4,7 @@ SALUS AUDIO QUALITY ANALYZER v5 (DROPOUT DETECTION)
 
 File: 01-morning-meditation.mp3
 Duration: 07:37.98
-Analysis: 2026-02-05 17:03
+Analysis: 2026-02-05 17:07
 
 ----------------------------------------------------------------------
 SUMMARY
@@ -12,7 +12,7 @@ SUMMARY
 Total Issues: 66
   CRITICAL: 0
   HIGH: 35
-  MEDIUM: 31
+  MEDIUM: 17
 
 By Type:
   CLICK_GLITCH: 8
@@ -147,38 +147,38 @@ ALL ISSUES (by timestamp)
  39. [HIGH    ] 00:36.54 SIBILANCE
      Harsh 's' sound at 00:36.54 (intensity=24.0x baseline)
 
- 40. [MEDIUM  ] 00:40.93 TEMPO_SPEEDUP
-     Speech speeds up at 00:40.93 (185 vs baseline 129 BPM, +43%)
+ 40. [LOW     ] 00:40.93 TEMPO_SPEEDUP
+     [EXPERIMENTAL] Speech may speed up at 00:40.93 (185 vs baseline 129 BPM)
 
- 41. [MEDIUM  ] 00:52.91 TEMPO_SPEEDUP
-     Speech speeds up at 00:52.91 (215 vs baseline 129 BPM, +67%)
+ 41. [LOW     ] 00:52.91 TEMPO_SPEEDUP
+     [EXPERIMENTAL] Speech may speed up at 00:52.91 (215 vs baseline 129 BPM)
 
- 42. [MEDIUM  ] 01:08.89 TEMPO_SPEEDUP
-     Speech speeds up at 01:08.89 (199 vs baseline 129 BPM, +54%)
+ 42. [LOW     ] 01:08.89 TEMPO_SPEEDUP
+     [EXPERIMENTAL] Speech may speed up at 01:08.89 (199 vs baseline 129 BPM)
 
  43. [MEDIUM  ] 01:16.95 HISSING
      Hissing at 01:16.95-01:17.34 (intensity=2.8x)
 
- 44. [MEDIUM  ] 01:22.87 TEMPO_SPEEDUP
-     Speech speeds up at 01:22.87 (215 vs baseline 129 BPM, +67%)
+ 44. [LOW     ] 01:22.87 TEMPO_SPEEDUP
+     [EXPERIMENTAL] Speech may speed up at 01:22.87 (215 vs baseline 129 BPM)
 
- 45. [MEDIUM  ] 01:36.85 TEMPO_SPEEDUP
-     Speech speeds up at 01:36.85 (215 vs baseline 129 BPM, +67%)
+ 45. [LOW     ] 01:36.85 TEMPO_SPEEDUP
+     [EXPERIMENTAL] Speech may speed up at 01:36.85 (215 vs baseline 129 BPM)
 
  46. [HIGH    ] 01:43.11 HISSING
      Hissing at 01:43.11-01:43.65 (intensity=8.1x)
 
- 47. [MEDIUM  ] 02:28.77 TEMPO_SPEEDUP
-     Speech speeds up at 02:28.77 (185 vs baseline 129 BPM, +43%)
+ 47. [LOW     ] 02:28.77 TEMPO_SPEEDUP
+     [EXPERIMENTAL] Speech may speed up at 02:28.77 (185 vs baseline 129 BPM)
 
  48. [HIGH    ] 02:36.87 HISSING
      Hissing at 02:36.87-02:37.54 (intensity=5.3x)
 
- 49. [MEDIUM  ] 02:46.74 TEMPO_SPEEDUP
-     Speech speeds up at 02:46.74 (199 vs baseline 129 BPM, +54%)
+ 49. [LOW     ] 02:46.74 TEMPO_SPEEDUP
+     [EXPERIMENTAL] Speech may speed up at 02:46.74 (199 vs baseline 129 BPM)
 
- 50. [MEDIUM  ] 03:02.71 TEMPO_SPEEDUP
-     Speech speeds up at 03:02.71 (185 vs baseline 129 BPM, +43%)
+ 50. [LOW     ] 03:02.71 TEMPO_SPEEDUP
+     [EXPERIMENTAL] Speech may speed up at 03:02.71 (185 vs baseline 129 BPM)
 
  51. [HIGH    ] 03:04.76 HISSING
      Hissing at 03:04.76-03:05.38 (intensity=10.5x)
@@ -186,26 +186,26 @@ ALL ISSUES (by timestamp)
  52. [HIGH    ] 03:21.40 HISSING
      Hissing at 03:21.40-03:21.78 (intensity=13.4x)
 
- 53. [MEDIUM  ] 03:28.67 TEMPO_SPEEDUP
-     Speech speeds up at 03:28.67 (258 vs baseline 129 BPM, +100%)
+ 53. [LOW     ] 03:28.67 TEMPO_SPEEDUP
+     [EXPERIMENTAL] Speech may speed up at 03:28.67 (258 vs baseline 129 BPM)
 
- 54. [MEDIUM  ] 03:58.63 TEMPO_SPEEDUP
-     Speech speeds up at 03:58.63 (258 vs baseline 129 BPM, +100%)
+ 54. [LOW     ] 03:58.63 TEMPO_SPEEDUP
+     [EXPERIMENTAL] Speech may speed up at 03:58.63 (258 vs baseline 129 BPM)
 
  55. [HIGH    ] 04:12.44 HISSING
      Hissing at 04:12.44-04:12.84 (intensity=50.0x)
 
- 56. [MEDIUM  ] 04:40.56 TEMPO_SPEEDUP
-     Speech speeds up at 04:40.56 (215 vs baseline 129 BPM, +67%)
+ 56. [LOW     ] 04:40.56 TEMPO_SPEEDUP
+     [EXPERIMENTAL] Speech may speed up at 04:40.56 (215 vs baseline 129 BPM)
 
- 57. [MEDIUM  ] 05:56.44 TEMPO_SPEEDUP
-     Speech speeds up at 05:56.44 (185 vs baseline 129 BPM, +43%)
+ 57. [LOW     ] 05:56.44 TEMPO_SPEEDUP
+     [EXPERIMENTAL] Speech may speed up at 05:56.44 (185 vs baseline 129 BPM)
 
  58. [HIGH    ] 06:08.52 HISSING
      Hissing at 06:08.52-06:09.08 (intensity=4.8x)
 
- 59. [MEDIUM  ] 06:56.35 TEMPO_SPEEDUP
-     Speech speeds up at 06:56.35 (199 vs baseline 129 BPM, +54%)
+ 59. [LOW     ] 06:56.35 TEMPO_SPEEDUP
+     [EXPERIMENTAL] Speech may speed up at 06:56.35 (199 vs baseline 129 BPM)
 
  60. [MEDIUM  ] 07:06.47 SEGMENT_TOO_LONG
      Segment at 07:06.47 is 2.4s (expected ~1.2s): "Take in the light...."
@@ -219,8 +219,8 @@ ALL ISSUES (by timestamp)
  63. [MEDIUM  ] 07:29.89 SEGMENT_TOO_LONG
      Segment at 07:29.89 is 5.1s (expected ~1.4s): "Sleep. Relax. Restore...."
 
- 64. [MEDIUM  ] 07:30.30 TEMPO_SPEEDUP
-     Speech speeds up at 07:30.30 (185 vs baseline 129 BPM, +43%)
+ 64. [LOW     ] 07:30.30 TEMPO_SPEEDUP
+     [EXPERIMENTAL] Speech may speed up at 07:30.30 (185 vs baseline 129 BPM)
 
  65. [HIGH    ] 07:30.74 HISSING
      Hissing at 07:30.74-07:31.34 (intensity=4.1x)
