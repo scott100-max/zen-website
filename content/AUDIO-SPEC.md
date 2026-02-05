@@ -297,11 +297,18 @@ Script structure:
 Applied to all TTS output before mixing:
 
 ```
-highpass=f=80        # Cut low rumble
-lowpass=f=10000      # Cut high-freq hiss (aggressive)
-afftdn=nf=-25        # Noise reduction (stronger setting)
-dynaudnorm=p=0.9:m=10  # Normalize levels
+highpass=f=80              # Cut low rumble
+equalizer=f=6000:t=q:w=2:g=-4   # De-esser: notch at 6kHz for sibilance
+highshelf=f=7000:g=-2      # De-esser: gentle shelf above 7kHz
+lowpass=f=10000            # Cut high-freq hiss (aggressive)
+afftdn=nf=-25              # Noise reduction (stronger setting)
+dynaudnorm=p=0.9:m=10      # Normalize levels
 ```
+
+**De-esser notes:** The two de-esser stages reduce harsh 's' sounds:
+- Notch at 6kHz (-4dB) targets the main sibilance frequency
+- High shelf above 7kHz (-2dB) softens harsh consonants
+- Together they prevent the "hissing 's'" artifact common in TTS
 
 ### Known Issues & Fixes
 

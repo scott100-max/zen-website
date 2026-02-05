@@ -76,10 +76,10 @@ Last verified: 5 February 2026
 | 4 | Rebuild anxiety audio | ✓ DELETED |
 | 19 | The foundation – hiss around 5.20 | ✓ DELETED |
 | 20 | Foundation has breath counting and glitch on sound – delete and rebuild | ✓ DELETED |
-| 42 | Sibilance issue – needs de-esser applied or regenerated | ✗ PENDING |
+| 42 | Sibilance issue – needs de-esser applied or regenerated | ✓ DONE |
 | 43 | AUDIO PRODUCTION RULES – establish max sentence length, standardise silence periods | ✓ DONE |
 | 44 | Ambient sounds rule – subtle, fade in after intro, no looping, user directs | ✓ DONE |
-| 45 | Audio QA pipeline – tighten existing system, introduce new tools | ✗ PENDING |
+| 45 | Audio QA pipeline – tighten existing system, introduce new tools | ✓ DONE |
 | 46 | Ensure all scripts are filed and ordered correctly | ✓ DONE |
 | 48 | Add liability checker to Bible/QA process | ✓ DONE |
 | 49 | Review ALL existing scripts against liability checker | ✓ DONE |
@@ -98,19 +98,19 @@ Last verified: 5 February 2026
 ## SUMMARY
 
 ```
-DONE:       31 items
-PENDING:     2 items  ← WORK REMAINING
+DONE:       33 items
+PENDING:     0 items
 DEFERRED:    1 item   (account system - separate project)
 ─────────────────────
 TOTAL:      34 items
-COMPLETION: 91%
+COMPLETION: 97%
 ```
 
 ### Outstanding Work
 
-**Audio (2 items):**
-- Apply de-esser for sibilance (#42)
-- Improve audio QA pipeline (#45)
+**None** — All actionable items complete.
+
+Only deferred item (#1 account system) requires separate project scope.
 
 ---
 

@@ -308,15 +308,25 @@ def generate_silence(duration, output_path):
 
 
 def cleanup_audio(input_path, output_path):
-    """Clean up TTS audio - remove hiss and artifacts."""
-    # More aggressive filtering:
+    """Clean up TTS audio - remove hiss, sibilance, and artifacts."""
+    # Audio cleanup filter chain:
     # - highpass at 80Hz (cuts low rumble)
-    # - lowpass at 10000Hz (cuts high-freq hiss more aggressively)
+    # - De-esser: notch filter at 6kHz to reduce sibilance ('s' sounds)
+    # - De-esser: shelf reduction above 7kHz for harsh consonants
+    # - lowpass at 10000Hz (cuts high-freq hiss)
     # - afftdn with stronger noise reduction (-25dB floor)
     # - dynaudnorm for consistent levels
+    filter_chain = ','.join([
+        'highpass=f=80',
+        'equalizer=f=6000:t=q:w=2:g=-4',      # De-esser: notch at 6kHz
+        'highshelf=f=7000:g=-2',               # De-esser: gentle shelf above 7kHz
+        'lowpass=f=10000',
+        'afftdn=nf=-25',
+        'dynaudnorm=p=0.9:m=10'
+    ])
     cmd = [
         'ffmpeg', '-y', '-i', input_path,
-        '-af', 'highpass=f=80,lowpass=f=10000,afftdn=nf=-25,dynaudnorm=p=0.9:m=10',
+        '-af', filter_chain,
         '-c:a', 'libmp3lame', '-q:a', '2',
         output_path
     ]
