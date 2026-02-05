@@ -194,16 +194,15 @@
 
   <script>
     const reviewData = {
-      file: "content/audio/03-breathing-for-anxiety-raw.mp3",
-      filename: "03-breathing-for-anxiety-raw.mp3",
-      session: "03-breathing-for-anxiety",
-      expected: "13:06",
-      actual: "13:04",
+      file: "content/audio-free/01-morning-meditation.mp3",
+      filename: "01-morning-meditation.mp3 (Fresh Fish Rebuild)",
+      session: "01-morning-meditation",
+      expected: "~10:00",
+      actual: "07:38",
       issues: [
-        { id: 1, time: "01:00", seconds: 60, severity: "high", type: "REPEATED_PHRASE", desc: "Repeat detected", verdict: null },
-        { id: 2, time: "01:33", seconds: 93, severity: "high", type: "HISSING", desc: "Hissing detected", verdict: null },
-        { id: 3, time: "02:55", seconds: 175, severity: "high", type: "REPEATED_PHRASE", desc: "Repeat detected", verdict: null },
-        { id: 4, time: "03:10", seconds: 190, severity: "high", type: "HISSING", desc: "Hissing detected", verdict: null }
+        { id: 1, time: "01:50", seconds: 110, severity: "high", type: "HISSING", desc: "Known issue - hissing", verdict: null },
+        { id: 2, time: "02:59", seconds: 179, severity: "high", type: "GLITCH", desc: "User-reported glitch", verdict: null },
+        { id: 3, time: "07:16", seconds: 436, severity: "high", type: "VOICE_CHANGE", desc: "Known issue - voice shift", verdict: null }
       ]
     };
 

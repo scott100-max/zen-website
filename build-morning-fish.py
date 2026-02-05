@@ -123,7 +123,7 @@ segments = [
 
 
 def generate_tts(text, output_path):
-    """Generate TTS audio via Fish Audio."""
+    """Generate TTS audio via Fish Audio with validation."""
     resp = requests.post(
         "https://api.fish.audio/v1/tts",
         headers={
@@ -135,10 +135,39 @@ def generate_tts(text, output_path):
     )
     if resp.status_code != 200:
         print(f"  ERROR: {resp.status_code} - {resp.text[:200]}")
-        return False
+        return False, 0
+
     with open(output_path, 'wb') as f:
         f.write(resp.content)
-    return True
+
+    # VALIDATE: Check file exists and has audio
+    if not os.path.exists(output_path):
+        print(f"  ERROR: TTS file not created!")
+        return False, 0
+
+    file_size = os.path.getsize(output_path)
+    if file_size < 1000:  # Less than 1KB is suspicious
+        print(f"  ERROR: TTS file too small ({file_size} bytes)")
+        return False, 0
+
+    # Get duration
+    result = subprocess.run([
+        "ffprobe", "-v", "error", "-show_entries", "format=duration",
+        "-of", "default=noprint_wrappers=1:nokey=1", output_path
+    ], capture_output=True, text=True)
+
+    try:
+        duration = float(result.stdout.strip())
+    except:
+        print(f"  ERROR: Could not get TTS duration")
+        return False, 0
+
+    # Minimum 0.5s for any speech
+    if duration < 0.5:
+        print(f"  ERROR: TTS too short ({duration:.2f}s)")
+        return False, 0
+
+    return True, duration
 
 
 def generate_silence(seconds, output_path):
@@ -155,6 +184,8 @@ def main():
 
     part_files = []
     text_count = 0
+    total_tts_duration = 0
+    failed_segments = []
 
     for i, (stype, value) in enumerate(segments):
         part_path = os.path.join(tmpdir, f"part_{i:03d}.wav")
@@ -162,10 +193,18 @@ def main():
         if stype == "text":
             text_count += 1
             mp3_path = os.path.join(tmpdir, f"tts_{i:03d}.mp3")
-            print(f"  [{text_count}] TTS: {value[:60]}...")
-            if not generate_tts(value, mp3_path):
-                print("    Failed! Skipping.")
-                continue
+            print(f"  [{text_count}] TTS: {value[:50]}...")
+            success, duration = generate_tts(value, mp3_path)
+            if not success:
+                print(f"    *** FAILED! BUILD ABORTED ***")
+                failed_segments.append((text_count, value[:40]))
+                shutil.rmtree(tmpdir)
+                print(f"\nBUILD FAILED - TTS generation failed for segment {text_count}")
+                print(f"Text: {value[:60]}...")
+                return
+            print(f"    OK ({duration:.2f}s)")
+            total_tts_duration += duration
+            # Convert to stereo WAV
             subprocess.run([
                 "ffmpeg", "-y", "-i", mp3_path,
                 "-ar", "44100", "-ac", "2", "-acodec", "pcm_s16le", part_path
@@ -175,6 +214,9 @@ def main():
             generate_silence(value, part_path)
 
         part_files.append(part_path)
+
+    print(f"\nAll {text_count} TTS segments generated successfully")
+    print(f"Total TTS duration: {total_tts_duration:.1f}s")
 
     concat_list = os.path.join(tmpdir, "concat.txt")
     with open(concat_list, 'w') as f:

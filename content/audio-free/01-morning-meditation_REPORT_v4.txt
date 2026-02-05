@@ -1,0 +1,193 @@
+======================================================================
+SALUS AUDIO QUALITY ANALYZER v5 (DROPOUT DETECTION)
+======================================================================
+
+File: 01-morning-meditation.mp3
+Duration: 07:41.75
+Analysis: 2026-02-05 16:11
+
+----------------------------------------------------------------------
+SUMMARY
+----------------------------------------------------------------------
+Total Issues: 54
+  CRITICAL: 6
+  HIGH: 37
+  MEDIUM: 11
+
+By Type:
+  AUDIO_DROPOUT: 6
+  CLICK_GLITCH: 7
+  HISSING: 11
+  SIBILANCE: 30
+
+----------------------------------------------------------------------
+VERDICT
+----------------------------------------------------------------------
+*** CRITICAL FAIL ***
+
+----------------------------------------------------------------------
+ALL ISSUES (by timestamp)
+----------------------------------------------------------------------
+
+  1. [HIGH    ] 00:00.60 SIBILANCE
+     Harsh 's' sound at 00:00.60 (intensity=48.9x baseline)
+
+  2. [HIGH    ] 00:01.13 SIBILANCE
+     Harsh 's' sound at 00:01.13 (intensity=36.3x baseline)
+
+  3. [HIGH    ] 00:01.16 HISSING
+     Hissing at 00:01.16-00:01.55 (intensity=5.5x)
+
+  4. [MEDIUM  ] 00:04.64 SIBILANCE
+     Harsh 's' sound at 00:04.64 (intensity=3.5x baseline)
+
+  5. [MEDIUM  ] 00:05.00 CLICK_GLITCH
+     Click/glitch detected at 00:05.00 (spike=7.0x local)
+
+  6. [HIGH    ] 00:05.08 SIBILANCE
+     Harsh 's' sound at 00:05.08 (intensity=12.3x baseline)
+
+  7. [HIGH    ] 00:05.43 SIBILANCE
+     Harsh 's' sound at 00:05.43 (intensity=8.0x baseline)
+
+  8. [HIGH    ] 00:06.40 SIBILANCE
+     Harsh 's' sound at 00:06.40 (intensity=13.0x baseline)
+
+  9. [HIGH    ] 00:06.59 SIBILANCE
+     Harsh 's' sound at 00:06.59 (intensity=5.5x baseline)
+
+ 10. [MEDIUM  ] 00:07.00 CLICK_GLITCH
+     Click/glitch detected at 00:07.00 (spike=4.6x local)
+
+ 11. [MEDIUM  ] 00:07.05 SIBILANCE
+     Harsh 's' sound at 00:07.05 (intensity=2.6x baseline)
+
+ 12. [HIGH    ] 00:08.17 SIBILANCE
+     Harsh 's' sound at 00:08.17 (intensity=49.3x baseline)
+
+ 13. [MEDIUM  ] 00:09.00 CLICK_GLITCH
+     Click/glitch detected at 00:09.00 (spike=4.4x local)
+
+ 14. [HIGH    ] 00:09.47 SIBILANCE
+     Harsh 's' sound at 00:09.47 (intensity=9.4x baseline)
+
+ 15. [HIGH    ] 00:09.84 SIBILANCE
+     Harsh 's' sound at 00:09.84 (intensity=9.1x baseline)
+
+ 16. [HIGH    ] 00:10.05 SIBILANCE
+     Harsh 's' sound at 00:10.05 (intensity=5.0x baseline)
+
+ 17. [HIGH    ] 00:10.58 SIBILANCE
+     Harsh 's' sound at 00:10.58 (intensity=6.0x baseline)
+
+ 18. [HIGH    ] 00:14.58 SIBILANCE
+     Harsh 's' sound at 00:14.58 (intensity=4.9x baseline)
+
+ 19. [HIGH    ] 00:14.88 SIBILANCE
+     Harsh 's' sound at 00:14.88 (intensity=4.0x baseline)
+
+ 20. [HIGH    ] 00:15.81 SIBILANCE
+     Harsh 's' sound at 00:15.81 (intensity=31.6x baseline)
+
+ 21. [HIGH    ] 00:15.97 SIBILANCE
+     Harsh 's' sound at 00:15.97 (intensity=5.7x baseline)
+
+ 22. [MEDIUM  ] 00:16.46 SIBILANCE
+     Harsh 's' sound at 00:16.46 (intensity=2.7x baseline)
+
+ 23. [MEDIUM  ] 00:17.00 CLICK_GLITCH
+     Click/glitch detected at 00:17.00 (spike=7.7x local)
+
+ 24. [HIGH    ] 00:17.22 SIBILANCE
+     Harsh 's' sound at 00:17.22 (intensity=38.8x baseline)
+
+ 25. [HIGH    ] 00:18.00 CLICK_GLITCH
+     Click/glitch detected at 00:18.00 (spike=15.3x local)
+
+ 26. [MEDIUM  ] 00:19.00 CLICK_GLITCH
+     Click/glitch detected at 00:19.00 (spike=5.6x local)
+
+ 27. [HIGH    ] 00:19.85 SIBILANCE
+     Harsh 's' sound at 00:19.85 (intensity=21.1x baseline)
+
+ 28. [MEDIUM  ] 00:20.00 CLICK_GLITCH
+     Click/glitch detected at 00:20.00 (spike=5.5x local)
+
+ 29. [HIGH    ] 00:20.57 SIBILANCE
+     Harsh 's' sound at 00:20.57 (intensity=39.5x baseline)
+
+ 30. [HIGH    ] 00:21.31 SIBILANCE
+     Harsh 's' sound at 00:21.31 (intensity=4.6x baseline)
+
+ 31. [HIGH    ] 00:25.26 SIBILANCE
+     Harsh 's' sound at 00:25.26 (intensity=6.3x baseline)
+
+ 32. [HIGH    ] 00:25.72 SIBILANCE
+     Harsh 's' sound at 00:25.72 (intensity=4.1x baseline)
+
+ 33. [HIGH    ] 00:26.09 SIBILANCE
+     Harsh 's' sound at 00:26.09 (intensity=15.7x baseline)
+
+ 34. [HIGH    ] 00:26.35 SIBILANCE
+     Harsh 's' sound at 00:26.35 (intensity=56.9x baseline)
+
+ 35. [MEDIUM  ] 00:28.46 SIBILANCE
+     Harsh 's' sound at 00:28.46 (intensity=3.5x baseline)
+
+ 36. [HIGH    ] 00:28.79 SIBILANCE
+     Harsh 's' sound at 00:28.79 (intensity=10.4x baseline)
+
+ 37. [HIGH    ] 00:29.16 SIBILANCE
+     Harsh 's' sound at 00:29.16 (intensity=21.9x baseline)
+
+ 38. [HIGH    ] 00:35.03 SIBILANCE
+     Harsh 's' sound at 00:35.03 (intensity=6.9x baseline)
+
+ 39. [CRITICAL] 01:28.32 AUDIO_DROPOUT
+     Audio dropout at 01:28.32 - 360ms of silence mid-speech
+
+ 40. [MEDIUM  ] 02:02.43 HISSING
+     Hissing at 02:02.43-02:02.97 (intensity=2.8x)
+
+ 41. [HIGH    ] 02:03.78 HISSING
+     Hissing at 02:03.78-02:04.24 (intensity=7.2x)
+
+ 42. [HIGH    ] 02:05.13 HISSING
+     Hissing at 02:05.13-02:05.68 (intensity=5.0x)
+
+ 43. [CRITICAL] 03:01.20 AUDIO_DROPOUT
+     Audio dropout at 03:01.20 - 104ms of silence mid-speech
+
+ 44. [HIGH    ] 03:08.45 HISSING
+     Hissing at 03:08.45-03:09.05 (intensity=9.9x)
+
+ 45. [HIGH    ] 03:26.28 HISSING
+     Hissing at 03:26.28-03:26.65 (intensity=15.9x)
+
+ 46. [HIGH    ] 04:33.64 HISSING
+     Hissing at 04:33.64-04:34.25 (intensity=6.6x)
+
+ 47. [CRITICAL] 05:44.03 AUDIO_DROPOUT
+     Audio dropout at 05:44.03 - 104ms of silence mid-speech
+
+ 48. [HIGH    ] 06:12.63 HISSING
+     Hissing at 06:12.63-06:13.05 (intensity=8.8x)
+
+ 49. [HIGH    ] 06:14.42 HISSING
+     Hissing at 06:14.42-06:14.81 (intensity=4.5x)
+
+ 50. [HIGH    ] 06:46.02 HISSING
+     Hissing at 06:46.02-06:46.53 (intensity=3.6x)
+
+ 51. [CRITICAL] 06:58.69 AUDIO_DROPOUT
+     Audio dropout at 06:58.69 - 255ms of silence mid-speech
+
+ 52. [HIGH    ] 07:09.05 HISSING
+     Hissing at 07:09.05-07:09.49 (intensity=5.2x)
+
+ 53. [CRITICAL] 07:36.39 AUDIO_DROPOUT
+     Audio dropout at 07:36.39 - 395ms of silence mid-speech
+
+ 54. [CRITICAL] 07:37.57 AUDIO_DROPOUT
+     Audio dropout at 07:37.57 - 279ms of silence mid-speech
+
