@@ -68,7 +68,8 @@ var SalusAuth = (function() {
 
   // Load user's subscription from database
   async function loadSubscription() {
-    if (!supabase || !currentUser) {
+    // Skip if no supabase, no user, or using localStorage fallback (no real session)
+    if (!supabase || !currentUser || !currentUser.aud) {
       subscription = null;
       return;
     }
