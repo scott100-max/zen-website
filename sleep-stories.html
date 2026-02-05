@@ -22,28 +22,15 @@
       position: relative;
       cursor: pointer;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 8px 10px;
       overflow: hidden;
       transform-style: preserve-3d;
-      min-height: 160px;
-      box-shadow:
-        8px 8px 16px rgba(0,0,0,0.25),
-        3px 0 0 #e8e4dc,
-        6px 0 0 #f0ece4,
-        9px 0 0 #f5f2eb,
-        12px 0 0 #faf8f5;
+      min-height: 180px;
+      box-shadow: 8px 8px 16px rgba(0,0,0,0.25), 3px 0 0 #e8e4dc, 6px 0 0 #f0ece4, 9px 0 0 #f5f2eb, 12px 0 0 #faf8f5;
     }
     .story-book::before {
       content: '';
       position: absolute;
-      right: -12px;
-      top: 3px;
-      bottom: 3px;
-      width: 12px;
+      right: -12px; top: 3px; bottom: 3px; width: 12px;
       background: linear-gradient(to right, #d0ccc4, #e8e4dc, #f5f2eb);
       border-radius: 0 3px 3px 0;
       box-shadow: inset -2px 0 4px rgba(0,0,0,0.15);
@@ -53,121 +40,106 @@
       position: absolute;
       inset: 0;
       border-radius: 3px 6px 6px 3px;
-      background: linear-gradient(90deg, rgba(0,0,0,0.15) 0%, transparent 20%, transparent 80%, rgba(255,255,255,0.1) 100%);
+      background: linear-gradient(90deg, rgba(0,0,0,0.12) 0%, transparent 15%, transparent 85%, rgba(255,255,255,0.08) 100%);
       pointer-events: none;
-      z-index: 10;
+      z-index: 20;
     }
     .story-book:hover {
       transform: translateY(-6px) rotateY(-5deg);
-      box-shadow:
-        10px 12px 20px rgba(0,0,0,0.25),
-        2px 0 0 #e8e4dc,
-        4px 0 0 #f0ece4,
-        6px 0 0 #f5f2eb;
+      box-shadow: 10px 12px 20px rgba(0,0,0,0.25), 2px 0 0 #e8e4dc, 4px 0 0 #f0ece4, 6px 0 0 #f5f2eb;
     }
-    .story-book.locked {
-      opacity: 0.75;
-      cursor: default;
-    }
-    .story-book.locked:hover {
-      transform: none;
-      box-shadow:
-        6px 6px 12px rgba(0,0,0,0.2),
-        2px 0 0 #e8e4dc,
-        4px 0 0 #f0ece4,
-        6px 0 0 #f5f2eb;
-    }
-    .book-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: rgba(255,255,255,0.95);
-      text-align: center;
-      line-height: 1.2;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.4);
-      z-index: 2;
-      padding: 0 2px;
-    }
-    .book-icon {
-      font-size: 1.8rem;
-      z-index: 2;
-      opacity: 0.9;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-    }
-    .book-week {
-      font-size: 0.6rem;
-      font-weight: 600;
-      color: rgba(255,255,255,0.7);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      z-index: 2;
-    }
-    .book-decor {
+    .story-book.locked { opacity: 0.7; cursor: default; }
+    .story-book.locked:hover { transform: none; box-shadow: 6px 6px 12px rgba(0,0,0,0.2), 2px 0 0 #e8e4dc, 4px 0 0 #f0ece4, 6px 0 0 #f5f2eb; }
+
+    /* Book cover scene */
+    .book-scene {
       position: absolute;
       inset: 0;
       overflow: hidden;
-      z-index: 1;
     }
-    .book-decor .star {
+    .book-sky {
       position: absolute;
-      width: 3px;
-      height: 3px;
-      background: rgba(255,255,255,0.6);
+      inset: 0;
+    }
+    .book-ground {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 35%;
+    }
+    .book-element {
+      position: absolute;
+    }
+    /* Stars */
+    .star { background: #fff; border-radius: 50%; }
+    .star-1 { width: 2px; height: 2px; top: 12%; left: 20%; opacity: 0.9; }
+    .star-2 { width: 1px; height: 1px; top: 8%; left: 70%; opacity: 0.7; }
+    .star-3 { width: 2px; height: 2px; top: 18%; left: 45%; opacity: 0.8; }
+    .star-4 { width: 1px; height: 1px; top: 25%; left: 80%; opacity: 0.6; }
+    .star-5 { width: 2px; height: 2px; top: 15%; left: 30%; opacity: 0.7; }
+    .star-6 { width: 1px; height: 1px; top: 22%; left: 60%; opacity: 0.8; }
+    /* Moon */
+    .moon {
+      width: 22px; height: 22px;
       border-radius: 50%;
+      background: linear-gradient(135deg, #fef9c3 0%, #fde68a 100%);
+      box-shadow: 0 0 15px rgba(254,240,138,0.5), inset -3px -2px 0 rgba(253,224,71,0.4);
+      top: 10%; right: 15%;
     }
-    .book-decor .moon {
+    /* Trees */
+    .tree-group { bottom: 0; width: 100%; height: 45%; }
+    .tree { position: absolute; bottom: 0; }
+    .tree svg { width: 100%; height: 100%; }
+    /* Mountains */
+    .mountains { bottom: 0; width: 100%; height: 50%; }
+    /* Waves */
+    .waves { bottom: 0; width: 100%; height: 30%; }
+    /* Hills */
+    .hills { bottom: 0; width: 100%; height: 35%; }
+
+    /* Title styling */
+    .book-title-wrap {
       position: absolute;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: rgba(255,255,200,0.3);
-      box-shadow: inset -4px -2px 0 rgba(255,255,200,0.5);
+      bottom: 0; left: 0; right: 0;
+      padding: 20px 8px 12px;
+      background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
+      z-index: 10;
     }
-    .book-decor .wave {
-      position: absolute;
-      bottom: 20%;
-      left: -10%;
-      right: -10%;
-      height: 30px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 50% 50% 0 0;
+    .book-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #fff;
+      text-align: center;
+      line-height: 1.25;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
     }
-    .book-decor .tree {
-      position: absolute;
-      bottom: 10px;
-      width: 0;
-      height: 0;
-      border-left: 8px solid transparent;
-      border-right: 8px solid transparent;
-      border-bottom: 20px solid rgba(255,255,255,0.15);
-    }
-    .book-decor .hill {
-      position: absolute;
-      bottom: 0;
-      width: 120%;
-      height: 30px;
-      background: rgba(0,0,0,0.2);
-      border-radius: 50% 50% 0 0;
-      left: -10%;
+    .book-author {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.5rem;
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      margin-top: 2px;
+      letter-spacing: 0.5px;
     }
     .story-book .lock-icon {
       position: absolute;
-      bottom: 6px;
-      right: 8px;
-      opacity: 0.5;
-      z-index: 5;
+      top: 8px; right: 8px;
+      background: rgba(0,0,0,0.4);
+      border-radius: 4px;
+      padding: 4px;
+      z-index: 15;
     }
+
     @media (max-width: 900px) {
       .stories-grid { grid-template-columns: repeat(5, 1fr); gap: 16px; }
-      .story-book { min-height: 140px; }
-      .book-title { font-size: 0.6rem; }
-      .book-icon { font-size: 1.5rem; }
+      .story-book { min-height: 150px; }
+      .book-title { font-size: 0.65rem; }
     }
     @media (max-width: 600px) {
       .stories-grid { grid-template-columns: repeat(4, 1fr); gap: 12px; }
-      .story-book { min-height: 120px; padding: 8px 4px; }
-      .book-title { font-size: 0.55rem; }
-      .book-icon { font-size: 1.3rem; }
+      .story-book { min-height: 130px; }
+      .book-title { font-size: 0.6rem; }
+      .book-title-wrap { padding: 15px 6px 10px; }
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -241,76 +213,168 @@
         <p>52 stories. New material unlocked each week with Premium.</p>
       </div>
       <div class="stories-grid fade-in">
-        <!-- Week 1-4 available -->
-        <div class="story-book available" style="background:linear-gradient(180deg, #0a1628 0%, #1a3a5c 100%);">
-          <span class="book-week">Week 1</span>
-          <span class="book-icon">🌙</span>
-          <span class="book-title">The Quiet Shore</span>
+        <!-- Week 1: The Quiet Shore - Beach/ocean night scene -->
+        <div class="story-book available">
+          <div class="book-scene">
+            <div class="book-sky" style="background:linear-gradient(180deg, #0a1628 0%, #1a3a5c 40%, #2a5a7c 100%);"></div>
+            <div class="book-element moon"></div>
+            <div class="book-element star star-1"></div>
+            <div class="book-element star star-2"></div>
+            <div class="book-element star star-3"></div>
+            <svg class="book-element" style="bottom:0;left:0;width:100%;height:40%;" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,20 Q25,10 50,20 T100,20 L100,40 L0,40 Z" fill="rgba(255,255,255,0.15)"/><path d="M0,25 Q25,15 50,25 T100,25 L100,40 L0,40 Z" fill="rgba(255,255,255,0.1)"/><path d="M0,30 Q25,22 50,30 T100,30 L100,40 L0,40 Z" fill="#1a3a5c"/></svg>
+          </div>
+          <div class="book-title-wrap"><div class="book-title">The Quiet Shore</div><div class="book-author">Marco</div></div>
         </div>
-        <div class="story-book available" style="background:linear-gradient(180deg, #1a2f1a 0%, #2d4a2d 100%);">
-          <span class="book-week">Week 2</span>
-          <span class="book-icon">🌲</span>
-          <span class="book-title">The Forest Path</span>
+        <!-- Week 2: The Forest Path - Forest silhouette -->
+        <div class="story-book available">
+          <div class="book-scene">
+            <div class="book-sky" style="background:linear-gradient(180deg, #0d1f0d 0%, #1a3a1a 50%, #2d4a2d 100%);"></div>
+            <div class="book-element star star-1"></div>
+            <div class="book-element star star-4"></div>
+            <svg class="book-element" style="bottom:0;left:0;width:100%;height:55%;" viewBox="0 0 100 55" preserveAspectRatio="none"><polygon points="10,55 15,20 20,55" fill="#0d1f0d"/><polygon points="25,55 32,10 39,55" fill="#1a2a1a"/><polygon points="45,55 50,25 55,55" fill="#0d1f0d"/><polygon points="60,55 68,5 76,55" fill="#1a2a1a"/><polygon points="80,55 85,22 90,55" fill="#0d1f0d"/><rect x="0" y="48" width="100" height="7" fill="#0d1f0d"/></svg>
+          </div>
+          <div class="book-title-wrap"><div class="book-title">The Forest Path</div><div class="book-author">Marco</div></div>
         </div>
-        <div class="story-book available" style="background:linear-gradient(180deg, #2a3a4a 0%, #4a5a6a 100%);">
-          <span class="book-week">Week 3</span>
-          <span class="book-icon">🌧️</span>
-          <span class="book-title">Rainfall Journey</span>
+        <!-- Week 3: Rainfall Journey - Rainy clouds -->
+        <div class="story-book available">
+          <div class="book-scene">
+            <div class="book-sky" style="background:linear-gradient(180deg, #2a3a4a 0%, #4a5a6a 50%, #6a7a8a 100%);"></div>
+            <svg class="book-element" style="top:15%;left:10%;width:45%;height:25%;" viewBox="0 0 50 25"><ellipse cx="25" cy="18" rx="20" ry="7" fill="rgba(255,255,255,0.3)"/><ellipse cx="15" cy="15" rx="12" ry="8" fill="rgba(255,255,255,0.25)"/><ellipse cx="35" cy="14" rx="10" ry="6" fill="rgba(255,255,255,0.25)"/></svg>
+            <svg class="book-element" style="top:35%;left:5%;width:100%;height:50%;" viewBox="0 0 100 50"><line x1="20" y1="0" x2="18" y2="15" stroke="rgba(255,255,255,0.3)" stroke-width="1"/><line x1="35" y1="5" x2="33" y2="20" stroke="rgba(255,255,255,0.25)" stroke-width="1"/><line x1="50" y1="2" x2="48" y2="18" stroke="rgba(255,255,255,0.3)" stroke-width="1"/><line x1="65" y1="8" x2="63" y2="22" stroke="rgba(255,255,255,0.2)" stroke-width="1"/><line x1="80" y1="3" x2="78" y2="17" stroke="rgba(255,255,255,0.25)" stroke-width="1"/></svg>
+            <svg class="book-element" style="bottom:0;left:0;width:100%;height:25%;" viewBox="0 0 100 25" preserveAspectRatio="none"><ellipse cx="50" cy="30" rx="60" ry="20" fill="#3a4a5a"/></svg>
+          </div>
+          <div class="book-title-wrap"><div class="book-title">Rainfall Journey</div><div class="book-author">Marco</div></div>
         </div>
-        <div class="story-book available" style="background:linear-gradient(180deg, #1a1a2e 0%, #3a3a5e 100%);">
-          <span class="book-week">Week 4</span>
-          <span class="book-icon">✨</span>
-          <span class="book-title">Moonlight Drift</span>
+        <!-- Week 4: Moonlight Drift - Big moon, stars -->
+        <div class="story-book available">
+          <div class="book-scene">
+            <div class="book-sky" style="background:linear-gradient(180deg, #0a0a1a 0%, #1a1a3a 50%, #2a2a4a 100%);"></div>
+            <div class="book-element" style="top:8%;right:12%;width:35px;height:35px;border-radius:50%;background:linear-gradient(135deg,#fef9c3,#fde68a);box-shadow:0 0 20px rgba(254,240,138,0.6);"></div>
+            <div class="book-element star star-1"></div><div class="book-element star star-2"></div><div class="book-element star star-3"></div><div class="book-element star star-4"></div><div class="book-element star star-5"></div><div class="book-element star star-6"></div>
+            <svg class="book-element" style="bottom:0;left:0;width:100%;height:30%;" viewBox="0 0 100 30" preserveAspectRatio="none"><ellipse cx="30" cy="35" rx="40" ry="15" fill="#1a1a2a"/><ellipse cx="75" cy="38" rx="35" ry="12" fill="#15152a"/></svg>
+          </div>
+          <div class="book-title-wrap"><div class="book-title">Moonlight Drift</div><div class="book-author">Marco</div></div>
         </div>
-        <!-- Weeks 5-52 locked -->
-        <div class="story-book locked" style="background:linear-gradient(180deg, #2a1a1a 0%, #4a2a2a 100%);"><span class="book-week">Week 5</span><span class="book-icon">🔥</span><span class="book-title">Fireside Tales</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #0a2a3a 0%, #1a4a5a 100%);"><span class="book-week">Week 6</span><span class="book-icon">🌊</span><span class="book-title">Ocean Lullaby</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #2a2a1a 0%, #4a4a2a 100%);"><span class="book-week">Week 7</span><span class="book-icon">🦉</span><span class="book-title">The Owl's Watch</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #1a1a3a 0%, #2a2a5a 100%);"><span class="book-week">Week 8</span><span class="book-icon">⭐</span><span class="book-title">Starlight Garden</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #1a2a2a 0%, #2a4a4a 100%);"><span class="book-week">Week 9</span><span class="book-icon">🍃</span><span class="book-title">Whisper Woods</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #2a1a2a 0%, #4a2a4a 100%);"><span class="book-week">Week 10</span><span class="book-icon">🌸</span><span class="book-title">Cherry Blossom</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #1a1a1a 0%, #3a3a3a 100%);"><span class="book-week">Week 11</span><span class="book-icon">🏔️</span><span class="book-title">Mountain Rest</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #0a1a2a 0%, #1a3a4a 100%);"><span class="book-week">Week 12</span><span class="book-icon">🚂</span><span class="book-title">Night Train</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #2a2a2a 0%, #4a4a4a 100%);"><span class="book-week">Week 13</span><span class="book-icon">☁️</span><span class="book-title">Cloud Drifter</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #1a2a1a 0%, #2a4a2a 100%);"><span class="book-week">Week 14</span><span class="book-icon">🌿</span><span class="book-title">Meadow Dreams</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #2a1a3a 0%, #4a2a5a 100%);"><span class="book-week">Week 15</span><span class="book-icon">🌌</span><span class="book-title">Cosmic Voyage</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #3a2a1a 0%, #5a4a2a 100%);"><span class="book-week">Week 16</span><span class="book-icon">🏠</span><span class="book-title">Cozy Cabin</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #1a3a3a 0%, #2a5a5a 100%);"><span class="book-week">Week 17</span><span class="book-icon">🐋</span><span class="book-title">Whale Song</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #2a2a1a 0%, #4a4a3a 100%);"><span class="book-week">Week 18</span><span class="book-icon">🌾</span><span class="book-title">Golden Fields</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #0a2a2a 0%, #1a4a4a 100%);"><span class="book-week">Week 19</span><span class="book-icon">🌴</span><span class="book-title">Island Breeze</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #1a1a2a 0%, #3a3a4a 100%);"><span class="book-week">Week 20</span><span class="book-icon">🦋</span><span class="book-title">Butterfly Dream</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #2a1a1a 0%, #4a3a2a 100%);"><span class="book-week">Week 21</span><span class="book-icon">🍂</span><span class="book-title">Autumn Walk</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #1a2a3a 0%, #2a4a5a 100%);"><span class="book-week">Week 22</span><span class="book-icon">⛵</span><span class="book-title">Sailing Home</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #2a2a3a 0%, #4a4a5a 100%);"><span class="book-week">Week 23</span><span class="book-icon">🌠</span><span class="book-title">Shooting Stars</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #1a3a2a 0%, #2a5a3a 100%);"><span class="book-week">Week 24</span><span class="book-icon">🌳</span><span class="book-title">Ancient Oak</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #3a1a2a 0%, #5a2a4a 100%);"><span class="book-week">Week 25</span><span class="book-icon">🌺</span><span class="book-title">Secret Garden</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #0a1a3a 0%, #1a2a5a 100%);"><span class="book-week">Week 26</span><span class="book-icon">🌃</span><span class="book-title">City Lights</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #2a3a2a 0%, #4a5a4a 100%);"><span class="book-week">Week 27</span><span class="book-icon">🦌</span><span class="book-title">Deer Meadow</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #1a1a4a 0%, #2a2a6a 100%);"><span class="book-week">Week 28</span><span class="book-icon">🔮</span><span class="book-title">Crystal Cave</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #3a2a2a 0%, #5a4a4a 100%);"><span class="book-week">Week 29</span><span class="book-icon">☕</span><span class="book-title">Tea Time</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #1a4a3a 0%, #2a6a5a 100%);"><span class="book-week">Week 30</span><span class="book-icon">🐢</span><span class="book-title">Sea Turtle</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #2a1a4a 0%, #4a2a6a 100%);"><span class="book-week">Week 31</span><span class="book-icon">🎆</span><span class="book-title">Northern Lights</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #4a3a2a 0%, #6a5a4a 100%);"><span class="book-week">Week 32</span><span class="book-icon">🏜️</span><span class="book-title">Desert Night</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #1a2a4a 0%, #2a4a6a 100%);"><span class="book-week">Week 33</span><span class="book-icon">🐠</span><span class="book-title">Coral Dreams</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #2a3a3a 0%, #4a5a5a 100%);"><span class="book-week">Week 34</span><span class="book-icon">🦢</span><span class="book-title">Swan Lake</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #3a1a1a 0%, #5a3a2a 100%);"><span class="book-week">Week 35</span><span class="book-icon">🎻</span><span class="book-title">Gentle Strings</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #1a3a4a 0%, #2a5a6a 100%);"><span class="book-week">Week 36</span><span class="book-icon">🐬</span><span class="book-title">Dolphin Bay</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #2a2a4a 0%, #4a4a6a 100%);"><span class="book-week">Week 37</span><span class="book-icon">🏯</span><span class="book-title">Temple Bell</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #3a3a2a 0%, #5a5a4a 100%);"><span class="book-week">Week 38</span><span class="book-icon">🌻</span><span class="book-title">Sunflower Field</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #0a2a4a 0%, #1a4a6a 100%);"><span class="book-week">Week 39</span><span class="book-icon">⚓</span><span class="book-title">Harbour Rest</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #2a4a3a 0%, #4a6a5a 100%);"><span class="book-week">Week 40</span><span class="book-icon">🐻</span><span class="book-title">Bear's Den</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #1a1a3a 0%, #2a2a5a 100%);"><span class="book-week">Week 41</span><span class="book-icon">🎐</span><span class="book-title">Wind Chimes</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #3a2a3a 0%, #5a4a5a 100%);"><span class="book-week">Week 42</span><span class="book-icon">🌷</span><span class="book-title">Tulip Garden</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #1a4a4a 0%, #2a6a6a 100%);"><span class="book-week">Week 43</span><span class="book-icon">🦜</span><span class="book-title">Rainforest</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #2a1a2a 0%, #4a3a4a 100%);"><span class="book-week">Week 44</span><span class="book-icon">🕯️</span><span class="book-title">Candlelight</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #4a2a1a 0%, #6a4a3a 100%);"><span class="book-week">Week 45</span><span class="book-icon">🦊</span><span class="book-title">Fox's Tale</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #1a2a2a 0%, #2a4a4a 100%);"><span class="book-week">Week 46</span><span class="book-icon">❄️</span><span class="book-title">First Snow</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #2a3a1a 0%, #4a5a3a 100%);"><span class="book-week">Week 47</span><span class="book-icon">🐝</span><span class="book-title">Honey Meadow</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #0a1a1a 0%, #1a3a3a 100%);"><span class="book-week">Week 48</span><span class="book-icon">🌑</span><span class="book-title">New Moon</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #3a1a3a 0%, #5a2a5a 100%);"><span class="book-week">Week 49</span><span class="book-icon">🎄</span><span class="book-title">Winter's Eve</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #1a3a1a 0%, #2a5a2a 100%);"><span class="book-week">Week 50</span><span class="book-icon">🍀</span><span class="book-title">Lucky Clover</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #2a2a2a 0%, #4a4a4a 100%);"><span class="book-week">Week 51</span><span class="book-icon">🕊️</span><span class="book-title">Dove Song</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked" style="background:linear-gradient(180deg, #1a1a2a 0%, #3a3a4a 100%);"><span class="book-week">Week 52</span><span class="book-icon">🎊</span><span class="book-title">Year's End</span><svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <!-- Week 5-52: Locked books with scenes -->
+        <div class="story-book locked">
+          <div class="book-scene">
+            <div class="book-sky" style="background:linear-gradient(180deg, #1a0a0a 0%, #3a1a0a 50%, #5a2a0a 100%);"></div>
+            <svg class="book-element" style="bottom:20%;left:50%;transform:translateX(-50%);width:30px;height:40px;" viewBox="0 0 30 40"><path d="M15,35 L15,20 M10,25 Q15,15 20,25 M8,30 Q15,18 22,30" stroke="#ff6b35" stroke-width="2" fill="none"/><ellipse cx="15" cy="12" rx="8" ry="10" fill="#ff8c42" opacity="0.6"/><ellipse cx="15" cy="8" rx="5" ry="7" fill="#ffb347" opacity="0.5"/></svg>
+            <svg class="book-element" style="bottom:0;left:0;width:100%;height:25%;" viewBox="0 0 100 25" preserveAspectRatio="none"><rect x="0" y="0" width="100" height="25" fill="#2a1a0a"/></svg>
+          </div>
+          <div class="book-title-wrap"><div class="book-title">Fireside Tales</div><div class="book-author">Marco</div></div>
+          <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="story-book locked">
+          <div class="book-scene">
+            <div class="book-sky" style="background:linear-gradient(180deg, #0a2a3a 0%, #1a4a5a 100%);"></div>
+            <svg class="book-element" style="bottom:0;left:0;width:100%;height:50%;" viewBox="0 0 100 50" preserveAspectRatio="none"><path d="M0,25 Q10,20 20,25 T40,25 T60,25 T80,25 T100,25 L100,50 L0,50 Z" fill="rgba(255,255,255,0.15)"/><path d="M0,30 Q15,24 30,30 T60,30 T90,30 L100,30 L100,50 L0,50 Z" fill="rgba(255,255,255,0.1)"/><path d="M0,35 Q20,30 40,35 T80,35 L100,35 L100,50 L0,50 Z" fill="#0a2a3a"/></svg>
+          </div>
+          <div class="book-title-wrap"><div class="book-title">Ocean Lullaby</div><div class="book-author">Marco</div></div>
+          <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="story-book locked">
+          <div class="book-scene">
+            <div class="book-sky" style="background:linear-gradient(180deg, #1a1a0a 0%, #2a2a1a 50%, #3a3a2a 100%);"></div>
+            <div class="book-element" style="top:12%;right:18%;width:18px;height:18px;border-radius:50%;background:#fef9c3;box-shadow:0 0 10px rgba(254,249,195,0.4);"></div>
+            <svg class="book-element" style="bottom:15%;left:50%;transform:translateX(-50%);width:25px;height:30px;" viewBox="0 0 25 30"><ellipse cx="12.5" cy="8" rx="8" ry="6" fill="#3a3a2a"/><ellipse cx="8" cy="12" rx="3" ry="2" fill="#fef9c3"/><ellipse cx="17" cy="12" rx="3" ry="2" fill="#fef9c3"/><ellipse cx="12.5" cy="18" rx="2" ry="1.5" fill="#8a7a5a"/></svg>
+            <svg class="book-element" style="bottom:0;left:0;width:100%;height:20%;" viewBox="0 0 100 20" preserveAspectRatio="none"><rect x="0" y="0" width="100" height="20" fill="#1a1a0a"/></svg>
+          </div>
+          <div class="book-title-wrap"><div class="book-title">The Owl's Watch</div><div class="book-author">Marco</div></div>
+          <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="story-book locked">
+          <div class="book-scene">
+            <div class="book-sky" style="background:linear-gradient(180deg, #050510 0%, #0a0a20 50%, #151530 100%);"></div>
+            <div class="book-element star" style="width:3px;height:3px;top:10%;left:15%;box-shadow:0 0 3px #fff;"></div>
+            <div class="book-element star" style="width:2px;height:2px;top:20%;left:45%;"></div>
+            <div class="book-element star" style="width:4px;height:4px;top:15%;left:75%;box-shadow:0 0 4px #fff;"></div>
+            <div class="book-element star" style="width:2px;height:2px;top:30%;left:25%;"></div>
+            <div class="book-element star" style="width:3px;height:3px;top:25%;left:60%;box-shadow:0 0 3px #fff;"></div>
+            <div class="book-element star" style="width:2px;height:2px;top:35%;left:85%;"></div>
+            <div class="book-element star" style="width:3px;height:3px;top:8%;left:55%;box-shadow:0 0 3px #fff;"></div>
+            <svg class="book-element" style="bottom:0;left:0;width:100%;height:35%;" viewBox="0 0 100 35" preserveAspectRatio="none"><ellipse cx="50" cy="40" rx="60" ry="20" fill="#0a0a15"/></svg>
+          </div>
+          <div class="book-title-wrap"><div class="book-title">Starlight Garden</div><div class="book-author">Marco</div></div>
+          <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="story-book locked">
+          <div class="book-scene">
+            <div class="book-sky" style="background:linear-gradient(180deg, #0d1f1a 0%, #1a3a2a 50%, #2d4a3a 100%);"></div>
+            <svg class="book-element" style="bottom:0;left:0;width:100%;height:60%;" viewBox="0 0 100 60" preserveAspectRatio="none"><polygon points="5,60 12,25 19,60" fill="#0d1f15"/><polygon points="20,60 28,15 36,60" fill="#1a2a20"/><polygon points="38,60 45,30 52,60" fill="#0d1f15"/><polygon points="55,60 65,10 75,60" fill="#1a2a20"/><polygon points="78,60 85,28 92,60" fill="#0d1f15"/><rect x="0" y="52" width="100" height="8" fill="#0d1510"/></svg>
+          </div>
+          <div class="book-title-wrap"><div class="book-title">Whisper Woods</div><div class="book-author">Marco</div></div>
+          <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="story-book locked">
+          <div class="book-scene">
+            <div class="book-sky" style="background:linear-gradient(180deg, #2a1a2a 0%, #4a2a4a 50%, #5a3a5a 100%);"></div>
+            <svg class="book-element" style="top:20%;left:50%;transform:translateX(-50%);width:40px;height:30px;" viewBox="0 0 40 30"><circle cx="12" cy="18" r="4" fill="#ffc0cb" opacity="0.7"/><circle cx="20" cy="12" r="5" fill="#ffb6c1" opacity="0.8"/><circle cx="28" cy="18" r="4" fill="#ffc0cb" opacity="0.7"/><circle cx="20" cy="20" r="3" fill="#ff69b4" opacity="0.6"/></svg>
+            <svg class="book-element" style="bottom:0;left:0;width:100%;height:30%;" viewBox="0 0 100 30" preserveAspectRatio="none"><rect x="0" y="0" width="100" height="30" fill="#1a0a1a"/></svg>
+          </div>
+          <div class="book-title-wrap"><div class="book-title">Cherry Blossom</div><div class="book-author">Marco</div></div>
+          <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="story-book locked">
+          <div class="book-scene">
+            <div class="book-sky" style="background:linear-gradient(180deg, #1a1a2a 0%, #2a2a3a 50%, #3a3a4a 100%);"></div>
+            <svg class="book-element" style="bottom:0;left:0;width:100%;height:55%;" viewBox="0 0 100 55" preserveAspectRatio="none"><polygon points="0,55 25,20 50,55" fill="#2a2a35"/><polygon points="30,55 60,10 90,55" fill="#1a1a25"/><polygon points="60,55 85,25 100,40 100,55" fill="#252530"/></svg>
+          </div>
+          <div class="book-title-wrap"><div class="book-title">Mountain Rest</div><div class="book-author">Marco</div></div>
+          <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="story-book locked">
+          <div class="book-scene">
+            <div class="book-sky" style="background:linear-gradient(180deg, #0a1a2a 0%, #1a2a3a 100%);"></div>
+            <div class="book-element star star-1"></div><div class="book-element star star-3"></div><div class="book-element star star-5"></div>
+            <svg class="book-element" style="bottom:25%;left:50%;transform:translateX(-50%);width:50px;height:20px;" viewBox="0 0 50 20"><rect x="5" y="8" width="40" height="12" rx="2" fill="#3a3a4a"/><rect x="8" y="5" width="8" height="8" fill="#4a4a5a"/><circle cx="12" cy="14" r="3" fill="#2a2a3a"/><circle cx="38" cy="14" r="3" fill="#2a2a3a"/><rect x="18" y="9" width="3" height="4" fill="#fef9c3" opacity="0.5"/><rect x="24" y="9" width="3" height="4" fill="#fef9c3" opacity="0.5"/></svg>
+            <svg class="book-element" style="bottom:0;left:0;width:100%;height:28%;" viewBox="0 0 100 28" preserveAspectRatio="none"><rect x="0" y="0" width="100" height="28" fill="#0a1520"/></svg>
+          </div>
+          <div class="book-title-wrap"><div class="book-title">Night Train</div><div class="book-author">Marco</div></div>
+          <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <!-- Remaining 44 books with simpler but still illustrated covers -->
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #4a5a6a 0%, #7a8a9a 100%);"></div><svg class="book-element" style="top:20%;left:20%;width:35%;height:20%;" viewBox="0 0 40 20"><ellipse cx="20" cy="12" rx="18" ry="8" fill="rgba(255,255,255,0.8)"/><ellipse cx="10" cy="10" rx="10" ry="7" fill="rgba(255,255,255,0.7)"/><ellipse cx="30" cy="10" rx="8" ry="5" fill="rgba(255,255,255,0.7)"/></svg><svg class="book-element" style="top:25%;right:15%;width:25%;height:15%;" viewBox="0 0 30 15"><ellipse cx="15" cy="10" rx="12" ry="5" fill="rgba(255,255,255,0.6)"/></svg></div><div class="book-title-wrap"><div class="book-title">Cloud Drifter</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #1a3a1a 0%, #3a5a3a 50%, #5a7a5a 100%);"></div><svg class="book-element" style="bottom:0;left:0;width:100%;height:40%;" viewBox="0 0 100 40" preserveAspectRatio="none"><ellipse cx="50" cy="50" rx="70" ry="30" fill="#2a4a2a"/></svg></div><div class="book-title-wrap"><div class="book-title">Meadow Dreams</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #05051a 0%, #0a0a2a 50%, #15153a 100%);"></div><div class="book-element star" style="width:3px;height:3px;top:12%;left:20%;box-shadow:0 0 4px #a0a0ff;"></div><div class="book-element star" style="width:2px;height:2px;top:18%;left:50%;box-shadow:0 0 3px #fff;"></div><div class="book-element star" style="width:4px;height:4px;top:8%;left:75%;box-shadow:0 0 5px #a0a0ff;"></div><div class="book-element star" style="width:2px;height:2px;top:25%;left:35%;"></div><div class="book-element" style="top:30%;left:50%;transform:translateX(-50%);width:12px;height:12px;border-radius:50%;background:radial-gradient(circle,#6a5acd,#4a3aad);box-shadow:0 0 8px #6a5acd;"></div></div><div class="book-title-wrap"><div class="book-title">Cosmic Voyage</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #2a1a0a 0%, #4a3a1a 100%);"></div><svg class="book-element" style="bottom:20%;left:50%;transform:translateX(-50%);width:40px;height:35px;" viewBox="0 0 40 35"><polygon points="20,0 40,20 35,20 35,35 5,35 5,20 0,20" fill="#3a2a1a"/><rect x="15" y="22" width="10" height="13" fill="#5a4a2a"/><rect x="8" y="10" width="6" height="6" fill="#fef9c3" opacity="0.4"/></svg><svg class="book-element" style="bottom:0;left:0;width:100%;height:22%;" viewBox="0 0 100 22" preserveAspectRatio="none"><rect x="0" y="0" width="100" height="22" fill="#1a0a00"/></svg></div><div class="book-title-wrap"><div class="book-title">Cozy Cabin</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #0a2a3a 0%, #1a4a5a 50%, #2a5a6a 100%);"></div><svg class="book-element" style="bottom:30%;left:50%;transform:translateX(-50%);width:50px;height:25px;" viewBox="0 0 50 25"><ellipse cx="25" cy="12" rx="20" ry="8" fill="#3a5a6a"/><path d="M15,8 Q25,0 35,8" stroke="#4a6a7a" stroke-width="2" fill="none"/></svg><svg class="book-element" style="bottom:0;left:0;width:100%;height:35%;" viewBox="0 0 100 35" preserveAspectRatio="none"><path d="M0,15 Q25,5 50,15 T100,15 L100,35 L0,35 Z" fill="#1a3a4a"/></svg></div><div class="book-title-wrap"><div class="book-title">Whale Song</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #4a4a2a 0%, #6a6a3a 50%, #8a8a4a 100%);"></div><svg class="book-element" style="bottom:0;left:0;width:100%;height:45%;" viewBox="0 0 100 45" preserveAspectRatio="none"><path d="M0,20 Q5,15 10,20 Q15,10 20,20 Q25,12 30,20 Q35,8 40,20 Q45,14 50,20 Q55,10 60,20 Q65,15 70,20 Q75,12 80,20 Q85,16 90,20 Q95,14 100,20 L100,45 L0,45 Z" fill="#5a5a2a"/></svg></div><div class="book-title-wrap"><div class="book-title">Golden Fields</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #1a4a5a 0%, #3a6a7a 50%, #5a8a9a 100%);"></div><svg class="book-element" style="bottom:25%;left:30%;width:20px;height:40px;" viewBox="0 0 20 40"><rect x="8" y="20" width="4" height="20" fill="#4a3a2a"/><ellipse cx="10" cy="15" rx="10" ry="15" fill="#2a5a2a"/></svg><svg class="book-element" style="bottom:0;left:0;width:100%;height:30%;" viewBox="0 0 100 30" preserveAspectRatio="none"><rect x="0" y="0" width="100" height="30" fill="#d4a574"/></svg></div><div class="book-title-wrap"><div class="book-title">Island Breeze</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #2a3a4a 0%, #4a5a6a 50%, #6a7a8a 100%);"></div><svg class="book-element" style="top:25%;left:50%;transform:translateX(-50%);width:30px;height:20px;" viewBox="0 0 30 20"><path d="M5,15 Q15,5 25,15" stroke="#8a6aaa" stroke-width="1" fill="none"/><ellipse cx="15" cy="12" rx="8" ry="5" fill="#9a7aba" opacity="0.7"/></svg><svg class="book-element" style="bottom:0;left:0;width:100%;height:35%;" viewBox="0 0 100 35" preserveAspectRatio="none"><ellipse cx="50" cy="45" rx="60" ry="25" fill="#3a4a3a"/></svg></div><div class="book-title-wrap"><div class="book-title">Butterfly Dream</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #3a2a1a 0%, #5a4a2a 50%, #7a6a3a 100%);"></div><svg class="book-element" style="top:15%;left:20%;width:15px;height:15px;" viewBox="0 0 15 15"><path d="M7.5,0 L9,6 L15,7.5 L9,9 L7.5,15 L6,9 L0,7.5 L6,6 Z" fill="#c9a05a" opacity="0.6"/></svg><svg class="book-element" style="bottom:0;left:0;width:100%;height:50%;" viewBox="0 0 100 50" preserveAspectRatio="none"><polygon points="15,50 20,30 25,50" fill="#5a3a1a"/><polygon points="40,50 48,20 56,50" fill="#4a2a0a"/><polygon points="70,50 75,35 80,50" fill="#5a3a1a"/><rect x="0" y="42" width="100" height="8" fill="#3a2a1a"/></svg></div><div class="book-title-wrap"><div class="book-title">Autumn Walk</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #1a3a4a 0%, #3a5a6a 50%, #5a7a8a 100%);"></div><svg class="book-element" style="bottom:30%;left:50%;transform:translateX(-50%);width:30px;height:35px;" viewBox="0 0 30 35"><polygon points="15,0 25,20 20,20 20,35 10,35 10,20 5,20" fill="#fff" opacity="0.9"/></svg><svg class="book-element" style="bottom:0;left:0;width:100%;height:35%;" viewBox="0 0 100 35" preserveAspectRatio="none"><path d="M0,15 Q25,5 50,15 T100,15 L100,35 L0,35 Z" fill="#2a4a5a"/></svg></div><div class="book-title-wrap"><div class="book-title">Sailing Home</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <!-- Weeks 23-52: Simplified covers for remaining books -->
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #05051a 0%, #15153a 100%);"></div><div class="book-element star" style="width:4px;height:4px;top:15%;left:30%;box-shadow:0 0 6px #fff;"></div><div class="book-element star" style="width:2px;height:2px;top:25%;left:60%;"></div><div class="book-element star" style="width:3px;height:3px;top:10%;left:70%;box-shadow:0 0 4px #fff;"></div><path class="book-element" style="top:20%;left:45%;width:20px;height:2px;background:linear-gradient(90deg,transparent,#fff,transparent);transform:rotate(-30deg);"></path></div><div class="book-title-wrap"><div class="book-title">Shooting Stars</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #1a2a1a 0%, #2a4a2a 100%);"></div><svg class="book-element" style="bottom:15%;left:50%;transform:translateX(-50%);width:40px;height:50px;" viewBox="0 0 40 50"><rect x="17" y="25" width="6" height="25" fill="#3a2a1a"/><ellipse cx="20" cy="20" rx="18" ry="20" fill="#2a4a2a"/></svg></div><div class="book-title-wrap"><div class="book-title">Ancient Oak</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #2a1a2a 0%, #4a3a4a 100%);"></div><svg class="book-element" style="bottom:30%;left:50%;transform:translateX(-50%);width:30px;height:25px;" viewBox="0 0 30 25"><circle cx="8" cy="15" r="6" fill="#ff6b8a" opacity="0.7"/><circle cx="15" cy="10" r="7" fill="#ff8fab" opacity="0.8"/><circle cx="22" cy="15" r="6" fill="#ff6b8a" opacity="0.7"/></svg></div><div class="book-title-wrap"><div class="book-title">Secret Garden</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #0a1a3a 0%, #1a2a4a 100%);"></div><svg class="book-element" style="bottom:0;left:0;width:100%;height:45%;" viewBox="0 0 100 45" preserveAspectRatio="none"><rect x="10" y="15" width="12" height="30" fill="#1a2a3a"/><rect x="25" y="8" width="15" height="37" fill="#2a3a4a"/><rect x="45" y="20" width="10" height="25" fill="#1a2a3a"/><rect x="60" y="5" width="18" height="40" fill="#2a3a4a"/><rect x="82" y="12" width="12" height="33" fill="#1a2a3a"/></svg><div class="book-element" style="top:8%;left:15%;width:4px;height:4px;background:#fef9c3;border-radius:50%;box-shadow:0 0 4px #fef9c3;"></div><div class="book-element" style="top:12%;left:45%;width:3px;height:3px;background:#fef9c3;border-radius:50%;"></div></div><div class="book-title-wrap"><div class="book-title">City Lights</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #1a2a1a 0%, #3a4a3a 100%);"></div><svg class="book-element" style="bottom:0;left:0;width:100%;height:40%;" viewBox="0 0 100 40" preserveAspectRatio="none"><ellipse cx="50" cy="50" rx="60" ry="30" fill="#2a3a2a"/></svg></div><div class="book-title-wrap"><div class="book-title">Deer Meadow</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #1a1a3a 0%, #2a2a5a 50%, #3a3a6a 100%);"></div><svg class="book-element" style="bottom:20%;left:50%;transform:translateX(-50%);width:25px;height:35px;" viewBox="0 0 25 35"><polygon points="12.5,0 25,35 0,35" fill="#8a7aaa" opacity="0.6"/><polygon points="12.5,8 20,35 5,35" fill="#9a8aba" opacity="0.5"/></svg></div><div class="book-title-wrap"><div class="book-title">Crystal Cave</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #3a2a2a 0%, #5a4a3a 100%);"></div><svg class="book-element" style="bottom:30%;left:50%;transform:translateX(-50%);width:25px;height:20px;" viewBox="0 0 25 20"><ellipse cx="12.5" cy="15" rx="10" ry="5" fill="#8a7a6a"/><ellipse cx="12.5" cy="12" rx="7" ry="8" fill="#9a8a7a"/><path d="M8,8 Q12.5,2 17,8" stroke="#6a5a4a" stroke-width="1" fill="none"/></svg></div><div class="book-title-wrap"><div class="book-title">Tea Time</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #1a4a4a 0%, #2a6a6a 100%);"></div><svg class="book-element" style="bottom:0;left:0;width:100%;height:40%;" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,20 Q25,10 50,20 T100,20 L100,40 L0,40 Z" fill="#1a3a3a"/></svg></div><div class="book-title-wrap"><div class="book-title">Sea Turtle</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #0a1a2a 0%, #1a3a4a 30%, #2a8a6a 60%, #1a5a4a 100%);"></div><div class="book-element star star-1"></div><div class="book-element star star-3"></div></div><div class="book-title-wrap"><div class="book-title">Northern Lights</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #3a2a1a 0%, #6a5a3a 50%, #8a7a5a 100%);"></div><svg class="book-element" style="bottom:0;left:0;width:100%;height:35%;" viewBox="0 0 100 35" preserveAspectRatio="none"><path d="M0,15 Q20,5 40,20 Q60,10 80,18 Q90,12 100,15 L100,35 L0,35 Z" fill="#5a4a2a"/></svg></div><div class="book-title-wrap"><div class="book-title">Desert Night</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #1a3a5a 0%, #2a5a7a 100%);"></div><svg class="book-element" style="bottom:0;left:0;width:100%;height:45%;" viewBox="0 0 100 45" preserveAspectRatio="none"><ellipse cx="30" cy="30" rx="15" ry="10" fill="#ff6b6b" opacity="0.5"/><ellipse cx="60" cy="35" rx="12" ry="8" fill="#ffa07a" opacity="0.5"/><ellipse cx="80" cy="28" rx="10" ry="7" fill="#ff6b6b" opacity="0.4"/><rect x="0" y="38" width="100" height="7" fill="#1a3a4a"/></svg></div><div class="book-title-wrap"><div class="book-title">Coral Dreams</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #2a3a4a 0%, #4a5a6a 100%);"></div><svg class="book-element" style="bottom:0;left:0;width:100%;height:40%;" viewBox="0 0 100 40" preserveAspectRatio="none"><ellipse cx="50" cy="50" rx="55" ry="30" fill="#3a4a5a"/></svg></div><div class="book-title-wrap"><div class="book-title">Swan Lake</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #2a1a1a 0%, #4a2a2a 100%);"></div></div><div class="book-title-wrap"><div class="book-title">Gentle Strings</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #1a3a5a 0%, #2a5a7a 100%);"></div><svg class="book-element" style="bottom:0;left:0;width:100%;height:40%;" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,20 Q25,10 50,20 T100,20 L100,40 L0,40 Z" fill="#1a3a4a"/></svg></div><div class="book-title-wrap"><div class="book-title">Dolphin Bay</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #1a1a2a 0%, #2a2a4a 100%);"></div><svg class="book-element" style="bottom:15%;left:50%;transform:translateX(-50%);width:35px;height:40px;" viewBox="0 0 35 40"><rect x="5" y="15" width="25" height="25" fill="#3a2a2a"/><polygon points="17.5,0 35,15 0,15" fill="#4a3a3a"/></svg></div><div class="book-title-wrap"><div class="book-title">Temple Bell</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #4a5a2a 0%, #6a7a3a 50%, #8a9a4a 100%);"></div><svg class="book-element" style="bottom:25%;left:50%;transform:translateX(-50%);width:25px;height:25px;" viewBox="0 0 25 25"><circle cx="12.5" cy="12.5" r="10" fill="#ffc107"/><circle cx="12.5" cy="12.5" r="5" fill="#5a4a1a"/></svg></div><div class="book-title-wrap"><div class="book-title">Sunflower Field</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #1a2a3a 0%, #2a4a5a 100%);"></div><svg class="book-element" style="bottom:0;left:0;width:100%;height:40%;" viewBox="0 0 100 40" preserveAspectRatio="none"><rect x="0" y="0" width="100" height="40" fill="#1a3a4a"/></svg></div><div class="book-title-wrap"><div class="book-title">Harbour Rest</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #1a2a1a 0%, #2a4a2a 100%);"></div><svg class="book-element" style="bottom:0;left:0;width:100%;height:50%;" viewBox="0 0 100 50" preserveAspectRatio="none"><ellipse cx="50" cy="60" rx="55" ry="35" fill="#1a3a1a"/></svg></div><div class="book-title-wrap"><div class="book-title">Bear's Den</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #2a3a4a 0%, #4a5a6a 100%);"></div></div><div class="book-title-wrap"><div class="book-title">Wind Chimes</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #2a3a2a 0%, #4a5a4a 100%);"></div><svg class="book-element" style="bottom:25%;left:50%;transform:translateX(-50%);width:30px;height:30px;" viewBox="0 0 30 30"><ellipse cx="15" cy="20" rx="8" ry="10" fill="#ff6b6b" opacity="0.7"/><rect x="13" y="5" width="4" height="10" fill="#4a6a3a"/></svg></div><div class="book-title-wrap"><div class="book-title">Tulip Garden</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #0a2a1a 0%, #1a4a2a 100%);"></div><svg class="book-element" style="bottom:0;left:0;width:100%;height:60%;" viewBox="0 0 100 60" preserveAspectRatio="none"><polygon points="10,60 18,20 26,60" fill="#0a3a1a"/><polygon points="30,60 40,10 50,60" fill="#1a4a2a"/><polygon points="55,60 62,25 69,60" fill="#0a3a1a"/><polygon points="72,60 82,15 92,60" fill="#1a4a2a"/></svg></div><div class="book-title-wrap"><div class="book-title">Rainforest</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 100%);"></div><svg class="book-element" style="bottom:30%;left:50%;transform:translateX(-50%);width:15px;height:30px;" viewBox="0 0 15 30"><ellipse cx="7.5" cy="8" rx="5" ry="8" fill="#ffa500" opacity="0.8"/><rect x="6" y="15" width="3" height="15" fill="#d4a574"/></svg></div><div class="book-title-wrap"><div class="book-title">Candlelight</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #2a2a1a 0%, #4a4a2a 100%);"></div><svg class="book-element" style="bottom:0;left:0;width:100%;height:40%;" viewBox="0 0 100 40" preserveAspectRatio="none"><ellipse cx="50" cy="50" rx="55" ry="30" fill="#3a3a1a"/></svg></div><div class="book-title-wrap"><div class="book-title">Fox's Tale</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #2a3a4a 0%, #4a5a6a 50%, #6a7a8a 100%);"></div><div class="book-element" style="top:20%;left:25%;width:4px;height:4px;background:#fff;border-radius:50%;"></div><div class="book-element" style="top:15%;left:55%;width:3px;height:3px;background:#fff;border-radius:50%;"></div><div class="book-element" style="top:30%;left:70%;width:4px;height:4px;background:#fff;border-radius:50%;"></div><svg class="book-element" style="bottom:0;left:0;width:100%;height:35%;" viewBox="0 0 100 35" preserveAspectRatio="none"><rect x="0" y="0" width="100" height="35" fill="#fff"/></svg></div><div class="book-title-wrap"><div class="book-title">First Snow</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #3a4a2a 0%, #5a6a3a 50%, #7a8a4a 100%);"></div><svg class="book-element" style="bottom:0;left:0;width:100%;height:40%;" viewBox="0 0 100 40" preserveAspectRatio="none"><ellipse cx="50" cy="50" rx="60" ry="30" fill="#4a5a2a"/></svg></div><div class="book-title-wrap"><div class="book-title">Honey Meadow</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #050508 0%, #0a0a10 50%, #101018 100%);"></div><div class="book-element star" style="width:2px;height:2px;top:15%;left:30%;"></div><div class="book-element star" style="width:1px;height:1px;top:25%;left:60%;"></div><div class="book-element star" style="width:2px;height:2px;top:20%;left:80%;"></div></div><div class="book-title-wrap"><div class="book-title">New Moon</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #0a1a1a 0%, #1a2a2a 100%);"></div><svg class="book-element" style="bottom:15%;left:50%;transform:translateX(-50%);width:30px;height:40px;" viewBox="0 0 30 40"><polygon points="15,0 25,35 20,35 20,40 10,40 10,35 5,35" fill="#1a4a2a"/></svg><div class="book-element star star-1"></div><div class="book-element star star-3"></div></div><div class="book-title-wrap"><div class="book-title">Winter's Eve</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #1a3a1a 0%, #2a5a2a 100%);"></div><svg class="book-element" style="bottom:0;left:0;width:100%;height:40%;" viewBox="0 0 100 40" preserveAspectRatio="none"><ellipse cx="50" cy="50" rx="55" ry="30" fill="#1a4a1a"/></svg></div><div class="book-title-wrap"><div class="book-title">Lucky Clover</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #3a4a5a 0%, #5a6a7a 50%, #7a8a9a 100%);"></div><svg class="book-element" style="top:25%;left:50%;transform:translateX(-50%);width:20px;height:15px;" viewBox="0 0 20 15"><ellipse cx="10" cy="10" rx="8" ry="5" fill="#fff" opacity="0.8"/></svg></div><div class="book-title-wrap"><div class="book-title">Dove Song</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="story-book locked"><div class="book-scene"><div class="book-sky" style="background:linear-gradient(180deg, #1a1a2a 0%, #2a2a4a 50%, #3a3a5a 100%);"></div><div class="book-element star" style="width:3px;height:3px;top:12%;left:25%;box-shadow:0 0 4px #ffd700;"></div><div class="book-element star" style="width:4px;height:4px;top:18%;left:55%;box-shadow:0 0 5px #ffd700;"></div><div class="book-element star" style="width:3px;height:3px;top:25%;left:75%;box-shadow:0 0 4px #ffd700;"></div></div><div class="book-title-wrap"><div class="book-title">Year's End</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
       </div>
       <p class="fade-in" style="text-align:center;color:var(--mid-gray);font-size:0.9rem;margin-top:32px;">Stories unlock weekly for Premium members. Start your collection today.</p>
     </div>
