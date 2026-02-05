@@ -364,6 +364,46 @@ git push origin main
 
 ---
 
+## Audio Production
+
+### Fish Audio Voice
+- **Voice:** "Calm male" by ANGEL NSEKUYE
+- **ID:** `0165567b33324f518b02336ad232e31a`
+- **Character:** Deep resonance, slight accent (possibly Italian), very soothing
+- **User calls him:** "Marco" / "Fish man"
+- **Critical:** This voice has a relaxation quality that other TTS (ElevenLabs) cannot replicate
+
+### What DOESN'T Work
+- **ffmpeg processing degrades quality** - noise reduction, de-essers, lowpass filters all make it sound "muffled" or "behind a quilt"
+- **ElevenLabs cloning** - captures resonance but loses the specific character
+- **Adobe Podcast Enhance** - can't fix TTS voice changes, only surface noise
+- **Aggressive cleanup pipeline** - `lowpass=f=10000` kills clarity
+
+### What DOES Work
+- **Fresh Fish rebuild** - TTS is non-deterministic, rebuilding often fixes issues
+- **Minimal processing** - loudness normalization only: `loudnorm=I=-24:TP=-2:LRA=11`
+- **Higher bitrate** - 128kbps vs original 51kbps
+
+### Quality Standards
+- **100% OR NO SHIP** - any audible glitch = FAIL
+- **3-Strike Rule** - max 3 rebuild attempts before escalating
+- **Human ear is final gate** - analyzer is pre-screening only
+
+### Analyzer v4 Findings
+- Sibilance/click detection has many false positives
+- Voice change detection is useful signal
+- 0 voice changes = good indicator
+
+### Comparative Benchmarks (vs Calm app)
+| Metric | Target | Notes |
+|--------|--------|-------|
+| Bitrate | 128kbps | Calm uses 92kbps Opus |
+| Loudness | -24 LUFS | Industry standard for relaxation |
+| True Peak | -2 dBTP min | Calm at -5.67 |
+| Channels | Mono OK | Stereo comes from ambient mix |
+
+---
+
 ## Common Issues & Lessons Learned
 
 ### Page Visibility Checklist (Feb 2026)
