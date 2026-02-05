@@ -58,36 +58,14 @@
       bottom: -20px;
       left: 20px;
     }
-    .article-thumb .icon-circle {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .article-thumb .category-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.15);
+      text-transform: uppercase;
+      letter-spacing: 8px;
       z-index: 1;
-      transition: all 0.3s ease;
-      box-shadow:
-        0 8px 32px rgba(0,0,0,0.2),
-        0 4px 12px rgba(0,0,0,0.15),
-        inset 0 2px 4px rgba(255,255,255,0.8),
-        inset 0 -2px 4px rgba(0,0,0,0.05);
-    }
-    .article-card:hover .icon-circle {
-      transform: scale(1.15) translateY(-4px);
-      box-shadow:
-        0 16px 48px rgba(0,0,0,0.25),
-        0 8px 20px rgba(0,0,0,0.2),
-        inset 0 2px 4px rgba(255,255,255,0.8),
-        inset 0 -2px 4px rgba(0,0,0,0.05);
-    }
-    .article-thumb svg {
-      width: 32px;
-      height: 32px;
-      stroke: var(--accent);
-      stroke-width: 2;
-      fill: none;
     }
     .article-header h3 {
       font-size: 1.15rem;
@@ -286,9 +264,7 @@
             <div class="article-thumb" style="background:linear-gradient(135deg, #0d3d4a 0%, #1a5568 50%, #0f4c5c 100%);">
               <div style="position:absolute;width:100px;height:100px;border-radius:50%;background:#06b6d4;filter:blur(40px);opacity:0.5;top:-30px;right:-20px;"></div>
               <div style="position:absolute;width:60px;height:60px;border-radius:50%;background:#22d3ee;filter:blur(25px);opacity:0.4;bottom:-15px;left:20px;"></div>
-              <div class="icon-circle">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-              </div>
+              <span class="category-label">Begin</span>
             </div>
           </div>
           <div class="article-info">
@@ -332,9 +308,7 @@
             <div class="article-thumb" style="background:linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%);">
               <div style="position:absolute;width:100px;height:100px;border-radius:50%;background:#10b981;filter:blur(40px);opacity:0.5;top:-30px;right:-20px;"></div>
               <div style="position:absolute;width:60px;height:60px;border-radius:50%;background:#34d399;filter:blur(25px);opacity:0.4;bottom:-15px;left:20px;"></div>
-              <div class="icon-circle">
-                <svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-              </div>
+              <span class="category-label">Daily</span>
             </div>
           </div>
           <div class="article-info">
@@ -374,9 +348,7 @@
             <div class="article-thumb" style="background:linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #3730a3 100%);">
               <div style="position:absolute;width:100px;height:100px;border-radius:50%;background:#818cf8;filter:blur(40px);opacity:0.5;top:-30px;right:-20px;"></div>
               <div style="position:absolute;width:60px;height:60px;border-radius:50%;background:#a78bfa;filter:blur(25px);opacity:0.4;bottom:-15px;left:20px;"></div>
-              <div class="icon-circle">
-                <svg viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 6v6l4 2"/></svg>
-              </div>
+              <span class="category-label">Breath</span>
             </div>
           </div>
           <div class="article-info">
@@ -421,9 +393,7 @@
             <div class="article-thumb" style="background:linear-gradient(135deg, #1e1b4b 0%, #3730a3 50%, #6366f1 100%);">
               <div style="position:absolute;width:100px;height:100px;border-radius:50%;background:#a78bfa;filter:blur(40px);opacity:0.5;top:-30px;right:-20px;"></div>
               <div style="position:absolute;width:60px;height:60px;border-radius:50%;background:#c4b5fd;filter:blur(25px);opacity:0.4;bottom:-15px;left:20px;"></div>
-              <div class="icon-circle">
-                <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-              </div>
+              <span class="category-label">Sleep</span>
             </div>
           </div>
           <div class="article-info">
@@ -464,9 +434,7 @@
             <div class="article-thumb" style="background:linear-gradient(135deg, #451a03 0%, #78350f 50%, #b45309 100%);">
               <div style="position:absolute;width:100px;height:100px;border-radius:50%;background:#f59e0b;filter:blur(40px);opacity:0.5;top:-30px;right:-20px;"></div>
               <div style="position:absolute;width:60px;height:60px;border-radius:50%;background:#fbbf24;filter:blur(25px);opacity:0.4;bottom:-15px;left:20px;"></div>
-              <div class="icon-circle">
-                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-              </div>
+              <span class="category-label">Calm</span>
             </div>
           </div>
           <div class="article-info">
