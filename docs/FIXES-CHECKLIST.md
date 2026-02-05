@@ -17,7 +17,7 @@ Last verified: 5 February 2026
 
 | # | Item | Status |
 |---|------|--------|
-| 1 | Need account system – subscribed on one device, no login details on another | ⏸ DEFERRED |
+| 1 | Need account system – subscribed on one device, no login details on another | ✓ DONE |
 
 ---
 
@@ -98,19 +98,19 @@ Last verified: 5 February 2026
 ## SUMMARY
 
 ```
-DONE:       33 items
+DONE:       34 items
 PENDING:     0 items
-DEFERRED:    1 item   (account system - separate project)
+DEFERRED:    0 items
 ─────────────────────
 TOTAL:      34 items
-COMPLETION: 97%
+COMPLETION: 100%
 ```
 
 ### Outstanding Work
 
-**None** — All actionable items complete.
+**None** — All items complete.
 
-Only deferred item (#1 account system) requires separate project scope.
+Item #1 (account system) implemented 5 Feb 2026 using Supabase authentication.
 
 ---
 
