@@ -1478,7 +1478,17 @@ FREE CONTENT COMPLETE: 6 February 2026
 - ALL audio must end with: "Thank you for practicing with Salus. Sleep, relax, restore."
 - Strike 3 waiver to human review is established and reliable
 
+WEBSITE UPDATES (6 February 2026):
+- Sleep Stories page: 3 custom book covers deployed (Monty's Midnight Feast,
+  The Moonlit Garden, The Whispering Woods). Covers rendered from HTML designs
+  to PNG via headless Chrome. Source files in OneDrive/Salus/Sleep Story Covers/
+- Sleep Stories page: Remaining 49 tiles simplified to "Coming Soon" placeholders
+- Cover images stored in content/images/sleep-stories/
+- Applied Psychology page: hero image added (lone tree on still water)
+- CTA banner: Subscribe + Join Newsletter buttons side by side
+- Newsletter form removed from footer
+
 ================================================================================
 — END OF DOCUMENT —
-Last updated: 6 February 2026 (v1.7 - All Free Content Approved)
+Last updated: 6 February 2026 (v1.7.1 - Sleep Story Covers Deployed)
 ================================================================================
