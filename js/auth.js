@@ -283,7 +283,7 @@ var SalusAuth = (function() {
 
     // Detect if we're in a subdirectory by checking existing href pattern
     var pathPrefix = '';
-    if (authBtn && authBtn.href.includes('../')) {
+    if (authBtn && (authBtn.getAttribute('href') || '').includes('../')) {
       pathPrefix = '../';
     }
 
