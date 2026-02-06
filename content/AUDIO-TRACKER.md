@@ -6,6 +6,7 @@
 | 01 | Morning Meditation | Approved (benchmark) | PASS | None | APPROVED | Pre-reset |
 | 03 | Breathing for Anxiety | Rewritten (safe breathing) | PASS (Build 7, Strike 3 waived) | Birds 8hr -14dB | APPROVED | 6 Feb 2026 |
 | 25 | 10-Minute Mindfulness | Rewritten | PASS (Build 3) | Stream 3hr -16dB | APPROVED | 6 Feb 2026 |
+| 09 | Rainfall Sleep Journey | Rewritten | PASS (Build 3, Strike 3 waived) | Rain 8hr -12dB | APPROVED | 6 Feb 2026 |
 
 ## In Progress
 | # | Session | Stage | Notes |
@@ -16,7 +17,6 @@
 | # | Session | Category | Old Script | Notes |
 |---|---------|----------|------------|-------|
 | 02 | Deep Sleep | Sleep | Archived | |
-| 09 | Rainfall Sleep Journey | Sleep | Archived | Was free content |
 | 05 | Body Scan for Deep Rest | Sleep | Archived | |
 | 06 | Letting Go of the Day | Sleep | Archived | |
 | 07 | Moonlight Drift | Sleep | Archived | |
@@ -56,6 +56,6 @@
 
 ## Stats
 - **Total sessions**: 50
-- **Approved**: 3
+- **Approved**: 4
 - **Archived scripts**: 48
-- **Rewritten scripts**: 3 (01, 03, 25)
+- **Rewritten scripts**: 4 (01, 03, 09, 25)
