@@ -5,11 +5,12 @@
 |---|---------|--------|-------|---------|--------|------|
 | 01 | Morning Meditation | Approved (benchmark) | PASS | None | APPROVED | Pre-reset |
 | 03 | Breathing for Anxiety | Rewritten (safe breathing) | PASS (Build 7, Strike 3 waived) | Birds 8hr -14dB | APPROVED | 6 Feb 2026 |
+| 25 | Introduction to Mindfulness | Rewritten | PASS (Build 3) | Stream 3hr -16dB | APPROVED | 6 Feb 2026 |
 
 ## In Progress
 | # | Session | Stage | Notes |
 |---|---------|-------|-------|
-| 25 | Introduction to Mindfulness | Build pending | Pause durations need tightening first |
+| — | — | — | — |
 
 ## Queue (Bible Priority Order)
 | # | Session | Category | Old Script | Notes |
@@ -55,6 +56,6 @@
 
 ## Stats
 - **Total sessions**: 50
-- **Approved**: 2
+- **Approved**: 3
 - **Archived scripts**: 48
-- **Rewritten scripts**: 2 (01, 03)
+- **Rewritten scripts**: 3 (01, 03, 25)

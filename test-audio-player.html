@@ -194,26 +194,23 @@
 
   <script>
     const reviewData = {
-      file: "content/audio-free/mixed/03-breathing-for-anxiety.mp3",
-      filename: "03-breathing-for-anxiety.mp3 (Build 4 — Safe breathing + Birds 8hr @ -14dB)",
-      session: "03-breathing-for-anxiety",
-      expected: "~19:00",
-      actual: "19:20",
+      file: "content/audio-free/mixed/25-introduction-to-mindfulness.mp3",
+      filename: "25-introduction-to-mindfulness.mp3 (Build 3 + Stream 3hr @ -14dB)",
+      session: "25-introduction-to-mindfulness",
+      expected: "~10:00",
+      actual: "14:25",
       issues: [
         { id: 1,  time: "00:00", seconds: 0,    severity: "high", type: "OPENING",    desc: "Check opening — soft intro?", verdict: null },
-        { id: 2,  time: "02:00", seconds: 120,  severity: "high", type: "BREATHING",  desc: "Cycle 1: in(4s)+hold(5s)+out(6s) = 15s?", verdict: null },
-        { id: 3,  time: "03:16", seconds: 196,  severity: "high", type: "BREATHING",  desc: "Cycle 2: in(4s)+hold(5s)+out(6s) = 15s?", verdict: null },
-        { id: 4,  time: "04:43", seconds: 283,  severity: "high", type: "BREATHING",  desc: "Cycle 3: in(4s)+hold(5s)+out(6s) = 15s?", verdict: null },
-        { id: 5,  time: "06:16", seconds: 376,  severity: "high", type: "GLITCH",     desc: "Glitch reported on prev build — check fixed", verdict: null },
-        { id: 6,  time: "06:50", seconds: 410,  severity: "high", type: "SILENCE",    desc: "45s pause — ambient continuous?", verdict: null },
-        { id: 7,  time: "07:52", seconds: 472,  severity: "high", type: "BREATHING",  desc: "Cycle 4: in(4s)+hold(5s)+out(6s) = 15s?", verdict: null },
-        { id: 8,  time: "08:48", seconds: 528,  severity: "high", type: "SILENCE",    desc: "60s pause — announced?", verdict: null },
-        { id: 9,  time: "10:19", seconds: 619,  severity: "high", type: "BREATHING",  desc: "Cycle 5: in(4s)+hold(5s)+out(6s) = 15s?", verdict: null },
-        { id: 10, time: "11:08", seconds: 668,  severity: "high", type: "BREATHING",  desc: "Cycle 6: in(4s)+hold(5s)+out(6s) = 15s?", verdict: null },
-        { id: 11, time: "12:10", seconds: 730,  severity: "high", type: "SILENCE",    desc: "75s pause — announced?", verdict: null },
-        { id: 12, time: "15:00", seconds: 900,  severity: "high", type: "TONE",       desc: "Closing section — voice consistent?", verdict: null },
-        { id: 13, time: "18:50", seconds: 1130, severity: "high", type: "CLOSING",    desc: "'Thank you for practicing with Salus'", verdict: null },
-        { id: 14, time: "19:10", seconds: 1150, severity: "high", type: "CLOSING",    desc: "'Sleep, relax, restore' — clean end?", verdict: null }
+        { id: 2,  time: "00:30", seconds: 30,   severity: "high", type: "TONE",       desc: "Stream ambient fading in — natural?", verdict: null },
+        { id: 3,  time: "02:30", seconds: 150,  severity: "high", type: "TONE",       desc: "'breath' section — voice consistent?", verdict: null },
+        { id: 4,  time: "04:20", seconds: 260,  severity: "high", type: "TONE",       desc: "'mind will wander' — natural delivery?", verdict: null },
+        { id: 5,  time: "05:30", seconds: 330,  severity: "high", type: "SILENCE",    desc: "45s pause — stream continuous?", verdict: null },
+        { id: 6,  time: "07:00", seconds: 420,  severity: "high", type: "SILENCE",    desc: "60s pause — stream continuous?", verdict: null },
+        { id: 7,  time: "09:00", seconds: 540,  severity: "high", type: "TONE",       desc: "'breaths together' section", verdict: null },
+        { id: 8,  time: "10:30", seconds: 630,  severity: "high", type: "SILENCE",    desc: "45s pause — ambient OK?", verdict: null },
+        { id: 9,  time: "12:00", seconds: 720,  severity: "high", type: "TONE",       desc: "Closing section — widen awareness", verdict: null },
+        { id: 10, time: "13:50", seconds: 830,  severity: "high", type: "CLOSING",    desc: "'Thank you for practicing with Salus'", verdict: null },
+        { id: 11, time: "14:10", seconds: 850,  severity: "high", type: "CLOSING",    desc: "'Sleep, relax, restore' — clean end?", verdict: null }
       ]
     };
 
