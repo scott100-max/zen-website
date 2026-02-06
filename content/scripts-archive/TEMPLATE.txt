@@ -1,0 +1,36 @@
+SESSION TITLE HERE
+Duration: X minutes
+Category: sleep | focus | stress | mindfulness | beginner | advanced
+Ambient: ocean | rain | forest | birds | stream | wind | night | fire | garden | temple | chimes | piano | library | waterfall | none
+Style: Warm, grounded male narrator
+---
+
+[Your script content here]
+
+Use ... for pauses. More dots = longer pause:
+- Single ... = short pause (category-dependent, ~4-15 seconds)
+- Double line of ... = medium pause (~12-45 seconds)
+- Triple line of ... = long pause (~25-105 seconds)
+
+Example:
+
+Welcome to this meditation.
+
+...
+
+Find a comfortable position.
+
+...
+
+Close your eyes.
+
+...
+...
+
+Take a deep breath in.
+
+...
+...
+...
+
+And slowly release.

@@ -168,12 +168,12 @@ Use ... on its own line for pauses. More consecutive lines equal longer pauses.
 
 Category    | Short (...) | Medium (... x2) | Long (... x3)
 ------------|-------------|-----------------|---------------
-sleep       | 8-15s       | 25-45s          | 60-105s
-focus       | 3-6s        | 8-15s           | 15-30s
-stress      | 5-10s       | 15-30s          | 30-60s
-mindfulness | 5-12s       | 20-40s          | 45-75s
-beginner    | 4-8s        | 12-25s          | 25-45s
-advanced    | 8-15s       | 30-60s          | 75-105s
+sleep       | 5-10s       | 12-20s          | 25-45s
+focus       | 2-4s        | 5-10s           | 10-20s
+stress      | 3-7s        | 8-15s           | 15-30s
+mindfulness | 3-7s        | 10-20s          | 20-40s
+beginner    | 3-6s        | 8-15s           | 15-25s
+advanced    | 5-10s       | 15-30s          | 30-60s
 
 4.3 BREATHING EXERCISE SPECIFICATIONS
 ================================================================================
@@ -287,14 +287,43 @@ Before building ANY breathing content, verify:
 [ ] Basic breathing has NO hold after exhale
 [ ] Box breathing has hold after exhale (4 phases)
 [ ] Text blocks are 20+ characters (TTS stability)
+[ ] BREATHING PAUSES USE EXPLICIT [X second pause] MARKERS (see safety rule below)
+
+*****************************************************************************
+*                    CRITICAL SAFETY RULE                                   *
+*     BREATHING PAUSES MUST USE EXPLICIT SECOND MARKERS — NEVER ...        *
+*     FAILURE TO COMPLY = HEALTH RISK — AUTOMATIC REJECT                   *
+*****************************************************************************
+
+Pauses BETWEEN breathing instructions (inhale, hold, exhale) MUST use
+explicit [X second pause] markers. NEVER use ... markers for breathing
+gaps — the randomised pause profiles will inflate breathing cycles to
+dangerous durations (30-40+ seconds observed).
+
+MANDATORY breathing pause format:
+    Breathe in slowly.
+    [4 second pause]
+
+    Now hold your breath gently.
+    [5 second pause]
+
+    And breathe out through your mouth.
+    [6 second pause]
+
+The ... markers are ONLY for non-breathing pauses (scene-setting,
+reflection, transitions). Any pause where the listener is actively
+holding breath or controlling breathing MUST be explicit.
+
+Total breathing cycle must not exceed 15 seconds (4+5+6).
 
 FORBIDDEN:
 ----------
 - Counting aloud (TTS too fast)
-- Prescriptive timing language ("for X seconds")
+- Prescriptive timing language ("for four seconds" etc)
 - "Hold" after exhale in basic breathing
 - Rushed pacing
 - Single-word blocks under 20 characters
+- Using ... markers between breathing instructions (SAFETY CRITICAL)
 
 --------------------------------------------------------------------------------
 
@@ -378,7 +407,7 @@ CLOSING (MANDATORY):
 
 Every meditation and guided session MUST end with:
 
-    "Thank you for practising with Salus. Sleep, relax, restore."
+    "Thank you for practicing with Salus. Sleep, relax, restore."
 
 This is the ONLY acceptable closing. No variations. No exceptions.
 
@@ -476,27 +505,13 @@ updated automatically.
 
 Benchmark: Rainfall Sleep Journey (09) - spec-compliant, deployed February 2026
 
-7.1 SPEC-COMPLIANT SESSIONS (13 deployed)
------------------------------------------
-These sessions have been rebuilt with the new specification: spaced openings, 
-proper metadata headers, -12dB ambient (sleep), temperature 0.3, noise 
-reduction applied.
+7.1 APPROVED SESSIONS (1 deployed — reset 6 Feb 2026)
+-----------------------------------------------------
+All previous audio archived. Rebuilding from scratch to benchmark quality.
 
 #  | Session                      | Duration  | Category    | Status
 ---|------------------------------|-----------|-------------|----------
-05 | Body Scan for Deep Rest      | 50.2 min  | Sleep       | Deployed
-06 | Letting Go of the Day        | 38.5 min  | Sleep       | Deployed
-07 | Moonlight Drift              | 52.0 min  | Sleep       | Deployed
-08 | The Quiet Shore              | 63.4 min  | Sleep       | Deployed
-09 | Rainfall Sleep Journey       | 17.7 min  | Sleep       | Deployed (BENCHMARK)
-11 | Lucid Dream Preparation      | 56.2 min  | Advanced    | Deployed
-18 | Calm in Three Minutes        | 5.2 min   | Stress      | Deployed
-19 | Release and Restore          | 13.7 min  | Stress      | Deployed
-23 | The Calm Reset               | 5.8 min   | Stress      | Deployed
-25 | Introduction to Mindfulness  | 8.2 min   | Beginner    | Deployed
-29 | Open Awareness               | 11.4 min  | Mindfulness | Deployed
-32 | Observing Emotions           | 9.4 min   | Mindfulness | Deployed
-43 | Non-Dual Awareness           | 20.1 min  | Advanced    | Deployed
+01 | Morning Meditation           | ~9 min    | Mindfulness | APPROVED (BENCHMARK)
 
 7.2 REBUILD PRIORITY ORDER
 --------------------------
@@ -1159,81 +1174,39 @@ REMAINING WORK:
 --------------------------------------------------------------------------------
 11.20 CURRENT TESTING STATUS
 --------------------------------------------------------------------------------
-Last Updated: 4 February 2026
-Status: ANALYSER v3 DEPLOYED — Ready to resume testing
+Last Updated: 6 February 2026
+Status: AUDIO RESET — Rebuilding from scratch with single approved benchmark
 
-ANALYSER v3 VALIDATION:
-File                         | v2 Result    | v3 Result        | Correct?
------------------------------|--------------|------------------|----------
-09-rainfall (BAD - 32min)    | PASS         | CRITICAL FAIL    | ✓ YES
-18-calm-in-three (GOOD)      | -            | PASS (0 issues)  | ✓ YES
+AUDIO RESET (6 February 2026):
+All previous audio archived to content/audio-archive/ (2.2GB).
+Only ONE approved session remains in production.
 
-RAW NARRATION BUILD STATUS:
-Session                      | Analyser v3       | Human Review      | Status
+APPROVED AUDIO:
+Session                      | Analyser v5       | Human Review      | Status
 -----------------------------|-------------------|-------------------|--------
-01-morning-meditation        | 11 HIGH (all FP)  | PASS              | DEPLOYED
-02-deep-sleep               | NEEDS RE-TEST     | PENDING           | -
-03-breathing-for-anxiety    | 1 HIGH (hiss FP)  | PASS              | DEPLOYED
-08-sleep-stories-quiet-shore| NEEDS RE-TEST     | PENDING           | -
-09-rainfall-sleep-journey   | 11 HIGH (all FP)  | PASS              | DEPLOYED
-25-introduction-to-mindfulness| 3 REPEATED (FP) | PASS              | DEPLOYED
-38-seven-day-mindfulness-day1| REBUILD 1        | PASS              | DEPLOYED
+01-morning-meditation        | PASS (0 VC, 0 US) | PASS              | BENCHMARK
+03-breathing-for-anxiety     | PASS (0 VC, 0 US) | PASS (6 Feb)      | APPROVED
 
-FREE CONTENT DEPLOYMENT (4 February 2026):
-All 5 free sessions deployed to audio-free/ and website:
-- 01-morning-meditation.mp3
-- 03-breathing-for-anxiety.mp3
-- 09-rainfall-sleep-journey.mp3
-- 25-introduction-to-mindfulness.mp3
-- 38-seven-day-mindfulness-day1.mp3
+Build notes for 03:
+- Build 1: Opening too abrupt ("You found your way here") — rewrote to soft contextual intro
+- Build 2: 1 VOICE_CHANGE at 15:15 — auto-rebuild (Strike 1)
+- Build 3: PASS — 0 voice changes, 0 dropouts, human review PASS
+- Scanner had 15 hissing + 30 sibilance flags — all false positives, none audible
+- Lesson: Hissing/sibilance downgraded to LOW (too many false positives with Marco)
+- Lesson: Opening must set the scene before any extended silence
 
-FREE CONTENT VALIDATION (4 February 2026):
-Run via: python3 validate-site.py
-
-#  | Title                              | Page   | Audio  | Script | Status
----|------------------------------------+--------|--------|--------|------------------
-01 | Morning Meditation                 | EXISTS | PASS   | PASS   | COMPLETE
-03 | Breathing for Anxiety              | EXISTS | PASS   | PASS   | COMPLETE
-09 | Rainfall Sleep Journey             | EXISTS | PASS   | PASS   | COMPLETE
-25 | Introduction to Mindfulness        | EXISTS | PASS   | PASS   | COMPLETE
-38 | 7-Day Mindfulness Course: Day 1    | EXISTS | PASS   | PASS   | COMPLETE
-
-All 5 free content sessions now have:
-- Audio files deployed to audio-free/
-- HTML session pages in sessions/
-- Script metadata headers complete
-
-NOTE: Audio PASS = deployed and human-reviewed. Script PASS = compliant with Bible rules.
-
-Not started: Sessions 04-07, 10-51 (~45 files remaining)
-
-NEXT STEPS:
-1. ✓ FIX ANALYSER — v3 deployed with voice/phrase/duration detection
-2. ✓ REBUILD 09-rainfall-sleep-journey — Rebuilt 4 Feb, human review PASS, deployed
-3. RE-TEST all previous "PASS" files with v3 (may catch issues v2 missed)
-4. Human review all v3 PASS files
-5. Continue building raw narrations for remaining ~45 free files
+NEXT: Session 02 (Deep Sleep) or next priority
 
 --------------------------------------------------------------------------------
 11.21 DEPLOYED SESSIONS TEST SUMMARY
 --------------------------------------------------------------------------------
-All 13 spec-compliant sessions have passed the quality gate:
+After audio reset (6 Feb 2026), only one session is approved:
 
 #  | Session                      | Voice | Artifacts | Overall
 ---|------------------------------|-------|-----------|----------
-05 | Body Scan for Deep Rest      | PASS  | PASS      | PASS
-06 | Letting Go of the Day        | PASS  | PASS      | PASS
-07 | Moonlight Drift              | PASS  | PASS      | PASS
-08 | The Quiet Shore              | PASS  | PASS      | PASS
-09 | Rainfall Sleep Journey       | PASS  | PASS      | BENCHMARK
-11 | Lucid Dream Preparation      | PASS  | PASS      | PASS
-18 | Calm in Three Minutes        | PASS  | PASS      | PASS
-19 | Release and Restore          | PASS  | PASS      | PASS
-23 | The Calm Reset               | PASS  | PASS      | PASS
-25 | Introduction to Mindfulness  | PASS  | PASS      | PASS
-29 | Open Awareness               | PASS  | PASS      | PASS
-32 | Observing Emotions           | PASS  | PASS      | PASS
-43 | Non-Dual Awareness           | PASS  | PASS      | PASS
+01 | Morning Meditation           | PASS  | PASS      | BENCHMARK
+
+Previous 13 "spec-compliant" sessions archived — to be rebuilt to new benchmark.
 
 ================================================================================
 12. TECHNICAL REFERENCE
@@ -1490,14 +1463,14 @@ NOT AUTOMATED (requires human review):
 --------------------------------------------------------------------------------
 PICKUP POINT FOR AUDIO REBUILDING:
 --------------------------------------------------------------------------------
-- 5 free sessions COMPLETE: 01, 03, 09, 25, 38
-- Session pages created for all 5 free sessions
-- Next priority: Sessions needing ambient overlay
-- Then: Rebuild remaining ~45 sessions (02, 04-08, 10-51)
-- Use build-session-v3.py for all new builds
+AUDIO RESET: 6 February 2026
+- All previous audio archived to content/audio-archive/ (2.2GB)
+- 1 approved session: 01-morning-meditation (BENCHMARK)
+- All other sessions need fresh rebuild to benchmark quality
+- NEXT: Session 02 — Deep Sleep
 - All scripts must pass Bible compliance check before building
 - Human review required for all audio before deployment
-- ALL audio must end with: "Thank you for practising with Salus. Sleep, relax, restore."
+- ALL audio must end with: "Thank you for practicing with Salus. Sleep, relax, restore."
 
 ================================================================================
 — END OF DOCUMENT —

@@ -110,6 +110,32 @@ Announcement phrases:
 
 ---
 
+## CRITICAL SAFETY: Breathing Exercise Pauses
+
+**HEALTH RISK — AUTOMATIC REJECT IF VIOLATED**
+
+Pauses between breathing instructions (inhale, hold, exhale) **MUST** use explicit `[X second pause]` markers. **NEVER** use `...` markers for breathing gaps. The randomised pause profiles will inflate breathing cycles to dangerous durations (30-40+ seconds observed on 6 Feb 2026).
+
+**Mandatory breathing pause format:**
+```
+Breathe in slowly.
+[4 second pause]
+
+Now hold your breath gently.
+[5 second pause]
+
+And breathe out through your mouth.
+[6 second pause]
+```
+
+**Rules:**
+- Total breathing cycle must not exceed **15 seconds** (4 in + 5 hold + 6 out)
+- `...` markers are ONLY for non-breathing pauses (scene-setting, reflection, transitions)
+- Any pause where the listener is actively holding breath or controlling breathing MUST be explicit
+- This applies to ALL breathing patterns (basic, box, 4-7-8)
+
+---
+
 ## Ambient Sound Rules
 
 ### CRITICAL: User Direction Required
@@ -371,12 +397,23 @@ afftdn = -25dB
 
 **Opening:**
 - Do NOT say "Welcome to Salus" at the start of every session
-- Jump straight into the content or a gentle opening like "Get comfortable..." or "Close your eyes..."
+- Start with a soft, contextual intro that sets the scene (e.g. "This is a gentle breathing session for when anxiety feels heavy.")
+- **No extended silence until the scene is set.** The first 3-4 sentences must flow with only short pauses (single `...`). Extended pauses (double/triple `...`) only after the listener knows what they're in and is settled.
 - Exception: Landing page / intro content can mention Salus
 
-**Closing:**
-- End with "Goodnight from Salus" (sleep sessions) or just fade out naturally
-- No need for lengthy sign-offs
+**Opening structure (mandatory):**
+```
+[Contextual intro — what this session is]     <- single ...
+[Second scene-setting sentence]               <- single ...
+[Third — instruction or reassurance]          <- single ...
+[Physical instruction — sit, close eyes etc]  <- NOW double/triple ... OK
+```
+
+**Closing (MANDATORY):**
+- Every session MUST end with: "Thank you for practicing with Salus. Sleep, relax, restore."
+- This is the ONLY acceptable closing. No variations. No exceptions.
+- Sleep sessions: Add "Goodnight" after the closing phrase
+- Other sessions: Fade out after the closing phrase
 
 ---
 
@@ -469,8 +506,8 @@ Human ear is the final gate.
 | TEMPO_SLOWDOWN | LOW | [EXPERIMENTAL] Speech >45% slower than baseline - BPM-based, needs tuning |
 | SEGMENT_TOO_SHORT | HIGH | TTS segment <50% of expected duration |
 | SEGMENT_TOO_LONG | MEDIUM | TTS segment >180% of expected duration |
-| SIBILANCE | HIGH | Harsh 's' sounds (often false positives - human verify) |
-| HISSING | HIGH | High-frequency noise (often false positives - human verify) |
+| SIBILANCE | LOW | Harsh 's' sounds — almost always false positives with Marco voice. Ignore unless human hears it. |
+| HISSING | LOW | High-frequency noise — almost always false positives. Downgraded 6 Feb after 03 review (15 flags, 0 audible). Ignore unless human hears it. |
 
 **Key improvement:** v5 loads the build manifest (if available) to compare expected vs actual segment timings.
 
@@ -486,8 +523,8 @@ python3 analyze_audio_v5.py <audio-file.mp3>
 **Pass criteria:**
 - VOICE_CHANGE = 0 (mandatory)
 - UNEXPECTED_SILENCE = 0 (mandatory)
-- TEMPO_SPEEDUP = warnings for human review (TTS sometimes rushes "thank you", closing phrases)
-- Other issues are warnings for human review
+- Everything else = informational only, ignore unless human ear catches it
+- SIBILANCE and HISSING are almost always false positives with Marco — downgraded to LOW (6 Feb 2026)
 
 **Tempo detection notes (EXPERIMENTAL):**
 - Uses librosa BPM estimation with 10-second sliding windows
@@ -883,6 +920,41 @@ Scanner results for human-approved audio (benchmark for expected false positives
 
 ---
 
+## Audio Reset — 6 February 2026
+
+**All previous audio has been archived.** Only one approved session remains.
+
+### Approved Audio (Production)
+| # | Session | File | Status |
+|---|---------|------|--------|
+| 01 | Morning Meditation | `content/audio-free/01-morning-meditation.mp3` | APPROVED — BENCHMARK |
+| 03 | Breathing for Anxiety | `content/audio-free/03-breathing-for-anxiety.mp3` | APPROVED (6 Feb 2026) |
+
+01 is the quality benchmark. Every new session must match or exceed this standard.
+
+### Archive Location
+All previous audio moved to `content/audio-archive/` (2.2GB). Organised by original folder:
+- `audio-archive/audio-free/` — previous deployed files
+- `audio-archive/audio/` — previous working copies
+- `audio-archive/audio-backup/` — previous backups
+- `audio-archive/audio-extended/` — previous extended versions
+
+Archive is reference only. Nothing in archive is approved for deployment.
+
+### Rebuild Queue (Starting Fresh)
+All sessions except 01 need to be built from scratch to benchmark quality.
+
+**Next up:** Session 02 — Deep Sleep
+
+### What Remains Active
+- `content/audio-free/01-morning-meditation.mp3` — approved production audio
+- `content/audio-free/01-morning-meditation_manifest.json` — build manifest
+- `content/audio-free/01-morning-meditation_REPORT_v4.txt` — analyzer report
+- `content/audio/ambient/` — ambient loops for mixing
+- `content/sounds/` — ASMR library (unchanged)
+
+---
+
 ## Claude Session Management
 
 **NO MEMORY FILES.** All project knowledge lives in this bible.
@@ -902,4 +974,4 @@ Future Claude sessions should:
 
 ---
 
-*Last updated: 5 February 2026 - Added analyzer v5 (with experimental tempo detection), build script v2, workflow improvements, TTS non-determinism lessons, no-memory-files rule*
+*Last updated: 6 February 2026 - Audio reset: all previous audio archived, 01-morning-meditation is sole approved benchmark, rebuilding from scratch*

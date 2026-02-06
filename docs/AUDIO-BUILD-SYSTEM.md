@@ -59,12 +59,12 @@ Use `...` on its own line for pauses. More consecutive lines = longer pause:
 
 | Category | Short | Medium | Long |
 |----------|-------|--------|------|
-| sleep | 8-15s | 25-45s | 60-105s |
-| focus | 3-6s | 8-15s | 15-30s |
-| stress | 5-10s | 15-30s | 30-60s |
-| mindfulness | 5-12s | 20-40s | 45-75s |
-| beginner | 4-8s | 12-25s | 25-45s |
-| advanced | 8-15s | 30-60s | 75-105s |
+| sleep | 5-10s | 12-20s | 25-45s |
+| focus | 2-4s | 5-10s | 10-20s |
+| stress | 3-7s | 8-15s | 15-30s |
+| mindfulness | 3-7s | 10-20s | 20-40s |
+| beginner | 3-6s | 8-15s | 15-25s |
+| advanced | 5-10s | 15-30s | 30-60s |
 
 ## Usage
 
