@@ -583,6 +583,9 @@ def build_page(s):
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script src="../js/auth.js">
   <style>
     .session-detail-hero {{
       background: {s['gradient']};
@@ -647,11 +650,8 @@ def build_page(s):
       <strong>Best for:</strong> {s['best_for']}
     </div>
 
-    <div class="unlock-cta">
-      <h2>&#128274; Premium Session</h2>
-      <p>Unlock this session and hundreds more with Salus Premium.</p>
-      <a href="../apps.html" class="btn">Start Free Trial</a>
-    </div>
+    <div class="unlock-cta" style="text-align:center;padding:32px 24px;margin:24px 0;background:var(--off-white);border-radius:16px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" style="margin-bottom:12px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><h3 style="margin-bottom:8px;color:var(--forest);">Premium Session</h3><p style="color:var(--mid-gray);margin-bottom:16px;">Subscribe to unlock this guided meditation and hundreds more.</p><a href="../apps.html" class="btn btn-primary" style="padding:8px 18px;font-size:0.85rem;">Subscribe</a>
+      <a href="../login.html" class="btn btn-outline nav-auth-btn" style="padding:8px 18px;font-size:0.85rem;margin-left:8px;">Log In</a></div>
   </div>
 
 {FOOTER}
