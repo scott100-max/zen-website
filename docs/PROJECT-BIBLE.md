@@ -314,20 +314,74 @@ fi
 
 ---
 
-## Deployment
+## Deployment & Infrastructure
 
-**Hosting:** GitHub Pages (auto-deploys on push)
-**Repository:** `https://github.com/scott100-max/Salus-Website.git`
-**Live site:** `https://salus-mind.com`
-**Branch:** `main`
+### Architecture
+| Service | What it hosts | URL |
+|---------|--------------|-----|
+| **GitHub Pages** | Website code (HTML, CSS, JS, small images) | `https://salus-mind.com` |
+| **Cloudflare R2** | Media files (MP3, MP4) | `https://media.salus-mind.com` |
+| **Cloudflare** | DNS for entire domain | Nameservers: `gerald.ns.cloudflare.com`, `megan.ns.cloudflare.com` |
 
-**To deploy changes:**
+### GitHub Pages (website code)
+- **Repository:** `https://github.com/scott100-max/Salus-Website.git`
+- **Branch:** `main`
+- **Auto-deploys** on push within 1-2 minutes
+
+**To deploy website changes:**
 ```bash
 git add <files>
 git commit -m "Description"
 git push origin main
-# Changes go live automatically within 1-2 minutes
 ```
+
+### Cloudflare R2 (media files)
+- **Bucket:** `salus-mind`
+- **Account ID:** `e798430a916680159a81cf34de0db9c2`
+- **Custom domain:** `media.salus-mind.com` (proxied through Cloudflare CDN)
+- **Public dev URL:** Disabled — use custom domain only
+- **API token** (Edit zone DNS): `yYNUa2enwfPdNnVrfcUQnWHhgMnebTSFntGWbwGe`
+
+**To upload new audio/video:**
+```bash
+# Via wrangler CLI:
+npx wrangler r2 object put salus-mind/content/audio-free/FILENAME.mp3 --file=./FILENAME.mp3
+
+# Or drag-and-drop in Cloudflare dashboard:
+# R2 → salus-mind bucket → Objects → Upload
+```
+
+**To reference media in HTML:**
+```html
+<div class="custom-player" data-src="https://media.salus-mind.com/content/audio-free/FILENAME.mp3">
+```
+
+**File paths in R2 bucket:**
+- Free audio: `content/audio-free/`
+- Sounds (ASMR): `content/sounds/`
+- Video: `content/video/`
+
+### Domain & DNS
+- **Registrar:** reg-123 (salus-mind.com), GoDaddy (salus-mind.co.uk)
+- **DNS managed by:** Cloudflare
+- GitHub Pages A records: `185.199.108-111.153`
+- `www` CNAME → `scott100-max.github.io`
+- `media` CNAME → R2 bucket (proxied)
+
+### SEO
+- **Google Search Console:** Verified via HTML file (`googleaba2f038193703b2.html`)
+- **Sitemap:** `https://salus-mind.com/sitemap.xml` (76 URLs)
+- **Canonical tags:** All 75 public HTML pages
+- **Open Graph + Twitter cards:** All 75 public HTML pages
+- **Default OG image:** `https://salus-mind.com/images/meditation-woman-outdoor.jpg`
+- **robots.txt:** Points to sitemap at `salus-mind.com`
+
+### Workflow Summary
+| Task | Action |
+|------|--------|
+| Edit HTML/CSS/JS | Change files → `git push` |
+| Add new audio/video | Upload to R2 → reference in HTML → `git push` |
+| Add new HTML page | Create page → add to sitemap.xml → `git push` |
 
 ---
 
@@ -431,9 +485,9 @@ sed -i '' 's|../sessions.html">Guided Meditations</a></li>|../sessions.html">Gui
 - Use `WebFetch` to confirm live site content matches expectations
 
 ### Large Files in Git
-- Never commit audio/video files over 100MB to git
-- Test files, debug files, and downloads should be in `.gitignore`
-- Current exclusions: `content/audio/test-*/`, `content/audio/debug-*/`, `*.py`
+- **NEVER commit audio/video files to git** — all media goes to Cloudflare R2
+- `.gitignore` excludes `*.mp3`, `*.mp4`, `*.wav`, and media directories
+- Test files, debug files, and downloads should also be in `.gitignore`
 
 ---
 
@@ -509,4 +563,4 @@ sed -i '' 's|../sessions.html">Guided Meditations</a></li>|../sessions.html">Gui
 
 ---
 
-*Last updated: 5 February 2026*
+*Last updated: 6 February 2026*
