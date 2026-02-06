@@ -536,10 +536,32 @@ def check_audio_links(result):
         for ref in audio_refs:
             # Remove query string if present
             clean_ref = ref.split('?')[0]
-            audio_path = SITE_ROOT / clean_ref
 
-            if not audio_path.exists():
-                broken_links.append((html_file.name, clean_ref))
+            if clean_ref.startswith('http://') or clean_ref.startswith('https://'):
+                # External URL (e.g. Cloudflare R2) — verify with curl
+                # Uses --resolve fallback via Google DNS if local DNS fails
+                try:
+                    import subprocess, urllib.parse
+                    parsed = urllib.parse.urlparse(clean_ref)
+                    hostname = parsed.hostname
+                    # Try resolving via Google DNS to get IP for --resolve flag
+                    dig = subprocess.run(['dig', '@8.8.8.8', hostname, '+short'],
+                                         capture_output=True, text=True, timeout=5)
+                    ip = dig.stdout.strip().split('\n')[-1]  # last line is the A record
+                    if ip:
+                        curl_cmd = ['curl', '-sI', '--max-time', '10',
+                                    '--resolve', f'{hostname}:443:{ip}', clean_ref]
+                    else:
+                        curl_cmd = ['curl', '-sI', '--max-time', '10', clean_ref]
+                    r = subprocess.run(curl_cmd, capture_output=True, text=True, timeout=15)
+                    if 'HTTP/2 200' not in r.stdout and 'HTTP/1.1 200' not in r.stdout:
+                        broken_links.append((html_file.name, clean_ref))
+                except Exception:
+                    broken_links.append((html_file.name, clean_ref))
+            else:
+                audio_path = SITE_ROOT / clean_ref
+                if not audio_path.exists():
+                    broken_links.append((html_file.name, clean_ref))
 
     if broken_links:
         for html_name, audio_ref in broken_links:
