@@ -1281,7 +1281,28 @@ Key lessons from free content production:
 - Beginner pause profiles produce ~11 min for 10 min target (acceptable)
 - Sleep pause profiles produce ~25 min for 30 min target (could be longer)
 
-NEXT: Session 02 (Deep Sleep) — first premium session rebuild
+SLEEP STORY BUILD RESULTS (6 February 2026):
+---------------------------------------------
+SS01 — Monty's Midnight Feast (45 min target, 147 chunks, Fish TTS Marco):
+
+Build | CRITICALs | Voice Changes              | Overlong Chunks | Result
+------|-----------|----------------------------|-----------------|--------
+1     | 3         | 23:41, 38:36, 39:28        | 3 (119s, 47s)   | FAIL
+2     | 2         | 31:06, 37:59 + repeat @35  | 2               | FAIL
+3     | 1         | 1 voice change             | 3 (47s, 62s, 62s)| FAIL
+
+*** PRODUCTION STOPPED ***
+Fish TTS cannot maintain voice consistency over 147 chunks / 45 minutes.
+Every build produced CRITICAL voice changes and overlong TTS chunks.
+Shorter sessions (5-18 min) pass reliably in 1-3 builds — 45-minute
+content exceeds Fish's reliability threshold.
+
+DECISION: Move sleep story narration to ElevenLabs.
+Fish TTS remains viable for shorter meditation sessions (<20 min).
+Scripts are complete and ready in content/sleep-stories/.
+
+NEXT: Session 02 (Deep Sleep) — first premium session rebuild (Fish TTS)
+NEXT: Sleep stories — awaiting ElevenLabs integration
 
 --------------------------------------------------------------------------------
 11.21 DEPLOYED SESSIONS TEST SUMMARY
@@ -1572,6 +1593,15 @@ WEBSITE UPDATES (6 February 2026):
 - Applied Psychology page: hero image added (lone tree on still water)
 - CTA banner: Subscribe + Join Newsletter buttons side by side
 - Newsletter form removed from footer
+
+DNS MIGRATION (6 February 2026):
+- Nameservers moved from GoDaddy (ns65/ns66.domaincontrol.com) to
+  Cloudflare (gerald/megan.ns.cloudflare.com)
+- Cloudflare zone: salus-mind.com — Status: Active, Free plan
+- Main site: still served via GitHub Pages (A records + www CNAME unchanged)
+- Media: served via Cloudflare R2 with custom domain media.salus-mind.com
+- All DNS now managed in Cloudflare dashboard
+- Registrar: reg-123 (salus-mind.com) — nameservers only, no DNS records there
 
 WEBSITE FIXES (6 February 2026 — Session 3):
 - Account link 404 on session pages: auth.js used element.href (returns

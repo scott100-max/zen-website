@@ -363,10 +363,12 @@ npx wrangler r2 object put salus-mind/content/audio-free/FILENAME.mp3 --file=./F
 
 ### Domain & DNS
 - **Registrar:** reg-123 (salus-mind.com), GoDaddy (salus-mind.co.uk)
-- **DNS managed by:** Cloudflare
+- **DNS managed by:** Cloudflare (nameservers: `gerald.ns.cloudflare.com`, `megan.ns.cloudflare.com`)
+- **Migrated:** 6 February 2026 — moved from GoDaddy DNS (`ns65/ns66.domaincontrol.com`) to Cloudflare
+- **Registrar holds nameservers only** — all DNS records managed in Cloudflare dashboard
 - GitHub Pages A records: `185.199.108-111.153`
 - `www` CNAME → `scott100-max.github.io`
-- `media` CNAME → R2 bucket (proxied)
+- `media` CNAME → R2 bucket (proxied through Cloudflare CDN)
 
 ### SEO
 - **Google Search Console:** Verified via HTML file (`googleaba2f038193703b2.html`)
