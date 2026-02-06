@@ -194,23 +194,23 @@
 
   <script>
     const reviewData = {
-      file: "content/audio-free/mixed/25-introduction-to-mindfulness.mp3",
-      filename: "25-introduction-to-mindfulness.mp3 (Build 3 + Stream 3hr @ -14dB)",
-      session: "25-introduction-to-mindfulness",
+      file: "content/audio-free/38-seven-day-mindfulness-day1.mp3",
+      filename: "38-seven-day-mindfulness-day1.mp3 (Build 3, Strike 3 waived)",
+      session: "38-seven-day-mindfulness-day1",
       expected: "~10:00",
-      actual: "14:25",
+      actual: "11:35",
       issues: [
-        { id: 1,  time: "00:00", seconds: 0,    severity: "high", type: "OPENING",    desc: "Check opening — soft intro?", verdict: null },
-        { id: 2,  time: "00:30", seconds: 30,   severity: "high", type: "TONE",       desc: "Stream ambient fading in — natural?", verdict: null },
-        { id: 3,  time: "02:30", seconds: 150,  severity: "high", type: "TONE",       desc: "'breath' section — voice consistent?", verdict: null },
-        { id: 4,  time: "04:20", seconds: 260,  severity: "high", type: "TONE",       desc: "'mind will wander' — natural delivery?", verdict: null },
-        { id: 5,  time: "05:30", seconds: 330,  severity: "high", type: "SILENCE",    desc: "45s pause — stream continuous?", verdict: null },
-        { id: 6,  time: "07:00", seconds: 420,  severity: "high", type: "SILENCE",    desc: "60s pause — stream continuous?", verdict: null },
-        { id: 7,  time: "09:00", seconds: 540,  severity: "high", type: "TONE",       desc: "'breaths together' section", verdict: null },
-        { id: 8,  time: "10:30", seconds: 630,  severity: "high", type: "SILENCE",    desc: "45s pause — ambient OK?", verdict: null },
-        { id: 9,  time: "12:00", seconds: 720,  severity: "high", type: "TONE",       desc: "Closing section — widen awareness", verdict: null },
-        { id: 10, time: "13:50", seconds: 830,  severity: "high", type: "CLOSING",    desc: "'Thank you for practicing with Salus'", verdict: null },
-        { id: 11, time: "14:10", seconds: 850,  severity: "high", type: "CLOSING",    desc: "'Sleep, relax, restore' — clean end?", verdict: null }
+        { id: 1,  time: "00:00", seconds: 0,     severity: "high",   type: "OPENING",      desc: "Check opening — 'This is Day One' soft intro?", verdict: null },
+        { id: 2,  time: "01:00", seconds: 60,    severity: "medium",  type: "TONE",         desc: "What is mindfulness section — warm delivery?", verdict: null },
+        { id: 3,  time: "02:00", seconds: 120,   severity: "high",   type: "VOICE_CHANGE", desc: "FLAGGED: Voice change at 02:00 — audible?", verdict: null },
+        { id: 4,  time: "03:30", seconds: 210,   severity: "medium",  type: "TONE",         desc: "Practice begins — get comfortable", verdict: null },
+        { id: 5,  time: "04:30", seconds: 270,   severity: "medium",  type: "TONE",         desc: "Breathing section — natural pace?", verdict: null },
+        { id: 6,  time: "05:30", seconds: 330,   severity: "medium",  type: "TONE",         desc: "Breath awareness — nostrils/chest/belly", verdict: null },
+        { id: 7,  time: "06:30", seconds: 390,   severity: "high",   type: "SILENCE",      desc: "60s silence — smooth transition?", verdict: null },
+        { id: 8,  time: "07:24", seconds: 444,   severity: "high",   type: "VOICE_CHANGE", desc: "FLAGGED: Voice change at 07:24 — audible?", verdict: null },
+        { id: 9,  time: "08:30", seconds: 510,   severity: "medium",  type: "TONE",         desc: "Mind wandering section — encouraging?", verdict: null },
+        { id: 10, time: "10:00", seconds: 600,   severity: "medium",  type: "TONE",         desc: "Widening attention — closing approach", verdict: null },
+        { id: 11, time: "11:00", seconds: 660,   severity: "high",   type: "CLOSING",      desc: "'Thank you for practicing with Salus. Sleep, relax, restore.'", verdict: null }
       ]
     };
 
