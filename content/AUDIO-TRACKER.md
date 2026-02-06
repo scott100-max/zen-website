@@ -5,7 +5,7 @@
 |---|---------|--------|-------|---------|--------|------|
 | 01 | Morning Meditation | Approved (benchmark) | PASS | None | APPROVED | Pre-reset |
 | 03 | Breathing for Anxiety | Rewritten (safe breathing) | PASS (Build 7, Strike 3 waived) | Birds 8hr -14dB | APPROVED | 6 Feb 2026 |
-| 25 | Introduction to Mindfulness | Rewritten | PASS (Build 3) | Stream 3hr -16dB | APPROVED | 6 Feb 2026 |
+| 25 | 10-Minute Mindfulness | Rewritten | PASS (Build 3) | Stream 3hr -16dB | APPROVED | 6 Feb 2026 |
 
 ## In Progress
 | # | Session | Stage | Notes |
@@ -40,7 +40,7 @@
 | 33 | Morning Mindfulness | Mindfulness | Archived | |
 | 36 | Loving Kindness Intro | Mindfulness | Archived | |
 | 37 | Building a Daily Practice | Beginner | Archived | |
-| 38 | Seven Day Mindfulness Day 1 | Beginner | Archived | Was free content |
+| 38 | Day 1: The Foundation | Beginner | Archived | Was free content |
 
 ## Low Priority
 | # | Session | Category | Notes |

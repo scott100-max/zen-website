@@ -13,6 +13,7 @@ content/video/*.mp4
 # Large audio files
 content/audio-backup/
 content/audio-extended/
+content/audio-archive/
 content/audio/ambient/rain-campervan-8hr.mp3
 
 # Large test/debug audio files (not for production)
