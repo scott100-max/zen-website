@@ -1537,6 +1537,22 @@ LESSON: Simple keyword matching fails for natural language meditation scripts.
 Context matters. Always test validator changes against known-good content.
 
 --------------------------------------------------------------------------------
+VALIDATOR FIXES (6 February 2026):
+--------------------------------------------------------------------------------
+FIX 1: Audio link checker updated for Cloudflare R2.
+- Old behaviour: treated full URLs as local file paths (always failed)
+- New behaviour: uses curl with Google DNS (8.8.8.8) fallback via --resolve
+  flag, so checks work even when local DNS hasn't propagated after changes
+- Handles both local paths and external https:// URLs
+
+FIX 2: Closing phrase spelling corrected.
+- Validator checked for British "practising" but scripts use American
+  "practicing" — caused 5 false positive warnings on every run
+- Fixed to match actual script content: "thank you for practicing with salus"
+
+RESULT: All 12 checks now pass with 0 errors and 0 warnings.
+
+--------------------------------------------------------------------------------
 VALIDATOR COVERAGE (4 February 2026):
 --------------------------------------------------------------------------------
 The validator (validate-site.py) checks these Bible rules:
