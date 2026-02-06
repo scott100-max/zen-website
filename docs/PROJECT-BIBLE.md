@@ -563,4 +563,46 @@ sed -i '' 's|../sessions.html">Guided Meditations</a></li>|../sessions.html">Gui
 
 ---
 
+### 6 February 2026 — SEO Fundamentals & Infrastructure
+
+**SEO Changes:**
+
+| Change | Details |
+|--------|---------|
+| robots.txt | Fixed sitemap URL from `scott100-max.github.io` to `salus-mind.com` |
+| sitemap.xml | Complete rebuild: 13 URLs → 76 URLs with priorities and lastmod dates |
+| Canonical tags | Added `<link rel="canonical">` to all 75 public HTML pages |
+| Open Graph tags | Added `og:title`, `og:description`, `og:url`, `og:type`, `og:image` to all 75 pages |
+| Twitter cards | Added `twitter:card` (summary_large_image) to all 75 pages |
+| Google Search Console | Verified via HTML file, sitemap submitted |
+
+**Excluded from SEO tags:** dashboard.html, login.html, signup.html, reset-password.html, test-audio-player.html, thank-you.html, content/* (internal pages)
+
+**Infrastructure Completed:**
+
+| Task | Status |
+|------|--------|
+| Cloudflare zone activated | Active (nameservers: gerald/megan.ns.cloudflare.com) |
+| media.salus-mind.com custom domain | Connected to R2 bucket, serving files |
+| Media URLs in HTML | Switched from `pub-...r2.dev` to `media.salus-mind.com` (5 files) |
+| R2 public dev URL | Can be disabled — custom domain is now the production path |
+
+**Sleep Stories — 49 Titles Added:**
+- All 52 books now have titles (3 with covers, 49 with gradient placeholders)
+- Cover brief created at `docs/SLEEP-STORY-COVERS-BRIEF.md` for Claude Desktop
+- Covers to be saved as PNG to `content/images/sleep-stories/` using kebab-case filenames
+- Once covers are created, they need to be wired into `sleep-stories.html` (replace gradient backgrounds with `background:url(...)`)
+
+**Files Modified:**
+- `robots.txt` — Sitemap URL
+- `sitemap.xml` — Complete rebuild
+- 75 HTML pages — Canonical + OG + Twitter tags
+- `googleaba2f038193703b2.html` — NEW (Google verification)
+- `media.html`, `soundscapes.html`, `mindfulness.html`, `mindfulness-21-day.html`, `sessions.html` — Media URLs
+- `sleep-stories.html` — 49 titled books
+- `docs/PROJECT-BIBLE.md` — Infrastructure & deployment docs added
+- `docs/SLEEP-STORY-COVERS-BRIEF.md` — NEW (cover generation brief)
+
+---
+
 *Last updated: 6 February 2026*
