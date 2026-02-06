@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://scott100-max.github.io/salus-website/sitemap.xml
+Sitemap: https://salus-mind.com/sitemap.xml

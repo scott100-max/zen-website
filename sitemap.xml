@@ -1,14 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://scott100-max.github.io/salus-website/</loc><priority>1.0</priority></url>
-  <url><loc>https://scott100-max.github.io/salus-website/about.html</loc><priority>0.8</priority></url>
-  <url><loc>https://scott100-max.github.io/salus-website/apps.html</loc><priority>0.9</priority></url>
-  <url><loc>https://scott100-max.github.io/salus-website/media.html</loc><priority>0.8</priority></url>
-  <url><loc>https://scott100-max.github.io/salus-website/contact.html</loc><priority>0.7</priority></url>
-  <url><loc>https://scott100-max.github.io/salus-website/breathe.html</loc><priority>0.8</priority></url>
-  <url><loc>https://scott100-max.github.io/salus-website/timer.html</loc><priority>0.8</priority></url>
-  <url><loc>https://scott100-max.github.io/salus-website/sounds.html</loc><priority>0.8</priority></url>
-  <url><loc>https://scott100-max.github.io/salus-website/faq.html</loc><priority>0.6</priority></url>
-  <url><loc>https://scott100-max.github.io/salus-website/privacy.html</loc><priority>0.3</priority></url>
-  <url><loc>https://scott100-max.github.io/salus-website/terms.html</loc><priority>0.3</priority></url>
+
+  <!-- Homepage -->
+  <url><loc>https://salus-mind.com/</loc><lastmod>2026-02-06</lastmod><priority>1.0</priority></url>
+
+  <!-- Core pages -->
+  <url><loc>https://salus-mind.com/sessions.html</loc><lastmod>2026-02-06</lastmod><priority>0.9</priority></url>
+  <url><loc>https://salus-mind.com/mindfulness.html</loc><lastmod>2026-02-06</lastmod><priority>0.9</priority></url>
+  <url><loc>https://salus-mind.com/soundscapes.html</loc><lastmod>2026-02-06</lastmod><priority>0.9</priority></url>
+  <url><loc>https://salus-mind.com/sleep-stories.html</loc><lastmod>2026-02-06</lastmod><priority>0.9</priority></url>
+  <url><loc>https://salus-mind.com/media.html</loc><lastmod>2026-02-06</lastmod><priority>0.9</priority></url>
+  <url><loc>https://salus-mind.com/education.html</loc><lastmod>2026-02-06</lastmod><priority>0.9</priority></url>
+  <url><loc>https://salus-mind.com/apps.html</loc><lastmod>2026-02-06</lastmod><priority>0.9</priority></url>
+
+  <!-- Feature pages -->
+  <url><loc>https://salus-mind.com/breathe.html</loc><lastmod>2026-02-06</lastmod><priority>0.8</priority></url>
+  <url><loc>https://salus-mind.com/timer.html</loc><lastmod>2026-02-06</lastmod><priority>0.8</priority></url>
+  <url><loc>https://salus-mind.com/sounds.html</loc><lastmod>2026-02-06</lastmod><priority>0.8</priority></url>
+  <url><loc>https://salus-mind.com/tools.html</loc><lastmod>2026-02-06</lastmod><priority>0.8</priority></url>
+  <url><loc>https://salus-mind.com/reading.html</loc><lastmod>2026-02-06</lastmod><priority>0.8</priority></url>
+  <url><loc>https://salus-mind.com/applied-psychology.html</loc><lastmod>2026-02-06</lastmod><priority>0.8</priority></url>
+  <url><loc>https://salus-mind.com/mindfulness-21-day.html</loc><lastmod>2026-02-06</lastmod><priority>0.8</priority></url>
+
+  <!-- Info pages -->
+  <url><loc>https://salus-mind.com/about.html</loc><lastmod>2026-02-06</lastmod><priority>0.7</priority></url>
+  <url><loc>https://salus-mind.com/contact.html</loc><lastmod>2026-02-06</lastmod><priority>0.7</priority></url>
+  <url><loc>https://salus-mind.com/newsletter.html</loc><lastmod>2026-02-06</lastmod><priority>0.7</priority></url>
+  <url><loc>https://salus-mind.com/faq.html</loc><lastmod>2026-02-06</lastmod><priority>0.7</priority></url>
+
+  <!-- Session pages -->
+  <url><loc>https://salus-mind.com/sessions/anger-frustration-release.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/anxiety-relief.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/body-scan-meditation.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/breathing-for-anxiety.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/building-a-daily-practice.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/calm-reset.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/chakra-alignment.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/counting-down-to-sleep.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/creative-flow.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/deep-sleep.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/deep-work-mode.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/exam-preparation.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/gratitude-before-sleep.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/introduction-to-mindfulness.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/laser-focus.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/letting-go-of-thoughts.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/loving-kindness.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/lucid-dream-preparation.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/meditation-for-beginners.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/meditation-foundations.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/mindful-breathing.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/mindful-eating.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/mindful-walking.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/mindfulness-at-work.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/moonlight-body-scan.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/morning-energy.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/morning-meditation.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/morning-mindfulness.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/non-dual-awareness.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/observing-emotions.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/open-awareness.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/peak-performance.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/rainfall-sleep-journey.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/releasing-tension.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/self-compassion.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/seven-day-mindfulness-course.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/seven-day-mindfulness-day1.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/sleep-stories-forest.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/sleep-stories-ocean.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/stress-dissolve.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/transcendental-stillness.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/vipassana-insight.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/worry-release.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://salus-mind.com/sessions/yoga-nidra.html</loc><lastmod>2026-02-06</lastmod><priority>0.6</priority></url>
+
+  <!-- Newsletter archive -->
+  <url><loc>https://salus-mind.com/newsletters/2025-03.html</loc><lastmod>2025-03-01</lastmod><priority>0.4</priority></url>
+  <url><loc>https://salus-mind.com/newsletters/2025-04.html</loc><lastmod>2025-04-01</lastmod><priority>0.4</priority></url>
+  <url><loc>https://salus-mind.com/newsletters/2025-05.html</loc><lastmod>2025-05-01</lastmod><priority>0.4</priority></url>
+  <url><loc>https://salus-mind.com/newsletters/2025-06.html</loc><lastmod>2025-06-01</lastmod><priority>0.4</priority></url>
+  <url><loc>https://salus-mind.com/newsletters/2025-08.html</loc><lastmod>2025-08-01</lastmod><priority>0.4</priority></url>
+  <url><loc>https://salus-mind.com/newsletters/2025-10.html</loc><lastmod>2025-10-01</lastmod><priority>0.4</priority></url>
+  <url><loc>https://salus-mind.com/newsletters/2025-11.html</loc><lastmod>2025-11-01</lastmod><priority>0.4</priority></url>
+  <url><loc>https://salus-mind.com/newsletters/2025-12.html</loc><lastmod>2025-12-01</lastmod><priority>0.4</priority></url>
+  <url><loc>https://salus-mind.com/newsletters/2026-01.html</loc><lastmod>2026-01-01</lastmod><priority>0.4</priority></url>
+
+  <!-- Legal pages -->
+  <url><loc>https://salus-mind.com/privacy.html</loc><lastmod>2026-02-06</lastmod><priority>0.3</priority></url>
+  <url><loc>https://salus-mind.com/terms.html</loc><lastmod>2026-02-06</lastmod><priority>0.3</priority></url>
+  <url><loc>https://salus-mind.com/disclaimer.html</loc><lastmod>2026-02-06</lastmod><priority>0.3</priority></url>
+
 </urlset>
