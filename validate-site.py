@@ -298,7 +298,7 @@ def check_audio_closing(result):
     if not SCRIPTS_DIR.exists():
         return
 
-    REQUIRED_CLOSING = "thank you for practising with salus"
+    REQUIRED_CLOSING = "thank you for practicing with salus"
 
     for script_file in SCRIPTS_DIR.glob("*.txt"):
         if script_file.name == "TEMPLATE.txt":
