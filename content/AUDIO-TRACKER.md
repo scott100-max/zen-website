@@ -7,6 +7,7 @@
 | 03 | Breathing for Anxiety | Rewritten (safe breathing) | PASS (Build 7, Strike 3 waived) | Birds 8hr -14dB | APPROVED | 6 Feb 2026 |
 | 25 | 10-Minute Mindfulness | Rewritten | PASS (Build 3) | Stream 3hr -16dB | APPROVED | 6 Feb 2026 |
 | 09 | Rainfall Sleep Journey | Rewritten | PASS (Build 3, Strike 3 waived) | Rain 8hr -12dB | APPROVED | 6 Feb 2026 |
+| 38 | Day 1: The Foundation | Rewritten | PASS (Build 3, Strike 3 waived) | Birds 8hr -16dB | APPROVED | 6 Feb 2026 |
 
 ## In Progress
 | # | Session | Stage | Notes |
@@ -40,7 +41,6 @@
 | 33 | Morning Mindfulness | Mindfulness | Archived | |
 | 36 | Loving Kindness Intro | Mindfulness | Archived | |
 | 37 | Building a Daily Practice | Beginner | Archived | |
-| 38 | Day 1: The Foundation | Beginner | Archived | Was free content |
 
 ## Low Priority
 | # | Session | Category | Notes |
@@ -56,6 +56,6 @@
 
 ## Stats
 - **Total sessions**: 50
-- **Approved**: 4
+- **Approved**: 5
 - **Archived scripts**: 48
-- **Rewritten scripts**: 4 (01, 03, 09, 25)
+- **Rewritten scripts**: 5 (01, 03, 09, 25, 38)

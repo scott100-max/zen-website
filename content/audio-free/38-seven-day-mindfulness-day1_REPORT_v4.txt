@@ -1,0 +1,194 @@
+======================================================================
+SALUS AUDIO QUALITY ANALYZER v5 (DROPOUT DETECTION)
+======================================================================
+
+File: 38-seven-day-mindfulness-day1.mp3
+Duration: 11:34.88
+Analysis: 2026-02-06 13:27
+
+----------------------------------------------------------------------
+SUMMARY
+----------------------------------------------------------------------
+Total Issues: 54
+  CRITICAL: 0
+  HIGH: 32
+  MEDIUM: 17
+
+By Type:
+  CLICK_GLITCH: 11
+  HISSING: 6
+  SIBILANCE: 30
+  TEMPO_SPEEDUP: 5
+  VOICE_CHANGE: 2
+
+----------------------------------------------------------------------
+VERDICT
+----------------------------------------------------------------------
+FAIL - 32 HIGH issues
+
+----------------------------------------------------------------------
+ALL ISSUES (by timestamp)
+----------------------------------------------------------------------
+
+  1. [MEDIUM  ] 00:00.00 CLICK_GLITCH
+     Click/glitch detected at 00:00.00 (spike=4.4x local)
+
+  2. [HIGH    ] 00:00.32 SIBILANCE
+     Harsh 's' sound at 00:00.32 (intensity=21.1x baseline)
+
+  3. [MEDIUM  ] 00:01.30 SIBILANCE
+     Harsh 's' sound at 00:01.30 (intensity=2.8x baseline)
+
+  4. [MEDIUM  ] 00:01.53 SIBILANCE
+     Harsh 's' sound at 00:01.53 (intensity=2.5x baseline)
+
+  5. [MEDIUM  ] 00:01.74 SIBILANCE
+     Harsh 's' sound at 00:01.74 (intensity=2.5x baseline)
+
+  6. [MEDIUM  ] 00:02.00 CLICK_GLITCH
+     Click/glitch detected at 00:02.00 (spike=4.0x local)
+
+  7. [HIGH    ] 00:02.85 SIBILANCE
+     Harsh 's' sound at 00:02.85 (intensity=53.3x baseline)
+
+  8. [MEDIUM  ] 00:03.00 CLICK_GLITCH
+     Click/glitch detected at 00:03.00 (spike=4.1x local)
+
+  9. [HIGH    ] 00:03.25 SIBILANCE
+     Harsh 's' sound at 00:03.25 (intensity=72.3x baseline)
+
+ 10. [MEDIUM  ] 00:03.80 SIBILANCE
+     Harsh 's' sound at 00:03.80 (intensity=3.6x baseline)
+
+ 11. [MEDIUM  ] 00:04.00 CLICK_GLITCH
+     Click/glitch detected at 00:04.00 (spike=7.5x local)
+
+ 12. [HIGH    ] 00:09.45 SIBILANCE
+     Harsh 's' sound at 00:09.45 (intensity=5.4x baseline)
+
+ 13. [HIGH    ] 00:10.14 SIBILANCE
+     Harsh 's' sound at 00:10.14 (intensity=67.4x baseline)
+
+ 14. [HIGH    ] 00:10.77 SIBILANCE
+     Harsh 's' sound at 00:10.77 (intensity=33.7x baseline)
+
+ 15. [MEDIUM  ] 00:11.00 CLICK_GLITCH
+     Click/glitch detected at 00:11.00 (spike=6.5x local)
+
+ 16. [HIGH    ] 00:11.91 SIBILANCE
+     Harsh 's' sound at 00:11.91 (intensity=5.3x baseline)
+
+ 17. [MEDIUM  ] 00:12.00 CLICK_GLITCH
+     Click/glitch detected at 00:12.00 (spike=6.3x local)
+
+ 18. [HIGH    ] 00:12.77 SIBILANCE
+     Harsh 's' sound at 00:12.77 (intensity=42.9x baseline)
+
+ 19. [HIGH    ] 00:13.00 CLICK_GLITCH
+     Click/glitch detected at 00:13.00 (spike=9.7x local)
+
+ 20. [HIGH    ] 00:13.76 SIBILANCE
+     Harsh 's' sound at 00:13.76 (intensity=101.5x baseline)
+
+ 21. [HIGH    ] 00:14.00 CLICK_GLITCH
+     Click/glitch detected at 00:14.00 (spike=8.5x local)
+
+ 22. [HIGH    ] 00:14.32 SIBILANCE
+     Harsh 's' sound at 00:14.32 (intensity=88.5x baseline)
+
+ 23. [MEDIUM  ] 00:14.83 SIBILANCE
+     Harsh 's' sound at 00:14.83 (intensity=3.1x baseline)
+
+ 24. [MEDIUM  ] 00:15.00 CLICK_GLITCH
+     Click/glitch detected at 00:15.00 (spike=4.5x local)
+
+ 25. [MEDIUM  ] 00:15.44 SIBILANCE
+     Harsh 's' sound at 00:15.44 (intensity=3.2x baseline)
+
+ 26. [HIGH    ] 00:16.85 SIBILANCE
+     Harsh 's' sound at 00:16.85 (intensity=4.6x baseline)
+
+ 27. [MEDIUM  ] 00:17.00 CLICK_GLITCH
+     Click/glitch detected at 00:17.00 (spike=4.3x local)
+
+ 28. [HIGH    ] 00:21.36 SIBILANCE
+     Harsh 's' sound at 00:21.36 (intensity=5.4x baseline)
+
+ 29. [HIGH    ] 00:21.73 SIBILANCE
+     Harsh 's' sound at 00:21.73 (intensity=59.7x baseline)
+
+ 30. [HIGH    ] 00:22.01 SIBILANCE
+     Harsh 's' sound at 00:22.01 (intensity=6.6x baseline)
+
+ 31. [HIGH    ] 00:22.26 SIBILANCE
+     Harsh 's' sound at 00:22.26 (intensity=18.0x baseline)
+
+ 32. [HIGH    ] 00:22.61 SIBILANCE
+     Harsh 's' sound at 00:22.61 (intensity=7.6x baseline)
+
+ 33. [HIGH    ] 00:23.19 SIBILANCE
+     Harsh 's' sound at 00:23.19 (intensity=81.1x baseline)
+
+ 34. [HIGH    ] 00:23.19 HISSING
+     Hissing at 00:23.19-00:23.66 (intensity=14.7x)
+
+ 35. [MEDIUM  ] 00:23.84 SIBILANCE
+     Harsh 's' sound at 00:23.84 (intensity=2.8x baseline)
+
+ 36. [MEDIUM  ] 00:24.00 CLICK_GLITCH
+     Click/glitch detected at 00:24.00 (spike=4.9x local)
+
+ 37. [HIGH    ] 00:24.14 SIBILANCE
+     Harsh 's' sound at 00:24.14 (intensity=27.2x baseline)
+
+ 38. [HIGH    ] 00:24.63 SIBILANCE
+     Harsh 's' sound at 00:24.63 (intensity=8.1x baseline)
+
+ 39. [MEDIUM  ] 00:25.17 SIBILANCE
+     Harsh 's' sound at 00:25.17 (intensity=3.9x baseline)
+
+ 40. [HIGH    ] 00:29.21 SIBILANCE
+     Harsh 's' sound at 00:29.21 (intensity=42.7x baseline)
+
+ 41. [HIGH    ] 00:29.79 SIBILANCE
+     Harsh 's' sound at 00:29.79 (intensity=72.2x baseline)
+
+ 42. [HIGH    ] 00:30.48 SIBILANCE
+     Harsh 's' sound at 00:30.48 (intensity=40.7x baseline)
+
+ 43. [HIGH    ] 00:30.48 HISSING
+     Hissing at 00:30.48-00:31.18 (intensity=13.4x)
+
+ 44. [HIGH    ] 00:32.62 HISSING
+     Hissing at 00:32.62-00:33.15 (intensity=15.3x)
+
+ 45. [HIGH    ] 02:00.11 VOICE_CHANGE
+     Voice differs at 02:00.11 (MFCC=0.008, pitch diff=25.8Hz)
+
+ 46. [HIGH    ] 03:08.94 HISSING
+     Hissing at 03:08.94-03:09.31 (intensity=5.8x)
+
+ 47. [LOW     ] 04:04.62 TEMPO_SPEEDUP
+     [EXPERIMENTAL] Speech may speed up at 04:04.62 (199 vs baseline 140 BPM)
+
+ 48. [LOW     ] 04:42.56 TEMPO_SPEEDUP
+     [EXPERIMENTAL] Speech may speed up at 04:42.56 (199 vs baseline 140 BPM)
+
+ 49. [LOW     ] 04:54.54 TEMPO_SPEEDUP
+     [EXPERIMENTAL] Speech may speed up at 04:54.54 (199 vs baseline 140 BPM)
+
+ 50. [HIGH    ] 07:24.36 VOICE_CHANGE
+     Voice differs at 07:24.36 (MFCC=0.005, pitch diff=23.8Hz)
+
+ 51. [HIGH    ] 07:38.82 HISSING
+     Hissing at 07:38.82-07:39.29 (intensity=17.4x)
+
+ 52. [LOW     ] 09:08.15 TEMPO_SPEEDUP
+     [EXPERIMENTAL] Speech may speed up at 09:08.15 (258 vs baseline 140 BPM)
+
+ 53. [LOW     ] 10:57.98 TEMPO_SPEEDUP
+     [EXPERIMENTAL] Speech may speed up at 10:57.98 (199 vs baseline 140 BPM)
+
+ 54. [HIGH    ] 11:21.62 HISSING
+     Hissing at 11:21.62-11:22.01 (intensity=11.8x)
+

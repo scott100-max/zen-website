@@ -247,7 +247,10 @@
     <div class="container">
       <h2 class="fade-in">Let's build something together</h2>
       <p class="fade-in">We're not a corporation. We're a family who built something we believe in. Come be part of it.</p>
-      <a href="apps.html" class="btn fade-in">Subscribe</a>
+      <div class="cta-buttons fade-in" style="display:flex;gap:16px;justify-content:center;align-items:center;flex-wrap:wrap;">
+        <a href="apps.html" class="btn" style="min-width:180px;text-align:center;">Subscribe</a>
+        <a href="newsletter.html" class="btn" style="min-width:180px;text-align:center;">Join Newsletter</a>
+      </div>
     </div>
   </section>
 
@@ -288,11 +291,6 @@
             <li><a href="timer.html">Meditation Timer</a></li>
             <li><a href="sounds.html">ASMR</a></li>
           </ul>
-          <h4 style="margin-top:24px;"><a href="newsletter.html" style="color:inherit;text-decoration:none;">Newsletter</a></h4>
-          <form class="newsletter-form" onsubmit="event.preventDefault();this.querySelector('button').textContent='Subscribed!';this.querySelector('input').value='';return false;">
-            <input type="email" placeholder="Your email" required>
-            <button type="submit">Join</button>
-          </form>
         </div>
       </div>
       <div class="footer-bottom">
