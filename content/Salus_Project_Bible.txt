@@ -56,9 +56,11 @@ Total Unique Content         | 79         | ~24h 30m
 2.1 REPOSITORY STRUCTURE
 ------------------------
 content/
-├── scripts/           # Source scripts with metadata
+├── scripts/           # Source scripts with metadata (meditations)
 │   ├── TEMPLATE.txt   # Template for new sessions
 │   └── XX-name.txt    # Individual session scripts
+├── sleep-stories/     # Sleep story scripts (separate from meditations)
+│   └── ssXX-name.txt  # Individual sleep story scripts
 ├── audio/             # Generated audio files
 │   └── ambient/       # Ambient sound loops for mixing
 ├── audio-free/        # Primary audio source (premium content)
@@ -414,6 +416,89 @@ This is the ONLY acceptable closing. No variations. No exceptions.
 - Sleep sessions: End with the closing phrase, then "Goodnight"
 - Other sessions: End with the closing phrase, then fade out
 - The phrase must be clearly audible, not rushed or cut off
+
+EXCEPTION: Sleep Stories — see Section 4.7 for separate closing rules.
+
+4.7 SLEEP STORY RULES
+---------------------
+Sleep stories are NARRATIVE content — bedtime tales designed to guide the
+listener to sleep through storytelling, not guided meditation. They follow
+different rules from meditation sessions.
+
+FILE LOCATION:
+    content/sleep-stories/ssXX-story-name.txt
+    Example: content/sleep-stories/ss01-montys-midnight-feast.txt
+
+Sleep stories live in their own folder, separate from meditation scripts.
+The "ss" prefix further distinguishes them from numbered meditation
+sessions (01-51).
+
+METADATA:
+    Story Title
+    Duration: 45 minutes
+    Category: sleep
+    Ambient: [appropriate ambient — night, forest, garden, ocean, rain]
+    Style: Warm, grounded male narrator
+    ---
+
+TARGET DURATION: 45 minutes (longer than standard meditations).
+
+CLOSING (SLEEP STORIES ONLY):
+*****************************************************************************
+*     SLEEP STORIES DO NOT USE THE STANDARD MEDITATION CLOSING              *
+*****************************************************************************
+
+Sleep stories end with:
+
+    "Goodnight. Sweet dreams."
+
+Do NOT use "Thank you for practicing with Salus. Sleep, relax, restore."
+for sleep stories. You don't "practice" a story — you listen to one.
+
+PACING:
+- Use ... pause markers throughout for slow, drowsy pacing
+- Sleep pause durations apply (5-10s short, 12-20s medium, 25-45s long)
+- Pace should be slow and unhurried — the story should drift
+
+NO ANNOUNCED SILENCES:
+*****************************************************************************
+*     SLEEP STORIES DO NOT USE ANNOUNCED SILENCES (60s/90s)                 *
+*****************************************************************************
+
+The meditation silence rules (Section 4.4) do NOT apply to sleep stories.
+No "I'm going to be quiet now" announcements. No [60 second pause] or
+[90 second pause] blocks. These break the narrative flow of a story.
+
+Stories maintain pace through natural ... pauses between narrative blocks.
+
+NARRATIVE RULES:
+- These are STORIES, not instructions — the narrator tells, not directs
+- Rich sensory detail: sights, sounds, smells, textures, warmth
+- No conflict, no tension, no stakes — everything is safe and calm
+- The story should become progressively slower and drowsier
+- No breathing exercises or body scans within the story
+- The listener can be a character (walking through a garden) or an
+  observer (watching Monty the cat)
+- The opening can gently settle the listener ("Settle in tonight")
+  but should move quickly into the story itself
+- No "Welcome to Salus"
+
+STORY STRUCTURE:
+1. Brief settling-in (2-3 lines, then into the story)
+2. Scene-setting — establish the world with sensory detail
+3. Gentle narrative — things happen slowly, described richly
+4. Progressive drowsiness — language slows, descriptions soften
+5. Wind-down — story reaches a natural resting place
+6. Close: "Goodnight. Sweet dreams."
+
+CURRENT SLEEP STORIES:
+#    | Title                    | Ambient | Status
+-----|--------------------------|---------|--------
+SS01 | Monty's Midnight Feast   | night   | Script complete
+SS02 | The Moonlit Garden       | garden  | Script complete
+SS03 | The Whispering Woods     | forest  | Script complete
+
+Target: 52 stories (one per week for a year).
 
 ================================================================================
 5. BUILD SYSTEM
@@ -1488,7 +1573,25 @@ WEBSITE UPDATES (6 February 2026):
 - CTA banner: Subscribe + Join Newsletter buttons side by side
 - Newsletter form removed from footer
 
+WEBSITE FIXES (6 February 2026 — Session 3):
+- Account link 404 on session pages: auth.js used element.href (returns
+  resolved absolute URL, never contains "../") for subdirectory detection.
+  Fixed to use getAttribute('href') which returns the raw attribute value.
+  Affected all 44 session pages — Account button linked to /sessions/dashboard.html
+  instead of /dashboard.html.
+- Subscribe/Log In button size mismatch on session pages: Subscribe button
+  in unlock CTA had no inline style (default 14px 32px padding) while Log In
+  had style="padding:8px 18px;font-size:0.85rem". Added matching inline style
+  to Subscribe button across all 44 session pages.
+- build-session-pages.py updated: was generating outdated unlock CTA with
+  single "Start Free Trial" button and no auth integration. Now generates
+  both Subscribe + Log In buttons with matching sizes, and includes
+  supabase-js + supabase-config.js + auth.js script tags.
+
+NOTE: build-session-pages.py is the ONLY build script that generates HTML.
+All other build-*.py scripts (17 total) are audio builders.
+
 ================================================================================
 — END OF DOCUMENT —
-Last updated: 6 February 2026 (v1.7.1 - Sleep Story Covers Deployed)
+Last updated: 6 February 2026 (v1.7.2 - Auth & Button Fixes)
 ================================================================================
