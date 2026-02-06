@@ -1,4 +1,19 @@
-# Background source clips (not needed on site)
+# Media files (served from GitHub Releases)
+*.mp3
+*.mp4
+*.wav
+*.m4a
+*.ogg
+*.webm
+
+# Media directories
+content/audio/
+content/audio-free/
+content/audio-backup/
+content/audio-extended/
+content/audio-archive/
+content/sounds/
+content/video/*.mp4
 content/video/backgrounds/
 
 # System files
@@ -8,22 +23,12 @@ content/video/backgrounds/
 # Research screenshots (not for public repo)
 calm/
 Calm/
-content/video/*.mp4
 
-# Large audio files
-content/audio-backup/
-content/audio-extended/
-content/audio-archive/
-content/audio/ambient/rain-campervan-8hr.mp3
-
-# Large test/debug audio files (not for production)
-content/audio/test-*/
-content/audio/debug-*/
-content/audio/ambient/youtube-downloads/
-content/audio/ambient/rain-8hr.mp3
+# Build/test scripts
 *.py
 test-*.py
 build-*.py
+
+# Other
 transcripts by others/
-*.wav
 audio-analysis/
