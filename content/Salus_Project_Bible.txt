@@ -2,8 +2,8 @@
 SALUS MIND — PROJECT BIBLE
 ================================================================================
 Comprehensive Reference Document for Claude
-Version 1.6
-Last Updated: 4 February 2026 (v1.6 - Validator Coverage Documented)
+Version 1.7
+Last Updated: 6 February 2026 (v1.7 - All Free Content Approved)
 
 ================================================================================
 CONTENTS
@@ -1175,38 +1175,43 @@ REMAINING WORK:
 11.20 CURRENT TESTING STATUS
 --------------------------------------------------------------------------------
 Last Updated: 6 February 2026
-Status: AUDIO RESET — Rebuilding from scratch with single approved benchmark
-
-AUDIO RESET (6 February 2026):
-All previous audio archived to content/audio-archive/ (2.2GB).
-Only ONE approved session remains in production.
+Status: ALL FREE CONTENT APPROVED — 5 sessions deployed
 
 APPROVED AUDIO:
-Session                      | Analyser v5       | Human Review      | Status
------------------------------|-------------------|-------------------|--------
-01-morning-meditation        | PASS (0 VC, 0 US) | PASS              | BENCHMARK
-03-breathing-for-anxiety     | PASS (0 VC, 0 US) | PASS (6 Feb)      | APPROVED
+Session                      | Analyser v5       | Human Review      | Ambient          | Status
+-----------------------------|-------------------|-------------------|------------------|--------
+01-morning-meditation        | PASS (0 VC, 0 US) | PASS              | None             | BENCHMARK
+03-breathing-for-anxiety     | PASS (Build 7, S3)| PASS (6 Feb)      | Birds 8hr -14dB  | APPROVED
+09-rainfall-sleep-journey    | PASS (Build 3, S3)| PASS (6 Feb)      | Rain 8hr -12dB   | APPROVED
+25-introduction-to-mindfulness| PASS (Build 3)   | PASS (6 Feb)      | Stream 3hr -16dB | APPROVED
+38-seven-day-mindfulness-day1| PASS (Build 3, S3)| PASS (6 Feb)      | Birds 8hr -16dB  | APPROVED
 
-Build notes for 03:
-- Build 1: Opening too abrupt ("You found your way here") — rewrote to soft contextual intro
-- Build 2: 1 VOICE_CHANGE at 15:15 — auto-rebuild (Strike 1)
-- Build 3: PASS — 0 voice changes, 0 dropouts, human review PASS
-- Scanner had 15 hissing + 30 sibilance flags — all false positives, none audible
-- Lesson: Hissing/sibilance downgraded to LOW (too many false positives with Marco)
-- Lesson: Opening must set the scene before any extended silence
+Key lessons from free content production:
+- Strike 3 waiver to human review is reliable — all waived sessions passed
+- Sibilance/hissing flags are almost always false positives with Marco voice
+- Voice change flags at MFCC <0.01 are typically false positives
+- 8hr+ ambient sources eliminate loop seam problems
+- Rain sessions: -12dB (ambient is a feature). Voice-focused: -16dB
+- Ambient fade-in: 10-15s after intro, 20-25s logarithmic curve
+- Beginner pause profiles produce ~11 min for 10 min target (acceptable)
+- Sleep pause profiles produce ~25 min for 30 min target (could be longer)
 
-NEXT: Session 02 (Deep Sleep) or next priority
+NEXT: Session 02 (Deep Sleep) — first premium session rebuild
 
 --------------------------------------------------------------------------------
 11.21 DEPLOYED SESSIONS TEST SUMMARY
 --------------------------------------------------------------------------------
-After audio reset (6 Feb 2026), only one session is approved:
+After audio reset and free content rebuild (6 Feb 2026), all 5 free sessions approved:
 
-#  | Session                      | Voice | Artifacts | Overall
----|------------------------------|-------|-----------|----------
-01 | Morning Meditation           | PASS  | PASS      | BENCHMARK
+#  | Session                      | Voice | Artifacts | Ambient          | Overall
+---|------------------------------|-------|-----------|------------------|----------
+01 | Morning Meditation           | PASS  | PASS      | None             | BENCHMARK
+03 | Breathing for Anxiety        | PASS  | PASS      | Birds 8hr -14dB  | APPROVED
+09 | Rainfall Sleep Journey       | PASS  | PASS      | Rain 8hr -12dB   | APPROVED
+25 | 10-Minute Mindfulness        | PASS  | PASS      | Stream 3hr -16dB | APPROVED
+38 | Day 1: The Foundation        | PASS  | PASS      | Birds 8hr -16dB  | APPROVED
 
-Previous 13 "spec-compliant" sessions archived — to be rebuilt to new benchmark.
+All free content complete. Previous 13 "spec-compliant" sessions archived — premium rebuild next.
 
 ================================================================================
 12. TECHNICAL REFERENCE
@@ -1463,16 +1468,17 @@ NOT AUTOMATED (requires human review):
 --------------------------------------------------------------------------------
 PICKUP POINT FOR AUDIO REBUILDING:
 --------------------------------------------------------------------------------
-AUDIO RESET: 6 February 2026
+FREE CONTENT COMPLETE: 6 February 2026
+- All 5 free sessions approved and deployed (01, 03, 09, 25, 38)
 - All previous audio archived to content/audio-archive/ (2.2GB)
-- 1 approved session: 01-morning-meditation (BENCHMARK)
-- All other sessions need fresh rebuild to benchmark quality
-- NEXT: Session 02 — Deep Sleep
+- NEXT: Session 02 (Deep Sleep) — first premium session rebuild
+- Premium sessions queue: 02, 05, 06, 07, 08, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 22, 24, 26, 27, 28, 31, 33, 36, 37
 - All scripts must pass Bible compliance check before building
 - Human review required for all audio before deployment
 - ALL audio must end with: "Thank you for practicing with Salus. Sleep, relax, restore."
+- Strike 3 waiver to human review is established and reliable
 
 ================================================================================
 — END OF DOCUMENT —
-Last updated: 4 February 2026 (v1.6 - Validator Coverage Documented)
+Last updated: 6 February 2026 (v1.7 - All Free Content Approved)
 ================================================================================
