@@ -802,4 +802,144 @@ All 5 deployed sessions scanned and patched:
 
 ---
 
+### 7 February 2026 — Lossless WAV Pipeline & Email Notifications
+
+**Problem:** MP3 intermediate files caused cumulative compression artifacts. Each processing step (TTS → cleanup → edge fades → concat → ambient mix) was re-encoding to MP3, degrading quality at every stage.
+
+**Solution:** All intermediate audio is now WAV (PCM 16-bit). MP3 encoding happens exactly ONCE at the final step.
+
+**Updated Pipeline:**
+
+```
+Script (... pause markers)
+        │
+        ▼
+process_script_for_tts() → blocks with pause durations
+        │
+        ▼
+generate_tts_chunk() → Fish API → MP3 (only lossy input)
+        │
+        ▼
+Convert to WAV (pcm_s16le, mono, -ac 1)
+        │
+        ▼
+apply_edge_fades() → WAV in, WAV out (15ms cosine)
+        │
+        ▼
+generate_silence() → WAV (mono, pcm_s16le)
+        │
+        ▼
+concatenate_with_silences() → concat demuxer → WAV
+        │
+        ▼
+cleanup_audio_light() → loudnorm → WAV
+        │
+        ▼
+mix_ambient() → amix → WAV
+        │
+        ▼
+SINGLE MP3 ENCODE (libmp3lame, 128kbps) ← only lossy step
+        │
+        ▼
+qa_loop() → scan → fix → rescan
+        │
+        ▼
+deploy_to_r2() → send_build_email()
+```
+
+**Critical Bug Fixed — Channel Mismatch:**
+
+| Component | Before (broken) | After (fixed) |
+|-----------|----------------|---------------|
+| Voice chunks (Fish) | Mono MP3 | Mono WAV (`-ac 1`) |
+| Silence files | **Stereo** WAV (`cl=stereo`) | **Mono** WAV (`cl=mono`) |
+| Concat result | Duration doubled (stereo+mono misinterpretation) | Correct duration |
+
+When ffmpeg's concat demuxer joins mono and stereo PCM files, it misinterprets the sample data — stereo segments play at double duration. The fix ensures all files are mono before concatenation.
+
+**Evidence:** Manifest calculated 13.8 min, actual WAV was 20.9 min. Difference (428s) exactly equaled total silence duration.
+
+**Result:** QA went from 300+ false-positive clicks to **0 artifacts**. The lossless pipeline eliminated stitch clicks entirely.
+
+---
+
+### Email Notification System
+
+**Service:** Resend API (free tier, 100 emails/day)
+**Env var:** `RESEND_API_KEY` in `.env`
+**Sender:** `onboarding@resend.dev` (switch to `build@salus-mind.com` after domain verification in Resend dashboard)
+**Recipient:** `scottripley@icloud.com`
+
+Fires automatically after every successful deploy. No UI permissions needed.
+
+**Python note:** Must include `User-Agent: SalusBuild/1.0` header — Cloudflare blocks Python's default user-agent from reaching the Resend API.
+
+---
+
+### Script Writing Rules (for Fish Audio TTS)
+
+| Rule | Why |
+|------|-----|
+| All text blocks must be **20-400 characters** | Blocks under 20 chars cause Fish TTS instability (timing glitches) |
+| Combine short phrases with lead-in text | "May I be safe." (14 chars) → "Silently now, may I be safe." (28 chars) |
+| Use `...` for pauses (not `—`) | Script parser reads `...` as pause markers |
+| Single `...` = 8s, double `......` = 25s, triple = 50s (mindfulness profile) | Pause profiles defined in `PAUSE_PROFILES` dict |
+| `[SILENCE: Xs]` for narrator-announced silences | Used for extended silent practice periods |
+| No ellipsis in spoken text | Fish renders `...` as nervous/hesitant delivery |
+| Estimate: ~7.2 chars/second for narration duration | Calibrated from Fish/Marco output |
+
+**Pause Profiles (by category):**
+
+| Category | Single `...` | Double `......` | Triple `........` |
+|----------|-------------|-----------------|-------------------|
+| sleep | 10s | 30s | 60s |
+| mindfulness | 8s | 25s | 50s |
+| stress | 6s | 20s | 40s |
+| default | 8s | 25s | 50s |
+
+---
+
+### 7 February 2026 — Loving-Kindness Introduction Session
+
+**Session:** `36-loving-kindness-intro`
+**Duration:** 12.9 min (target 12 min)
+**Category:** mindfulness (beginners)
+**Voice:** Marco (Fish Audio)
+**Ambient:** `loving-kindness-ambient` (YouTube download, trimmed to 15 min WAV, -14dB)
+
+**Build History:**
+
+| Attempt | Duration | Result | Issue |
+|---------|----------|--------|-------|
+| 1 | 21.4 min | FAIL | Chunk 3 glitch (47.6s for 46 chars) + channel mismatch |
+| 2 | 20.9 min | FAIL | Chunk 36 glitch (47.6s for 99 chars) + channel mismatch |
+| 3 | 12.9 min | **PASS** | Channel fix applied, no TTS glitches, 0 click artifacts |
+
+**Deployed to:**
+- Audio: `https://media.salus-mind.com/content/audio-free/36-loving-kindness-intro.mp3`
+- Session page: `sessions/loving-kindness.html` (free, custom-player)
+- Sessions listing: `sessions.html` (13 min, Beginners, no Premium tag)
+
+**Website changes:** Converted from premium-locked placeholder to free session with working audio player.
+
+---
+
+### Pre-Build Checklist (Updated)
+
+Before every build:
+- [ ] Dry run shows correct block count and silence totals
+- [ ] Only building ONE session (no parallel builds)
+- [ ] Provider set to `fish` (default)
+- [ ] All text blocks are 20-400 characters
+- [ ] Short phrases combined with lead-in text to exceed 20 chars
+- [ ] `RESEND_API_KEY` set in `.env` for email notification
+
+### Three Strikes Rule
+
+1. **Strike 1-2:** Rebuild. Fish TTS is non-deterministic — glitch chunks are expected.
+2. **Strike 3:** DELETE ALL FILES → Start 100% fresh (new TTS generation from scratch).
+3. **After 4 total attempts:** Stop. Escalate to human review. Something structural is wrong.
+
+---
+
 *Last updated: 7 February 2026*
