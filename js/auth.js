@@ -297,12 +297,17 @@ var SalusAuth = (function() {
       }
     }
 
-    // Update subscribe button for premium users
-    if (subscribeBtn && isPremium()) {
-      if (subscribeBtn.textContent.trim() === 'Subscribe') {
-        subscribeBtn.textContent = 'Premium';
-        subscribeBtn.style.background = 'linear-gradient(135deg, var(--accent), var(--accent-dark))';
-      }
+    // Update ALL subscribe buttons/links for premium users
+    if (isPremium()) {
+      document.querySelectorAll('a[href="apps.html"], a[href="../apps.html"]').forEach(function(link) {
+        var text = link.textContent.trim();
+        if (text === 'Subscribe' || text === 'Upgrade to Premium' || text === 'Get Salus Premium') {
+          link.textContent = 'Premium';
+          link.href = pathPrefix + 'dashboard.html';
+          link.style.background = 'linear-gradient(135deg, var(--accent), var(--accent-dark))';
+          link.style.color = '#fff';
+        }
+      });
     }
 
     // Handle premium content unlock
