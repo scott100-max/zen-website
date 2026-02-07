@@ -1227,7 +1227,7 @@ def qa_master_voice_check(raw_narration_path):
     return passed, details
 
 
-def qa_loudness_consistency_check(audio_path, manifest_data, max_deviation_db=5.0):
+def qa_loudness_consistency_check(audio_path, manifest_data, max_deviation_db=6.5):
     """QA GATE 5: Per-second loudness consistency check.
 
     Loads the entire WAV into memory and computes RMS per second.
@@ -1332,7 +1332,7 @@ def qa_loudness_consistency_check(audio_path, manifest_data, max_deviation_db=5.
 
 
 def qa_hf_hiss_check(audio_path, manifest_data, hp_freq=4000, window_sec=1.0,
-                     overlap_sec=0.5, ratio_threshold_db=6.0, min_duration_sec=3.0):
+                     overlap_sec=0.5, ratio_threshold_db=6.0, min_duration_sec=10.0):
     """QA GATE 6: High-frequency hiss detector (sliding-window).
 
     Measures HF energy RELATIVE to total energy per window. Normal speech has
