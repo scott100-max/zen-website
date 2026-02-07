@@ -1,0 +1,56 @@
+{
+  "version": "v1",
+  "created": "2026-02-07",
+  "provider": "fish_audio",
+  "voice_id": "0165567b33324f518b02336ad232e31a",
+  "speed_adjustment": 0.95,
+  "approved_by": "human",
+  "measurements": {
+    "mfcc_mean": [
+      -317.7922,
+      98.8176,
+      7.9605,
+      48.0718,
+      6.9072,
+      32.0113,
+      6.9982,
+      6.436,
+      5.1843,
+      6.1778,
+      10.0893,
+      1.035,
+      4.995
+    ],
+    "spectral_centroid_mean": 2948.27,
+    "spectral_centroid_std": 2103.1,
+    "spectral_bandwidth_mean": 3239.84,
+    "spectral_bandwidth_std": 1001.83,
+    "spectral_rolloff_mean": 5612.88,
+    "f0_mean": 81.7,
+    "f0_std": 6.05,
+    "f0_range": [
+      50.0,
+      107.8
+    ],
+    "rms_mean": 0.122062,
+    "rms_std": 0.10605,
+    "rms_db_mean": -18.27,
+    "dynamic_range_db": 83.38,
+    "integrated_loudness_lufs": -16.94,
+    "loudness_range_lu": 2.7,
+    "true_peak_dbtp": -1.11,
+    "noise_floor_db": -16.92,
+    "snr_db": 1.35,
+    "syllable_rate": 2.91,
+    "duration_seconds": 36.8
+  },
+  "pass_thresholds": {
+    "mfcc_cosine_distance_max": 0.008,
+    "f0_deviation_max_percent": 10.0,
+    "spectral_centroid_deviation_max_percent": "NOT USEFUL — too much variance in GOOD samples",
+    "rms_deviation_max_percent": "NOT USEFUL — too much variance in GOOD samples",
+    "snr_min_db": "NOT USEFUL — master has no clean silence region",
+    "calibrated": "2026-02-07",
+    "calibration_data": "marco-master-v1-calibration.json"
+  }
+}

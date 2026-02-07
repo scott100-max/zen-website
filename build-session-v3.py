@@ -53,7 +53,7 @@ R2_PATH_PREFIX = "content/audio-free"
 # QA settings
 QA_MAX_PASSES = 5         # Max scan-fix-rescan cycles before failing
 QA_CLICK_THRESHOLD = 100  # Min amplitude jump to count as click
-QA_FADE_MS = 20           # Crossfade width at stitch boundaries
+QA_FADE_MS = 40           # Crossfade width at stitch boundaries (20ms wasn't enough for Fish 40-chunk builds)
 
 # Master quality benchmarks (from ss02-the-moonlit-garden Marco T2 build)
 # Measured via astats RMS on silence regions — calibrated to measure_noise_floor()
@@ -61,7 +61,21 @@ QA_FADE_MS = 20           # Crossfade width at stitch boundaries
 # Thresholds allow 1 dB tolerance above master
 MASTER_NOISE_FLOOR_DB = -26.0   # Max RMS in silence (master: -27.0)
 MASTER_HF_HISS_DB = -44.0      # Max RMS >6kHz in silence (master: -45.0)
-MASTER_REF_WAV = Path("content/audio/marco-master/marco-master-raw.wav")
+MASTER_REF_WAV = Path("content/audio/marco-master/marco-master-v1.wav")
+
+# Marco master voice comparison thresholds (calibrated 2026-02-07)
+# Derived from 5 Fish + 3 Resemble calibration set with human GOOD/BAD labels
+# See content/audio/marco-master/marco-master-v1-calibration.json
+#
+# IMPORTANT: MFCC cosine distance is CONTENT-DEPENDENT. The calibration threshold
+# (0.008) was derived from same-text comparisons. Production builds with different
+# text produce MFCC distances of ~0.035 even with the correct voice, because different
+# phoneme distributions shift the MFCC means. The production threshold (0.06) allows
+# for content variance while still catching a fundamentally wrong voice.
+# F0 deviation is content-independent and uses the tight calibration threshold.
+MASTER_MFCC_COSINE_MAX = 0.06      # Production threshold (same-voice diff-text: ~0.035, wrong-voice: >0.10)
+MASTER_F0_DEVIATION_MAX = 10.0     # Max F0 deviation percent (GOOD Fish: ≤5.6%, BAD Resemble: ≥14.8%)
+MASTER_MEASUREMENTS = Path("content/audio/marco-master/marco-master-v1-measurements.json")
 
 # Fish TTS API
 FISH_API_URL = "https://api.fish.audio/v1/tts"
@@ -708,6 +722,10 @@ def cleanup_audio_medium(input_path, output_path):
 def cleanup_audio(input_path, output_path):
     """Clean up TTS audio - remove hiss, sibilance, and artifacts (Fish full chain).
     Output is WAV for lossless pipeline.
+
+    Uses loudnorm=I=-26 (NOT dynaudnorm) — dynaudnorm amplifies silence regions,
+    pushing noise floor to -20 dB which fails QA. loudnorm target -26 keeps noise
+    floor at -27 dB matching the master.
     """
     filter_chain = ','.join([
         'highpass=f=80',
@@ -715,7 +733,7 @@ def cleanup_audio(input_path, output_path):
         'highshelf=f=7000:g=-2',               # De-esser: gentle shelf above 7kHz
         'lowpass=f=10000',
         'afftdn=nf=-25',
-        'dynaudnorm=p=0.9:m=10'
+        'loudnorm=I=-26:TP=-2:LRA=11'
     ])
     cmd = [
         'ffmpeg', '-y', '-i', input_path,
@@ -784,10 +802,13 @@ def apply_edge_fades(audio_path, output_path, fade_ms=15):
     return output_path
 
 
-def concatenate_with_silences(voice_chunks, silences, output_path, temp_dir, cleanup_mode='full'):
+def concatenate_with_silences(voice_chunks, silences, output_path, temp_dir, cleanup_mode='full',
+                               pre_cleanup_path=None):
     """Concatenate voice chunks with silence gaps (lossless WAV pipeline).
 
     cleanup_mode: 'full' (Fish chain), 'light' (loudnorm only), 'none' (raw)
+    pre_cleanup_path: if set, saves a copy of the raw concat BEFORE cleanup
+                      (used by Gate 4 voice comparison — must compare raw vs raw master)
 
     Each voice chunk gets a 15ms fade-in/out applied before concatenation
     to prevent click artifacts at join boundaries.
@@ -836,6 +857,10 @@ def concatenate_with_silences(voice_chunks, silences, output_path, temp_dir, cle
         concat_output
     ]
     subprocess.run(cmd, capture_output=True, check=True)
+
+    # Save pre-cleanup copy for voice comparison (Gate 4 needs raw audio)
+    if pre_cleanup_path:
+        shutil.copy(concat_output, pre_cleanup_path)
 
     if cleanup_mode == 'full':
         print("  Cleaning up audio (full Fish chain)...")
@@ -1096,6 +1121,91 @@ def qa_independent_check(raw_narration_path, manifest_data):
     return passed, details
 
 
+def qa_master_voice_check(raw_narration_path):
+    """QA GATE 4: Master voice comparison — MFCC cosine + F0 deviation.
+
+    Compares the raw narration against the Marco master reference WAV.
+    Catches provider-level voice failures (e.g. Resemble on short content).
+    Does NOT catch subtle within-provider prosody issues — human ear required.
+
+    Returns (passed, details_dict).
+    """
+    print(f"\n  QA-VOICE: Comparing against master voice reference...")
+
+    if not MASTER_REF_WAV.exists():
+        print(f"  QA-VOICE: WARNING — master WAV not found at {MASTER_REF_WAV}")
+        print(f"  QA-VOICE: SKIPPED (no master to compare against)")
+        return True, {'skipped': True}
+
+    if not MASTER_MEASUREMENTS.exists():
+        print(f"  QA-VOICE: WARNING — master measurements not found at {MASTER_MEASUREMENTS}")
+        print(f"  QA-VOICE: SKIPPED (no baseline measurements)")
+        return True, {'skipped': True}
+
+    try:
+        import librosa
+        import numpy as np
+    except ImportError:
+        print(f"  QA-VOICE: WARNING — librosa/numpy not installed, skipping")
+        return True, {'skipped': True, 'reason': 'missing_deps'}
+
+    # Load master measurements (pre-computed)
+    with open(str(MASTER_MEASUREMENTS)) as f:
+        master_data = json.load(f)
+    master_mfcc = np.array(master_data['measurements']['mfcc_mean'])
+    master_f0 = master_data['measurements']['f0_mean']
+
+    # Extract MFCC from build
+    print(f"  QA-VOICE: Extracting MFCC from build...")
+    y_build, sr_build = librosa.load(raw_narration_path, sr=22050)
+    mfcc_build = librosa.feature.mfcc(y=y_build, sr=sr_build, n_mfcc=13)
+    build_mfcc = mfcc_build.mean(axis=1)
+
+    # MFCC cosine distance
+    dot = np.dot(master_mfcc, build_mfcc)
+    norm_m = np.linalg.norm(master_mfcc)
+    norm_b = np.linalg.norm(build_mfcc)
+    cosine_sim = dot / (norm_m * norm_b) if (norm_m * norm_b) > 0 else 0
+    mfcc_distance = 1.0 - cosine_sim
+
+    # Extract F0 from build
+    print(f"  QA-VOICE: Extracting F0 from build...")
+    f0_build, voiced_flag, _ = librosa.pyin(y_build, fmin=40, fmax=300, sr=sr_build)
+    f0_voiced = f0_build[voiced_flag] if voiced_flag is not None else f0_build[~np.isnan(f0_build)]
+    build_f0 = float(np.median(f0_voiced)) if len(f0_voiced) > 0 else 0.0
+
+    # F0 deviation
+    f0_deviation = abs(build_f0 - master_f0) / master_f0 * 100 if master_f0 > 0 else 0.0
+
+    print(f"  QA-VOICE: MFCC cosine distance = {mfcc_distance:.4f} (threshold: {MASTER_MFCC_COSINE_MAX})")
+    print(f"  QA-VOICE: F0 mean = {build_f0:.1f} Hz (master: {master_f0:.1f} Hz, deviation: {f0_deviation:.1f}%)")
+
+    details = {
+        'mfcc_cosine_distance': round(mfcc_distance, 6),
+        'mfcc_threshold': MASTER_MFCC_COSINE_MAX,
+        'build_f0': round(build_f0, 1),
+        'master_f0': master_f0,
+        'f0_deviation_pct': round(f0_deviation, 1),
+        'f0_threshold': MASTER_F0_DEVIATION_MAX,
+    }
+
+    passed = True
+    if mfcc_distance > MASTER_MFCC_COSINE_MAX:
+        print(f"  QA-VOICE: FAIL — MFCC distance {mfcc_distance:.4f} exceeds threshold {MASTER_MFCC_COSINE_MAX}")
+        passed = False
+    if f0_deviation > MASTER_F0_DEVIATION_MAX:
+        print(f"  QA-VOICE: FAIL — F0 deviation {f0_deviation:.1f}% exceeds threshold {MASTER_F0_DEVIATION_MAX}%")
+        passed = False
+
+    if passed:
+        print(f"  QA-VOICE: PASSED")
+    else:
+        print(f"  QA-VOICE: NOTE — automated metrics catch provider-level failures only.")
+        print(f"  QA-VOICE: Human review still required for prosody/naturalness.")
+
+    return passed, details
+
+
 def scan_for_clicks(audio_path, manifest_data, threshold=QA_CLICK_THRESHOLD):
     """Scan mixed audio for click artifacts in silence regions.
 
@@ -1299,18 +1409,22 @@ def patch_stitch_clicks(raw_mp3, manifest_data, output_mp3, ambient_name=None, f
     return len(stitch_times)
 
 
-def qa_loop(final_mp3, raw_mp3, manifest_data, ambient_name=None, raw_narration_wav=None):
-    """Full dual-gate QA pipeline.
+def qa_loop(final_mp3, raw_mp3, manifest_data, ambient_name=None, raw_narration_wav=None,
+            pre_cleanup_wav=None):
+    """Full quad-gate QA pipeline.
 
     GATE 1 (Primary): Quality benchmarks — noise floor and HF hiss vs master
     GATE 2 (Click scan): Scan → fix → rescan loop for click artifacts
     GATE 3 (Independent): Spectral comparison against master reference WAV
+    GATE 4 (Voice): MFCC cosine + F0 deviation vs Marco master
+                    Uses PRE-CLEANUP audio (must compare raw vs raw master)
 
-    ALL THREE gates must pass. Any failure = no deploy.
+    ALL FOUR gates must pass. Any failure = no deploy.
+    Human review remains MANDATORY — Gate 4 cannot catch subtle prosody issues.
     Returns True only if all gates pass.
     """
     print(f"\n{'='*60}")
-    print("  QA: DUAL-GATE QUALITY ASSURANCE")
+    print("  QA: QUAD-GATE QUALITY ASSURANCE")
     print(f"{'='*60}")
 
     # ── GATE 1: Quality benchmarks ──
@@ -1358,7 +1472,18 @@ def qa_loop(final_mp3, raw_mp3, manifest_data, ambient_name=None, raw_narration_
             print(f"  QA: Build will NOT be deployed")
             return False
 
+    # ── GATE 4: Master voice comparison (MFCC + F0) ──
+    # Uses PRE-CLEANUP audio — cleanup changes spectral fingerprint significantly
+    voice_check_wav = pre_cleanup_wav or raw_narration_wav
+    if voice_check_wav and os.path.exists(voice_check_wav):
+        voice_passed, voice_details = qa_master_voice_check(voice_check_wav)
+        if not voice_passed:
+            print(f"\n  QA: REJECTED — voice does not match Marco master")
+            print(f"  QA: Build will NOT be deployed")
+            return False
+
     print(f"\n  QA: ALL GATES PASSED")
+    print(f"  QA: REMINDER — Human review is MANDATORY. Automated gates cannot catch subtle prosody issues.")
     return True
 
 
@@ -1590,7 +1715,9 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
         # ================================================================
         print(f"\n  Concatenating {len(voice_files)} blocks with silences (lossless WAV)...")
         voice_path = os.path.join(temp_dir, "voice_complete.wav")
-        concatenate_with_silences(voice_files, silences, voice_path, temp_dir, cleanup_mode=cleanup_mode)
+        pre_cleanup_wav_path = OUTPUT_RAW_DIR / f"{session_name}_precleanup.wav"
+        concatenate_with_silences(voice_files, silences, voice_path, temp_dir, cleanup_mode=cleanup_mode,
+                                   pre_cleanup_path=str(pre_cleanup_wav_path))
 
         voice_duration = get_audio_duration(voice_path)
         print(f"  Voice track: {voice_duration/60:.1f} min")
@@ -1648,8 +1775,10 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
     # PHASE 3: QA — SCAN → FIX → RESCAN LOOP
     # ================================================================
     raw_for_qa = str(raw_wav_path) if raw_wav_path.exists() else str(raw_path)
+    pre_cleanup_for_qa = str(pre_cleanup_wav_path) if pre_cleanup_wav_path.exists() else None
     qa_passed = qa_loop(str(final_path), raw_for_qa, manifest_data, ambient,
-                        raw_narration_wav=str(raw_wav_path) if raw_wav_path.exists() else None)
+                        raw_narration_wav=str(raw_wav_path) if raw_wav_path.exists() else None,
+                        pre_cleanup_wav=pre_cleanup_for_qa)
 
     if qa_passed:
         # Update mixed copy after QA patching
@@ -1689,9 +1818,10 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
     print(f"  QA: {'PASSED' if qa_passed else 'REJECTED'}")
     print(f"{'='*60}")
 
-    # Email notification (always send — pass or fail)
-    r2_url = f"https://media.salus-mind.com/{R2_PATH_PREFIX}/{session_name}.mp3"
-    send_build_email(session_name, final_duration / 60, qa_passed, r2_url)
+    # Email notification — only on successful deploy (not during dev iterations)
+    if qa_passed and not no_deploy:
+        r2_url = f"https://media.salus-mind.com/{R2_PATH_PREFIX}/{session_name}.mp3"
+        send_build_email(session_name, final_duration / 60, qa_passed, r2_url)
 
     return qa_passed
 

@@ -2,6 +2,19 @@
 
 This document contains design guidelines, standards, and a record of website amendments.
 
+## Contents
+
+- Design Standards
+- Website Amendments
+- Self-Validation Process
+- Deployment & Infrastructure
+- Audio Production
+- TTS Provider Comparison: Fish Audio vs ElevenLabs
+- Common Issues & Lessons Learned
+- Marco Master Audio Standard (Resemble AI)
+- Section 13: External Audio Quality Analysis — Auphonic
+- Section 14: Marco Master Voice Specification
+
 ---
 
 ## Design Standards
@@ -1187,4 +1200,940 @@ Before every Resemble build:
 
 ---
 
-*Last updated: 7 February 2026 (QA triple-gate system, calibrated Resemble cleanup chain)*
+---
+
+================================================================================
+SECTION 13: EXTERNAL AUDIO QUALITY ANALYSIS — AUPHONIC
+================================================================================
+Added: 7 February 2026
+Status: ACTIVE — Account registered, free tier (2h/month)
+
+================================================================================
+13.1 OVERVIEW
+================================================================================
+
+Auphonic is an automated audio post-production web service with a full REST
+API. It provides AI-driven audio analysis, noise reduction, loudness
+normalisation, and detailed diagnostic reporting. It has been operating since
+2012, processes over 2 million tracks, and its ML models are continuously
+trained on real-world audio data.
+
+Auphonic replaces the failed Dolby.io approach (enterprise-only, no self-service
+access) as the external quality gate in the Salus audio production pipeline.
+
+PURPOSE IN SALUS PIPELINE:
+- Analyse raw narration files for signal quality defects
+- Provide detailed diagnostic reports (SNR, noise levels, hum, loudness)
+- Optionally return a corrected audio file with noise/hum removed
+- Act as an independent external validation alongside the internal analyser
+- Fill detection gaps the internal analyser cannot cover (subtle hiss, hum,
+  broadband noise, loudness inconsistencies)
+
+WHAT AUPHONIC DOES NOT COVER:
+- Voice change detection (different speaker mid-file)
+- Content verification (repeated phrases, wrong script text)
+- Speaker diarisation on single-track narration
+
+These gaps must still be addressed by the internal analyser (voice shift via
+MFCC) and optionally by a speech-to-text service for content verification.
+
+================================================================================
+13.2 ACCOUNT DETAILS
+================================================================================
+
+Service URL:        https://auphonic.com
+Dashboard:          https://auphonic.com/engine/
+API Base URL:       https://auphonic.com/api/
+API Documentation:  https://auphonic.com/help/api/
+API Examples:       https://github.com/auphonic/auphonic-api-examples
+
+CREDENTIALS:
+Store in the project .env file:
+    AUPHONIC_USERNAME=your_auphonic_username
+    AUPHONIC_PASSWORD=your_auphonic_password
+
+Authentication: HTTP Basic Authentication (username:password).
+No API key required — Auphonic uses account credentials directly.
+
+FREE TIER:
+- 2 hours of processed audio per month
+- Credits reset monthly
+- Re-processing the same input file is FREE (no additional credits)
+- Free productions include an Auphonic jingle (appended to output)
+- Minimum billing: 3 minutes per production
+
+CAPACITY AT FREE TIER:
+- A 12-minute session = 12 minutes of credits per analysis
+- 2 hours = 120 minutes = 10 full analyses per month
+- Sufficient for all development, testing, and standard production
+- If batch-processing the full catalogue (~50 hours), upgrade required
+
+PAID TIERS (if needed):
+    One-time 5h    ~£4-5/hour (credits never expire)
+    Recurring S    9h/month
+    Recurring M    21h/month
+
+CRITICAL: The jingle on free-tier output files does NOT affect the analysis
+statistics or diagnostic report. For QA purposes (analysis only, not using
+the output file as the final product), the free tier is fully functional.
+
+================================================================================
+13.3 WHAT AUPHONIC RETURNS
+================================================================================
+
+For every production, Auphonic returns:
+
+A) PROCESSED AUDIO FILE
+   - Cleaned version with noise/hum removed, loudness normalised
+   - Available in any format (WAV, MP3, FLAC, etc.)
+   - Download URL provided in the API response
+   - NOTE: Free tier output includes an Auphonic jingle
+
+B) AUDIO PROCESSING STATISTICS (JSON)
+   Detailed diagnostic data covering:
+
+   INPUT LEVELS:
+   - loudness: integrated loudness in LUFS
+   - noise_level: measured noise floor in dB
+   - signal_level: signal level in dB
+   - snr: signal-to-noise ratio in dB
+   - lra: loudness range in LU
+   - max_momentary: maximum momentary loudness in LUFS
+   - max_shortterm: maximum short-term loudness in LUFS
+
+   OUTPUT LEVELS:
+   - loudness: final integrated loudness in LUFS
+   - peak: true peak level in dBTP
+   - lra: output loudness range in LU
+   - gain_mean: average gain applied in dB
+   - gain_min / gain_max: range of gain adjustments
+
+   MUSIC/SPEECH CLASSIFICATION:
+   - Timestamped segments labelled as "speech" or "music"
+   - Segments must be 20+ seconds to appear
+   - Useful for verifying ambient vs narration boundaries
+
+   NOISE AND HUM REDUCTION:
+   - Per-segment data showing how much noise reduction was applied (in dB)
+   - Per-segment hum detection (true/false) with base frequency (50/60Hz)
+   - Timestamps for every segment
+
+   Example statistics JSON:
+   {
+     "statistics": {
+       "levels": {
+         "input": {
+           "loudness": [-17.71, "LUFS"],
+           "noise_level": [-49.63, "dB"],
+           "snr": [26.12, "dB"],
+           "signal_level": [-23.51, "dB"],
+           "lra": [19.23, "LU"],
+           "max_momentary": [-10.75, "LUFS"],
+           "max_shortterm": [-12.71, "LUFS"]
+         },
+         "output": {
+           "loudness": [-16.0, "LUFS"],
+           "peak": [-1.0, "dBTP"],
+           "lra": [3.0, "LU"],
+           "gain_mean": [7.9, "dB"],
+           "gain_min": [-2.5, "dB"],
+           "gain_max": [21.04, "dB"]
+         }
+       },
+       "noise_hum_reduction": [
+         {"denoise": -12, "dehum": false,
+          "start": "00:00:00.000", "stop": "00:01:01.528"},
+         {"denoise": false, "dehum": "50Hz",
+          "start": "00:01:01.528", "stop": "00:02:30.000"}
+       ],
+       "music_speech": [
+         {"label": "speech", "start": "00:00:00.000", "stop": "00:01:13.440"},
+         {"label": "music",  "start": "00:01:13.440", "stop": "00:01:35.520"},
+         {"label": "speech", "start": "00:01:35.520", "stop": "00:01:59.223"}
+       ]
+     }
+   }
+
+C) OPTIONAL OUTPUT FORMATS
+   Statistics can be exported as:
+   - JSON (machine-readable, for automated pipeline)
+   - YAML (machine-readable)
+   - TXT (human-readable summary)
+
+================================================================================
+13.4 API USAGE
+================================================================================
+
+SIMPLE PRODUCTION (single API call, recommended for Salus):
+
+    curl -X POST https://auphonic.com/api/simple/productions.json \
+      -u "$AUPHONIC_USERNAME:$AUPHONIC_PASSWORD" \
+      -F "input_file=@/path/to/raw_narration.wav" \
+      -F "denoise=true" \
+      -F "loudnesstarget=-24" \
+      -F "output_files[0].format=wav" \
+      -F "output_basename=narration_auphonic" \
+      -F "action=start"
+
+PRODUCTION WITH PRESET (for repeated use with same settings):
+1. Create a preset via the web dashboard or API
+2. Reference the preset UUID in subsequent productions
+
+POLLING FOR COMPLETION:
+After submitting, poll the production status:
+
+    curl https://auphonic.com/api/production/{uuid}.json \
+      -u "$AUPHONIC_USERNAME:$AUPHONIC_PASSWORD"
+
+Status values:
+- 0: File Upload
+- 1: Waiting
+- 2: Error
+- 3: Done
+- 4: Audio Processing
+- 9: Incomplete
+
+DOWNLOADING RESULTS:
+When status = 3 (Done), the response includes:
+- output_files[].download_url — the processed audio file
+- statistics — the full diagnostic JSON
+
+RECOMMENDED AUPHONIC SETTINGS FOR SALUS:
+
+    Setting                  | Value           | Rationale
+    -------------------------|-----------------|----------------------------------
+    denoise                  | true            | Detect and remove hiss/noise
+    dehum                    | auto            | Detect and remove hum if present
+    loudnesstarget           | -24 LUFS        | Match Salus loudnorm target
+    output_files[0].format   | wav             | Lossless for pipeline use
+    output_files[0].bitrate  | (default)       | WAV ignores bitrate
+    filtering                | true            | Adaptive high-pass filter
+
+IMPORTANT: For QA analysis purposes, you may want to submit the RAW narration
+(before ambient mixing) to get clean diagnostics on the voice track alone.
+Submitting the mixed file would include ambient sound in the noise analysis.
+
+================================================================================
+13.5 INTEGRATION INTO QA PIPELINE
+================================================================================
+
+Auphonic slots into the existing quality gate workflow as an external
+validation step. It does NOT replace the internal analyser — it complements it.
+
+UPDATED QUALITY GATE WORKFLOW:
+
+1. BUILD — Generate audio with TTS + ambient mixing
+2. INTERNAL ANALYSE — Run analyze_audio.py on raw narration (no ambient)
+   - Voice shift detection (MFCC cosine distance)
+   - Click/splice detection
+   - Basic hiss detection
+3. AUPHONIC ANALYSE — Submit raw narration to Auphonic API
+   - Upload raw narration WAV
+   - Receive statistics JSON + optionally corrected file
+   - Extract: SNR, noise_level, noise_hum_reduction segments
+4. GATE CHECK — Evaluate combined results:
+
+   INTERNAL ANALYSER PASS CRITERIA:
+   - HIGH severity issues = 0
+   - Voice shifts = 0
+
+   AUPHONIC PASS CRITERIA:
+   - Input SNR >= 25 dB (good signal quality)
+   - No segments with denoise > -20 dB (excessive noise reduction needed)
+   - No hum detected (dehum = false for all segments)
+   - Output loudness within 1 LUFS of target (-24 LUFS)
+   - Output true peak <= -1.0 dBTP
+
+5. DECISION:
+   - ALL criteria met = PASS → Proceed to ambient mixing and deployment
+   - ANY criteria failed = FAIL → Log which criteria failed → Rebuild
+
+6. IF USING AUPHONIC CORRECTED FILE:
+   - Compare Auphonic output against raw narration
+   - If corrections are minimal (gain changes < 3dB, denoise < -10dB),
+     the raw narration is acceptable — use it directly
+   - If corrections are significant, consider using the Auphonic output
+     as the narration source (but note free-tier jingle limitation)
+
+WORKFLOW DIAGRAM:
+
+    Raw Narration (WAV)
+         |
+         +---> Internal Analyser (voice shifts, clicks)
+         |         |
+         |         v
+         +---> Auphonic API (SNR, noise, hum, loudness)
+                   |
+                   v
+              Combined Gate Check
+                   |
+            PASS --+--> Ambient Mix --> Deploy
+                   |
+            FAIL --+--> Rebuild (fresh TTS run)
+
+================================================================================
+13.6 PYTHON INTEGRATION REFERENCE
+================================================================================
+
+Minimal Python implementation for Claude Code to integrate:
+
+    import requests
+    import os
+    import time
+
+    AUPHONIC_USERNAME = os.getenv("AUPHONIC_USERNAME")
+    AUPHONIC_PASSWORD = os.getenv("AUPHONIC_PASSWORD")
+    AUPHONIC_API = "https://auphonic.com/api"
+
+    def analyse_with_auphonic(audio_path, loudness_target=-24):
+        """
+        Submit audio file to Auphonic for analysis and processing.
+        Returns the production UUID for status polling.
+        """
+        with open(audio_path, "rb") as f:
+            response = requests.post(
+                f"{AUPHONIC_API}/simple/productions.json",
+                auth=(AUPHONIC_USERNAME, AUPHONIC_PASSWORD),
+                files={"input_file": f},
+                data={
+                    "denoise": "true",
+                    "loudnesstarget": str(loudness_target),
+                    "output_files[0].format": "wav",
+                    "action": "start"
+                }
+            )
+        result = response.json()
+        return result["data"]["uuid"]
+
+    def poll_auphonic(uuid, timeout=300, interval=10):
+        """
+        Poll production status until complete or timeout.
+        Returns full production data including statistics.
+        """
+        elapsed = 0
+        while elapsed < timeout:
+            response = requests.get(
+                f"{AUPHONIC_API}/production/{uuid}.json",
+                auth=(AUPHONIC_USERNAME, AUPHONIC_PASSWORD)
+            )
+            data = response.json()["data"]
+            status = data["status"]
+            if status == 3:  # Done
+                return data
+            elif status == 2:  # Error
+                raise Exception(f"Auphonic error: {data.get('error_message')}")
+            time.sleep(interval)
+            elapsed += interval
+        raise TimeoutError(f"Auphonic processing timed out after {timeout}s")
+
+    def evaluate_auphonic_results(stats):
+        """
+        Evaluate Auphonic statistics against Salus quality criteria.
+        Returns (pass: bool, issues: list[str])
+        """
+        issues = []
+        levels = stats.get("levels", {})
+        input_levels = levels.get("input", {})
+        output_levels = levels.get("output", {})
+        noise_hum = stats.get("noise_hum_reduction", [])
+
+        # Check SNR
+        snr = input_levels.get("snr", [0])[0]
+        if snr < 25:
+            issues.append(f"LOW SNR: {snr:.1f} dB (minimum 25 dB)")
+
+        # Check for excessive noise reduction
+        for segment in noise_hum:
+            denoise = segment.get("denoise", False)
+            if denoise and denoise < -20:
+                issues.append(
+                    f"EXCESSIVE NOISE: {denoise} dB reduction at "
+                    f"{segment['start']}-{segment['stop']}"
+                )
+
+        # Check for hum
+        for segment in noise_hum:
+            dehum = segment.get("dehum", False)
+            if dehum and dehum != False:
+                issues.append(
+                    f"HUM DETECTED: {dehum} at "
+                    f"{segment['start']}-{segment['stop']}"
+                )
+
+        # Check output loudness
+        out_loudness = output_levels.get("loudness", [0])[0]
+        if abs(out_loudness - (-24)) > 1.0:
+            issues.append(
+                f"LOUDNESS OFF TARGET: {out_loudness:.1f} LUFS "
+                f"(target -24 LUFS)"
+            )
+
+        # Check true peak
+        peak = output_levels.get("peak", [0])[0]
+        if peak > -1.0:
+            issues.append(f"TRUE PEAK TOO HIGH: {peak:.1f} dBTP (max -1.0)")
+
+        return (len(issues) == 0, issues)
+
+    # USAGE IN BUILD PIPELINE:
+    # uuid = analyse_with_auphonic("raw_narration.wav")
+    # production = poll_auphonic(uuid)
+    # stats = production["statistics"]
+    # passed, issues = evaluate_auphonic_results(stats)
+    # if not passed:
+    #     for issue in issues:
+    #         print(f"  AUPHONIC FAIL: {issue}")
+
+================================================================================
+13.7 IMPORTANT RULES
+================================================================================
+
+1. SUBMIT RAW NARRATION ONLY
+   Always submit the raw narration (voice-only, no ambient) to Auphonic.
+   Submitting the mixed file would confuse noise analysis with ambient sound.
+
+2. DO NOT USE AUPHONIC OUTPUT AS FINAL AUDIO (FREE TIER)
+   Free-tier output files include an Auphonic jingle. The output file is
+   useful for comparison and quality assessment, but cannot be deployed as
+   the final meditation audio.
+
+3. AUPHONIC IS ANALYSIS FIRST, CORRECTION SECOND
+   The primary value is the diagnostic statistics (SNR, noise segments,
+   hum detection). The corrected file is a bonus, not the main purpose.
+
+4. RE-PROCESSING IS FREE
+   If you need to resubmit the same file with different settings, no
+   additional credits are consumed. Use this for tuning thresholds.
+
+5. AUPHONIC DOES NOT REPLACE HUMAN REVIEW
+   Auphonic catches signal quality issues. It does not catch:
+   - Voice changes (different speaker)
+   - Repeated content
+   - Wrong script text
+   Human review remains mandatory until the internal analyser addresses
+   these gaps (see Section 11.19).
+
+6. CREDIT MANAGEMENT
+   Monitor credits at https://auphonic.com/accounts/settings/
+   A 12-minute session uses 12 minutes of the 120-minute monthly allowance.
+   Plan batch operations to stay within the free tier where possible.
+
+7. ENVIRONMENT VARIABLES
+   Add to .env alongside existing credentials:
+       FISH_API_KEY=your_fish_api_key
+       AUPHONIC_USERNAME=your_auphonic_username
+       AUPHONIC_PASSWORD=your_auphonic_password
+
+================================================================================
+13.8 AUPHONIC PRESET CONFIGURATION (RECOMMENDED)
+================================================================================
+
+Create a reusable preset in Auphonic for all Salus narration analysis.
+This avoids specifying settings on every API call.
+
+PRESET NAME: Salus Narration QA
+SETTINGS:
+    Noise & Hum Reduction:    Enabled (Auto)
+    Adaptive Leveler:         Enabled
+    Filtering:                Enabled (Adaptive High Pass)
+    Loudness Target:          -24 LUFS
+    True Peak Limit:          -1.0 dBTP
+    Output Format:            WAV
+    Output Statistics:        JSON (as additional output file)
+
+To create via API:
+
+    curl -X POST https://auphonic.com/api/preset.json \
+      -u "$AUPHONIC_USERNAME:$AUPHONIC_PASSWORD" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "preset_name": "Salus Narration QA",
+        "denoise": true,
+        "loudnesstarget": -24,
+        "output_files": [
+          {"format": "wav"},
+          {"format": "statistics", "ending": "json"}
+        ]
+      }'
+
+Then reference the preset UUID in productions:
+
+    curl -X POST https://auphonic.com/api/simple/productions.json \
+      -u "$AUPHONIC_USERNAME:$AUPHONIC_PASSWORD" \
+      -F "input_file=@narration.wav" \
+      -F "preset={preset_uuid}" \
+      -F "action=start"
+
+================================================================================
+13.9 PASS/FAIL CRITERIA SUMMARY
+================================================================================
+
+Metric                          | PASS              | FAIL
+--------------------------------|-------------------|----------------------
+Input SNR                       | >= 25 dB          | < 25 dB
+Noise reduction per segment     | <= -15 dB         | > -20 dB applied
+Hum detected                    | No                | Yes (any segment)
+Output loudness                 | -24 +/- 1.0 LUFS  | Outside range
+Output true peak                | <= -1.0 dBTP      | > -1.0 dBTP
+Output loudness range (LRA)     | <= 15 LU          | > 15 LU
+
+NOTE: These thresholds are initial estimates. Calibrate against the benchmark
+session (09 - Rainfall Sleep Journey) and adjust based on real results. The
+first priority after integration is to run the benchmark file through Auphonic
+and use its statistics to establish baseline values.
+
+================================================================================
+13.10 FIRST STEPS AFTER INTEGRATION
+================================================================================
+
+1. ADD CREDENTIALS to .env file (AUPHONIC_USERNAME, AUPHONIC_PASSWORD)
+2. RUN BENCHMARK: Submit the Rainfall Sleep Journey (09) raw narration to
+   Auphonic and record the baseline statistics
+3. CALIBRATE THRESHOLDS: Adjust pass/fail criteria in Section 13.9 based
+   on benchmark results
+4. CREATE PRESET: Set up the "Salus Narration QA" preset via the API
+5. INTEGRATE INTO build-session-v3.py: Add Auphonic analysis step after
+   internal analyser, before ambient mixing
+6. TEST END-TO-END: Build one session with the full pipeline including
+   Auphonic gate and verify the workflow
+
+================================================================================
+— END OF SECTION 13 —
+================================================================================
+
+---
+
+================================================================================
+SECTION 14: MARCO MASTER VOICE SPECIFICATION
+================================================================================
+Added: 7 February 2026
+Status: DRAFT — Awaiting master file creation and baseline measurements
+
+================================================================================
+14.1 PURPOSE
+================================================================================
+
+The Marco Master is the single definitive reference for what Marco sounds like
+across all Salus audio production. Every generated session is measured against
+this file. If it does not sound like the master, it does not ship — regardless
+of what automated gates report.
+
+The master removes all ambiguity from quality assessment. Instead of asking
+"does this sound good?" the question becomes "does this sound like the master?"
+
+================================================================================
+14.2 WHAT THE MASTER FILE IS
+================================================================================
+
+A single audio file containing Marco speaking a standardised reference passage.
+This file is:
+
+- The ONLY accepted definition of Marco's voice
+- The benchmark for all automated comparisons (spectral, MFCC, pitch, timbre)
+- The reference for all human listening reviews
+- Stored permanently and NEVER overwritten
+- Versioned if a new master is ever created (master_v1, master_v2 etc.)
+
+The master is NOT a production session. It is a dedicated reference recording
+created under controlled conditions specifically to capture Marco's voice
+characteristics without any ambient, processing, or mixing.
+
+================================================================================
+14.3 MASTER FILE SPECIFICATION
+================================================================================
+
+AUDIO PROPERTIES:
+    Format:             WAV (uncompressed, lossless)
+    Sample rate:        44100 Hz
+    Bit depth:          16-bit (or 24-bit if provider supports)
+    Channels:           Mono
+    Duration:           30-90 seconds
+    Processing:         0.95x atempo only (standard Marco speed adjustment applied before locking)
+    Ambient:            NONE
+    Normalisation:      NONE
+    Noise reduction:    NONE
+    Encoding:           NONE (no MP3 conversion)
+
+CRITICAL: The master file is raw TTS output + speed correction only. No filters,
+no loudnorm, no edge fades, no cleanup of any kind. The 0.95x atempo is the
+standard Marco speed adjustment — Fish Audio's native pace is slightly too fast
+for meditation narration. This is the pure voice signature that everything else
+is compared against.
+
+FILE LOCATION:
+    Primary:    Cloudflare R2: salus-mind/reference/marco-master-v1.wav
+    Backup:     OneDrive: Salus_Mind/Reference/marco-master-v1.wav
+    Local copy: Keep in project root for build script access
+
+NAMING CONVENTION:
+    marco-master-v{version}.wav
+    e.g. marco-master-v1.wav, marco-master-v2.wav
+
+================================================================================
+14.4 REFERENCE PASSAGE
+================================================================================
+
+The master file must contain a passage that exercises Marco's full vocal range
+as used in Salus content. The passage should include:
+
+REQUIRED ELEMENTS:
+- Opening gentle instruction (matching session openings)
+- Mid-length flowing sentences (matching narrative prose)
+- Short meditative phrases (matching loving-kindness / mantra style)
+- A natural pause of 3-5 seconds (to capture silence characteristics)
+- Closing gentle phrase (matching session endings)
+
+SUGGESTED REFERENCE PASSAGE:
+(This can be refined, but must cover all the above elements)
+
+    Close your eyes and settle into a comfortable position. Let your
+    shoulders drop away from your ears and feel the weight of your body
+    being fully supported.
+
+    Take a slow breath in through your nose, feeling your chest gently
+    rise. And as you breathe out, let go of any tension you have been
+    carrying. There is nowhere else you need to be right now. This
+    moment is yours.
+
+    [3-5 second pause]
+
+    May I be safe. May I be happy. May I be healthy. May I live with
+    ease.
+
+    Now gently bring your attention back to the room around you. Take
+    your time. There is no rush.
+
+WHY THIS PASSAGE:
+- "Close your eyes..." tests the gentle opening register
+- "Take a slow breath..." tests flowing narrative mid-range
+- The pause tests silence behaviour and any ambient noise floor
+- "May I be safe..." tests short repeated phrases (the loving-kindness
+  pattern that exposed the Resemble problem)
+- "Now gently..." tests the closing register
+- Total length ~60-70 seconds — long enough for stable measurements,
+  short enough for quick generation and comparison
+
+================================================================================
+14.5 CREATING THE MASTER
+================================================================================
+
+The master must be created with the BEST available provider for Marco's voice.
+Based on current evidence:
+
+PROVIDER: Fish Audio
+VOICE ID: 0165567b33324f518b02336ad232e31a (Marco)
+
+TTS SETTINGS (IDENTICAL to production settings):
+    temperature:                    0.3
+    condition_on_previous_chunks:   true
+    sample_rate:                    44100
+    format:                         wav (NOT mp3)
+
+GENERATION PROCESS:
+1. Send the full reference passage as a SINGLE chunk to Fish Audio
+2. Request WAV output (not MP3 — avoid any lossy encoding)
+3. Download the raw output
+4. Apply speed correction: ffmpeg -af "atempo=0.95" (standard Marco pace)
+5. DO NOT apply any other processing — no filters, no loudnorm, no cleanup
+6. Listen to it. Does it sound like Marco? Warm, deep, soothing, grounded?
+7. If yes → this is the master. Store it permanently.
+8. If no → regenerate (Fish is non-deterministic, ~60% success rate)
+9. Maximum 5 attempts. If none sound right, investigate TTS settings.
+
+HUMAN APPROVAL REQUIRED:
+The master file MUST be approved by human listening before it is accepted.
+No automated system can determine "this is what Marco should sound like."
+The human ear is the only valid authority for establishing the benchmark.
+
+Once approved, the master is LOCKED. It does not change unless a deliberate
+decision is made to create a new version (e.g. voice provider change,
+intentional voice evolution).
+
+================================================================================
+14.6 BASELINE MEASUREMENTS
+================================================================================
+
+Once the master file is created and approved, extract and record these
+measurements. These become the reference values for all automated comparison.
+
+MEASUREMENTS TO EXTRACT AND RECORD:
+
+A) SPECTRAL CHARACTERISTICS
+   - Mean MFCC coefficients (13 coefficients) — the voice "fingerprint"
+   - Spectral centroid (mean and standard deviation)
+   - Spectral bandwidth (mean and standard deviation)
+   - Spectral rolloff frequency
+
+B) PITCH CHARACTERISTICS
+   - Mean fundamental frequency (F0) in Hz
+   - F0 standard deviation (pitch variation)
+   - F0 range (min to max)
+
+C) ENERGY AND DYNAMICS
+   - Mean RMS energy
+   - RMS standard deviation
+   - Dynamic range (peak to trough)
+
+D) LOUDNESS (via Auphonic or pyloudnorm)
+   - Integrated loudness (LUFS)
+   - Noise floor (dB)
+   - Signal-to-noise ratio (dB)
+   - Loudness range (LU)
+
+E) TIMING
+   - Average syllable rate (syllables per second)
+   - Pause duration in the silence section
+   - Total duration
+
+STORAGE:
+Record all measurements in a JSON file stored alongside the master:
+
+    {
+        "version": "v1",
+        "created": "2026-02-07",
+        "provider": "fish_audio",
+        "voice_id": "0165567b33324f518b02336ad232e31a",
+        "approved_by": "human",
+        "measurements": {
+            "mfcc_mean": [values],
+            "spectral_centroid_mean": value,
+            "spectral_centroid_std": value,
+            "f0_mean": value,
+            "f0_std": value,
+            "f0_range": [min, max],
+            "rms_mean": value,
+            "rms_std": value,
+            "integrated_loudness_lufs": value,
+            "noise_floor_db": value,
+            "snr_db": value,
+            "loudness_range_lu": value,
+            "duration_seconds": value
+        },
+        "pass_thresholds": {
+            "mfcc_cosine_distance_max": value,
+            "f0_deviation_max_percent": value,
+            "spectral_centroid_deviation_max_percent": value,
+            "snr_min_db": value
+        }
+    }
+
+FILE LOCATIONS:
+    Master audio:       salus-mind/reference/marco-master-v1.wav
+    Master measurements: salus-mind/reference/marco-master-v1-measurements.json
+    Auphonic report:    salus-mind/reference/marco-master-v1-auphonic.json
+
+================================================================================
+14.7 COMPARISON METHODOLOGY
+================================================================================
+
+Every generated session is compared against the master using two methods:
+
+METHOD 1: AUTOMATED COMPARISON (in build-session-v3.py)
+Extract the same measurements from the generated audio (raw narration, before
+ambient mixing) and compare against the master's baseline values.
+
+COMPARISON METRICS:
+    Metric                      | Method                  | Threshold
+    ----------------------------|-------------------------|------------------
+    Voice similarity (timbre)   | MFCC cosine distance    | <= TBD (calibrate)
+    Pitch consistency           | F0 mean % deviation     | <= TBD (calibrate)
+    Spectral match              | Centroid % deviation    | <= TBD (calibrate)
+    Energy consistency          | RMS % deviation         | <= TBD (calibrate)
+
+TBD thresholds are set during calibration (Section 14.9). They cannot be
+guessed — they must be derived from real data by comparing known-good and
+known-bad generations against the master.
+
+METHOD 2: AUPHONIC COMPARISON (external validation)
+Submit both the master and the generated narration to Auphonic. Compare:
+    - Input SNR (should be similar — same voice, same TTS pipeline)
+    - Noise floor (should be similar)
+    - Gain changes applied (large differences indicate quality issues)
+    - Loudness consistency
+
+METHOD 3: HUMAN COMPARISON (final authority)
+A/B listening test: play 10 seconds of the master, then 10 seconds of the
+generated file. Do they sound like the same person with the same character?
+
+Human comparison is the FINAL GATE. If automated comparison says PASS but
+human says "that doesn't sound like Marco," the human wins. Always.
+
+================================================================================
+14.8 PROVIDER ROUTING
+================================================================================
+
+Not all content types suit every TTS provider. Based on the loving-kindness
+failure analysis, the following routing rules apply:
+
+FISH AUDIO — Use for:
+    Content Type            | Why
+    ------------------------|----------------------------------------------
+    Meditation/mindfulness  | Short phrases, individual generation per block
+    Loving-kindness/metta   | Repeated phrases need dedicated attention
+    Body scans              | Short instructions with long pauses
+    Breathwork              | Brief cues between silence
+    Mantras/affirmations    | Repetitive short phrases
+    Any session < 15 min    | Within Fish's consistency window
+
+    Architecture: One TTS call per text block. Pauses stitched in post.
+    Marco's voice was trained on Fish — short meditative phrases are what
+    it knows. The ~60% rebuild rate is acceptable with the QA system
+    catching failures early.
+
+RESEMBLE — Use for:
+    Content Type            | Why
+    ------------------------|----------------------------------------------
+    Sleep stories           | Long narrative prose, flowing text
+    Guided journeys         | Extended storytelling passages
+    Any session > 20 min    | Better consistency over long durations
+
+    Architecture: Large ~2000-character chunks, merged with SSML breaks.
+    Resemble excels at long flowing text where the model has enough context
+    to maintain voice character. Do NOT use for short phrase content — the
+    chunking and SSML break approach degrades voice quality on meditation-
+    style scripts.
+
+DECISION TREE:
+    Is the script mostly short phrases with pauses? → Fish
+    Is the script mostly long flowing narrative?    → Resemble
+    Mixed content?                                  → Fish (safer default)
+    Unsure?                                         → Fish (Marco's home)
+
+CRITICAL: When switching providers for a session, ALWAYS compare the output
+against the Marco master. Provider differences can subtly shift the voice
+character even with the same voice ID/clone.
+
+================================================================================
+14.9 CALIBRATION PROCESS
+================================================================================
+
+Thresholds cannot be set in advance. They must be derived from real data.
+
+CALIBRATION STEPS:
+
+1. CREATE THE MASTER (Section 14.5)
+   - Generate, listen, approve
+   - Extract baseline measurements
+
+2. GENERATE CALIBRATION SET
+   - Build 5 generations of the reference passage using Fish Audio
+   - Build 3 generations using Resemble (if Resemble remains in use)
+   - Listen to each and classify: GOOD (sounds like Marco) or BAD
+     (voice degraded, wrong character, artifacts)
+
+3. MEASURE EVERYTHING
+   - Extract all metrics from Section 14.6 for each generation
+   - Run each through Auphonic and record statistics
+   - Record human judgement (GOOD/BAD) for each
+
+4. SET THRESHOLDS
+   - For each metric, find the boundary between GOOD and BAD generations
+   - Set the pass threshold at the tightest point that passes all GOOD
+     generations and fails all BAD ones
+   - If no clean boundary exists for a metric, that metric is not useful
+     for automated comparison — note this and rely on other metrics
+
+5. VALIDATE
+   - Run the thresholds against the next 3 production builds
+   - Do the automated results match human judgement?
+   - If yes → thresholds are calibrated. Lock them.
+   - If no → adjust and repeat
+
+6. DOCUMENT
+   - Record all calibration data in marco-master-v1-measurements.json
+   - Record which metrics proved useful and which did not
+   - Record the final thresholds with rationale
+
+================================================================================
+14.10 MASTER VERSIONING
+================================================================================
+
+The master may need to be updated if:
+- The TTS provider changes or updates their model
+- A deliberate decision is made to evolve Marco's voice
+- The original master is discovered to have an unnoticed issue
+
+VERSIONING RULES:
+- NEVER overwrite the current master. Create a new version.
+- New versions require full human approval (same process as Section 14.5)
+- New versions require full recalibration (Section 14.9)
+- Old versions are archived, never deleted
+- The build script must reference a specific master version, not "latest"
+
+VERSION HISTORY:
+    Version | Date       | Provider | Notes
+    --------|------------|----------|--------------------------------------
+    v1      | TBD        | Fish     | Initial master (pending creation)
+
+================================================================================
+14.11 INTEGRATION WITH BUILD PIPELINE
+================================================================================
+
+The master comparison slots into the build pipeline as follows:
+
+    TTS Generation (Fish or Resemble per routing rules)
+         |
+         v
+    Raw Narration (WAV)
+         |
+         +---> Internal QA Gates 1-3 (clicks, stitches, qa_loop)
+         |
+         +---> Master Comparison (MFCC, pitch, spectral vs master)
+         |
+         +---> Auphonic QA (if enabled — SNR, noise, hum, loudness)
+         |
+         v
+    Combined Gate Check
+         |
+    PASS: All gates passed + master comparison within thresholds
+         |
+         v
+    Ambient Mix → Final MP3 Encode → R2 Deploy
+
+FAIL CONDITIONS:
+- Any internal gate fails → rebuild
+- Master comparison outside thresholds → rebuild
+- Auphonic criteria failed (if enabled) → rebuild
+- Human review says "doesn't sound like Marco" → rebuild (overrides all)
+
+THE MASTER IS THE ULTIMATE AUTHORITY.
+If a file passes every automated gate but does not sound like the master
+to a human listener, it fails. Full stop.
+
+================================================================================
+14.12 IMMEDIATE NEXT STEPS
+================================================================================
+
+1. GENERATE MASTER FILE
+   - Use Fish Audio with the reference passage from Section 14.4
+   - Raw WAV output, no processing
+   - Human listens and approves
+
+2. EXTRACT BASELINE MEASUREMENTS
+   - Run spectral/pitch/energy analysis
+   - Submit to Auphonic for external measurements
+   - Record everything in the measurements JSON
+
+3. RUN CALIBRATION SET
+   - Generate 5 Fish versions + 3 Resemble versions of the reference passage
+   - Classify each as GOOD/BAD by human listening
+   - Derive comparison thresholds
+
+4. INTEGRATE INTO BUILD SCRIPT
+   - Add master comparison step to build-session-v3.py
+   - Load master measurements from JSON
+   - Compare each new generation against master
+   - Add pass/fail criteria based on calibrated thresholds
+
+5. REBUILD LOVING-KINDNESS
+   - Use Fish Audio (per provider routing rules)
+   - One TTS call per text block, pauses stitched in post
+   - Compare against master before deployment
+
+================================================================================
+— END OF SECTION 14 —
+================================================================================
+
+---
+
+*Last updated: 7 February 2026 (Sections 13-14 added: Auphonic, Marco Master Voice Specification)*

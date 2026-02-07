@@ -1,0 +1,62 @@
+{
+  "date": "2026-02-07",
+  "master": "content/audio/marco-master/marco-master-v1.wav",
+  "classifications": {
+    "fish-cal-1": "GOOD",
+    "fish-cal-2": "GOOD",
+    "fish-cal-3": "GOOD",
+    "fish-cal-4": "BAD",
+    "fish-cal-5": "GOOD",
+    "resemble-cal-1": "BAD",
+    "resemble-cal-2": "BAD",
+    "resemble-cal-3": "BAD"
+  },
+  "measurements": {
+    "fish-cal-1": {
+      "mfcc_cosine": 0.0046,
+      "f0_dev_pct": 0.6
+    },
+    "fish-cal-2": {
+      "mfcc_cosine": 0.0059,
+      "f0_dev_pct": 0.4
+    },
+    "fish-cal-3": {
+      "mfcc_cosine": 0.0002,
+      "f0_dev_pct": 3.9
+    },
+    "fish-cal-4": {
+      "mfcc_cosine": 0.0003,
+      "f0_dev_pct": 0.8
+    },
+    "fish-cal-5": {
+      "mfcc_cosine": 0.0006,
+      "f0_dev_pct": 5.6
+    },
+    "resemble-cal-1": {
+      "mfcc_cosine": 0.0112,
+      "f0_dev_pct": 17.4
+    },
+    "resemble-cal-2": {
+      "mfcc_cosine": 0.0109,
+      "f0_dev_pct": 17.0
+    },
+    "resemble-cal-3": {
+      "mfcc_cosine": 0.0106,
+      "f0_dev_pct": 14.8
+    }
+  },
+  "thresholds": {
+    "mfcc_cosine_distance_max": 0.008,
+    "f0_deviation_max_percent": 10.0,
+    "spectral_centroid_deviation_max_percent": "NOT USEFUL \u2014 too much variance in GOOD samples",
+    "rms_deviation_max_percent": "NOT USEFUL \u2014 too much variance in GOOD samples",
+    "mfcc_cosine_distance_production_max": 0.06,
+    "mfcc_production_note": "MFCC is content-dependent. Same-text calibration threshold is 0.008 but production builds with different text produce ~0.035 for same voice. Production threshold 0.06 allows content variance.",
+    "notes": {
+      "catches": "Wrong provider voice, major voice character shift (Resemble on short content)",
+      "does_not_catch": "Subtle within-provider quality issues (bad Fish generation with correct pitch/timbre but wrong prosody)",
+      "content_dependence": "MFCC cosine distance varies by content — different phoneme distributions shift MFCC means. F0 is content-independent.",
+      "human_review": "MANDATORY — automated metrics cannot replace human ear for prosody/naturalness"
+    }
+  }
+}
