@@ -942,4 +942,51 @@ Before every build:
 
 ---
 
+### 7 February 2026 — Ambient Track Fix (No Looping)
+
+**Problem:** Four sessions had ambient tracks shorter than the voice, causing the ambient to drop out partway through playback.
+
+| Session | Voice | Old Ambient | Duration |
+|---------|-------|-------------|----------|
+| 03-breathing-for-anxiety | 19.3 min | birds (3.5 min) | Drops at 3.5 min |
+| 25-introduction-to-mindfulness | 14.4 min | garden (1.8 min) | Drops at 1.8 min |
+| 38-seven-day-mindfulness-day1 | 11.6 min | garden (1.8 min) | Drops at 1.8 min |
+| ss02-the-moonlit-garden | 15.6 min | garden (1.8 min) | Drops at 1.8 min |
+
+**Fix:** Used 8-hour ambient files (already downloaded to `youtube-downloads/`). Copied to ambient folder, remixed all 4 sessions from raw narration, redeployed to R2.
+
+**Rule: NEVER loop ambient tracks.** Looping causes an audible glitch/breach at the loop point. Always use ambient files longer than the voice track. 8-hour ambient files exist for this reason.
+
+**Available 8-hour ambients:**
+
+| File | Duration | Location |
+|------|----------|----------|
+| `rain-8hr.mp3` | 8 hr | `content/audio/ambient/` |
+| `birds-8hr.mp3` | 8 hr | `content/audio/ambient/` |
+| `garden-8hr.mp3` | 12 hr | `content/audio/ambient/` |
+| `rain-extended.mp3` | 70 min | `content/audio/ambient/` |
+| `stream-3hr.mp3` | 3 hr | `content/audio/ambient/youtube-downloads/` |
+| `loving-kindness-ambient.wav` | 15 min | `content/audio/ambient/` |
+
+**`mix_ambient()` file search order:** `-8hr` → `-extended` → base name. WAV checked before MP3. This means `garden-8hr.mp3` is automatically preferred over `garden.mp3`.
+
+**Pre-build ambient check added:**
+- [ ] Ambient file duration exceeds estimated voice duration
+- [ ] If no long ambient exists, download one BEFORE building
+
+### File Organisation (7 February 2026)
+
+Loose files in the repo root were organised into proper directories:
+
+| Directory | Contents |
+|-----------|----------|
+| `scripts-archive/` | Old/superseded build scripts (build-session.py, build-session-v2.py, etc.) |
+| `reference/` | Competitor analysis (Calm), voice-clone experiments, branding, transcripts |
+| `test/` | Test files, audio reports, test HTML pages |
+| `docs/` | PROJECT-BIBLE, audio quality analysis, stripe links |
+
+**Root should only contain:** HTML pages, `build-session-v3.py`, `audition-voices.py`, `CNAME`, `robots.txt`, `sitemap.xml`, `package.json`.
+
+---
+
 *Last updated: 7 February 2026*
