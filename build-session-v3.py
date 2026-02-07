@@ -678,6 +678,28 @@ def generate_silence(duration, output_path):
     return output_path
 
 
+def cleanup_audio_medium(input_path, output_path):
+    """Medium cleanup for Fish — de-hiss without muffling.
+    Keeps de-esser, drops hard lowpass and heavy noise reduction.
+    Output is WAV for lossless pipeline.
+    """
+    filter_chain = ','.join([
+        'highpass=f=80',
+        'equalizer=f=6000:t=q:w=2:g=-3',      # De-esser: gentler notch at 6kHz
+        'highshelf=f=8000:g=-1.5',             # Gentle shelf above 8kHz (was 7kHz/-2)
+        'afftdn=nf=-20',                       # Lighter noise reduction (was -25)
+        'loudnorm=I=-24:TP=-2:LRA=11'
+    ])
+    cmd = [
+        'ffmpeg', '-y', '-i', input_path,
+        '-af', filter_chain,
+        '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE),
+        output_path
+    ]
+    subprocess.run(cmd, capture_output=True, check=True)
+    return output_path
+
+
 def cleanup_audio(input_path, output_path):
     """Clean up TTS audio - remove hiss, sibilance, and artifacts (Fish full chain).
     Output is WAV for lossless pipeline.
@@ -781,6 +803,9 @@ def concatenate_with_silences(voice_chunks, silences, output_path, temp_dir, cle
     if cleanup_mode == 'full':
         print("  Cleaning up audio (full Fish chain)...")
         cleanup_audio(concat_output, output_path)
+    elif cleanup_mode == 'medium':
+        print("  Cleaning up audio (de-hiss, no lowpass)...")
+        cleanup_audio_medium(concat_output, output_path)
     elif cleanup_mode == 'light':
         print("  Cleaning up audio (loudnorm only)...")
         cleanup_audio_light(concat_output, output_path)
@@ -814,7 +839,7 @@ def mix_ambient(voice_path, ambient_name, output_path):
     print(f"  Voice: {voice_duration/60:.1f} min, Ambient: {ambient_duration/60:.1f} min")
 
     if ambient_duration < voice_duration:
-        print(f"  WARNING: Ambient shorter than voice!")
+        print(f"  WARNING: Ambient shorter than voice! Need longer ambient file.")
 
     fade_out_start = max(0, voice_duration - AMBIENT_FADE_OUT_DURATION)
 
@@ -1407,7 +1432,7 @@ def main():
                         help='ElevenLabs model (default: v2, ignored for Fish)')
     parser.add_argument('--no-cleanup', action='store_true',
                         help='Skip audio cleanup for raw quality testing')
-    parser.add_argument('--cleanup', choices=['full', 'light', 'none'], default=None,
+    parser.add_argument('--cleanup', choices=['full', 'medium', 'light', 'none'], default=None,
                         help='Override cleanup mode (default: full for fish, light for elevenlabs/resemble)')
     parser.add_argument('--no-deploy', action='store_true',
                         help='Build and QA only — do not upload to R2')

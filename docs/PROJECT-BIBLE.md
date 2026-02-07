@@ -442,8 +442,7 @@ npx wrangler r2 object put salus-mind/content/audio-free/FILENAME.mp3 --file=./F
 
 ### Quality Standards
 - **100% OR NO SHIP** - any audible glitch = FAIL
-- **3-Strike Rule** - max 3 rebuild attempts before escalating
-- **Automated QA is the gate** - scan→fix→rescan loop runs until clean, then auto-deploys to R2. Human out of loop.
+- **Automated QA is the gate** - scan→fix→rescan loop runs until clean, then auto-deploys to R2, then emails scottripley@icloud.com. Human out of loop. No manual strike counting — the cycle runs until it passes.
 
 ### Analyzer v4 Findings
 - Sibilance/click detection has many false positives
@@ -541,35 +540,54 @@ ElevenLabs was evaluated as an alternative TTS provider across 11 builds and £9
 
 8 female Fish voices auditioned. All inferior to Marco for sleep story delivery. None had the warmth or natural pacing. Marco remains sole voice.
 
-### Production Pipeline (Automated)
+### Production Pipeline (Fully Automated — Brief to Live)
+
+The entire pipeline is autonomous. No human in the loop. Runs from script to live deployment without intervention.
 
 ```
-Script (... pause markers)
+Script (pause markers)
         │
         ▼
 process_script_for_tts() → blocks with pause durations
         │
         ▼
-generate_tts_chunk() → Fish API with condition_on_previous_chunks
+generate_tts_chunk() → Fish API
         │
         ▼
-apply_edge_fades() → 15ms cosine fade on each chunk (prevents stitch clicks)
+apply_edge_fades() → 15ms cosine fade on each chunk
         │
         ▼
-concatenate_with_silences() → cleanup chain → mix_ambient()
+concatenate_with_silences() → cleanup (loudnorm) → mix_ambient()
         │
         ▼
 qa_loop():  scan_for_clicks() → patch_stitch_clicks() → rescan
-            ↻ repeat until 0 click artifacts (max 5 passes)
+            ↻ repeat until 0 click artifacts
         │
         ▼
 deploy_to_r2() → LIVE on media.salus-mind.com
+        │
+        ▼
+send_build_email() → scottripley@icloud.com
 ```
 
-**Fish cleanup chain (full):**
-```
-highpass=80Hz → de-esser 6kHz → shelf 7kHz → lowpass 10kHz → noise reduction -25dB → dynaudnorm
-```
+**Audio processing — DO NOT apply at any stage:**
+- ~~lowpass=f=10000~~ (kills clarity)
+- ~~afftdn=nf=-25~~ (muffles the voice)
+- ~~dynaudnorm~~ (replaced by loudnorm)
+- ~~aggressive de-essers or shelf filters~~
+
+**Only processing allowed:** `loudnorm=I=-24:TP=-2:LRA=11`
+
+**Lossless pipeline — all intermediate audio must be WAV:**
+1. TTS chunks from API → immediately convert to WAV
+2. `apply_edge_fades()` → WAV in, WAV out
+3. `concatenate_with_silences()` → WAV
+4. Loudness normalisation → WAV
+5. Ambient mixing → WAV
+6. `scan_for_clicks()` and `patch_stitch_clicks()` → WAV
+7. **Final encode to MP3 128kbps** — this is the ONLY lossy step
+8. Deploy to R2
+9. Email scottripley@icloud.com
 
 No atempo needed for Fish/Marco — natural speed is correct.
 
@@ -582,6 +600,8 @@ No atempo needed for Fish/Marco — natural speed is correct.
 5. **Marco is the only voice.** Do not audition alternatives unless Marco is discontinued.
 6. **QA is automated.** The pipeline scans, patches, and re-scans until clean. No human listening required before deploy.
 7. **Deploy is automatic.** Build passes QA → uploads to R2 → live. Use `--no-deploy` to hold.
+8. **Email is mandatory.** Every completed build cycle ends with an email to scottripley@icloud.com — pass or fail.
+9. **Fully autonomous.** No human interaction between receiving a brief and the audio being live. Handle every step.
 
 ### CLI Usage
 
@@ -934,11 +954,44 @@ Before every build:
 - [ ] Short phrases combined with lead-in text to exceed 20 chars
 - [ ] `RESEND_API_KEY` set in `.env` for email notification
 
-### Three Strikes Rule
+### Build QA (Automated)
 
-1. **Strike 1-2:** Rebuild. Fish TTS is non-deterministic — glitch chunks are expected.
-2. **Strike 3:** DELETE ALL FILES → Start 100% fresh (new TTS generation from scratch).
-3. **After 4 total attempts:** Stop. Escalate to human review. Something structural is wrong.
+The scan→fix→rescan loop runs autonomously until the audio passes. No manual strike counting — the pipeline handles retries internally. After QA passes, auto-deploy to R2 and email scottripley@icloud.com.
+
+### Execution Checklist
+
+Run through this before considering any build complete:
+
+**Script:**
+- [ ] Script written with correct metadata header and pause markers
+- [ ] All text blocks 20-400 characters
+- [ ] Short phrases combined to exceed 20 chars
+- [ ] Pauses humanised (no identical gap durations)
+
+**Build:**
+- [ ] Dry run completed — block count and silence totals verified
+- [ ] TTS generated block-by-block (not combined)
+- [ ] All intermediate files in WAV (lossless throughout pipeline)
+- [ ] Edge fades applied (15ms cosine on each chunk)
+- [ ] Loudness normalised only (loudnorm — NOT aggressive ffmpeg chain)
+- [ ] Final encode to MP3 128kbps as the ONLY lossy step
+
+**Ambient:**
+- [ ] Ambient file longer than voice track (NEVER loop)
+- [ ] Ambient mixed at correct level for category
+- [ ] Ambient continues through ALL pauses and silences
+- [ ] Fade in: 15 seconds, Fade out: 8 seconds
+
+**Quality:**
+- [ ] QA loop run — scan→fix→rescan until clean
+- [ ] 0 voice changes in QA results
+
+**Deployment:**
+- [ ] Final audio uploaded to Cloudflare R2 (NOT committed to git)
+- [ ] Audio plays from media.salus-mind.com URL
+- [ ] Website HTML updated with session listing and player
+- [ ] HTML changes committed and pushed to main
+- [ ] Email sent to scottripley@icloud.com
 
 ---
 
