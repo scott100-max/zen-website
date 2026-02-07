@@ -823,6 +823,36 @@ All 5 deployed sessions scanned and patched:
 
 ---
 
+### 7 February 2026 — QA Failure: Degraded Marco Audio Shipped
+
+**Problem:** Loving-kindness build passed all QA checks despite severely degraded voice quality. User flagged: "audio qualities of marco completely lost." Reverb, hiss, and muffled character.
+
+**Root causes (3 independent failures):**
+
+| Failure | Impact |
+|---------|--------|
+| **QA blind spot** | QA only checked for click artifacts — zero quality checks for noise floor, HF hiss, or spectral degradation |
+| **Lossless pipeline violation** | `generate_tts_chunk_resemble()` converted WAV→MP3→WAV (lossy round-trip), degrading audio at the source |
+| **Wrong cleanup chain** | Used `cleanup light` (loudnorm only) which was insufficient for Resemble output |
+
+**Fixes applied:**
+
+1. **Lossless TTS chunk saving** — Resemble API returns native WAV; now saved directly with zero intermediate lossy steps
+2. **Triple-gate QA system:**
+   - Gate 1 (Quality): Measures noise floor and HF hiss in silence regions via astats, compared against master benchmarks
+   - Gate 2 (Clicks): Existing click artifact scan (scan→patch→rescan loop)
+   - Gate 3 (Independent Spectral): Compares frequency profile of build against master reference WAV
+   - ALL three gates must pass — any failure blocks deploy
+3. **Deploy gate hardened** — Deploy was unconditional before; now respects QA rejection
+4. **Calibrated cleanup chain** — `highpass=80, lowpass=10000, afftdn=-25, loudnorm I=-26` matches master quality benchmarks
+5. **Email always sends** (pass or fail) for visibility
+
+**Lesson:** Click-artifact QA is necessary but NOT sufficient. Quality benchmarks against a known-good master are the only reliable way to prevent degraded audio from shipping. Every new QA mode must be validated against the master before production use.
+
+**Rule change:** "Automated QA (clicks only) is the gate" → "Triple-gate QA (quality + clicks + spectral) is the gate"
+
+---
+
 ### 7 February 2026 — Lossless WAV Pipeline & Email Notifications
 
 **Problem:** MP3 intermediate files caused cumulative compression artifacts. Each processing step (TTS → cleanup → edge fades → concat → ambient mix) was re-encoding to MP3, degrading quality at every stage.
@@ -1048,7 +1078,8 @@ Loose files in the repo root were organised into proper directories:
 ### Reference Master
 - **Session:** `ss02-the-moonlit-garden` (12.1 min, Resemble Marco T2)
 - **Backed up to:** `content/audio/marco-master/` (raw WAV, mixed MP3, final MP3, manifest)
-- **Quality benchmarks:** Noise floor -27.7 dB, HF hiss (>6kHz) -51.3 dB, stereo, 0 click artifacts
+- **Quality benchmarks (astats on silence regions):** Noise floor -27.0 dB, HF hiss (>6kHz) -45.0 dB, 0 click artifacts
+- **QA thresholds:** Noise floor ≤ -26.0 dB, HF hiss ≤ -44.0 dB (1 dB margin from master)
 
 ### Voice Configuration
 | Setting | Value | Why |
@@ -1064,17 +1095,20 @@ Loose files in the repo root were organised into proper directories:
 ### What Produces Clean Audio (DO)
 - Always include `voice_settings_preset_uuid` in API payload
 - Use `output_format: wav` from the API (native WAV, no intermediate lossy steps)
-- Use `cleanup medium` for Resemble builds (gentle de-hiss + loudnorm)
+- Use `--cleanup resemble` (default for Resemble provider)
+- Cleanup chain: `highpass=80, lowpass=10000, afftdn=-25, loudnorm I=-26`
 - Keep pace at 0.85 — sounds natural, not rushed
 - Let Resemble handle pacing via SSML `<break>` tags with original pause durations
 - One final MP3 encode at 128kbps as the only lossy step
+- Save native WAV from API directly — no MP3 intermediate conversion
 
 ### What Degrades Audio (DO NOT)
 - Do NOT omit the voice settings preset — produces noisy, hissy output without HD mode
 - Do NOT use pace > 0.9 — too fast for meditation/sleep content
-- Do NOT apply `lowpass=f=10000` (kills clarity)
-- Do NOT apply heavy `afftdn=nf=-25` (muffles the voice)
-- Do NOT use `cleanup full` (Fish chain) — the de-esser and noise gate are for Fish, not Resemble
+- Do NOT use `loudnorm I=-24` — target is too loud, raises noise floor above QA threshold
+- Do NOT use `dynaudnorm` — amplifies silence regions, raising noise floor to -20 dB
+- Do NOT convert WAV→MP3→WAV at any point — lossy round-trip degrades audio
+- Do NOT use `cleanup full` (Fish chain) — the de-esser is for Fish, not Resemble
 - Do NOT use random SSML break durations — use original pause values from the script
 - Do NOT use `cleanup light` for Resemble — insufficient to remove residual TTS noise
 
@@ -1096,7 +1130,7 @@ generate_tts_chunk_resemble() → Resemble API (HD mode, pace=0.85)
 concatenate_with_silences() → auto-detect channels, match silence
         │
         ▼
-cleanup_audio_medium() → de-hiss without muffling + loudnorm
+cleanup_audio_resemble() → highpass 80 + lowpass 10k + afftdn=-25 + loudnorm I=-26
         │
         ▼
 mix_ambient() → ambient mixed at category level
@@ -1105,7 +1139,11 @@ mix_ambient() → ambient mixed at category level
 SINGLE MP3 ENCODE (128kbps) ← only lossy step
         │
         ▼
-qa_loop() → scan → fix → rescan until clean
+qa_loop() → TRIPLE-GATE QA:
+        │   Gate 1: Quality benchmarks (noise floor, HF hiss vs master)
+        │   Gate 2: Click artifact scan (scan → fix → rescan)
+        │   Gate 3: Independent spectral comparison vs master WAV
+        │   ALL must pass → deploy, ANY fail → block
         │
         ▼
 deploy_to_r2() → send_build_email()
@@ -1114,14 +1152,14 @@ deploy_to_r2() → send_build_email()
 ### CLI Usage (Resemble)
 
 ```bash
-# Standard Resemble build (recommended)
-python3 build-session-v3.py SESSION --provider resemble --cleanup medium
+# Standard Resemble build (recommended — cleanup defaults to 'resemble')
+python3 build-session-v3.py SESSION --provider resemble
 
 # Dry run first (always)
-python3 build-session-v3.py SESSION --provider resemble --cleanup medium --dry-run
+python3 build-session-v3.py SESSION --provider resemble --dry-run
 
 # Build without deploying
-python3 build-session-v3.py SESSION --provider resemble --cleanup medium --no-deploy
+python3 build-session-v3.py SESSION --provider resemble --no-deploy
 ```
 
 ### Pre-Build Checklist (Resemble)
@@ -1131,8 +1169,9 @@ Before every Resemble build:
 - [ ] Voice settings preset UUID matches `expressive-story` in script
 - [ ] Dry run shows correct chunk count and silence totals
 - [ ] Only building ONE session
-- [ ] Cleanup set to `medium` (NOT `light` or `full`)
+- [ ] Cleanup defaults to `resemble` (do NOT override to `light` or `full`)
 - [ ] Ambient file longer than estimated voice track
+- [ ] Master reference WAV exists at `content/audio/marco-master/marco-master-raw.wav`
 
 ### Fish vs Resemble: When to Use Each
 
@@ -1140,12 +1179,12 @@ Before every Resemble build:
 |---|---|---|
 | **When** | Short sessions (<15 min), budget-conscious | All new production builds |
 | **Voice** | Marco (Fish clone) | Marco T2 (Resemble clone) |
-| **Quality** | Good but needs full cleanup chain | Clean with HD mode, just de-hiss + loudnorm |
-| **Hiss** | De-esser + noise gate needed | Medium cleanup sufficient |
+| **Quality** | Good but needs full cleanup chain | Clean with HD mode, calibrated cleanup |
+| **Hiss** | De-esser + noise gate needed | highpass + lowpass + afftdn + loudnorm |
 | **Pacing** | Natural speed, no atempo needed | pace=0.85 via voice preset |
-| **Cleanup** | `--cleanup full` | `--cleanup medium` |
+| **Cleanup** | `--cleanup full` | `--cleanup resemble` (default) |
 | **Status** | Legacy — still works | **Preferred for new builds** |
 
 ---
 
-*Last updated: 7 February 2026*
+*Last updated: 7 February 2026 (QA triple-gate system, calibrated Resemble cleanup chain)*

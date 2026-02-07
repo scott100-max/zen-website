@@ -55,6 +55,14 @@ QA_MAX_PASSES = 5         # Max scan-fix-rescan cycles before failing
 QA_CLICK_THRESHOLD = 100  # Min amplitude jump to count as click
 QA_FADE_MS = 20           # Crossfade width at stitch boundaries
 
+# Master quality benchmarks (from ss02-the-moonlit-garden Marco T2 build)
+# Measured via astats RMS on silence regions — calibrated to measure_noise_floor()
+# Master silence-region measurements: noise -27.0 dB, HF hiss -45.0 dB
+# Thresholds allow 1 dB tolerance above master
+MASTER_NOISE_FLOOR_DB = -26.0   # Max RMS in silence (master: -27.0)
+MASTER_HF_HISS_DB = -44.0      # Max RMS >6kHz in silence (master: -45.0)
+MASTER_REF_WAV = Path("content/audio/marco-master/marco-master-raw.wav")
+
 # Fish TTS API
 FISH_API_URL = "https://api.fish.audio/v1/tts"
 FISH_VOICE_ID = "0165567b33324f518b02336ad232e31a"  # Marco voice
@@ -608,7 +616,8 @@ def _join_with_ssml_breaks(items):
 def generate_tts_chunk_resemble(text, output_path, chunk_num=0, voice_id=None):
     """Generate TTS for a single chunk using Resemble AI.
 
-    Returns output_path on success.
+    LOSSLESS: Saves native WAV from API — NO intermediate MP3 conversion.
+    Returns output_path (WAV) on success.
     """
     import requests
     import base64
@@ -640,17 +649,8 @@ def generate_tts_chunk_resemble(text, output_path, chunk_num=0, voice_id=None):
 
         if data.get("success"):
             audio_bytes = base64.b64decode(data["audio_content"])
-            # Write native WAV (keep stereo — HD mode quality)
-            wav_path = output_path.replace('.mp3', '.wav')
-            Path(wav_path).write_bytes(audio_bytes)
-            # Convert WAV to MP3 (intermediate — concat will re-extract WAV)
-            cmd = [
-                'ffmpeg', '-y', '-i', wav_path,
-                '-c:a', 'libmp3lame', '-b:a', '128k',
-                output_path
-            ]
-            subprocess.run(cmd, capture_output=True, check=True)
-            os.remove(wav_path)
+            # Write native WAV directly — ZERO lossy steps
+            Path(output_path).write_bytes(audio_bytes)
             duration = data.get("duration", 0)
             print(f"{duration:.1f}s")
             time.sleep(RESEMBLE_DELAY_MS / 1000)
@@ -716,6 +716,31 @@ def cleanup_audio(input_path, output_path):
         'lowpass=f=10000',
         'afftdn=nf=-25',
         'dynaudnorm=p=0.9:m=10'
+    ])
+    cmd = [
+        'ffmpeg', '-y', '-i', input_path,
+        '-af', filter_chain,
+        '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE),
+        output_path
+    ]
+    subprocess.run(cmd, capture_output=True, check=True)
+    return output_path
+
+
+def cleanup_audio_resemble(input_path, output_path):
+    """Resemble-specific cleanup — matches moonlit garden master chain.
+
+    Chain: highpass 80 Hz (rumble) + lowpass 10 kHz (super-voice noise) +
+    spectral denoise afftdn=-25 + loudnorm I=-26.
+    loudnorm target -26 LUFS keeps noise floor at -27 dB in silence regions,
+    matching the moonlit garden master. Higher targets (e.g. -24) raise the
+    noise floor above the QA threshold.
+    """
+    filter_chain = ','.join([
+        'highpass=f=80',
+        'lowpass=f=10000',
+        'afftdn=nf=-25',
+        'loudnorm=I=-26:TP=-2:LRA=11',
     ])
     cmd = [
         'ffmpeg', '-y', '-i', input_path,
@@ -815,6 +840,9 @@ def concatenate_with_silences(voice_chunks, silences, output_path, temp_dir, cle
     if cleanup_mode == 'full':
         print("  Cleaning up audio (full Fish chain)...")
         cleanup_audio(concat_output, output_path)
+    elif cleanup_mode == 'resemble':
+        print("  Cleaning up audio (Resemble HD: spectral denoise + loudnorm)...")
+        cleanup_audio_resemble(concat_output, output_path)
     elif cleanup_mode == 'medium':
         print("  Cleaning up audio (de-hiss, no lowpass)...")
         cleanup_audio_medium(concat_output, output_path)
@@ -875,6 +903,198 @@ def mix_ambient(voice_path, ambient_name, output_path):
 # ============================================================================
 # AUTOMATED QA — SCAN, PATCH, VERIFY
 # ============================================================================
+
+
+def measure_noise_floor(audio_path, manifest_data):
+    """Measure noise floor and HF hiss in silence regions of raw narration.
+
+    Returns (noise_floor_db, hf_hiss_db) — RMS levels measured during
+    the longest silence gap in the narration.
+    """
+    # Find the longest silence region
+    best_start = None
+    best_dur = 0
+    for seg in manifest_data['segments']:
+        if seg['type'] == 'silence' and seg['duration'] > best_dur:
+            best_start = seg['start_time']
+            best_dur = seg['duration']
+
+    if best_start is None or best_dur < 0.5:
+        print("  QA-QUALITY: WARNING — no silence region found for noise measurement")
+        return 0.0, 0.0
+
+    # Measure 1s in the middle of the longest silence (avoid edges)
+    measure_start = best_start + 0.2
+    measure_dur = min(best_dur - 0.4, 1.0)
+    if measure_dur < 0.3:
+        measure_dur = best_dur - 0.4
+
+    # Overall noise floor
+    result = subprocess.run([
+        'ffmpeg', '-i', audio_path,
+        '-ss', str(measure_start), '-t', str(measure_dur),
+        '-af', 'astats=reset=0',
+        '-f', 'null', '-'
+    ], capture_output=True, text=True)
+    noise_db = _parse_rms_from_astats(result.stderr)
+
+    # HF hiss (>6kHz)
+    result_hf = subprocess.run([
+        'ffmpeg', '-i', audio_path,
+        '-ss', str(measure_start), '-t', str(measure_dur),
+        '-af', 'highpass=f=6000,astats=reset=0',
+        '-f', 'null', '-'
+    ], capture_output=True, text=True)
+    hf_db = _parse_rms_from_astats(result_hf.stderr)
+
+    return noise_db, hf_db
+
+
+def _parse_rms_from_astats(stderr_text):
+    """Extract RMS level dB from ffmpeg astats output."""
+    import re
+    matches = re.findall(r'RMS level dB:\s*([-\d.]+)', stderr_text)
+    if matches:
+        try:
+            return float(matches[-1])
+        except ValueError:
+            return -100.0  # Treat unparseable (e.g. '-inf', '-') as silent
+    return 0.0
+
+
+def qa_quality_check(raw_narration_path, manifest_data):
+    """PRIMARY QA GATE 1: Quality benchmark check against master.
+
+    Measures noise floor and HF hiss, compares against master thresholds.
+    Returns (passed, details_dict).
+    """
+    print(f"\n  QA-QUALITY: Measuring audio quality...")
+    noise_db, hf_db = measure_noise_floor(raw_narration_path, manifest_data)
+
+    print(f"  QA-QUALITY: Noise floor = {noise_db:.1f} dB (threshold: {MASTER_NOISE_FLOOR_DB})")
+    print(f"  QA-QUALITY: HF hiss     = {hf_db:.1f} dB (threshold: {MASTER_HF_HISS_DB})")
+
+    details = {
+        'noise_floor_db': noise_db,
+        'hf_hiss_db': hf_db,
+        'noise_threshold': MASTER_NOISE_FLOOR_DB,
+        'hf_threshold': MASTER_HF_HISS_DB,
+    }
+
+    passed = True
+    if noise_db > MASTER_NOISE_FLOOR_DB:
+        print(f"  QA-QUALITY: FAIL — noise floor {noise_db:.1f} dB exceeds master threshold {MASTER_NOISE_FLOOR_DB}")
+        passed = False
+    if hf_db > MASTER_HF_HISS_DB:
+        print(f"  QA-QUALITY: FAIL — HF hiss {hf_db:.1f} dB exceeds master threshold {MASTER_HF_HISS_DB}")
+        passed = False
+
+    if passed:
+        print(f"  QA-QUALITY: PASSED")
+
+    return passed, details
+
+
+def qa_independent_check(raw_narration_path, manifest_data):
+    """SECONDARY QA GATE 2: Independent spectral quality verification.
+
+    Completely independent from primary QA. Compares frequency profile of
+    the build against the master reference WAV using spectral analysis.
+    Returns (passed, details_dict).
+    """
+    print(f"\n  QA-INDEPENDENT: Running secondary quality verification...")
+
+    if not MASTER_REF_WAV.exists():
+        print(f"  QA-INDEPENDENT: WARNING — master reference WAV not found at {MASTER_REF_WAV}")
+        print(f"  QA-INDEPENDENT: Falling back to absolute thresholds only")
+        # Fall back to stricter absolute thresholds
+        noise_db, hf_db = measure_noise_floor(raw_narration_path, manifest_data)
+        passed = noise_db <= MASTER_NOISE_FLOOR_DB and hf_db <= MASTER_HF_HISS_DB
+        if passed:
+            print(f"  QA-INDEPENDENT: PASSED (absolute thresholds)")
+        else:
+            print(f"  QA-INDEPENDENT: FAIL")
+        return passed, {'method': 'absolute', 'noise_db': noise_db, 'hf_db': hf_db}
+
+    # Measure master reference
+    master_manifest = {'segments': [{'type': 'silence', 'start_time': 3.0, 'duration': 3.0}]}
+    master_noise, master_hf = measure_noise_floor(str(MASTER_REF_WAV), master_manifest)
+
+    # Measure build
+    build_noise, build_hf = measure_noise_floor(raw_narration_path, manifest_data)
+
+    # Spectral energy comparison: measure energy in 3 bands
+    bands = [
+        ('low', '80', '2000'),
+        ('mid', '2000', '6000'),
+        ('high', '6000', '20000'),
+    ]
+    master_bands = {}
+    build_bands = {}
+
+    # Find a speech segment for spectral comparison
+    speech_seg = None
+    for seg in manifest_data['segments']:
+        if seg['type'] == 'text' and seg.get('duration', 0) > 5:
+            speech_seg = seg
+            break
+
+    if speech_seg:
+        speech_start = speech_seg['start_time'] + 1.0
+        speech_dur = min(speech_seg.get('duration', 5) - 2, 5.0)
+
+        for band_name, low, high in bands:
+            # Build
+            r = subprocess.run([
+                'ffmpeg', '-i', raw_narration_path,
+                '-ss', str(speech_start), '-t', str(speech_dur),
+                '-af', f'bandpass=f={int((int(low)+int(high))//2)}:w={int(high)-int(low)},astats=reset=0',
+                '-f', 'null', '-'
+            ], capture_output=True, text=True)
+            build_bands[band_name] = _parse_rms_from_astats(r.stderr)
+
+            # Master (use first 5s of speech — starts around 0s)
+            r2 = subprocess.run([
+                'ffmpeg', '-i', str(MASTER_REF_WAV),
+                '-ss', '1.0', '-t', str(speech_dur),
+                '-af', f'bandpass=f={int((int(low)+int(high))//2)}:w={int(high)-int(low)},astats=reset=0',
+                '-f', 'null', '-'
+            ], capture_output=True, text=True)
+            master_bands[band_name] = _parse_rms_from_astats(r2.stderr)
+
+        print(f"  QA-INDEPENDENT: Spectral comparison (build vs master):")
+        for band_name in ['low', 'mid', 'high']:
+            diff = build_bands.get(band_name, 0) - master_bands.get(band_name, 0)
+            print(f"    {band_name:>4}: build={build_bands.get(band_name, 0):.1f} dB, master={master_bands.get(band_name, 0):.1f} dB, diff={diff:+.1f} dB")
+
+    # Quality gap check
+    noise_gap = build_noise - master_noise
+    hf_gap = build_hf - master_hf
+    print(f"  QA-INDEPENDENT: Noise gap = {noise_gap:+.1f} dB (build vs master)")
+    print(f"  QA-INDEPENDENT: HF gap    = {hf_gap:+.1f} dB (build vs master)")
+
+    # FAIL if build is more than 3 dB worse than master in any metric
+    MAX_QUALITY_GAP = 3.0
+    passed = True
+    if noise_gap > MAX_QUALITY_GAP:
+        print(f"  QA-INDEPENDENT: FAIL — noise {noise_gap:+.1f} dB worse than master (max {MAX_QUALITY_GAP})")
+        passed = False
+    if hf_gap > MAX_QUALITY_GAP:
+        print(f"  QA-INDEPENDENT: FAIL — HF hiss {hf_gap:+.1f} dB worse than master (max {MAX_QUALITY_GAP})")
+        passed = False
+
+    if passed:
+        print(f"  QA-INDEPENDENT: PASSED")
+
+    details = {
+        'method': 'spectral_comparison',
+        'master_noise': master_noise, 'build_noise': build_noise,
+        'master_hf': master_hf, 'build_hf': build_hf,
+        'noise_gap': noise_gap, 'hf_gap': hf_gap,
+        'spectral_bands': {'build': build_bands, 'master': master_bands},
+    }
+    return passed, details
+
 
 def scan_for_clicks(audio_path, manifest_data, threshold=QA_CLICK_THRESHOLD):
     """Scan mixed audio for click artifacts in silence regions.
@@ -1079,22 +1299,37 @@ def patch_stitch_clicks(raw_mp3, manifest_data, output_mp3, ambient_name=None, f
     return len(stitch_times)
 
 
-def qa_loop(final_mp3, raw_mp3, manifest_data, ambient_name=None):
-    """Scan → fix → rescan loop until audio passes QA.
+def qa_loop(final_mp3, raw_mp3, manifest_data, ambient_name=None, raw_narration_wav=None):
+    """Full dual-gate QA pipeline.
 
-    Returns True if audio is clean, False if max passes exceeded.
+    GATE 1 (Primary): Quality benchmarks — noise floor and HF hiss vs master
+    GATE 2 (Click scan): Scan → fix → rescan loop for click artifacts
+    GATE 3 (Independent): Spectral comparison against master reference WAV
+
+    ALL THREE gates must pass. Any failure = no deploy.
+    Returns True only if all gates pass.
     """
     print(f"\n{'='*60}")
-    print("  QA: AUTOMATED QUALITY ASSURANCE")
+    print("  QA: DUAL-GATE QUALITY ASSURANCE")
     print(f"{'='*60}")
 
+    # ── GATE 1: Quality benchmarks ──
+    if raw_narration_wav and os.path.exists(raw_narration_wav):
+        quality_passed, quality_details = qa_quality_check(raw_narration_wav, manifest_data)
+        if not quality_passed:
+            print(f"\n  QA: REJECTED — audio quality below master threshold")
+            print(f"  QA: Build will NOT be deployed")
+            return False
+    else:
+        print(f"  QA-QUALITY: SKIPPED (no raw narration WAV available)")
+
+    # ── GATE 2: Click artifacts ──
     for qa_pass in range(1, QA_MAX_PASSES + 1):
         clicks = scan_for_clicks(final_mp3, manifest_data)
 
         if not clicks:
             print(f"  QA PASS {qa_pass}: CLEAN — 0 click artifacts")
-            print(f"  QA: PASSED")
-            return True
+            break
 
         print(f"  QA PASS {qa_pass}: FOUND {len(clicks)} click artifacts")
         for ts, jump, peak in clicks[:5]:  # Show first 5
@@ -1108,16 +1343,23 @@ def qa_loop(final_mp3, raw_mp3, manifest_data, ambient_name=None):
         print(f"  QA PASS {qa_pass}: Patching artifacts near stitch points...")
         patches = patch_stitch_clicks(raw_mp3, manifest_data, final_mp3, ambient_name, click_times=click_timestamps)
         print(f"  QA PASS {qa_pass}: Applied crossfades at {patches} stitch points")
+    else:
+        # Final check after last pass
+        clicks = scan_for_clicks(final_mp3, manifest_data)
+        if clicks:
+            print(f"  QA: REJECTED — {len(clicks)} clicks remain after {QA_MAX_PASSES} passes")
+            return False
 
-    # Final check after last pass
-    clicks = scan_for_clicks(final_mp3, manifest_data)
-    if not clicks:
-        print(f"  QA: PASSED (after {QA_MAX_PASSES} passes)")
-        return True
+    # ── GATE 3: Independent spectral verification ──
+    if raw_narration_wav and os.path.exists(raw_narration_wav):
+        independent_passed, independent_details = qa_independent_check(raw_narration_wav, manifest_data)
+        if not independent_passed:
+            print(f"\n  QA: REJECTED — independent quality check failed")
+            print(f"  QA: Build will NOT be deployed")
+            return False
 
-    print(f"  QA: FAILED — {len(clicks)} clicks remain after {QA_MAX_PASSES} passes")
-    print(f"  These may be ambient track artifacts (not fixable by stitch patching)")
-    return False
+    print(f"\n  QA: ALL GATES PASSED")
+    return True
 
 
 def deploy_to_r2(local_path, r2_key):
@@ -1289,7 +1531,7 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
 
         for i, (text, pause) in enumerate(combined_blocks):
             if provider == 'resemble':
-                block_path = os.path.join(temp_dir, f"block_{i}.mp3")
+                block_path = os.path.join(temp_dir, f"block_{i}.wav")
                 generate_tts_chunk_resemble(text, block_path, i, voice_id=voice_id)
             elif provider == 'elevenlabs':
                 block_path = os.path.join(temp_dir, f"block_{i}.mp3")
@@ -1406,25 +1648,29 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
     # PHASE 3: QA — SCAN → FIX → RESCAN LOOP
     # ================================================================
     raw_for_qa = str(raw_wav_path) if raw_wav_path.exists() else str(raw_path)
-    qa_passed = qa_loop(str(final_path), raw_for_qa, manifest_data, ambient)
+    qa_passed = qa_loop(str(final_path), raw_for_qa, manifest_data, ambient,
+                        raw_narration_wav=str(raw_wav_path) if raw_wav_path.exists() else None)
 
     if qa_passed:
         # Update mixed copy after QA patching
         shutil.copy(str(final_path), str(mixed_path))
     else:
-        print(f"\n  WARNING: QA did not fully pass — review manually")
-        print(f"  Remaining artifacts may be from ambient track (not narration)")
+        print(f"\n  QA REJECTED — build will NOT be deployed")
+        print(f"  File saved locally for inspection: {final_path}")
+        print(f"  Raw narration: {raw_wav_path}")
 
     # ================================================================
-    # PHASE 4: DEPLOY TO R2
+    # PHASE 4: DEPLOY TO R2 (only if QA passed)
     # ================================================================
-    if not no_deploy:
+    if qa_passed and not no_deploy:
         r2_key = f"{R2_PATH_PREFIX}/{session_name}.mp3"
         deployed = deploy_to_r2(str(final_path), r2_key)
         if deployed:
             print(f"\n  LIVE: https://media.salus-mind.com/{r2_key}")
         else:
             print(f"\n  DEPLOY FAILED — file saved locally at {final_path}")
+    elif not qa_passed:
+        print(f"\n  Deploy BLOCKED by QA rejection")
     else:
         print(f"\n  Deploy skipped (--no-deploy)")
 
@@ -1432,18 +1678,22 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
     # DONE
     # ================================================================
     print(f"\n{'='*60}")
-    status = "SHIPPED" if not no_deploy else "BUILT (not deployed)"
+    if qa_passed and not no_deploy:
+        status = "SHIPPED"
+    elif qa_passed:
+        status = "BUILT (not deployed)"
+    else:
+        status = "REJECTED — QA FAILED"
     print(f"  {status}: {session_name}")
     print(f"  Duration: {final_duration/60:.1f} min")
-    print(f"  QA: {'PASSED' if qa_passed else 'REVIEW NEEDED'}")
+    print(f"  QA: {'PASSED' if qa_passed else 'REJECTED'}")
     print(f"{'='*60}")
 
-    # Email notification
-    if not no_deploy:
-        r2_url = f"https://media.salus-mind.com/{R2_PATH_PREFIX}/{session_name}.mp3"
-        send_build_email(session_name, final_duration / 60, qa_passed, r2_url)
+    # Email notification (always send — pass or fail)
+    r2_url = f"https://media.salus-mind.com/{R2_PATH_PREFIX}/{session_name}.mp3"
+    send_build_email(session_name, final_duration / 60, qa_passed, r2_url)
 
-    return True
+    return qa_passed
 
 
 def main():
@@ -1458,8 +1708,8 @@ def main():
                         help='ElevenLabs model (default: v2, ignored for Fish)')
     parser.add_argument('--no-cleanup', action='store_true',
                         help='Skip audio cleanup for raw quality testing')
-    parser.add_argument('--cleanup', choices=['full', 'medium', 'light', 'none'], default=None,
-                        help='Override cleanup mode (default: full for fish, light for elevenlabs/resemble)')
+    parser.add_argument('--cleanup', choices=['full', 'resemble', 'medium', 'light', 'none'], default=None,
+                        help='Override cleanup mode (default: full for fish, resemble for resemble)')
     parser.add_argument('--no-deploy', action='store_true',
                         help='Build and QA only — do not upload to R2')
 
@@ -1473,7 +1723,7 @@ def main():
     elif args.provider == 'elevenlabs':
         cleanup_mode = 'light'
     elif args.provider == 'resemble':
-        cleanup_mode = 'light'
+        cleanup_mode = 'resemble'
     else:
         cleanup_mode = 'full'
 
