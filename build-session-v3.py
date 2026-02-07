@@ -720,20 +720,17 @@ def cleanup_audio_medium(input_path, output_path):
 
 
 def cleanup_audio(input_path, output_path):
-    """Clean up TTS audio - remove hiss, sibilance, and artifacts (Fish full chain).
+    """Minimal Fish cleanup — loudnorm + presence boost only.
     Output is WAV for lossless pipeline.
 
-    Uses loudnorm=I=-26 (NOT dynaudnorm) — dynaudnorm amplifies silence regions,
-    pushing noise floor to -20 dB which fails QA. loudnorm target -26 keeps noise
-    floor at -27 dB matching the master.
+    Fish TTS is already broadcast-quality clean (45 dB SNR, -62 dB noise floor).
+    Aggressive filtering (lowpass, afftdn, de-esser) degrades voice quality for
+    no benefit. Only loudnorm is needed for chunk-to-chunk level consistency.
+    High shelf boost restores presence/articulation lost by loudnorm.
     """
     filter_chain = ','.join([
-        'highpass=f=80',
-        'equalizer=f=6000:t=q:w=2:g=-4',      # De-esser: notch at 6kHz
-        'highshelf=f=7000:g=-2',               # De-esser: gentle shelf above 7kHz
-        'lowpass=f=10000',
-        'afftdn=nf=-25',
-        'loudnorm=I=-26:TP=-2:LRA=11'
+        'loudnorm=I=-26:TP=-2:LRA=11',
+        'highshelf=f=3000:g=3',                # Presence boost: restores sharpness lost by loudnorm
     ])
     cmd = [
         'ffmpeg', '-y', '-i', input_path,

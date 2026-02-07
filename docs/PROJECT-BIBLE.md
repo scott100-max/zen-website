@@ -14,7 +14,8 @@ This document contains design guidelines, standards, and a record of website ame
 - Marco Master Audio Standard (Resemble AI)
 - Section 13: External Audio Quality Analysis — Auphonic
 - Section 14: Marco Master Voice Specification
-- Section 15: Calibration Results & Quad-Gate QA Implementation
+- Section 15: Audio Processing Pipeline
+- Section 16: Expression Through Punctuation
 
 ---
 
@@ -1626,44 +1627,28 @@ Minimal Python implementation for Claude Code to integrate:
        AUPHONIC_PASSWORD=your_auphonic_password
 
 ================================================================================
-13.8 AUPHONIC PRESET CONFIGURATION (RECOMMENDED)
+13.8 AUPHONIC PRESET CONFIGURATION
 ================================================================================
 
-Create a reusable preset in Auphonic for all Salus narration analysis.
-This avoids specifying settings on every API call.
-
 PRESET NAME: Salus Narration QA
-SETTINGS:
-    Noise & Hum Reduction:    Enabled (Auto)
+STATUS: SAVED (created 7 February 2026 via web dashboard)
+
+ACTUAL SETTINGS:
     Adaptive Leveler:         Enabled
-    Filtering:                Enabled (Adaptive High Pass)
-    Loudness Target:          -24 LUFS
-    True Peak Limit:          -1.0 dBTP
-    Output Format:            WAV
-    Output Statistics:        JSON (as additional output file)
+    Filtering:                Enabled (Voice AutoEQ method)
+    Loudness Normalization:   Enabled
+        Loudness Target:      -26 LUFS
+        Maximum Peak Level:   -2 dBTP (ATSC A/85)
+        Normalization Method: Program Loudness
+    Noise Reduction:          Enabled
+        Denoising Method:     Static: remove constant noises only
+        Remove Noise:         6 dB (low — gentle, not aggressive)
+        Remove Reverb:        Off (no reverb in TTS output)
+    Automatic Cutting:        Off (preserve intentional meditation silences)
+    Output Format:            WAV 16-bit PCM, optimal stereo
 
-To create via API:
-
-    curl -X POST https://auphonic.com/api/preset.json \
-      -u "$AUPHONIC_USERNAME:$AUPHONIC_PASSWORD" \
-      -H "Content-Type: application/json" \
-      -d '{
-        "preset_name": "Salus Narration QA",
-        "denoise": true,
-        "loudnesstarget": -24,
-        "output_files": [
-          {"format": "wav"},
-          {"format": "statistics", "ending": "json"}
-        ]
-      }'
-
-Then reference the preset UUID in productions:
-
-    curl -X POST https://auphonic.com/api/simple/productions.json \
-      -u "$AUPHONIC_USERNAME:$AUPHONIC_PASSWORD" \
-      -F "input_file=@narration.wav" \
-      -F "preset={preset_uuid}" \
-      -F "action=start"
+NOTE: The "silent segments >30s" warning from Auphonic is a FALSE POSITIVE
+for meditation content. Intentional pauses trigger this warning. Ignore it.
 
 ================================================================================
 13.9 PASS/FAIL CRITERIA SUMMARY
@@ -1671,17 +1656,22 @@ Then reference the preset UUID in productions:
 
 Metric                          | PASS              | FAIL
 --------------------------------|-------------------|----------------------
-Input SNR                       | >= 25 dB          | < 25 dB
-Noise reduction per segment     | <= -15 dB         | > -20 dB applied
+Input SNR                       | >= 40 dB          | < 40 dB
+Background Level                | <= -55 dB         | > -55 dB
 Hum detected                    | No                | Yes (any segment)
-Output loudness                 | -24 +/- 1.0 LUFS  | Outside range
-Output true peak                | <= -1.0 dBTP      | > -1.0 dBTP
-Output loudness range (LRA)     | <= 15 LU          | > 15 LU
+Output loudness                 | -26 +/- 1.0 LUFS  | Outside range
+Output true peak                | <= -2.0 dBTP      | > -2.0 dBTP
+Output loudness range (LRA)     | <= 16 LU          | > 16 LU
+Leveler gain spread             | <= 10 dB          | > 10 dB
 
-NOTE: These thresholds are initial estimates. Calibrate against the benchmark
-session (09 - Rainfall Sleep Journey) and adjust based on real results. The
-first priority after integration is to run the benchmark file through Auphonic
-and use its statistics to establish baseline values.
+NOTE: SNR threshold raised from 25 to 40 dB based on actual Fish Audio
+baseline of 45.26 dB. If Fish consistently delivers 45+ dB SNR, any file
+below 40 indicates a problem worth investigating. The old 25 dB threshold
+was too permissive and would never trigger on TTS content.
+
+NOTE: LRA threshold set at 16 LU (baseline was 15.21 LU). Meditation
+content with intentional silences naturally has high LRA. Do not set
+this too tight or it will reject good meditation audio.
 
 ================================================================================
 13.10 FIRST STEPS AFTER INTEGRATION
@@ -1699,6 +1689,104 @@ and use its statistics to establish baseline values.
    Auphonic gate and verify the workflow
 
 ================================================================================
+13.11 FIRST BASELINE RESULTS (7 February 2026)
+================================================================================
+
+File analysed: 36-loving-kindness-intro_precleanup.wav (pre-cleanup WAV, edge fades only)
+
+INPUT FILE STATISTICS:
+    Program Loudness:        -16.34 LUFS
+    Loudness Range (LRA):    15.21 LU
+    Max Short-term Loudness: -10.64 LUFS (+5.70 LU rel)
+    Max Momentary Loudness:  -8.83 LUFS (+7.51 LU rel)
+    Max Peak Level:          -4.39 dBTP
+    SNR mean:                45.26 dB
+    Background Level mean:   -62.25 dB
+    Signal Level mean:       -16.99 dB
+
+OUTPUT FILE STATISTICS (Auphonic processed):
+    Program Loudness:        -26.00 LUFS
+    Loudness Range (LRA):    14.31 LU
+    Max Short-term Loudness: -20.35 LUFS (+5.65 LU rel)
+    Max Momentary Loudness:  -18.61 LUFS (+7.39 LU rel)
+    Peak-Loudness Ratio:     21.61 LU
+
+LEVELER GAIN:
+    Mean:  -8.69 dB
+    Min:   -13.96 dB
+    Max:   -6.10 dB
+    Spread: ~8 dB between quietest and loudest chunks
+
+NOISE & HUM:
+    Hum Reduction:    "Not necessary" — no mains hum detected
+    Noise Reduction:  Music Model dB (static denoiser applied)
+    Denoising method: Static — remove constant noises only
+
+SPEECH DETECTION:
+    Speech detected:  00:00:06.408 to 00:13:59.408
+
+INPUT FORMAT:
+    Format:     PCM_S16LE
+    Sample rate: 44100 Hz
+    Channels:    1 (mono)
+    Bitrate:     706k
+    Length:      00:13:53.263
+
+================================================================================
+13.12 INTERPRETATION AND CONCLUSIONS
+================================================================================
+
+KEY FINDINGS:
+
+1. SNR 45.26 dB — BROADCAST QUALITY
+   Fish Audio TTS output is already at professional standard (broadcast
+   standard is 40-50 dB). The old aggressive afftdn noise reduction chain
+   was solving a problem that barely existed and degrading voice quality
+   in the process.
+
+2. NOISE FLOOR -62.25 dB — VERY CLEAN
+   Confirms Fish output has minimal background noise. No need for
+   aggressive noise reduction on TTS output.
+
+3. HUM: NOT NECESSARY
+   No electrical interference. Expected for TTS (no microphone/preamp
+   chain) but good to have externally confirmed.
+
+4. LOUDNESS RANGE ~8 dB BETWEEN CHUNKS
+   Fish delivers chunks at varying levels. Loudnorm is justified for
+   consistency — but only loudnorm, not aggressive dynamic processing.
+
+5. INPUT LOUDNESS -16.34 LUFS vs TARGET -26 LUFS
+   Fish outputs roughly 10 LUFS louder than the Salus target. Pipeline
+   correctly applies gain reduction. Now we have the exact number.
+
+CRITICAL CONCLUSION — AUPHONIC ROLE IN SALUS:
+
+    Auphonic = MEASUREMENT GATE ONLY. Do NOT use Auphonic output as
+    production audio.
+
+    Reasons:
+    - Voice AutoEQ cuts Marco's bass — strips the warmth and deep
+      resonance that defines his character
+    - Adaptive Leveler wobbles on breath transitions — meditation
+      content has long silences then sudden speech, causing gain
+      instability and audible "shaking" on inhales
+    - Both are tuned for podcast content (continuous speech, clarity
+      over warmth) — fundamentally wrong for meditation narration
+
+    Use Auphonic for:
+    - SNR measurement (is the TTS output clean?)
+    - Noise floor verification (any degradation?)
+    - Hum detection (electrical interference?)
+    - Loudness measurement (how far from target?)
+    - Per-segment analysis (problem localisation)
+
+    Do NOT use Auphonic for:
+    - Processing/cleaning the audio (damages Marco's voice character)
+    - Leveling (causes breath wobble on meditation content)
+    - EQ (cuts defining bass characteristics)
+
+================================================================================
 — END OF SECTION 13 —
 ================================================================================
 
@@ -1708,7 +1796,7 @@ and use its statistics to establish baseline values.
 SECTION 14: MARCO MASTER VOICE SPECIFICATION
 ================================================================================
 Added: 7 February 2026
-Status: DRAFT — Awaiting master file creation and baseline measurements
+Status: ACTIVE — Master created and approved, calibration complete
 
 ================================================================================
 14.1 PURPOSE
@@ -1769,6 +1857,21 @@ FILE LOCATION:
 NAMING CONVENTION:
     marco-master-v{version}.wav
     e.g. marco-master-v1.wav, marco-master-v2.wav
+
+CURRENT MASTER:
+    File:           marco-master-v1.wav
+    Duration:       37 seconds
+    Processing:     0.95x atempo only (standard Marco speed adjustment)
+    Content:        Reference passage (Section 14.4)
+    Provider:       Fish Audio
+    Voice ID:       0165567b33324f518b02336ad232e31a
+    Status:         Human approved, LOCKED
+    Location:       /content/audio/marco-master/marco-master-v1.wav
+
+NOTE: The master is 37 seconds rather than the original 60-90 second
+target. This proved sufficient for calibration. The passage covers
+gentle opening, flowing narrative, short meditative phrases, natural
+pause, and closing — all required elements.
 
 ================================================================================
 14.4 REFERENCE PASSAGE
@@ -1921,7 +2024,41 @@ Record all measurements in a JSON file stored alongside the master:
 FILE LOCATIONS:
     Master audio:       salus-mind/reference/marco-master-v1.wav
     Master measurements: salus-mind/reference/marco-master-v1-measurements.json
-    Auphonic report:    salus-mind/reference/marco-master-v1-auphonic.json
+    Calibration data:   salus-mind/reference/marco-master-v1-calibration.json
+
+CALIBRATION RESULTS (7 February 2026)
+8 test generations: 5 Fish Audio + 3 Resemble
+
+USEFUL METRICS (reliably separate GOOD from BAD):
+
+    MFCC Cosine Distance:
+        Threshold: <= 0.008 (same-text), <= 0.06 (production/different-text)
+        Fish GOOD samples:    0.0003 to 0.0060
+        Fish BAD sample:      0.0003 (fish-4 — see CRITICAL NOTE)
+        Resemble BAD samples: 0.0100 to 0.0113
+        Conclusion: Reliably separates providers. Does NOT reliably
+        separate good from bad within Fish (fish-4 edge case).
+
+    F0 (Pitch) Deviation:
+        Threshold: <= 10%
+        Fish GOOD samples:    0.4% to 5.6%
+        Fish BAD sample:      0.8% (fish-4)
+        Resemble BAD samples: 14.8% to 17.4%
+        Conclusion: Same pattern as MFCC — good provider separator,
+        not reliable within Fish.
+
+NOT USEFUL METRICS (too much variance in GOOD samples):
+
+    Spectral Centroid Deviation: Fish GOOD range too wide. Discard.
+    RMS Deviation: Wildly inconsistent. Discard.
+
+CRITICAL NOTE — THE FISH-4 EDGE CASE:
+    fish-4 was classified as BAD by human listening but measured:
+    - MFCC distance: 0.0003 (indistinguishable from GOOD)
+    - F0 deviation: 0.8% (indistinguishable from GOOD)
+    This proves automated metrics CANNOT catch every subtle voice
+    quality failure. Human review remains MANDATORY even when all
+    automated gates pass.
 
 ================================================================================
 14.7 COMPARISON METHODOLOGY
@@ -2008,9 +2145,24 @@ character even with the same voice ID/clone.
 14.9 CALIBRATION PROCESS
 ================================================================================
 
-Thresholds cannot be set in advance. They must be derived from real data.
+STATUS: CALIBRATION COMPLETE (7 February 2026)
 
-CALIBRATION STEPS:
+WHAT PROVED USEFUL:
+    - MFCC cosine distance (threshold 0.008 same-text, 0.06 production)
+      — catches wrong provider
+    - F0 deviation (threshold 10%) — catches wrong provider
+    - Combined: if EITHER exceeds threshold, rebuild
+
+WHAT PROVED NOT USEFUL:
+    - Spectral centroid — too variable in good samples
+    - RMS energy — too variable in good samples
+
+WHAT CANNOT BE AUTOMATED:
+    - Subtle voice character loss (fish-4 case)
+    - "Sounds like Marco" subjective assessment
+    - Expression quality and emotional delivery
+
+CALIBRATION STEPS (for reference if recalibrating):
 
 1. CREATE THE MASTER (Section 14.5)
    - Generate, listen, approve
@@ -2020,30 +2172,18 @@ CALIBRATION STEPS:
    - Build 5 generations of the reference passage using Fish Audio
    - Build 3 generations using Resemble (if Resemble remains in use)
    - Listen to each and classify: GOOD (sounds like Marco) or BAD
-     (voice degraded, wrong character, artifacts)
 
 3. MEASURE EVERYTHING
-   - Extract all metrics from Section 14.6 for each generation
-   - Run each through Auphonic and record statistics
+   - Extract MFCC + F0 from each generation
    - Record human judgement (GOOD/BAD) for each
 
 4. SET THRESHOLDS
-   - For each metric, find the boundary between GOOD and BAD generations
-   - Set the pass threshold at the tightest point that passes all GOOD
-     generations and fails all BAD ones
-   - If no clean boundary exists for a metric, that metric is not useful
-     for automated comparison — note this and rely on other metrics
+   - Find the boundary between GOOD and BAD generations
+   - If no clean boundary exists for a metric, discard it
 
-5. VALIDATE
-   - Run the thresholds against the next 3 production builds
-   - Do the automated results match human judgement?
-   - If yes → thresholds are calibrated. Lock them.
-   - If no → adjust and repeat
+5. VALIDATE against production builds
 
-6. DOCUMENT
-   - Record all calibration data in marco-master-v1-measurements.json
-   - Record which metrics proved useful and which did not
-   - Record the final thresholds with rationale
+6. DOCUMENT in calibration JSON
 
 ================================================================================
 14.10 MASTER VERSIONING
@@ -2062,9 +2202,9 @@ VERSIONING RULES:
 - The build script must reference a specific master version, not "latest"
 
 VERSION HISTORY:
-    Version | Date       | Provider | Notes
-    --------|------------|----------|--------------------------------------
-    v1      | TBD        | Fish     | Initial master (pending creation)
+    Version | Date            | Provider | Notes
+    --------|-----------------|----------|--------------------------------------
+    v1      | 7 February 2026 | Fish     | Moonlit garden passage, 37s, 0.95x atempo
 
 ================================================================================
 14.11 INTEGRATION WITH BUILD PIPELINE
@@ -2102,7 +2242,31 @@ If a file passes every automated gate but does not sound like the master
 to a human listener, it fails. Full stop.
 
 ================================================================================
-14.12 IMMEDIATE NEXT STEPS
+14.12 VOICE COMPARISON GATE — RAW VS RAW (CRITICAL)
+================================================================================
+
+The voice comparison gate MUST compare raw audio against the raw master.
+
+BUG DISCOVERED (7 February 2026):
+    The build pipeline was running voice comparison AFTER the cleanup
+    chain (de-esser, afftdn, loudnorm). This compared a processed file
+    against the unprocessed master. The cleanup chain changes the spectral
+    fingerprint significantly, causing MFCC distances of 0.0380 — far
+    above the 0.008 threshold — on audio that was actually fine.
+
+FIX:
+    1. Save a pre-cleanup copy of the concatenated WAV
+       (e.g. XX-session_precleanup.wav)
+    2. Run voice comparison against THIS file, not the processed version
+    3. The cleanup chain runs afterward on the production copy
+    4. The precleanup WAV is also what Auphonic receives for analysis
+
+This is non-negotiable. Calibration thresholds were derived from
+raw-vs-raw comparisons. The gate must compare raw-vs-raw or the
+thresholds are meaningless.
+
+================================================================================
+14.13 IMMEDIATE NEXT STEPS
 ================================================================================
 
 1. GENERATE MASTER FILE
@@ -2137,194 +2301,208 @@ to a human listener, it fails. Full stop.
 
 
 ================================================================================
-SECTION 15: CALIBRATION RESULTS & QUAD-GATE QA IMPLEMENTATION
+SECTION 15: AUDIO PROCESSING PIPELINE
 ================================================================================
 Added: 7 February 2026
-Status: COMPLETE — Calibrated, integrated, and validated in production
+Status: ACTIVE
 
 ================================================================================
-15.1 CALIBRATION RESULTS
+15.1 PROCESSING PHILOSOPHY
 ================================================================================
 
-Master file: marco-master-v1.wav (Fish Audio, 0.95x atempo, human-approved)
-Calibration set: 5 Fish + 3 Resemble generations of the Section 14.4 reference passage
+LESS IS MORE. Fish Audio TTS output is already broadcast-quality clean
+(45 dB SNR, -62 dB noise floor). Every processing step applied trades
+clarity and character for consistency. Apply the minimum processing
+necessary and nothing more.
 
-HUMAN CLASSIFICATIONS:
-    Sample          | Provider  | Classification
-    ----------------|-----------|---------------
-    fish-cal-1      | Fish      | GOOD
-    fish-cal-2      | Fish      | GOOD
-    fish-cal-3      | Fish      | GOOD
-    fish-cal-4      | Fish      | BAD
-    fish-cal-5      | Fish      | GOOD
-    resemble-cal-1  | Resemble  | BAD
-    resemble-cal-2  | Resemble  | BAD
-    resemble-cal-3  | Resemble  | BAD
+The old aggressive cleanup chain (lowpass 10kHz, afftdn -25, dynaudnorm)
+was designed for noisy real-world recordings. TTS output does not have
+the same problems. Applying podcast-grade cleanup to clean TTS output
+degrades the voice — killing bass warmth, muffling consonants, and
+removing the "sharpness" that makes Marco sound present and alive.
+
+================================================================================
+15.2 CURRENT PIPELINE (MINIMAL)
+================================================================================
+
+Applied to TTS output in this order:
+
+1. EDGE FADES: apply_edge_fades() — 15ms cosine fade on each voice
+   chunk before concatenation (prevents stitch clicks)
+
+2. LOUDNESS NORMALISATION ONLY: loudnorm=I=-26:TP=-2:LRA=11
+   Purpose: consistent volume across chunks
+   Trade-off: some presence loss (the "behind a sheet" sound)
+
+3. HIGH SHELF BOOST: highshelf=f=3000:g=3
+   Purpose: restore presence and articulation lost by loudnorm
+   Applied AFTER loudnorm, lifts everything above 3kHz by 3dB
+
+4. ENCODE: 128kbps MP3 for deployment
+
+DO NOT APPLY:
+    - lowpass=f=10000     (kills clarity and consonant detail)
+    - afftdn=nf=-25       (muffles the voice — noise floor already clean)
+    - dynaudnorm           (amplifies silence — NEVER use)
+    - aggressive de-essers (removes natural sibilance)
 
 MEASUREMENTS (same-text comparison vs master):
     Sample          | MFCC Cosine | F0 Dev %
     ----------------|-------------|----------
-    fish-cal-1      | 0.0046      | 0.6%
-    fish-cal-2      | 0.0059      | 0.4%
-    fish-cal-3      | 0.0002      | 3.9%
-    fish-cal-4      | 0.0003      | 0.8%    ← BAD but indistinguishable by metrics
-    fish-cal-5      | 0.0006      | 5.6%
-    resemble-cal-1  | 0.0112      | 17.4%
-    resemble-cal-2  | 0.0109      | 17.0%
-    resemble-cal-3  | 0.0106      | 14.8%
-
-DERIVED THRESHOLDS (same-text calibration):
-    Metric                          | Threshold | Rationale
-    --------------------------------|-----------|----------------------------------
-    MFCC cosine distance            | ≤ 0.008   | All Fish GOOD ≤0.006, all Resemble BAD ≥0.010
-    F0 deviation %                  | ≤ 10.0%   | All Fish ≤5.6%, all Resemble ≥14.8%
-    Spectral centroid deviation     | NOT USEFUL | Too much variance in GOOD samples
-    RMS deviation                   | NOT USEFUL | Too much variance in GOOD samples
-
-CRITICAL FINDING — fish-cal-4:
-    Classified BAD by human ear but MFCC=0.0003, F0=0.8% — looks IDENTICAL to GOOD
-    by every automated metric. The issue was prosody/intonation, not timbre or pitch.
-    CONCLUSION: Automated metrics CANNOT catch subtle within-provider quality issues.
-    Human review is MANDATORY for every build. No exceptions.
-
 ================================================================================
-15.2 CONTENT-DEPENDENT MFCC THRESHOLD
+15.3 KNOWN TRADE-OFF: LOUDNORM VS PRESENCE
 ================================================================================
 
-CRITICAL DISCOVERY: MFCC cosine distance is CONTENT-DEPENDENT.
+The loudnorm step slightly reduces Marco's presence and "sharpness."
+This was noted on the first loving-kindness deployment (7 February 2026)
+— the voice is excellent but sounds slightly muted compared to raw
+Fish output.
 
-The calibration threshold (0.008) was derived from same-text comparisons — master
-reference passage vs calibration samples of the same passage. Different text produces
-different phoneme distributions which shift MFCC means.
+FIX — HIGH SHELF BOOST:
+    highshelf=f=3000:g=3
 
-OBSERVED IN PRODUCTION:
-    Comparison Type              | MFCC Distance | Notes
-    -----------------------------|---------------|------------------------------
-    Same voice, same text (Fish) | 0.0002-0.0059 | Calibration set
-    Wrong voice, same text (Res) | 0.0106-0.0112 | Calibration set
-    Same voice, diff text (Fish) | ~0.035-0.038  | Loving-kindness production build
+    This lifts everything above 3kHz by 3dB — the presence and
+    articulation range. Marco's consonants and sibilants get their
+    bite back without touching the warmth below.
 
-PRODUCTION THRESHOLDS (used in build-session-v3.py):
-    MFCC cosine distance: ≤ 0.06 (allows content variance, catches wrong voice)
-    F0 deviation:         ≤ 10.0% (content-independent, uses tight threshold)
+    Applied AFTER loudnorm, BEFORE ambient mixing.
+    Start at +3dB, test up to +4 or +5 if 3 feels subtle.
 
-F0 deviation is content-independent because fundamental frequency reflects the
-speaker's vocal characteristics, not which phonemes they are producing.
+EXPERIMENTAL OPTION — NO PROCESSING:
+    Given Fish's 45 dB SNR, the most radical option is to skip loudnorm
+    entirely. Raw Fish TTS with edge fades only, straight to ambient mix.
+    The only risk is volume inconsistency between chunks (~8 dB spread
+    per Auphonic data), which ambient mixing partially masks anyway.
 
-================================================================================
-15.3 QUAD-GATE QA SYSTEM
-================================================================================
-
-The build pipeline now runs four automated gates. ALL must pass for deployment.
-
-GATE 1 — Quality Benchmarks:
-    Measures noise floor and HF hiss in silence regions via astats RMS.
-    Thresholds: noise ≤ -26.0 dB, HF hiss (>6kHz) ≤ -44.0 dB
-    Catches: Excessive noise, poor cleanup, hissy TTS output
-
-GATE 2 — Click Artifact Scan:
-    Scans mixed audio for sample-level discontinuities in silence regions.
-    Auto-patches with 40ms cosine crossfades at stitch points. Max 5 passes.
-    Catches: Stitch clicks, concatenation artifacts
-
-GATE 3 — Independent Spectral Comparison:
-    Compares frequency band energy (low/mid/high) and noise gap vs master WAV.
-    Fails if build is >3 dB worse than master in any metric.
-    Catches: Spectral anomalies, major quality degradation
-
-GATE 4 — Master Voice Comparison:
-    Extracts MFCC (13 coefficients) and F0 from PRE-CLEANUP audio.
-    Compares against master measurements via cosine distance and % deviation.
-    Thresholds: MFCC ≤ 0.06, F0 ≤ 10%
-    Catches: Wrong provider voice, major voice character shift
-    Does NOT catch: Subtle prosody/intonation issues (fish-cal-4 type)
-
-    IMPORTANT: Uses PRE-CLEANUP audio. The cleanup chain (de-esser, afftdn,
-    loudnorm) shifts the spectral fingerprint significantly — post-cleanup MFCC
-    distances are ~0.038 even for same-text comparisons. Pre-cleanup WAV is saved
-    automatically at: content/audio-free/raw/{session}_precleanup.wav
-
-HUMAN REVIEW — THE FIFTH GATE:
-    Automated gates cannot replace the human ear. Every build must be listened to
-    before being considered production-ready. Gate 4 cannot catch fish-cal-4 type
-    failures where pitch and timbre are correct but prosody is wrong.
-
-EMAIL NOTIFICATION:
-    Emails only fire on successful deploy (qa_passed AND not no_deploy).
-    No emails during development iterations or --no-deploy builds.
+    Worth testing on a future build. If it works, the "behind a sheet"
+    problem disappears completely.
 
 ================================================================================
-15.4 FISH CLEANUP CHAIN FIX
+15.4 PROVIDER-SPECIFIC NOTES
 ================================================================================
 
-The Fish "full" cleanup chain previously used dynaudnorm. This was WRONG.
+FISH AUDIO:
+    - Raw output: -16.34 LUFS average, -4.39 dBTP peak
+    - Chunk volume spread: ~8 dB (Auphonic leveler data)
+    - SNR: 45+ dB (broadcast quality without processing)
+    - No hum, minimal noise floor
+    - Loudnorm justified for consistency, nothing else needed
+    - Temperature 0.3 keeps output consistent but flat emotionally
+    - Non-deterministic: same input produces different output every time
+    - ~60% rebuild rate is normal and expected
+    - Cost: negligible ($10 lasts ages, 3 attempts at 12-min = pennies)
+    - Real cost is TIME, not money
 
-BEFORE (broken):
-    highpass=80, eq=6kHz/-4, highshelf=7kHz/-2, lowpass=10kHz, afftdn=-25, dynaudnorm
-
-    dynaudnorm amplifies silence regions → noise floor jumps to -20 dB → Gate 1 FAIL.
-    This is the same problem discovered earlier with Resemble builds.
-
-AFTER (fixed):
-    highpass=80, eq=6kHz/-4, highshelf=7kHz/-2, lowpass=10kHz, afftdn=-25, loudnorm=I=-26
-
-    loudnorm I=-26 keeps noise floor at ~-28 dB in silence regions.
-    The de-esser (eq + highshelf) remains because Fish has more sibilance than Resemble.
-
-RULE: dynaudnorm must NEVER be used in any cleanup chain. It amplifies silence
-regions regardless of provider. Always use loudnorm with explicit I= target.
-
-================================================================================
-15.5 CLICK ARTIFACT RESOLUTION
-================================================================================
-
-QA crossfade width increased from 20ms to 40ms.
-
-With 40 individual Fish chunks (meditation-style one-block-per-phrase), 20ms
-crossfades were insufficient to resolve persistent click artifacts. Clicks would
-reduce each QA pass but not drop below threshold in 5 passes.
-
-40ms crossfades resolve clicks within 2-3 passes for 40-chunk Fish builds.
-No audible impact on voice quality at stitch boundaries.
+RESEMBLE:
+    - Requires larger chunks (~2000 chars) for voice consistency
+    - SSML breaks within chunks for pause insertion
+    - Different spectral characteristics from Fish (MFCC 0.01+ vs master)
+    - Not suitable for short-phrase meditation content
+    - Reserved for sleep stories and long narrative content
 
 ================================================================================
-15.6 LOVING-KINDNESS REBUILD (7 February 2026)
+15.5 ATEMPO SETTING
 ================================================================================
 
-Session: 36-loving-kindness-intro
-Provider: Fish Audio (was Resemble — voice character was completely lost)
-Architecture: 40 individual TTS calls, one per text block, silences stitched in post
-Duration: 13.9 min
-Build attempts: 6 (Fish ~60% success rate + iteration on cleanup/threshold issues)
-
-BUILD ITERATION LOG:
-    #1: Gate 1 FAIL — dynaudnorm in Fish chain (noise -20.7, HF -39.0)
-    #2: Gates 1-3 PASS, Gate 4 FAIL — MFCC 0.038 (post-cleanup comparison)
-    #3: Gate 1 FAIL — HF hiss -37.6 (Fish variance, bad generation)
-    #4: Gates 1-3 PASS, Gate 4 FAIL — MFCC 0.036 (still post-cleanup)
-    #5: Gate 2 FAIL — persistent click at 9:58 (20ms crossfade too narrow)
-    #6: ALL 4 GATES PASSED — deployed to R2
-
-Human voice review: PASSED — "Marco sounds like himself"
-Full glitch review: PENDING
-
-QA RESULTS (final build):
-    Gate 1: noise -28.5 dB, HF hiss -49.3 dB — PASSED
-    Gate 2: 1 click found, resolved in 3 passes (40ms crossfade) — PASSED
-    Gate 3: spectral comparison, noise gap -11.7 dB, HF gap -19.2 dB — PASSED
-    Gate 4: MFCC 0.0375 (threshold 0.06), F0 82.8 Hz / 1.4% dev — PASSED
-
-FILES:
-    Deployed MP3:   content/audio-free/36-loving-kindness-intro.mp3 (R2)
-    Raw narration:  content/audio-free/raw/36-loving-kindness-intro.wav
-    Pre-cleanup:    content/audio-free/raw/36-loving-kindness-intro_precleanup.wav
-    Auphonic file:  ↑ use precleanup WAV for Auphonic analysis
-    Manifest:       content/audio-free/36-loving-kindness-intro_manifest.json
+Marco standard speed adjustment: 0.95x atempo
+Applied to the master and should be applied consistently to all production.
+This gives Marco a slightly slower, more deliberate delivery that suits
+meditation pacing.
 
 ================================================================================
 — END OF SECTION 15 —
 ================================================================================
 
+
+================================================================================
+SECTION 16: EXPRESSION THROUGH PUNCTUATION
+================================================================================
+Added: 7 February 2026
+Status: ACTIVE — Technique proven, deployed in loving-kindness session
+
+================================================================================
+16.1 THE PROBLEM
+================================================================================
+
+TTS fundamentally struggles with emotional expression. Fish Audio at
+temperature 0.3 is deliberately flat and consistent. Marco sounds the
+same whether saying "close your eyes" or "you are deeply loved." The
+voice is technically perfect but emotionally monotone.
+
+Increasing temperature adds variation but also adds instability,
+artifacts, and unpredictability. Temperature is not the solution.
+
+================================================================================
+16.2 THE SOLUTION: SCRIPT-LEVEL DIRECTION
+================================================================================
+
+Every comma, ellipsis, fragment, and sentence structure in the script is
+vocal direction to Marco. The TTS model responds to punctuation cues —
+not perfectly, but enough to create natural rhythm and breathing.
+
+This is the cheapest, most reliable approach for TTS emotional delivery.
+No API changes, no model tuning, no extra cost. Just better scripts.
+
+================================================================================
+16.3 TECHNIQUES
+================================================================================
+
+ELLIPSES WITHIN SENTENCES (breath/hesitation):
+    "All you do... is offer gentle wishes"
+    "And gently... close your eyes"
+    The ellipsis creates a micro-pause and slight pitch shift.
+
+FRAGMENTS FOR EMOTIONAL WEIGHT:
+    "Who suffers. Who struggles. Just like you."
+    Short declarative sentences hit harder than flowing prose.
+
+SENTENCE STRUCTURE THAT SLOWS PACE:
+    "And gently... close your eyes" vs "Close your eyes gently"
+    The first version forces the TTS to slow down at "gently."
+
+COMMAS CREATING MICRO-PAUSES:
+    "Your lap, your sides, wherever feels natural"
+    Each comma is a tiny breath that makes the delivery more human.
+
+VARYING SENTENCE LENGTHS:
+    Long flowing sentence followed by a short punch.
+    "Take a moment to notice how it feels to offer these words to
+    yourself. Really feel them." The contrast creates rhythm.
+
+LOVING-KINDNESS PHRASES WITH INTERNAL ELLIPSES:
+    "May I be safe... May I be happy... May I be healthy...
+    May I live with ease."
+    76-84 characters per block — stable for TTS. The ellipses create
+    breathing rhythm within each phrase without splitting into
+    dangerously short chunks.
+
+================================================================================
+16.4 BLOCK SIZE GUIDELINES FOR EXPRESSIVE SCRIPTS
+================================================================================
+
+    Minimum: 20 characters (below this TTS becomes unstable)
+    Sweet spot: 50-200 characters (short enough for dedicated attention,
+                long enough for stable generation)
+    Maximum: 400 characters (longer blocks trend toward monotone)
+
+    For loving-kindness/mantra content:
+    - Combine 3-4 short phrases into one block with internal ellipses
+    - Each block 76-150 characters
+    - This gives TTS enough context while ellipses create internal rhythm
+
+================================================================================
+16.5 APPLIED EXAMPLE
+================================================================================
+
+The loving-kindness intro script (36-loving-kindness-intro) demonstrates
+all these techniques. 40 blocks, all 21-371 characters, with punctuation
+driving Marco's delivery throughout. The script reads as natural spoken
+meditation while every punctuation mark is deliberate vocal direction.
+
+================================================================================
+— END OF SECTION 16 —
+================================================================================
+
 ---
 
-*Last updated: 7 February 2026 (Section 15 added: Calibration Results & Quad-Gate QA Implementation)*
+*Last updated: 7 February 2026 — Bible v1.3: Auphonic baseline, Marco calibration complete, processing pipeline, expression technique*
