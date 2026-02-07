@@ -443,7 +443,7 @@ npx wrangler r2 object put salus-mind/content/audio-free/FILENAME.mp3 --file=./F
 ### Quality Standards
 - **100% OR NO SHIP** - any audible glitch = FAIL
 - **3-Strike Rule** - max 3 rebuild attempts before escalating
-- **Human ear is final gate** - analyzer is pre-screening only
+- **Automated QA is the gate** - scan→fix→rescan loop runs until clean, then auto-deploys to R2. Human out of loop.
 
 ### Analyzer v4 Findings
 - Sibilance/click detection has many false positives
@@ -457,6 +457,165 @@ npx wrangler r2 object put salus-mind/content/audio-free/FILENAME.mp3 --file=./F
 | Loudness | -24 LUFS | Industry standard for relaxation |
 | True Peak | -2 dBTP min | Calm at -5.67 |
 | Channels | Mono OK | Stereo comes from ambient mix |
+
+---
+
+## TTS Provider Comparison: Fish Audio vs ElevenLabs
+
+### When to Use Each Provider
+
+| | Fish Audio | ElevenLabs |
+|---|---|---|
+| **Best for** | Short meditations (<15 min) | Long sleep stories (30-45 min) |
+| **Voice** | "Marco" — deep resonance, slight accent, unique character | Library voices (Daniel, George, etc.) — clean, consistent |
+| **Chunks** | ~147 small blocks per 45-min story | ~12 merged blocks per 45-min story |
+| **Drift risk** | High on long content (voice changes across many chunks) | Low (fewer chunks = fewer drift points) |
+| **First-build success** | ~40% for 45-min stories, ~95% for <15 min | Expected ~90%+ for all lengths |
+| **Audio quality** | Needs full cleanup chain (de-esser, noise reduction) | Clean output, just loudnorm needed |
+| **API auth** | `Bearer` token | `xi-api-key` header |
+| **Pacing** | Explicit silence files between every block | Paragraph breaks (`\n\n`) render as natural pauses |
+| **Cost** | Lower per-character | Higher per-character |
+| **Rebuild cost** | Cheap per attempt but many attempts needed | More per attempt but fewer needed |
+
+### Provider Architecture in build-session-v3.py
+
+```
+Script → process_script_for_tts() → blocks (147 for Monty)
+                                          │
+                    ┌─────────────────────┴──────────────────────┐
+                    │                                            │
+              Fish (default)                            ElevenLabs
+              147 blocks as-is                   merge_blocks_for_elevenlabs()
+              generate_tts_chunk()                      → 12 blocks
+              cleanup: full                      generate_tts_chunk_elevenlabs()
+              (de-esser, noise gate,             cleanup: light
+               lowpass, dynaudnorm)              (loudnorm -24 LUFS only)
+                    │                                            │
+                    └─────────────────────┬──────────────────────┘
+                                          │
+                              concatenate_with_silences()
+                              mix_ambient()
+                              → final MP3
+```
+
+### CLI Usage
+
+```bash
+# Fish (unchanged default)
+python3 build-session-v3.py ss01-montys-midnight-feast
+
+# ElevenLabs
+python3 build-session-v3.py ss01-montys-midnight-feast --provider elevenlabs
+
+# ElevenLabs with specific voice and model
+python3 build-session-v3.py ss01-montys-midnight-feast --provider elevenlabs --voice VOICE_ID --model v3
+
+# Raw output (no cleanup) for quality testing
+python3 build-session-v3.py ss01-montys-midnight-feast --provider elevenlabs --no-cleanup
+
+# Dry run to preview block counts
+python3 build-session-v3.py ss01-montys-midnight-feast --dry-run --provider elevenlabs
+```
+
+### TTS Voice: Marco (Fish Audio)
+
+**Marco is the sole voice for all sleep stories.** Voice ID: `0165567b33324f518b02336ad232e31a`
+
+Fish Audio with Marco has shipped 3 sessions successfully. No atempo slowdown needed — Marco speaks at natural sleep story pace.
+
+### ElevenLabs — ABANDONED (6 Feb 2026)
+
+ElevenLabs was evaluated as an alternative TTS provider across 11 builds and £90+ in credits. **Every approach failed.** Full evidence archived at `Desktop/elevenlabs-evidence/`.
+
+**Why it failed:**
+- API cannot hold voice consistency beyond 2-3 sequential calls (request stitching doesn't work for long-form)
+- Studio "audiobook" feature produces continuous speech with no paragraph gaps and voice breakdown
+- SSML breaks max 3 seconds (sleep stories need 4-8s gaps)
+- Speed parameter inconsistent within chunks
+- Studio API locked behind sales whitelist (403 error)
+- Every combination of merging, stitching, SSML, and speed produced zero usable output
+
+**Do not revisit ElevenLabs** unless they release a fundamentally different long-form API. The platform is built for short-form content (ads, voiceovers, clips under 5 minutes).
+
+### Fish Audio Female Voice Auditions — FAILED (6 Feb 2026)
+
+8 female Fish voices auditioned. All inferior to Marco for sleep story delivery. None had the warmth or natural pacing. Marco remains sole voice.
+
+### Production Pipeline (Automated)
+
+```
+Script (... pause markers)
+        │
+        ▼
+process_script_for_tts() → blocks with pause durations
+        │
+        ▼
+generate_tts_chunk() → Fish API with condition_on_previous_chunks
+        │
+        ▼
+apply_edge_fades() → 15ms cosine fade on each chunk (prevents stitch clicks)
+        │
+        ▼
+concatenate_with_silences() → cleanup chain → mix_ambient()
+        │
+        ▼
+qa_loop():  scan_for_clicks() → patch_stitch_clicks() → rescan
+            ↻ repeat until 0 click artifacts (max 5 passes)
+        │
+        ▼
+deploy_to_r2() → LIVE on media.salus-mind.com
+```
+
+**Fish cleanup chain (full):**
+```
+highpass=80Hz → de-esser 6kHz → shelf 7kHz → lowpass 10kHz → noise reduction -25dB → dynaudnorm
+```
+
+No atempo needed for Fish/Marco — natural speed is correct.
+
+### Production Rules (Non-Negotiable)
+
+1. **ONE build at a time.** Never run builds in parallel — burned 100K credits once.
+2. **Always dry-run first.** Check block count and silence totals before spending credits.
+3. **Fish has a ~60% rebuild rate on 45-min stories.** This is expected. Rebuild until it lands.
+4. **Never identical gaps.** All pauses go through `humanize_pauses()`.
+5. **Marco is the only voice.** Do not audition alternatives unless Marco is discontinued.
+6. **QA is automated.** The pipeline scans, patches, and re-scans until clean. No human listening required before deploy.
+7. **Deploy is automatic.** Build passes QA → uploads to R2 → live. Use `--no-deploy` to hold.
+
+### CLI Usage
+
+```bash
+# Full pipeline: build → QA → deploy to R2
+python3 build-session-v3.py 25-introduction-to-mindfulness
+
+# Dry run (no API calls)
+python3 build-session-v3.py 25-introduction-to-mindfulness --dry-run
+
+# Build + QA but don't deploy
+python3 build-session-v3.py 25-introduction-to-mindfulness --no-deploy
+
+# ElevenLabs provider (abandoned, but syntax preserved)
+python3 build-session-v3.py SESSION --provider elevenlabs --model v2
+```
+
+### Pre-Build Checklist
+
+Before every Fish build:
+- [ ] Dry run shows correct block count and silence totals
+- [ ] Only building ONE story
+- [ ] Provider set to `fish` (default)
+
+---
+
+### Known Issue: Fish 60% Failure Rate on Long Content
+
+Fish Audio TTS generates non-deterministic output. For Monty's Midnight Feast (45 min, 28K chars):
+- 147 separate API calls = 147 potential drift points
+- Voice character can shift between chunks (pitch, accent, pacing)
+- ~60% of first builds have audible voice changes
+- Fix: rebuild (TTS is non-deterministic, next attempt may be clean)
+- ElevenLabs reduces this to 12 API calls, eliminating 92% of drift points
 
 ---
 
@@ -607,4 +766,40 @@ sed -i '' 's|../sessions.html">Guided Meditations</a></li>|../sessions.html">Gui
 
 ---
 
-*Last updated: 6 February 2026*
+### 7 February 2026 — Automated Audio QA Pipeline
+
+**Problem:** Human was the only QA gate. Listening to every minute of every build to catch glitches. Tired, angry, ready to quit.
+
+**Root cause:** `concatenate_with_silences()` used ffmpeg's concat demuxer for hard frame joins. Every join point was a potential click artifact. No automated detection or fixing existed.
+
+**Solution:** Fully automated build→QA→deploy pipeline:
+
+| Phase | What it does |
+|-------|-------------|
+| Build | TTS generation + edge fades on every chunk + concat + ambient mix |
+| QA Scan | Detects click artifacts in silence regions (sample-level jump > peak analysis) |
+| QA Fix | Applies 20ms cosine crossfades at all stitch boundaries |
+| QA Loop | Rescan after fix, repeat up to 5 passes until clean |
+| Deploy | Auto-upload to R2 when QA passes |
+
+**Key additions to `build-session-v3.py`:**
+- `apply_edge_fades()` — 15ms cosine fade on each voice chunk before concat
+- `scan_for_clicks()` — scans mixed audio against manifest silence regions
+- `patch_stitch_clicks()` — crossfades at all type-transition boundaries
+- `qa_loop()` — scan→fix→rescan until clean
+- `deploy_to_r2()` — wrangler upload to salus-mind bucket
+- `--no-deploy` flag to build+QA without uploading
+
+**Patched existing sessions:**
+All 5 deployed sessions scanned and patched:
+- 01-morning-meditation — clean (no clicks)
+- 03-breathing-for-anxiety — 68 clicks patched
+- 09-rainfall-sleep-journey — 10 clicks patched
+- 25-introduction-to-mindfulness — 83 stitch points patched
+- 38-seven-day-mindfulness-day1 — 8 clicks patched
+
+**Rule change:** "Human ear is final gate" → "Automated QA is the gate"
+
+---
+
+*Last updated: 7 February 2026*

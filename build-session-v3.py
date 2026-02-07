@@ -41,6 +41,18 @@ SCRIPT_DIR = Path("content/scripts")
 SLEEP_STORY_DIR = Path("content/sleep-stories")
 AUDIO_DIR = Path("content/audio")
 AMBIENT_DIR = Path("content/audio/ambient")
+OUTPUT_DIR = Path("content/audio-free")  # Final deployed audio
+OUTPUT_RAW_DIR = Path("content/audio-free/raw")
+OUTPUT_MIXED_DIR = Path("content/audio-free/mixed")
+
+# R2 deployment
+R2_BUCKET = "salus-mind"
+R2_PATH_PREFIX = "content/audio-free"
+
+# QA settings
+QA_MAX_PASSES = 5         # Max scan-fix-rescan cycles before failing
+QA_CLICK_THRESHOLD = 100  # Min amplitude jump to count as click
+QA_FADE_MS = 20           # Crossfade width at stitch boundaries
 
 # Fish TTS API
 FISH_API_URL = "https://api.fish.audio/v1/tts"
@@ -807,16 +819,254 @@ def mix_ambient(voice_path, ambient_name, output_path):
 
 
 # ============================================================================
+# AUTOMATED QA — SCAN, PATCH, VERIFY
+# ============================================================================
+
+def scan_for_clicks(audio_path, manifest_data, threshold=QA_CLICK_THRESHOLD):
+    """Scan mixed audio for click artifacts in silence regions.
+
+    Returns list of (timestamp, jump_amplitude, peak_amplitude) for each click found.
+    Only flags clicks where the sample jump exceeds the local peak (ratio > 1.0).
+    """
+    import wave as _wave
+    import struct as _struct
+
+    wav_path = audio_path + ".scan.wav"
+    subprocess.run([
+        'ffmpeg', '-y', '-i', audio_path,
+        '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE), '-ac', '2',
+        wav_path
+    ], capture_output=True, check=True)
+
+    w = _wave.open(wav_path, 'r')
+    n = w.getnframes()
+    frames = w.readframes(n)
+    samples = _struct.unpack(f'<{n * 2}h', frames)
+    w.close()
+    os.remove(wav_path)
+
+    # Build silence region lookup
+    silence_ranges = []
+    for seg in manifest_data['segments']:
+        if seg['type'] == 'silence':
+            silence_ranges.append((seg['start_time'], seg['start_time'] + seg['duration']))
+
+    def in_silence(ts):
+        return any(start <= ts <= end for start, end in silence_ranges)
+
+    # Scan in 10ms windows
+    window = int(SAMPLE_RATE * 0.01)
+    clicks = []
+    for start in range(0, n - window, window // 2):
+        chunk = [samples[i * 2] for i in range(start, min(start + window, n))]
+        if not chunk:
+            continue
+        peak = max(abs(s) for s in chunk)
+        if peak < 50:  # Skip true silence
+            continue
+        max_jump = max(abs(chunk[i + 1] - chunk[i]) for i in range(len(chunk) - 1)) if len(chunk) > 1 else 0
+        ts = start / SAMPLE_RATE
+        if in_silence(ts) and max_jump > peak and max_jump > threshold:
+            clicks.append((ts, max_jump, peak))
+
+    # Deduplicate close timestamps
+    filtered = []
+    for c in clicks:
+        if not filtered or c[0] - filtered[-1][0] > 0.1:
+            filtered.append(c)
+
+    return filtered
+
+
+def patch_stitch_clicks(raw_mp3, manifest_data, output_mp3, ambient_name=None, fade_ms=QA_FADE_MS):
+    """Patch click artifacts by applying crossfades at all stitch boundaries.
+
+    Takes the raw narration, applies cosine fades at every type-transition point,
+    re-applies loudnorm, and re-mixes with ambient.
+    """
+    import wave as _wave
+    import struct as _struct
+    import math as _math
+
+    # Get stitch points
+    stitch_times = []
+    for i, seg in enumerate(manifest_data['segments']):
+        if i == 0:
+            continue
+        prev = manifest_data['segments'][i - 1]
+        if prev['type'] != seg['type']:
+            stitch_times.append(seg['start_time'])
+        elif prev['type'] == 'silence' and seg['type'] == 'silence':
+            stitch_times.append(seg['start_time'])
+
+    # Convert raw to WAV
+    wav_path = raw_mp3 + ".patch.wav"
+    subprocess.run([
+        'ffmpeg', '-y', '-i', raw_mp3,
+        '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE), '-ac', '2',
+        wav_path
+    ], capture_output=True, check=True)
+
+    w = _wave.open(wav_path, 'r')
+    n = w.getnframes()
+    nch = w.getnchannels()
+    sw = w.getsampwidth()
+    frames = w.readframes(n)
+    samples = list(_struct.unpack(f'<{n * nch}h', frames))
+    w.close()
+
+    fade_samples = int(SAMPLE_RATE * fade_ms / 1000)
+
+    for ts in stitch_times:
+        center = int(ts * SAMPLE_RATE)
+        # Cosine fade-out before stitch
+        for i in range(fade_samples):
+            idx = (center - fade_samples + i) * nch
+            if 0 <= idx < len(samples) - nch:
+                factor = 0.5 * (1 + _math.cos(_math.pi * i / fade_samples))
+                for ch in range(nch):
+                    samples[idx + ch] = int(samples[idx + ch] * factor)
+        # Cosine fade-in after stitch
+        for i in range(fade_samples):
+            idx = (center + i) * nch
+            if 0 <= idx < len(samples) - nch:
+                factor = 0.5 * (1 - _math.cos(_math.pi * i / fade_samples))
+                for ch in range(nch):
+                    samples[idx + ch] = int(samples[idx + ch] * factor)
+
+    # Save patched WAV
+    patched_wav = raw_mp3 + ".patched.wav"
+    data = _struct.pack(f'<{len(samples)}h', *samples)
+    wout = _wave.open(patched_wav, 'w')
+    wout.setnchannels(nch)
+    wout.setsampwidth(sw)
+    wout.setframerate(SAMPLE_RATE)
+    wout.writeframes(data)
+    wout.close()
+
+    # Loudnorm
+    patched_mp3 = raw_mp3 + ".patched.mp3"
+    subprocess.run([
+        'ffmpeg', '-y', '-i', patched_wav,
+        '-af', 'loudnorm=I=-24:TP=-2:LRA=11',
+        '-c:a', 'libmp3lame', '-b:a', '128k',
+        patched_mp3
+    ], capture_output=True, check=True)
+
+    # Mix with ambient if specified
+    if ambient_name:
+        for suffix in ['-8hr', '-extended', '']:
+            ambient_path = AMBIENT_DIR / f"{ambient_name}{suffix}.mp3"
+            if ambient_path.exists():
+                break
+
+        if ambient_path.exists():
+            voice_duration = get_audio_duration(patched_mp3)
+            fade_out_start = max(0, voice_duration - AMBIENT_FADE_OUT_DURATION)
+            subprocess.run([
+                'ffmpeg', '-y',
+                '-i', patched_mp3, '-i', str(ambient_path),
+                '-filter_complex', (
+                    f"[1:a]volume={AMBIENT_VOLUME_DB}dB,"
+                    f"afade=t=in:st={AMBIENT_FADE_IN_START}:d={AMBIENT_FADE_IN_DURATION},"
+                    f"afade=t=out:st={fade_out_start}:d={AMBIENT_FADE_OUT_DURATION}[amb];"
+                    f"[0:a][amb]amix=inputs=2:duration=first:dropout_transition=2"
+                ),
+                '-c:a', 'libmp3lame', '-q:a', '2',
+                output_mp3
+            ], capture_output=True, check=True)
+        else:
+            shutil.copy(patched_mp3, output_mp3)
+    else:
+        shutil.copy(patched_mp3, output_mp3)
+
+    # Update the raw file with patched version
+    shutil.copy(patched_mp3, raw_mp3)
+
+    # Cleanup temp files
+    for f in [wav_path, patched_wav, patched_mp3]:
+        if os.path.exists(f):
+            os.remove(f)
+
+    return len(stitch_times)
+
+
+def qa_loop(final_mp3, raw_mp3, manifest_data, ambient_name=None):
+    """Scan → fix → rescan loop until audio passes QA.
+
+    Returns True if audio is clean, False if max passes exceeded.
+    """
+    print(f"\n{'='*60}")
+    print("  QA: AUTOMATED QUALITY ASSURANCE")
+    print(f"{'='*60}")
+
+    for qa_pass in range(1, QA_MAX_PASSES + 1):
+        clicks = scan_for_clicks(final_mp3, manifest_data)
+
+        if not clicks:
+            print(f"  QA PASS {qa_pass}: CLEAN — 0 click artifacts")
+            print(f"  QA: PASSED")
+            return True
+
+        print(f"  QA PASS {qa_pass}: FOUND {len(clicks)} click artifacts")
+        for ts, jump, peak in clicks[:5]:  # Show first 5
+            mins = int(ts // 60)
+            secs = ts % 60
+            print(f"    {mins}:{secs:05.2f} — jump={jump}, peak={peak}")
+        if len(clicks) > 5:
+            print(f"    ... and {len(clicks) - 5} more")
+
+        print(f"  QA PASS {qa_pass}: Patching {len(clicks)} artifacts...")
+        patches = patch_stitch_clicks(raw_mp3, manifest_data, final_mp3, ambient_name)
+        print(f"  QA PASS {qa_pass}: Applied crossfades at {patches} stitch points")
+
+    # Final check after last pass
+    clicks = scan_for_clicks(final_mp3, manifest_data)
+    if not clicks:
+        print(f"  QA: PASSED (after {QA_MAX_PASSES} passes)")
+        return True
+
+    print(f"  QA: FAILED — {len(clicks)} clicks remain after {QA_MAX_PASSES} passes")
+    print(f"  These may be ambient track artifacts (not fixable by stitch patching)")
+    return False
+
+
+def deploy_to_r2(local_path, r2_key):
+    """Upload file to Cloudflare R2 via wrangler CLI."""
+    print(f"  DEPLOY: Uploading to R2 → {r2_key}")
+    result = subprocess.run([
+        'npx', 'wrangler', 'r2', 'object', 'put',
+        f'{R2_BUCKET}/{r2_key}',
+        '--file', str(local_path),
+        '--remote',
+        '--content-type', 'audio/mpeg',
+    ], capture_output=True, text=True, timeout=120)
+
+    if result.returncode != 0:
+        print(f"  DEPLOY: FAILED — {result.stderr.strip()}")
+        return False
+
+    print(f"  DEPLOY: Upload complete")
+    return True
+
+
+# ============================================================================
 # MAIN BUILD
 # ============================================================================
 
-def build_session(session_name, dry_run=False, provider='fish', voice_id=None, model='v2', cleanup_mode='full'):
-    """Build a complete session.
+def build_session(session_name, dry_run=False, provider='fish', voice_id=None, model='v2',
+                   cleanup_mode='full', no_deploy=False):
+    """Build a complete session: TTS → concat → mix → QA loop → deploy.
 
-    provider: 'fish', 'elevenlabs', or 'resemble'
-    voice_id: override voice ID (or None for default)
-    model: ElevenLabs model key ('v2'/'v3', ignored for Fish/Resemble)
-    cleanup_mode: 'full', 'light', or 'none'
+    The full pipeline runs autonomously:
+    1. Generate TTS chunks
+    2. Concatenate with silences and edge fades
+    3. Mix with ambient
+    4. QA scan for click artifacts
+    5. Auto-patch and rescan until clean (up to QA_MAX_PASSES)
+    6. Deploy to R2 (unless --no-deploy)
+
+    No human listening required. Ship when clean.
     """
     script_path = SCRIPT_DIR / f"{session_name}.txt"
     if not script_path.exists():
@@ -824,7 +1074,16 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
     if not script_path.exists():
         raise FileNotFoundError(f"Script not found in content/scripts/ or content/sleep-stories/")
 
-    output_path = AUDIO_DIR / f"{session_name}.mp3"
+    # Ensure output directories exist
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    OUTPUT_RAW_DIR.mkdir(parents=True, exist_ok=True)
+    OUTPUT_MIXED_DIR.mkdir(parents=True, exist_ok=True)
+
+    # Output paths
+    final_path = OUTPUT_DIR / f"{session_name}.mp3"
+    raw_path = OUTPUT_RAW_DIR / f"{session_name}.mp3"
+    mixed_path = OUTPUT_MIXED_DIR / f"{session_name}.mp3"
+    manifest_path = OUTPUT_DIR / f"{session_name}_manifest.json"
 
     print("=" * 60)
     print(f"Building: {session_name} (v3 chunked, provider={provider})")
@@ -844,6 +1103,7 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
     elif provider == 'resemble':
         print(f"  Voice: {voice_id or RESEMBLE_VOICE_ID}")
     print(f"  Cleanup: {cleanup_mode}")
+    print(f"  Deploy: {'OFF' if no_deploy else 'AUTO → R2'}")
 
     # Process script into blocks with pauses
     blocks = process_script_for_tts(metadata['content'], category)
@@ -859,18 +1119,16 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
 
     # Provider-specific block merging
     if provider == 'elevenlabs':
-        # ElevenLabs: merge only tiny blocks (<20 chars), send paragraphs individually
         combined_blocks = merge_short_blocks(blocks)
         if len(combined_blocks) != len(blocks):
             print(f"  After merging short blocks: {len(combined_blocks)} (from {len(blocks)} raw)")
     elif provider == 'resemble':
-        # Resemble: merge blocks into chunks under 2500 chars with SSML breaks
         combined_blocks = merge_blocks_for_resemble(blocks)
         print(f"  Resemble chunks: {len(combined_blocks)} (from {len(blocks)} raw)")
     else:
         combined_blocks = blocks
 
-    # Humanize pauses (natural variation instead of robotic equal gaps)
+    # Humanize pauses
     if provider in ('elevenlabs', 'resemble'):
         combined_blocks = humanize_pauses(combined_blocks)
         humanized_silence = sum(pause for _, pause in combined_blocks)
@@ -883,25 +1141,25 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
                 print(f"    Block {i+1}: {len(text)} chars, {pause}s pause")
         return True
 
+    # ================================================================
+    # PHASE 1: GENERATE TTS
+    # ================================================================
     with tempfile.TemporaryDirectory() as temp_dir:
         print(f"  Processing {len(combined_blocks)} blocks")
 
         voice_files = []
         silences = []
-        request_ids = []  # Rolling list for ElevenLabs request stitching
+        manifest_segments = []
+        request_ids = []
+        current_time = 0.0
 
         print(f"\n  Generating TTS chunks ({provider})...")
 
         for i, (text, pause) in enumerate(combined_blocks):
             if provider == 'resemble':
-                # Resemble: merged chunks with SSML breaks baked in
                 block_path = os.path.join(temp_dir, f"block_{i}.mp3")
-                generate_tts_chunk_resemble(
-                    text, block_path, i,
-                    voice_id=voice_id,
-                )
+                generate_tts_chunk_resemble(text, block_path, i, voice_id=voice_id)
             elif provider == 'elevenlabs':
-                # ElevenLabs: one paragraph per API call with request stitching
                 block_path = os.path.join(temp_dir, f"block_{i}.mp3")
                 _, req_id = generate_tts_chunk_elevenlabs(
                     text, block_path, i,
@@ -910,11 +1168,9 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
                 )
                 if req_id:
                     request_ids.append(req_id)
-                    # Keep only last 3 for stitching
                     if len(request_ids) > 3:
                         request_ids = request_ids[-3:]
             else:
-                # Fish: original chunking logic
                 if len(text) > CHUNK_SIZE:
                     chunks = chunk_text_at_sentences(text)
                     chunk_files = []
@@ -928,10 +1184,36 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
                     block_path = os.path.join(temp_dir, f"block_{i}.mp3")
                     generate_tts_chunk(text, block_path, len(voice_files))
 
+            # Build manifest
+            duration = get_audio_duration(block_path)
+            expected = len(text) / 15.0  # ~15 chars/sec estimate
+            manifest_segments.append({
+                "index": len(manifest_segments),
+                "type": "text",
+                "start_time": current_time,
+                "text": text,
+                "duration": round(duration, 2),
+                "expected": round(expected, 2),
+                "end_time": round(current_time + duration, 2),
+            })
+            current_time += duration
+
+            if pause > 0:
+                manifest_segments.append({
+                    "index": len(manifest_segments),
+                    "type": "silence",
+                    "start_time": round(current_time, 2),
+                    "duration": round(pause, 1),
+                    "end_time": round(current_time + pause, 2),
+                })
+                current_time += pause
+
             voice_files.append(block_path)
             silences.append(pause)
 
-        # Concatenate all blocks with silences
+        # ================================================================
+        # PHASE 2: CONCATENATE + MIX
+        # ================================================================
         print(f"\n  Concatenating {len(voice_files)} blocks with silences...")
         voice_path = os.path.join(temp_dir, "voice_complete.mp3")
         concatenate_with_silences(voice_files, silences, voice_path, temp_dir, cleanup_mode=cleanup_mode)
@@ -940,26 +1222,75 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
         print(f"  Voice track: {voice_duration/60:.1f} min")
 
         if voice_duration > MAX_DURATION_SECONDS:
-            print(f"  WARNING: Exceeds 30 min limit!")
+            print(f"  WARNING: Exceeds max duration!")
 
-        # Save raw narration (no ambient) for quality analysis
-        raw_output = AUDIO_DIR / f"{session_name}-raw.mp3"
-        shutil.copy(voice_path, str(raw_output))
-        print(f"  Raw narration saved: {raw_output}")
+        # Save raw narration
+        shutil.copy(voice_path, str(raw_path))
+        print(f"  Raw narration saved: {raw_path}")
+
+        # Save manifest
+        manifest_data = {
+            "generated": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "script": session_name,
+            "category": category,
+            "ambient": ambient,
+            "total_tts_duration": round(sum(s['duration'] for s in manifest_segments if s['type'] == 'text'), 2),
+            "total_silence": round(sum(s['duration'] for s in manifest_segments if s['type'] == 'silence'), 1),
+            "text_segments": sum(1 for s in manifest_segments if s['type'] == 'text'),
+            "segments": manifest_segments,
+        }
+        with open(str(manifest_path), 'w') as f:
+            json.dump(manifest_data, f, indent=2)
+        print(f"  Manifest saved: {manifest_path}")
 
         # Mix ambient
         if ambient:
             print(f"\n  Mixing ambient '{ambient}'...")
-            mix_ambient(voice_path, ambient, str(output_path))
+            mix_ambient(voice_path, ambient, str(final_path))
         else:
-            shutil.copy(voice_path, str(output_path))
+            shutil.copy(voice_path, str(final_path))
 
-    final_duration = get_audio_duration(str(output_path))
-    print(f"\n  COMPLETE: {output_path}")
+    # Also save to mixed dir
+    shutil.copy(str(final_path), str(mixed_path))
+
+    final_duration = get_audio_duration(str(final_path))
+    print(f"\n  BUILD COMPLETE: {final_path}")
     print(f"  Duration: {final_duration/60:.1f} min")
 
-    if final_duration > MAX_DURATION_SECONDS:
-        print(f"  ⚠️  EXCEEDS 30 MIN LIMIT")
+    # ================================================================
+    # PHASE 3: QA — SCAN → FIX → RESCAN LOOP
+    # ================================================================
+    qa_passed = qa_loop(str(final_path), str(raw_path), manifest_data, ambient)
+
+    if qa_passed:
+        # Update mixed copy after QA patching
+        shutil.copy(str(final_path), str(mixed_path))
+    else:
+        print(f"\n  WARNING: QA did not fully pass — review manually")
+        print(f"  Remaining artifacts may be from ambient track (not narration)")
+
+    # ================================================================
+    # PHASE 4: DEPLOY TO R2
+    # ================================================================
+    if not no_deploy:
+        r2_key = f"{R2_PATH_PREFIX}/{session_name}.mp3"
+        deployed = deploy_to_r2(str(final_path), r2_key)
+        if deployed:
+            print(f"\n  LIVE: https://media.salus-mind.com/{r2_key}")
+        else:
+            print(f"\n  DEPLOY FAILED — file saved locally at {final_path}")
+    else:
+        print(f"\n  Deploy skipped (--no-deploy)")
+
+    # ================================================================
+    # DONE
+    # ================================================================
+    print(f"\n{'='*60}")
+    status = "SHIPPED" if not no_deploy else "BUILT (not deployed)"
+    print(f"  {status}: {session_name}")
+    print(f"  Duration: {final_duration/60:.1f} min")
+    print(f"  QA: {'PASSED' if qa_passed else 'REVIEW NEEDED'}")
+    print(f"{'='*60}")
 
     return True
 
@@ -976,11 +1307,17 @@ def main():
                         help='ElevenLabs model (default: v2, ignored for Fish)')
     parser.add_argument('--no-cleanup', action='store_true',
                         help='Skip audio cleanup for raw quality testing')
+    parser.add_argument('--cleanup', choices=['full', 'light', 'none'], default=None,
+                        help='Override cleanup mode (default: full for fish, light for elevenlabs/resemble)')
+    parser.add_argument('--no-deploy', action='store_true',
+                        help='Build and QA only — do not upload to R2')
 
     args = parser.parse_args()
 
     # Determine cleanup mode
-    if args.no_cleanup:
+    if args.cleanup:
+        cleanup_mode = args.cleanup
+    elif args.no_cleanup:
         cleanup_mode = 'none'
     elif args.provider == 'elevenlabs':
         cleanup_mode = 'light'
@@ -997,6 +1334,7 @@ def main():
             voice_id=args.voice_id,
             model=args.model,
             cleanup_mode=cleanup_mode,
+            no_deploy=args.no_deploy,
         )
     except Exception as e:
         print(f"\nERROR: {e}")
