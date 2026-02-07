@@ -96,7 +96,7 @@ ELEVENLABS_MIN_BLOCK_CHARS = 20
 RESEMBLE_API_KEY = os.getenv("RESEMBLE_API_KEY")
 RESEMBLE_SYNTH_URL = "https://f.cluster.resemble.ai/synthesize"
 RESEMBLE_API_URL = "https://app.resemble.ai/api/v2"
-RESEMBLE_VOICE_ID = "9f1fb457"  # Amanda — most expressive voice design
+RESEMBLE_VOICE_ID = "da18eeca"  # Marco T2 — master narration voice
 RESEMBLE_CHUNK_MAX = 2500  # Stay under 3000 char API limit
 RESEMBLE_DELAY_MS = 500  # Rate limiting between API calls
 RESEMBLE_VOICE_SETTINGS_PRESET = "6199a148-cd33-4ad7-b452-f067fdff3894"  # pace=0.85, exaggeration=0.75
@@ -930,26 +930,39 @@ def scan_for_clicks(audio_path, manifest_data, threshold=QA_CLICK_THRESHOLD):
     return filtered
 
 
-def patch_stitch_clicks(raw_mp3, manifest_data, output_mp3, ambient_name=None, fade_ms=QA_FADE_MS):
-    """Patch click artifacts by applying crossfades at all stitch boundaries.
+def patch_stitch_clicks(raw_mp3, manifest_data, output_mp3, ambient_name=None, fade_ms=QA_FADE_MS, click_times=None):
+    """Patch click artifacts by applying crossfades at stitch boundaries near detected clicks.
 
-    Takes the raw narration, applies cosine fades at every type-transition point,
-    re-applies loudnorm, and re-mixes with ambient.
+    Only patches stitch points within 1 second of a detected click artifact.
+    If no clicks are near any stitch point, skips patching entirely.
     """
     import wave as _wave
     import struct as _struct
     import math as _math
 
     # Get stitch points
-    stitch_times = []
+    all_stitch_times = []
     for i, seg in enumerate(manifest_data['segments']):
         if i == 0:
             continue
         prev = manifest_data['segments'][i - 1]
         if prev['type'] != seg['type']:
-            stitch_times.append(seg['start_time'])
+            all_stitch_times.append(seg['start_time'])
         elif prev['type'] == 'silence' and seg['type'] == 'silence':
-            stitch_times.append(seg['start_time'])
+            all_stitch_times.append(seg['start_time'])
+
+    # Only patch stitch points within 1s of a detected click
+    if click_times:
+        stitch_times = [st for st in all_stitch_times
+                        if any(abs(st - ct) < 1.0 for ct in click_times)]
+    else:
+        stitch_times = all_stitch_times
+
+    if not stitch_times:
+        print(f"    No stitch points near detected clicks — skipping patch")
+        # Still need to produce the output file (re-mix ambient + encode)
+        # Just copy through the pipeline without crossfades
+        import shutil as _shutil
 
     # Convert raw to WAV
     wav_path = raw_mp3 + ".patch.wav"
@@ -1089,8 +1102,9 @@ def qa_loop(final_mp3, raw_mp3, manifest_data, ambient_name=None):
         if len(clicks) > 5:
             print(f"    ... and {len(clicks) - 5} more")
 
-        print(f"  QA PASS {qa_pass}: Patching {len(clicks)} artifacts...")
-        patches = patch_stitch_clicks(raw_mp3, manifest_data, final_mp3, ambient_name)
+        click_timestamps = [ts for ts, jump, peak in clicks]
+        print(f"  QA PASS {qa_pass}: Patching artifacts near stitch points...")
+        patches = patch_stitch_clicks(raw_mp3, manifest_data, final_mp3, ambient_name, click_times=click_timestamps)
         print(f"  QA PASS {qa_pass}: Applied crossfades at {patches} stitch points")
 
     # Final check after last pass
