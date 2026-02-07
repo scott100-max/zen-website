@@ -120,8 +120,8 @@ PAUSE_PROFILES = {
 }
 
 # Ambient settings (per AUDIO-SPEC.md)
-AMBIENT_VOLUME_DB = -12          # Louder ambient for rain sessions
-AMBIENT_VOLUME_SILENCE_DB = -13  # Raise 1dB during 30s+ gaps (per spec)
+AMBIENT_VOLUME_DB = -14          # Standard ambient level for mindfulness/meditation
+AMBIENT_VOLUME_SILENCE_DB = -13  # Raise 1dB during 30s+ pauses (per spec)
 AMBIENT_FADE_IN_START = 0        # Start fade immediately
 AMBIENT_FADE_IN_DURATION = 15    # 15 seconds fade-in (per spec)
 AMBIENT_FADE_OUT_DURATION = 8    # 8 seconds fade-out (per spec)
@@ -663,12 +663,14 @@ def generate_tts_chunk_resemble(text, output_path, chunk_num=0, voice_id=None):
 
 
 def generate_silence(duration, output_path):
-    """Generate silence audio file."""
+    """Generate silence audio file (WAV for lossless pipeline).
+    Uses mono to match Fish TTS voice chunks.
+    """
     cmd = [
         'ffmpeg', '-y',
-        '-f', 'lavfi', '-i', f'anullsrc=r={SAMPLE_RATE}:cl=stereo',
+        '-f', 'lavfi', '-i', f'anullsrc=r={SAMPLE_RATE}:cl=mono',
         '-t', str(duration),
-        '-c:a', 'libmp3lame', '-q:a', '2',
+        '-c:a', 'pcm_s16le',
         output_path
     ]
     subprocess.run(cmd, capture_output=True, check=True)
@@ -676,7 +678,9 @@ def generate_silence(duration, output_path):
 
 
 def cleanup_audio(input_path, output_path):
-    """Clean up TTS audio - remove hiss, sibilance, and artifacts (Fish full chain)."""
+    """Clean up TTS audio - remove hiss, sibilance, and artifacts (Fish full chain).
+    Output is WAV for lossless pipeline.
+    """
     filter_chain = ','.join([
         'highpass=f=80',
         'equalizer=f=6000:t=q:w=2:g=-4',      # De-esser: notch at 6kHz
@@ -688,7 +692,7 @@ def cleanup_audio(input_path, output_path):
     cmd = [
         'ffmpeg', '-y', '-i', input_path,
         '-af', filter_chain,
-        '-c:a', 'libmp3lame', '-q:a', '2',
+        '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE),
         output_path
     ]
     subprocess.run(cmd, capture_output=True, check=True)
@@ -696,15 +700,11 @@ def cleanup_audio(input_path, output_path):
 
 
 def cleanup_audio_light(input_path, output_path):
-    """Light cleanup for ElevenLabs — loudness normalization only.
-
-    Speed is handled natively by the API (speed: 0.75 in voice_settings).
-    No atempo post-processing — it degrades audio quality.
-    """
+    """Light cleanup — loudness normalization only (WAV for lossless pipeline)."""
     cmd = [
         'ffmpeg', '-y', '-i', input_path,
         '-af', 'loudnorm=I=-24:TP=-2:LRA=11',
-        '-c:a', 'libmp3lame', '-b:a', '128k',
+        '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE),
         output_path
     ]
     subprocess.run(cmd, capture_output=True, check=True)
@@ -716,6 +716,7 @@ def apply_edge_fades(audio_path, output_path, fade_ms=15):
 
     Prevents click artifacts when files are concatenated with the concat demuxer.
     15ms cosine fades are inaudible but eliminate sample-level discontinuities.
+    Output is WAV for lossless pipeline.
     """
     fade_sec = fade_ms / 1000
     duration = get_audio_duration(audio_path)
@@ -723,7 +724,7 @@ def apply_edge_fades(audio_path, output_path, fade_ms=15):
     cmd = [
         'ffmpeg', '-y', '-i', audio_path,
         '-af', f'afade=t=in:st=0:d={fade_sec}:curve=hsin,afade=t=out:st={fade_out_start}:d={fade_sec}:curve=hsin',
-        '-c:a', 'libmp3lame', '-q:a', '2',
+        '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE),
         output_path
     ]
     subprocess.run(cmd, capture_output=True, check=True)
@@ -731,37 +732,47 @@ def apply_edge_fades(audio_path, output_path, fade_ms=15):
 
 
 def concatenate_with_silences(voice_chunks, silences, output_path, temp_dir, cleanup_mode='full'):
-    """Concatenate voice chunks with silence gaps.
+    """Concatenate voice chunks with silence gaps (lossless WAV pipeline).
 
     cleanup_mode: 'full' (Fish chain), 'light' (loudnorm only), 'none' (raw)
 
     Each voice chunk gets a 15ms fade-in/out applied before concatenation
     to prevent click artifacts at join boundaries.
+    All intermediate files are WAV to avoid cumulative MP3 compression artifacts.
     """
     all_files = []
 
     for i, (voice_file, silence_duration) in enumerate(zip(voice_chunks, silences)):
-        # Apply edge fades to voice chunk to prevent clicks at concat boundaries
-        faded_file = os.path.join(temp_dir, f"faded_{i}.mp3")
-        apply_edge_fades(voice_file, faded_file)
+        # Convert voice chunk to WAV first (Fish API returns MP3)
+        # Force mono to match silence files and prevent channel mismatch in concat
+        wav_voice = os.path.join(temp_dir, f"voice_{i}.wav")
+        subprocess.run([
+            'ffmpeg', '-y', '-i', voice_file,
+            '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE), '-ac', '1',
+            wav_voice
+        ], capture_output=True, check=True)
+
+        # Apply edge fades (WAV in, WAV out)
+        faded_file = os.path.join(temp_dir, f"faded_{i}.wav")
+        apply_edge_fades(wav_voice, faded_file)
         all_files.append(faded_file)
         if silence_duration > 0:
-            silence_file = os.path.join(temp_dir, f"silence_{i}.mp3")
+            silence_file = os.path.join(temp_dir, f"silence_{i}.wav")
             generate_silence(silence_duration, silence_file)
             all_files.append(silence_file)
 
-    # Use concat demuxer — now safe because edges are faded
+    # Use concat demuxer — all files are WAV
     concat_list = os.path.join(temp_dir, "concat_list.txt")
     with open(concat_list, 'w') as f:
         for file in all_files:
             f.write(f"file '{file}'\n")
 
-    # Concatenate
-    concat_output = os.path.join(temp_dir, "concat_raw.mp3")
+    # Concatenate to WAV
+    concat_output = os.path.join(temp_dir, "concat_raw.wav")
     cmd = [
         'ffmpeg', '-y', '-f', 'concat', '-safe', '0',
         '-i', concat_list,
-        '-c:a', 'libmp3lame', '-q:a', '2',
+        '-c:a', 'pcm_s16le',
         concat_output
     ]
     subprocess.run(cmd, capture_output=True, check=True)
@@ -779,14 +790,19 @@ def concatenate_with_silences(voice_chunks, silences, output_path, temp_dir, cle
 
 
 def mix_ambient(voice_path, ambient_name, output_path):
-    """Mix ambient background with voice."""
-    # Try extended version first, then 8hr version, then regular
-    for suffix in ['-8hr', '-extended', '']:
-        ambient_path = AMBIENT_DIR / f"{ambient_name}{suffix}.mp3"
-        if ambient_path.exists():
+    """Mix ambient background with voice (WAV output for lossless pipeline)."""
+    # Try WAV first, then MP3 variants
+    ambient_path = None
+    for ext in ['wav', 'mp3']:
+        for suffix in ['-8hr', '-extended', '']:
+            candidate = AMBIENT_DIR / f"{ambient_name}{suffix}.{ext}"
+            if candidate.exists():
+                ambient_path = candidate
+                break
+        if ambient_path:
             break
 
-    if not ambient_path.exists():
+    if not ambient_path:
         print(f"  WARNING: Ambient '{ambient_name}' not found, skipping mix")
         shutil.copy(voice_path, output_path)
         return output_path
@@ -811,7 +827,7 @@ def mix_ambient(voice_path, ambient_name, output_path):
             f"afade=t=out:st={fade_out_start}:d={AMBIENT_FADE_OUT_DURATION}[amb];"
             f"[0:a][amb]amix=inputs=2:duration=first:dropout_transition=2"
         ),
-        '-c:a', 'libmp3lame', '-q:a', '2',
+        '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE),
         output_path
     ]
     subprocess.run(cmd, capture_output=True, check=True)
@@ -944,47 +960,68 @@ def patch_stitch_clicks(raw_mp3, manifest_data, output_mp3, ambient_name=None, f
     wout.writeframes(data)
     wout.close()
 
-    # Loudnorm
-    patched_mp3 = raw_mp3 + ".patched.mp3"
+    # Loudnorm (WAV → WAV for lossless pipeline)
+    normed_wav = raw_mp3 + ".normed.wav"
     subprocess.run([
         'ffmpeg', '-y', '-i', patched_wav,
         '-af', 'loudnorm=I=-24:TP=-2:LRA=11',
-        '-c:a', 'libmp3lame', '-b:a', '128k',
-        patched_mp3
+        '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE),
+        normed_wav
     ], capture_output=True, check=True)
 
-    # Mix with ambient if specified
+    # Mix with ambient if specified (WAV → WAV, then encode MP3 at the end)
+    mixed_wav = raw_mp3 + ".mixed.wav"
     if ambient_name:
-        for suffix in ['-8hr', '-extended', '']:
-            ambient_path = AMBIENT_DIR / f"{ambient_name}{suffix}.mp3"
-            if ambient_path.exists():
+        ambient_path = None
+        for ext in ['wav', 'mp3']:
+            for suffix in ['-8hr', '-extended', '']:
+                candidate = AMBIENT_DIR / f"{ambient_name}{suffix}.{ext}"
+                if candidate.exists():
+                    ambient_path = candidate
+                    break
+            if ambient_path:
                 break
 
-        if ambient_path.exists():
-            voice_duration = get_audio_duration(patched_mp3)
+        if ambient_path and ambient_path.exists():
+            voice_duration = get_audio_duration(normed_wav)
             fade_out_start = max(0, voice_duration - AMBIENT_FADE_OUT_DURATION)
             subprocess.run([
                 'ffmpeg', '-y',
-                '-i', patched_mp3, '-i', str(ambient_path),
+                '-i', normed_wav, '-i', str(ambient_path),
                 '-filter_complex', (
                     f"[1:a]volume={AMBIENT_VOLUME_DB}dB,"
                     f"afade=t=in:st={AMBIENT_FADE_IN_START}:d={AMBIENT_FADE_IN_DURATION},"
                     f"afade=t=out:st={fade_out_start}:d={AMBIENT_FADE_OUT_DURATION}[amb];"
                     f"[0:a][amb]amix=inputs=2:duration=first:dropout_transition=2"
                 ),
-                '-c:a', 'libmp3lame', '-q:a', '2',
-                output_mp3
+                '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE),
+                mixed_wav
             ], capture_output=True, check=True)
         else:
-            shutil.copy(patched_mp3, output_mp3)
+            shutil.copy(normed_wav, mixed_wav)
     else:
-        shutil.copy(patched_mp3, output_mp3)
+        shutil.copy(normed_wav, mixed_wav)
 
-    # Update the raw file with patched version
-    shutil.copy(patched_mp3, raw_mp3)
+    # Final encode: WAV → MP3 128kbps (single lossy step)
+    subprocess.run([
+        'ffmpeg', '-y', '-i', mixed_wav,
+        '-c:a', 'libmp3lame', '-b:a', '128k',
+        output_mp3
+    ], capture_output=True, check=True)
+
+    # Update the raw file with patched version (keep as WAV if it was WAV)
+    if raw_mp3.endswith('.wav'):
+        shutil.copy(normed_wav, raw_mp3)
+    else:
+        # Legacy: convert back to MP3 for old raw files
+        subprocess.run([
+            'ffmpeg', '-y', '-i', normed_wav,
+            '-c:a', 'libmp3lame', '-b:a', '128k',
+            raw_mp3
+        ], capture_output=True, check=True)
 
     # Cleanup temp files
-    for f in [wav_path, patched_wav, patched_mp3]:
+    for f in [wav_path, patched_wav, normed_wav, mixed_wav]:
         if os.path.exists(f):
             os.remove(f)
 
@@ -1212,10 +1249,10 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
             silences.append(pause)
 
         # ================================================================
-        # PHASE 2: CONCATENATE + MIX
+        # PHASE 2: CONCATENATE + MIX (lossless WAV pipeline)
         # ================================================================
-        print(f"\n  Concatenating {len(voice_files)} blocks with silences...")
-        voice_path = os.path.join(temp_dir, "voice_complete.mp3")
+        print(f"\n  Concatenating {len(voice_files)} blocks with silences (lossless WAV)...")
+        voice_path = os.path.join(temp_dir, "voice_complete.wav")
         concatenate_with_silences(voice_files, silences, voice_path, temp_dir, cleanup_mode=cleanup_mode)
 
         voice_duration = get_audio_duration(voice_path)
@@ -1224,9 +1261,10 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
         if voice_duration > MAX_DURATION_SECONDS:
             print(f"  WARNING: Exceeds max duration!")
 
-        # Save raw narration
-        shutil.copy(voice_path, str(raw_path))
-        print(f"  Raw narration saved: {raw_path}")
+        # Save raw narration (WAV)
+        raw_wav_path = raw_path.with_suffix('.wav')
+        shutil.copy(voice_path, str(raw_wav_path))
+        print(f"  Raw narration saved: {raw_wav_path}")
 
         # Save manifest
         manifest_data = {
@@ -1243,12 +1281,24 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
             json.dump(manifest_data, f, indent=2)
         print(f"  Manifest saved: {manifest_path}")
 
-        # Mix ambient
+        # Mix ambient (WAV output)
+        mixed_wav = os.path.join(temp_dir, "mixed_complete.wav")
         if ambient:
             print(f"\n  Mixing ambient '{ambient}'...")
-            mix_ambient(voice_path, ambient, str(final_path))
+            mix_ambient(voice_path, ambient, mixed_wav)
         else:
-            shutil.copy(voice_path, str(final_path))
+            shutil.copy(voice_path, mixed_wav)
+
+        # ================================================================
+        # FINAL ENCODE: WAV → MP3 128kbps (the only lossy step)
+        # ================================================================
+        print(f"\n  Encoding final MP3 at 128kbps (single lossy step)...")
+        cmd = [
+            'ffmpeg', '-y', '-i', mixed_wav,
+            '-c:a', 'libmp3lame', '-b:a', '128k',
+            str(final_path)
+        ]
+        subprocess.run(cmd, capture_output=True, check=True)
 
     # Also save to mixed dir
     shutil.copy(str(final_path), str(mixed_path))
@@ -1260,7 +1310,8 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
     # ================================================================
     # PHASE 3: QA — SCAN → FIX → RESCAN LOOP
     # ================================================================
-    qa_passed = qa_loop(str(final_path), str(raw_path), manifest_data, ambient)
+    raw_for_qa = str(raw_wav_path) if raw_wav_path.exists() else str(raw_path)
+    qa_passed = qa_loop(str(final_path), raw_for_qa, manifest_data, ambient)
 
     if qa_passed:
         # Update mixed copy after QA patching
