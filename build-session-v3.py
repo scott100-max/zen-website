@@ -720,18 +720,17 @@ def cleanup_audio_medium(input_path, output_path):
 
 
 def cleanup_audio(input_path, output_path):
-    """Fish cleanup — denoise + loudnorm + gentle presence boost.
+    """Minimal Fish cleanup — loudnorm + presence boost only.
     Output is WAV for lossless pipeline.
 
-    Fish Audio produces HF hiss (consistently -35 to -42 dB across builds).
-    afftdn is required to clean it. Gentle highshelf (g=2 not g=3) restores
-    articulation without bringing hiss back.
+    Fish TTS is already broadcast-quality clean (45 dB SNR, -62 dB noise floor).
+    Aggressive filtering (lowpass, afftdn, de-esser) degrades voice quality for
+    no benefit. Only loudnorm is needed for chunk-to-chunk level consistency.
+    High shelf boost restores presence/articulation lost by loudnorm.
     """
     filter_chain = ','.join([
-        'highpass=f=80',                        # Sub-bass rumble
-        'afftdn=nf=-25',                        # Adaptive noise reduction (same as Resemble chain)
         'loudnorm=I=-26:TP=-2:LRA=11',
-        'highshelf=f=3000:g=2',                 # Gentle presence boost (reduced from 3 to avoid re-amplifying hiss)
+        'highshelf=f=3000:g=3',                # Presence boost: restores sharpness lost by loudnorm
     ])
     cmd = [
         'ffmpeg', '-y', '-i', input_path,
@@ -2286,11 +2285,9 @@ def qa_loop(final_mp3, raw_mp3, manifest_data, ambient_name=None, raw_narration_
         if not loudness_passed:
             any_failed = True
 
-    # ── GATE 6: HF hiss detector (post-cleanup) ──
-    # Runs on cleaned audio — catches hiss that survives the cleanup chain.
-    # Pre-cleanup Fish audio always has HF hiss; what matters is the listener experience.
-    if raw_narration_wav and os.path.exists(raw_narration_wav):
-        hiss_passed, hiss_details = qa_hf_hiss_check(raw_narration_wav, manifest_data)
+    # ── GATE 6: HF hiss detector (pre-cleanup) ──
+    if pre_wav and os.path.exists(pre_wav):
+        hiss_passed, hiss_details = qa_hf_hiss_check(pre_wav, manifest_data)
         gate_results['Gate 6: HF Hiss'] = {'passed': hiss_passed, 'details': hiss_details}
         if not hiss_passed:
             any_failed = True
