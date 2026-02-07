@@ -1214,3 +1214,21 @@ Full consolidation pass. Resolved contradictions (loudnorm -24 vs -26, block min
 ---
 
 *Last updated: 7 February 2026 — Bible v2.0: Full consolidation. All contradictions resolved. Brief Parts 2 and 3 integrated.*
+
+---
+
+## Document Governance
+
+**Owner:** Claude Desktop (Scott's conversational Claude instance)
+**Consumers:** Claude Code, any future contributors
+
+This document is maintained exclusively by Claude Desktop. Claude Code reads it as a reference but **must not edit, append to, or modify it under any circumstances.** If Code identifies an error, omission, or outdated information, it must report the issue and wait — not fix it.
+
+Changes to this document follow this workflow:
+1. Scott or Claude Desktop identifies needed change
+2. Claude Desktop drafts the update
+3. Scott approves
+4. Claude Desktop produces the updated bible
+5. Code receives the new version via brief
+
+This separation exists because Code previously both wrote and read the bible, leading to contradictions, self-certified completions, and unauthorised pipeline modifications. The CA does not let the contractor amend the specification.
