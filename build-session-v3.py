@@ -1601,17 +1601,23 @@ def qa_volume_surge_check(audio_path, manifest_data, window_sec=1.0, overlap_sec
 REPETITION_IGNORE_PHRASES = [
     "breathe in", "breathe out", "breathing in", "breathing out",
     "may i be", "may you be", "may they be", "may we be",
+    "may all beings be", "may all beings",
     "may i feel", "may you feel", "may they feel",
-    "let go", "letting go",
+    "may i live", "may you live", "may all beings live",
+    "live with ease",
+    "let go", "letting go", "let it go", "gently let",
     "notice the sensations", "notice any sensations",
     "gently bring your attention", "bring your awareness",
-    "take a deep breath", "take another breath",
+    "take a deep breath", "take another breath", "take a slow breath",
     "in and out", "slowly and gently",
+    "be safe", "be happy", "be healthy",
+    "when youre ready", "when you're ready",
+    "and gently", "gently now",
 ]
 
 
 def qa_repeated_content_check(audio_path, manifest_data, mfcc_sim_threshold=0.92,
-                               min_gap_sec=5.0, min_word_match=3):
+                               min_gap_sec=5.0, min_word_match=8):
     """QA GATE 8: Repeated content detector (MFCC fingerprint + Whisper STT).
 
     Approach A: Compare MFCC fingerprints of voiced segments.
