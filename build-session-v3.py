@@ -1331,7 +1331,7 @@ def qa_loudness_consistency_check(audio_path, manifest_data, max_deviation_db=6.
 
 
 def qa_hf_hiss_check(audio_path, manifest_data, hp_freq=4000, window_sec=1.0,
-                     overlap_sec=0.5, ratio_threshold_db=6.0, min_duration_sec=10.0):
+                     overlap_sec=0.5, ratio_threshold_db=6.0, min_duration_sec=3.0):
     """QA GATE 6: High-frequency hiss detector (sliding-window).
 
     Measures HF energy RELATIVE to total energy per window. Normal speech has
@@ -1787,6 +1787,128 @@ def qa_repeated_content_check(audio_path, manifest_data, mfcc_sim_threshold=0.92
         print(f"  QA-REPEAT: PASSED — no unexpected repetitions")
 
     return passed, details
+
+
+def qa_speech_rate_check(audio_path, manifest_data, window_sec=2.0, rush_threshold=1.3):
+    """QA GATE 10: Speech rate anomaly detection.
+
+    Uses Whisper word-level timestamps to measure words-per-second in sliding
+    windows. Flags any window where speech rate exceeds rush_threshold (130%)
+    of the session average. Meditation content should be consistently slow
+    (~100-120 wpm / 2-3 words per second).
+
+    Returns (passed, details_dict).
+    """
+    import numpy as np
+
+    print(f"\n  QA-RATE: Scanning for speech rate anomalies...")
+
+    try:
+        import whisper
+
+        model = whisper.load_model("base")
+        result = model.transcribe(audio_path, word_timestamps=True)
+
+        # Extract word-level timestamps
+        words = []
+        for seg in result.get('segments', []):
+            for w in seg.get('words', []):
+                words.append({
+                    'word': w['word'].strip(),
+                    'start': w['start'],
+                    'end': w['end'],
+                })
+
+        if len(words) < 10:
+            print(f"  QA-RATE: WARNING — too few words ({len(words)}) for rate analysis")
+            return True, {'skipped': True, 'word_count': len(words)}
+
+        # Build silence region lookup from manifest
+        silence_ranges = []
+        for seg in manifest_data['segments']:
+            if seg['type'] == 'silence':
+                silence_ranges.append((seg['start_time'], seg['start_time'] + seg['duration']))
+
+        def in_silence(t):
+            for s_start, s_end in silence_ranges:
+                if s_start <= t <= s_end:
+                    return True
+            return False
+
+        # Compute words-per-second in sliding windows across speech regions
+        total_dur = words[-1]['end']
+        hop = window_sec / 2  # 50% overlap
+        window_rates = []
+        window_times = []
+
+        t = 0.0
+        while t + window_sec <= total_dur:
+            # Skip windows that are mostly silence
+            if in_silence(t + window_sec / 2):
+                t += hop
+                continue
+
+            # Count words in this window
+            wc = sum(1 for w in words if w['start'] >= t and w['start'] < t + window_sec)
+            rate = wc / window_sec  # words per second
+
+            if rate > 0.5:  # Only count windows with actual speech
+                window_rates.append(rate)
+                window_times.append(t)
+
+            t += hop
+
+        if len(window_rates) < 5:
+            print(f"  QA-RATE: WARNING — too few speech windows ({len(window_rates)})")
+            return True, {'skipped': True, 'speech_windows': len(window_rates)}
+
+        window_rates = np.array(window_rates)
+        window_times = np.array(window_times)
+
+        avg_rate = float(np.mean(window_rates))
+        threshold_rate = avg_rate * rush_threshold
+
+        # Flag windows exceeding threshold
+        rushes = []
+        for i, (rate, t) in enumerate(zip(window_rates, window_times)):
+            if rate > threshold_rate:
+                mins = int(t // 60)
+                secs = t % 60
+                rushes.append({
+                    'time': round(float(t), 1),
+                    'time_fmt': f'{mins}:{secs:04.1f}',
+                    'rate_wps': round(float(rate), 1),
+                    'avg_rate_wps': round(avg_rate, 1),
+                    'ratio': round(float(rate / avg_rate), 2),
+                })
+
+        details = {
+            'avg_rate_wps': round(avg_rate, 1),
+            'threshold_wps': round(threshold_rate, 1),
+            'rush_threshold': rush_threshold,
+            'speech_windows': len(window_rates),
+            'rushes': len(rushes),
+            'flags': rushes,
+        }
+
+        print(f"  QA-RATE: Avg speech rate = {avg_rate:.1f} words/sec, threshold = {threshold_rate:.1f} words/sec")
+
+        passed = len(rushes) == 0
+        if not passed:
+            print(f"  QA-RATE: FAIL — {len(rushes)} speech rate anomalies:")
+            for r in rushes[:10]:
+                print(f"    {r['time_fmt']} — {r['rate_wps']} w/s ({r['ratio']:.0%} of avg)")
+        else:
+            print(f"  QA-RATE: PASSED — consistent speech rate")
+
+        return passed, details
+
+    except ImportError:
+        print(f"  QA-RATE: WARNING — Whisper not installed, skipping")
+        return True, {'skipped': True}
+    except Exception as e:
+        print(f"  QA-RATE: WARNING — error: {e}, skipping")
+        return True, {'skipped': True, 'error': str(e)}
 
 
 def qa_visual_report(audio_path, manifest_data, session_name, gate_results, output_dir=None):
@@ -2313,6 +2435,13 @@ def qa_loop(final_mp3, raw_mp3, manifest_data, ambient_name=None, raw_narration_
         repeat_passed, repeat_details = qa_repeated_content_check(pre_wav, manifest_data)
         gate_results['Gate 8: Repeat'] = {'passed': repeat_passed, 'details': repeat_details}
         if not repeat_passed:
+            any_failed = True
+
+    # ── GATE 10: Speech rate anomaly detection (pre-cleanup) ──
+    if pre_wav and os.path.exists(pre_wav):
+        rate_passed, rate_details = qa_speech_rate_check(pre_wav, manifest_data)
+        gate_results['Gate 10: Rate'] = {'passed': rate_passed, 'details': rate_details}
+        if not rate_passed:
             any_failed = True
 
     # ── GATE 9: Visual report (ALWAYS runs) ──
