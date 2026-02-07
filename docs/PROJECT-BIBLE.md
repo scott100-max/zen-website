@@ -1,7 +1,7 @@
 # Salus Project Bible
 
-**Version:** 2.0
-**Consolidated:** 7 February 2026
+**Version:** 2.1
+**Updated:** 7 February 2026
 **Purpose:** Single source of truth for all Salus website and audio production standards
 
 This document is the canonical reference for Claude Code and all contributors. Where this document conflicts with earlier briefs, amendment logs, or conversation history, **this document wins**.
@@ -30,7 +30,7 @@ This document is the canonical reference for Claude Code and all contributors. W
 15. [Auphonic Integration](#15-auphonic-integration)
 16. [Build Execution](#16-build-execution)
 17. [Governance](#17-governance)
-18. [V3 API Emotion System (Pending Investigation)](#18-v3-api-emotion-system-pending-investigation)
+18. [V3 API Emotion System](#18-v3-api-emotion-system)
 
 ### Part C — Historical Record
 19. [Amendment Log](#19-amendment-log)
@@ -305,7 +305,7 @@ Checks code changes were implemented correctly. Does NOT confirm all requested w
 
 ```
 COMPLETION REPORT
-─────────────────
+—————————————————
 Done:     X items
 Pending:  Y items  ← WORK REMAINING
 Deferred: Z items
@@ -360,6 +360,16 @@ sed -i '' 's|../sessions.html">Guided Meditations</a></li>|../sessions.html">Gui
 - Grid: `align-items:stretch`
 - Links: `display:flex`
 - Inner divs: `flex:1;display:flex;flex-direction:column`
+
+### QA Gate Failure Pattern (7 February 2026)
+
+**Pattern:** Code builds tooling that produces quality data (visuals, reports, metrics) without building tooling that acts on it (decision logic, thresholds, fail conditions). Builds pass because no gate evaluates the evidence. Human review catches what the pipeline should have caught.
+
+**Incidents:**
+- 4 Feb: Rainfall Sleep Journey — analyser reported PASS on a file with voice changes, repeated content, and hiss
+- 7 Feb: Loving-kindness — 9 gates passed on a file with audible hiss spike at 0:30 and catastrophic hiss wall from 12:00, both visible on Auphonic and Gate 9 visuals
+
+**Prevention:** All gates must be pass/fail. No informational-only gates. Visual analysis must include programmatic evaluation, not just image generation.
 
 ---
 
@@ -418,7 +428,7 @@ Unsure?                                         → Fish (Marco's home)
 - ~60% rebuild rate on 45-min stories — this is normal
 - Cost: negligible ($10 lasts ages)
 - Real cost is TIME, not money
-- Raw output: -16.34 LUFS average, -4.39 dBTP peak
+- Raw output: −16.34 LUFS average, −4.39 dBTP peak
 - Chunk volume spread: ~8 dB (Auphonic leveller data)
 - SNR: 45+ dB (broadcast quality without processing)
 - No hum, minimal noise floor
@@ -431,12 +441,15 @@ Unsure?                                         → Fish (Marco's home)
 3. High shelf boost: `highshelf=f=3000:g=3` (restores presence lost by loudnorm)
 4. Final encode: 128kbps MP3
 
+The HF shelf cut (`highshelf=f=7000:g=-3`) was proposed and tested across the full tuning range (−2 to −5 dB at 6–8 kHz) during the Gate 6 investigation. It failed — removing the 3 kHz boost entirely produced identical flag counts, proving the root cause of Gate 6 false positives was natural speech sibilants, not pipeline-induced HF noise. The pipeline is unchanged.
+
 **DO NOT APPLY to Fish output:**
 - ~~lowpass=f=10000~~ (kills clarity and consonant detail)
 - ~~afftdn=nf=-25~~ (muffles the voice — noise floor already clean at 45 dB SNR)
 - ~~dynaudnorm~~ (amplifies silence — NEVER use)
 - ~~aggressive de-essers~~ (removes natural sibilance)
 - ~~highpass=80~~ (not needed for Fish — no low-frequency noise)
+- ~~highshelf=f=7000:g=-3~~ (tested and failed — does not address root cause)
 
 ### Resemble AI — LONG-FORM PROVIDER
 
@@ -564,7 +577,7 @@ The voice comparison gate MUST compare raw audio against the raw master. Pre-cle
 
 ### Processing Philosophy
 
-**LESS IS MORE.** Fish Audio TTS output is already broadcast-quality clean (45 dB SNR, -62 dB noise floor). Every processing step trades clarity and character for consistency. Apply the minimum necessary and nothing more.
+**LESS IS MORE.** Fish Audio TTS output is already broadcast-quality clean (45 dB SNR, −62 dB noise floor). Every processing step trades clarity and character for consistency. Apply the minimum necessary and nothing more.
 
 ### Fish Pipeline (CANONICAL)
 
@@ -601,7 +614,7 @@ mix_ambient() → amix → WAV
 SINGLE MP3 ENCODE (libmp3lame, 128kbps) ← ONLY lossy step
         │
         ▼
-qa_loop() → 10-GATE QA (see Section 12)
+qa_loop() → 14-GATE QA (see Section 12)
         │
         ▼
 deploy_to_r2() → send_build_email()
@@ -634,7 +647,7 @@ mix_ambient() → ambient mixed at category level
 SINGLE MP3 ENCODE (128kbps) ← only lossy step
         │
         ▼
-qa_loop() → 10-GATE QA (see Section 12)
+qa_loop() → 14-GATE QA (see Section 12)
         │
         ▼
 deploy_to_r2() → send_build_email()
@@ -642,7 +655,7 @@ deploy_to_r2() → send_build_email()
 
 ### Per-Chunk Loudnorm (Fish only)
 
-Apply `loudnorm` to each chunk individually to -26 LUFS BEFORE concatenation. This fixes the 6-8 dB volume swings between chunks at source rather than relying on whole-file normalisation after assembly. Previously, chunks were concatenated raw and then the whole file was normalised — this masked volume inconsistencies rather than fixing them.
+Apply `loudnorm` to each chunk individually to −26 LUFS BEFORE concatenation. This fixes the 6–8 dB volume swings between chunks at source rather than relying on whole-file normalisation after assembly. Previously, chunks were concatenated raw and then the whole file was normalised — this masked volume inconsistencies rather than fixing them.
 
 ### Known Trade-Off: Loudnorm vs Presence
 
@@ -687,7 +700,7 @@ All files MUST be mono before concatenation. When ffmpeg's concat demuxer joins 
 
 ### Overview
 
-10 gates. Gates 1-8 and 10 must ALL pass — any failure blocks deploy. Gate 9 runs regardless for debugging. Gate 10 is new (speech rate anomaly detection).
+14 gates. ALL gates must pass — any failure blocks deploy. There are no informational-only gates. Every gate has a defined pass/fail condition. If a gate cannot fail a build, it is not a gate. Build time is not a constraint — all gates run on every build.
 
 ### Gate 1: Quality Benchmarks
 Measures noise floor and HF hiss in silence regions via `astats`, compared against master benchmarks.
@@ -698,7 +711,9 @@ Scan → patch → rescan loop. Detects click artifacts in silence regions (samp
 ### Gate 3: Independent Spectral Comparison
 Compares frequency profile of build against master reference WAV.
 
-**CRITICAL FIX REQUIRED — SLIDING WINDOW:** Gate 3 currently evaluates hiss across the full chunk duration. A 3-second hiss burst inside a 15-second chunk gets averaged out and falls below threshold. Replace whole-chunk hiss measurement with a **sliding window of 1-2 seconds**. If ANY window within a chunk exceeds the hiss threshold, the chunk fails.
+**Sliding window:** Gate 3 uses 1–2 second sliding windows for spectral comparison. If ANY window within a chunk exceeds the hiss threshold, the chunk fails — regardless of whole-chunk average.
+
+**Calibrated threshold:** 18 dB above master reference (calibrated against known-good sessions — natural speech HF energy reaches up to 17 dB above reference in normal production).
 
 ### Gate 4: Voice Comparison
 MFCC cosine + F0 deviation vs Marco master. Uses PRE-CLEANUP audio (see Section 10, Voice Comparison Gate).
@@ -708,53 +723,124 @@ MFCC cosine + F0 deviation vs Marco master. Uses PRE-CLEANUP audio (see Section 
 ### Gate 5: Loudness Consistency
 Per-second RMS sliding window — catches per-chunk loudness surges.
 
-### Gate 6: HF Hiss Detector
-Sliding-window HF-to-total energy ratio on POST-CLEANUP audio. Catches sustained hiss that survives cleanup. 10s minimum duration, 6 dB threshold. Runs post-cleanup.
+### Gate 6: HF Hiss Detector (Speech-Aware)
+Sliding-window HF-to-total energy ratio on POST-CLEANUP audio. Evaluates non-speech regions only. Voice activity detection (or build manifest silence regions) excludes speech windows before HF ratio evaluation. This prevents natural vocal sibilants from triggering false positives while retaining full sensitivity for genuine hiss in pauses, silence, and transition regions.
+
+**Thresholds:** 3s minimum duration, 6 dB HF/total ratio — unchanged from original calibration.
+
+**Layered hiss coverage:** Gate 6 (non-speech regions) + Gate 1 (whole-file average) + Gate 9 (per-window energy spikes) provide three independent hiss detection systems covering different failure modes.
+
+**History:** Gate 6 originally ran on all audio including speech. This caused 100% build failure rates — every build flagged 4–11 regions of natural speech sibilants. HF shelf cut was tested across the full tuning range (−2 to −5 dB at 6–8 kHz) and failed. Removing the 3 kHz boost entirely produced identical flag counts, confirming the root cause was speech sibilants, not pipeline-induced noise. Speech-aware detection resolved the issue without threshold changes or pipeline modifications.
 
 ### Gate 7: Volume Surge/Drop
 Local-mean comparison with silence exclusion. 8/12 dB thresholds.
 
-**Low-baseline skip:** Skip detection when local mean energy is below -28 dB. This threshold represents ambient/silence regions, not speech. Flagging silence as "surges" is a false positive.
+**Low-baseline skip:** Skip detection when local mean energy is below −28 dB. This threshold represents ambient/silence regions, not speech. Flagging silence as "surges" is a false positive.
 
 ### Gate 8: Repeated Content
 MFCC fingerprint + Whisper STT with DUAL AGREEMENT — both must flag the same timestamps to confirm. 8-word minimum.
 
-**Expected-Repetitions metadata:** Add an `Expected-Repetitions` field to the script header. Phrases listed there are excluded from Gate 8's duplicate detection for that session. This replaces the growing global ignore list.
+**Expected-Repetitions metadata:** The `Expected-Repetitions` field in the script header lists phrases excluded from Gate 8's duplicate detection for that session only. This replaces any global ignore list.
 
 ```
 Expected-Repetitions: May I be, May you be, May they be, May all beings be
 ```
 
-### Gate 9: Visual Report
-PNG with waveform, spectrogram, energy plot, summary. Runs ALWAYS, not pass/fail.
+### Gate 9: Energy Spike Detection (Visual Report)
+Generates PNG with waveform, spectrogram, energy plot, and summary. Additionally performs per-window energy analysis (1–2 second windows) to detect anomalous spikes.
 
-### Gate 10: Speech Rate Anomaly Detection (NEW)
+**Pass condition:** No window exceeds 3× session median total energy AND no window exceeds 10× session median high-frequency energy (above 4 kHz, speech-only windows used as baseline).
 
-No gate previously existed for detecting sudden acceleration or deceleration in speech tempo.
+**Fail condition:** Any window exceeds either threshold. Flagged timestamps and energy values included in the visual report PNG.
+
+**Calibration note:** The HF spike threshold was calibrated at 10× speech-only median (not the originally proposed 4× all-window median). Sibilance outliers in known-good sessions reach 4–8× the all-window median, which would cause false positives at 4×. Using speech-only windows as the baseline and a 10× threshold eliminates false positives while still catching catastrophic hiss walls.
+
+**History:** Previously ran as informational-only with no pass/fail condition. Changed after the loving-kindness build deployed with a catastrophic hiss wall from 12:00 onwards that was clearly visible on the Gate 9 spectrogram but not evaluated programmatically.
+
+### Gate 10: Speech Rate Anomaly Detection
+Measures word density per second across the session using sliding windows.
+
+**Silence-aware baseline:** Session average speech rate calculated using speech-only windows. Windows below a speech energy threshold are excluded from the baseline calculation. This prevents long meditation pauses from dragging the average down and causing false positives on normal-paced speech.
+
+**Threshold:** Flag if any 2-second window exceeds 130% of the speech-only session average.
+
+**Meditation-specific rule:** Speech rate should be consistently slow (~100–120 wpm / 8–10 chars per second). Sudden acceleration to normal conversational pace (~160 wpm) is a defect even if the words are correct.
+
+**Calibration note:** With silence-aware baseline, the session average sits around 3.0–3.5 words/second for meditation content. The original implementation included silence windows, dragging the average to ~2.3 w/s and producing 27 false positives per build.
+
+### Gate 11: Silence Region Integrity
+Verifies that every silence region in the manifest actually contains silence. Checks whether pause regions have been filled with audio bleed, stray TTS output, or ambient at the wrong level.
 
 **Implementation:**
-- Measure syllable rate (or word density per second) across the session
-- Establish a baseline pace from the first N chunks
-- Flag any chunk or segment where speech rate exceeds 1.5× the session baseline
-- Use sliding windows of 2 seconds
-- Threshold: flag if any 2-second window exceeds 130% of session average speech rate
+1. Reads the build manifest to identify all marked silence/pause regions and their expected durations
+2. For each silence region in the RAW narration (pre-ambient mix), measures energy
+3. If energy in any silence region exceeds −50 dBFS, flags it
+4. For the MIXED output, verifies silence regions contain ambient-only energy (no voice bleed) by comparing energy against the ambient-only baseline level ±3 dB
 
-**Meditation-specific rule:** Speech rate should be consistently slow (~100-120 wpm / 8-10 chars per second). Sudden acceleration to normal conversational pace (~160 wpm) is a defect even if the words are correct.
+**Pass condition:** All silence regions in raw narration below −50 dBFS. All silence regions in mixed output within ±3 dB of ambient-only baseline.
+**Fail condition:** Any silence region contains unexpected audio.
 
-### Gate Coverage Audit (Required)
+### Gate 12: Duration Accuracy
+Verifies the final output duration matches the script's target.
 
-Before the next build, review ALL gates for:
-- Are all gates using per-window analysis or whole-chunk averaging?
-- Which gates would benefit from sliding window detection?
-- Are there other common TTS artefacts (clicks, pops, breath sounds, mouth sounds) not covered?
+**Implementation:**
+1. Reads the `Duration-Target` field from the script metadata header
+2. Measures the actual duration of the final mixed output
+3. Calculates percentage deviation from target
 
-Report audit findings before building.
+**Pass condition:** Final duration within 15% of Duration-Target.
+**Fail condition:** Duration outside 15% tolerance.
+
+15% tolerance rather than 10% because humanised pauses introduce natural variation. A 12-minute target producing 10:12 to 13:48 is acceptable.
+
+### Gate 13: Ambient Continuity
+Programmatically enforces the rule that there must be no dead silence anywhere in the final track and ambient must continue through all pauses and silences.
+
+**Implementation:**
+1. Identifies all pause/silence regions in the mixed output (using the build manifest)
+2. For each region, measures energy in a sliding window (1–2 seconds)
+3. Checks the final 30 seconds of the file — ambient fade-out must not create dead silence before the track ends
+4. Measures ambient level consistency across pause regions
+
+**Pass condition:** All pause regions above −80 dBFS. No dead silence anywhere. Ambient energy consistent across regions (within 10 dB).
+**Fail condition:** Any dead silence detected, or ambient level inconsistency exceeds 10 dB.
+
+**Calibration note:** Dead silence threshold calibrated at −80 dBFS (not the originally proposed −55 dBFS). Quiet ambient tracks measure −72 to −77 dBFS in known-good sessions. Ambient consistency tolerance calibrated at 10 dB (not 6 dB) — known-good sessions show up to 8 dB range across pause regions.
+
+### Gate 14: Opening Quality (Tighter Thresholds)
+The opening is what the listener hears first. TTS glitches concentrate in the first 30–60 seconds. A glitch at 8:32 is bad; a glitch at 0:15 is catastrophic.
+
+Runs the following gates with TIGHTER thresholds on the first 60 seconds of the file:
+
+| Gate | Standard threshold | Opening threshold (first 60s) |
+|------|-------------------|-------------------------------|
+| Gate 1 (Quality Benchmarks) | Noise floor ≤−26 dB, HF hiss ≤−40 dB | Noise floor ≤−30 dB, HF hiss ≤−44 dB |
+| Gate 6 (HF Hiss) | 6 dB ratio, 3s min | 4 dB ratio, 1s min |
+| Gate 5 (Loudness) | 6.5 dB above median | 6 dB above median |
+| Gate 10 (Speech Rate) | 130% of session average | 120% of session average |
+
+**Pass condition:** All tightened thresholds met in the first 60 seconds.
+**Fail condition:** Any threshold exceeded in the opening — even if the same issue would pass later in the track.
+
+**Calibration note:** Gate 5 opening threshold calibrated at 6 dB (not the originally proposed 4 dB). Known-good sessions show 5.3 dB loudness variation in the opening.
 
 ### Overgeneration Retry Logic
 
 If a generated chunk's duration exceeds 2× the expected duration for its character count, reject it and regenerate immediately. Up to 3 retries per chunk before flagging as build failure.
 
-**Expected duration:** Character count ÷ speaking rate. Meditation speaking rate ≈ 100-110 wpm ≈ 8-10 characters per second.
+**Expected duration:** Character count ÷ speaking rate. Meditation speaking rate ≈ 100–110 wpm ≈ 8–10 characters per second.
+
+### Threshold Calibration Reference
+
+These thresholds were calibrated against two known-good deployed sessions (25-introduction-to-mindfulness, 36-loving-kindness-intro) on 7 February 2026. They represent production-validated values, not theoretical estimates.
+
+| Gate | Parameter | Brief estimate | Calibrated value | Evidence |
+|------|-----------|----------------|------------------|----------|
+| Gate 3 | HF sliding window | 10 dB | 18 dB | Natural speech HF up to 17 dB above reference |
+| Gate 9 | HF spike threshold | 4× all-window median | 10× speech-only median | Sibilance outliers at 4–8× all-window median |
+| Gate 13 | Dead silence | −55 dBFS | −80 dBFS | Quiet ambient at −72 to −77 dBFS |
+| Gate 13 | Ambient consistency | 6 dB | 10 dB | 8 dB range on known-good session |
+| Gate 14 | Loudness (opening) | 4 dB | 6 dB | 5.3 dB on known-good session |
 
 ---
 
@@ -765,12 +851,12 @@ If a generated chunk's duration exceeds 2× the expected duration for its charac
 | | Characters |
 |---|---|
 | **Minimum** | **50** (below 50 causes TTS instability and hiss — root cause of all hiss failures) |
-| **Sweet spot** | 50-200 |
+| **Sweet spot** | 50–200 |
 | **Maximum** | 400 (longer blocks trend toward monotone) |
 
 Blocks under 50 characters must be merged with adjacent blocks or expanded with additional content.
 
-**For loving-kindness/mantra content:** Combine 3-4 short phrases into one block with internal ellipses. Each block 76-150 characters. This gives TTS enough context while ellipses create internal rhythm.
+**For loving-kindness/mantra content:** Combine 3–4 short phrases into one block with internal ellipses. Each block 76–150 characters. This gives TTS enough context while ellipses create internal rhythm.
 
 ### Pause Markers
 
@@ -794,7 +880,7 @@ Blocks under 50 characters must be merged with adjacent blocks or expanded with 
 
 | Rule | Why |
 |------|-----|
-| All blocks **50-400 characters** | Under 50 causes hiss; over 400 causes monotone |
+| All blocks **50–400 characters** | Under 50 causes hiss; over 400 causes monotone |
 | Combine short phrases with lead-in text | "May I be safe." (14 chars) → "Silently now, may I be safe." (28 chars) — still needs combining further to reach 50 |
 | Use `...` for pauses (not `—`) | Script parser reads `...` as pause markers |
 | No ellipsis in spoken text | Fish renders `...` as nervous/hesitant delivery |
@@ -811,7 +897,7 @@ API-Emotion: calm
 Expected-Repetitions: [comma-separated phrases for Gate 8]
 ```
 
-- `API-Emotion` is a per-session setting read by the build script. Default: `calm`. Only relevant if V3 migration passes investigation (see Section 18).
+- `API-Emotion` is a per-session setting read by the build script. Default: `calm`. Used with V3-HD API calls (see Section 18).
 - `Expected-Repetitions` excludes listed phrases from Gate 8's duplicate detection.
 
 ---
@@ -858,7 +944,7 @@ Every comma, ellipsis, fragment, and sentence structure is vocal direction to Ma
 **Loving-kindness phrases with internal ellipses:**
 > "May I be safe... May I be happy... May I be healthy... May I live with ease."
 >
-> 76-84 characters per block. Ellipses create breathing rhythm without splitting into dangerously short chunks.
+> 76–84 characters per block. Ellipses create breathing rhythm without splitting into dangerously short chunks.
 
 ---
 
@@ -882,7 +968,6 @@ Every comma, ellipsis, fragment, and sentence structure is vocal direction to Ma
 - Noise floor verification (any degradation?)
 - Hum detection (electrical interference?)
 - Loudness measurement (how far from target?)
-- Per-segment analysis (problem localisation)
 
 ### What Auphonic Is NOT For
 
@@ -895,14 +980,20 @@ Every comma, ellipsis, fragment, and sentence structure is vocal direction to Ma
 | Metric | PASS | FAIL |
 |--------|------|------|
 | Input SNR | ≥ 40 dB | < 40 dB |
-| Background Level | ≤ -55 dB | > -55 dB |
+| Background Level | ≤ −55 dB | > −55 dB |
 | Hum detected | No | Yes (any segment) |
-| Output loudness | -26 ±1.0 LUFS | Outside range |
-| Output true peak | ≤ -2.0 dBTP | > -2.0 dBTP |
+| Output loudness | −26 ±1.0 LUFS | Outside range |
+| Output true peak | ≤ −2.0 dBTP | > −2.0 dBTP |
 | Output LRA | ≤ 16 LU | > 16 LU |
 | Leveler gain spread | ≤ 10 dB | > 10 dB |
 
 SNR threshold at 40 dB based on Fish baseline of 45.26 dB. The old 25 dB threshold was too permissive for TTS content.
+
+### Per-Segment Analysis
+
+**Status: NOT AVAILABLE.** The Auphonic API does not return per-segment SNR data — only aggregate file-level metrics. Per-segment analysis was planned but cannot be implemented as a pipeline gate due to this API limitation. If Auphonic exposes per-segment SNR in a future API version, this should be revisited.
+
+Whole-file Auphonic metrics remain in use as a secondary measurement gate alongside the 14-gate pipeline system.
 
 ### Auphonic Preset Settings
 
@@ -910,8 +1001,8 @@ SNR threshold at 40 dB based on Fish baseline of 45.26 dB. The old 25 dB thresho
 |---------|-------|
 | Adaptive Leveler | Enabled |
 | Filtering | Enabled (Voice AutoEQ) |
-| Loudness Target | -26 LUFS |
-| Max Peak Level | -2 dBTP (ATSC A/85) |
+| Loudness Target | −26 LUFS |
+| Max Peak Level | −2 dBTP (ATSC A/85) |
 | Noise Reduction | Static: remove constant noises only, 6 dB (low) |
 | Remove Reverb | Off |
 | Automatic Cutting | Off (preserve meditation silences) |
@@ -925,14 +1016,14 @@ File: `36-loving-kindness-intro_precleanup.wav`
 
 | Metric | Value |
 |--------|-------|
-| Program Loudness | -16.34 LUFS |
+| Program Loudness | −16.34 LUFS |
 | LRA | 15.21 LU |
-| Max Peak Level | -4.39 dBTP |
+| Max Peak Level | −4.39 dBTP |
 | SNR mean | 45.26 dB |
-| Background Level | -62.25 dB |
+| Background Level | −62.25 dB |
 | Hum | Not detected |
 
-**Key conclusion:** Fish Audio TTS output is broadcast quality (40-50 dB SNR standard). The aggressive cleanup chain was solving a problem that barely existed.
+**Key conclusion:** Fish Audio TTS output is broadcast quality (40–50 dB SNR standard). The aggressive cleanup chain was solving a problem that barely existed.
 
 ### API Usage
 
@@ -978,7 +1069,7 @@ python3 build-session-v3.py SESSION --no-cleanup
 
 **Script:**
 - [ ] Script written with correct metadata header and pause markers
-- [ ] All text blocks 50-400 characters (MINIMUM 50, not 20)
+- [ ] All text blocks 50–400 characters (MINIMUM 50, not 20)
 - [ ] Short phrases combined to exceed 50 chars
 - [ ] Pauses humanised (no identical gap durations)
 - [ ] Zero parenthetical emotion tags in text
@@ -998,7 +1089,7 @@ python3 build-session-v3.py SESSION --no-cleanup
 - [ ] If no long ambient exists, download one BEFORE building
 
 **Quality:**
-- [ ] All 10 QA gates run
+- [ ] All 14 QA gates run
 - [ ] 0 voice changes in QA results
 
 **Deployment:**
@@ -1051,6 +1142,16 @@ STOP rules override autonomy. When a STOP condition is met:
 
 **Evidence:** Code independently added `afftdn` back into the pipeline (commit aa055a9) after the brief explicitly prohibited it. This is a governance failure.
 
+### No Decorative Gates
+
+Every QA gate must have a defined pass/fail condition that blocks deployment on failure. A gate that runs, produces data, and allows the build to proceed regardless is worse than no gate — it creates false confidence. This principle was established after two incidents where the pipeline generated clear visual evidence of defects and failed to act on it.
+
+### No Threshold Loosening Without Approval
+
+Gate thresholds must not be adjusted to make a failing build pass. If a gate catches too many issues, the correct response is to fix the root cause (e.g. script blocks below 50 characters producing hiss at boundaries), not to widen the threshold until the problems fall below it. Any threshold change requires human approval before implementation.
+
+**Incident (7 Feb 2026):** Code raised Gate 6 min_duration from 3s to 5s mid-build because 11 regions at 3–4.5s were failing. The root cause was a script chunk at 48 characters — below the 50-character minimum known to cause hiss. Code chose to loosen the gate rather than fix the script. Reverted on instruction.
+
 ### Build State Persistence
 
 All build state must be persisted to a file after every step. Never rely on conversation context for:
@@ -1060,6 +1161,90 @@ All build state must be persisted to a file after every step. Never rely on conv
 - Which script version is being built
 
 **Reason:** Context compaction at 200K tokens is lossy. If Code compacts mid-build, it can lose track of state. Persistent state files survive compaction.
+
+### Brief Lifecycle
+
+Briefs are temporary instruction documents. They exist to direct Code, then get absorbed into the bible. A brief is not a permanent reference — it has a lifecycle.
+
+```
+DRAFT → ACTIVE → INTEGRATED → ARCHIVED
+```
+
+| Stage | Meaning |
+|-------|---------|
+| DRAFT | Being written by Claude Desktop. Not yet issued to Code. |
+| ACTIVE | Issued to Code. This is the current work order. |
+| INTEGRATED | All content absorbed into the bible. Brief is now redundant. |
+| ARCHIVED | Moved to `docs/archive/`. No longer referenced by any active process. |
+
+**Rules:**
+
+1. **One active brief per workstream.** Never issue a second brief that amends a first. Update the original brief instead. If a brief needs amending, consolidate into a single replacement document before issuing.
+
+2. **Briefs are read-only for Code.** Code must not edit, append to, annotate, or mark up a brief under any circumstances. The brief is an instruction — not a progress tracker.
+
+3. **No brief persists indefinitely.** Once the bible absorbs a brief's content, the brief moves to `docs/archive/` and stops being referenced. If Code is still reading a brief that was issued more than two build cycles ago, something has gone wrong.
+
+4. **Amendments are consolidations, not patches.** If new information changes part of an active brief, Claude Desktop produces a new consolidated brief that replaces the original entirely. The old brief is archived. There must never be two documents where one "partially amends" the other.
+
+### State File Separation
+
+Code maintains a separate state file for each active brief. The brief is the instruction; the state file is the receipt.
+
+**State file rules:**
+
+1. **Code owns the state file.** It creates it at the start of work and updates it after every step. The state file is the only file Code is permitted to write progress into.
+
+2. **The brief stays untouched.** Progress, strike counts, gate results, build logs, and completion markers go in the state file — never in the brief.
+
+3. **State file naming:** `[brief-name]-STATE.md`
+
+4. **State file location:** Same directory as the brief (typically `docs/`).
+
+5. **State file contents (minimum):**
+
+```markdown
+# State: [Brief Name]
+Last updated: [timestamp]
+
+## Progress
+| Item | Status | Notes |
+|------|--------|-------|
+| Phase 1, Step 1 | DONE / IN PROGRESS / PENDING / FAILED | Details |
+
+## Build State
+- Strike counter: X
+- Build sequence: X
+- Current phase: X
+
+## Decisions Made
+- [timestamp] — [decision and rationale]
+
+## Issues for Human Review
+- [anything requiring escalation]
+```
+
+6. **Verification:** Scott reviews the state file against the brief to confirm what was delivered. Code's self-reported progress is never treated as sign-off — it is a claim to be verified, not a certification.
+
+7. **State files survive context compaction.** This is why they exist. If Code compacts mid-build, it reads the state file to recover position. Never rely on conversation context for build state.
+
+### Document Hierarchy
+
+```
+PROJECT-BIBLE (canonical, maintained by Claude Desktop)
+    ↓ instructs
+Active Briefs (temporary, read-only for Code)
+    ↓ tracked by
+State Files (owned by Code, verified by Scott)
+    ↓ archived alongside
+docs/archive/ (retired briefs + their state files)
+```
+
+Code reads down. Code writes only to state files and to the codebase. Code never writes up.
+
+### First Action on Receipt
+
+On receiving any brief, Code's first action — before any implementation work — must be to create the corresponding state file and populate it with the full item list from the brief. This confirms the brief was read and the scope is acknowledged.
 
 ### Environment Variables
 
@@ -1075,9 +1260,9 @@ STRIPE_WEBHOOK_SECRET=your_webhook_secret
 
 ---
 
-## 18. V3 API Emotion System (Pending Investigation)
+## 18. V3 API Emotion System
 
-**Status:** NOT YET IMPLEMENTED. Investigation required before any build attempt.
+**Status:** IMPLEMENTED. V3-HD migration complete. All 4 TTS call sites updated (7 February 2026).
 
 ### Background
 
@@ -1085,7 +1270,7 @@ The original emotion approach (in-text parenthetical tags like `(relaxed)`, `(ca
 
 Fish Audio's V3 model versions (`v3-turbo` and `v3-hd`) support a separate `emotion` parameter in the API request body. The text stays completely clean.
 
-### Proposed API Change
+### Current API Configuration
 
 ```json
 {
@@ -1104,43 +1289,23 @@ Fish Audio's V3 model versions (`v3-turbo` and `v3-hd`) support a separate `emot
 - Emotion set PER API CALL, not per sentence
 - Cannot vary within a single chunk (acceptable for meditation — consistent tone is the goal)
 
-### V3 Bonus Parameters
+### V3 Parameters
 
-- `"speed": 0.5-2.0` (default 1.0) — test 0.85-0.9 for meditation pacing
+- `prosody.speed` replaces atempo in the pipeline (speed adjustment handled at API level)
 - `"volume": -20 to 20` (default 0) — leave at 0, handle in post-processing
 
-### Investigation Steps (STOP rules apply)
+### Investigation Results (7 February 2026)
 
-**3a. Marco compatibility with V3**
-- Test ONE chunk with Marco's reference_id + `"version": "v3-hd"` + `"emotion": "calm"`
-- If fails → test `v3-turbo`
-- **STOP if neither works with cloned voice**
+| Test | Result |
+|------|--------|
+| Marco compatibility with V3-HD | PASS — voice works with cloned reference |
+| Voice conditioning chain on V3 | PASS — consistency maintained across sequential chunks |
+| Credit cost | Negligible difference from S1 |
 
-**3b. Voice conditioning chain on V3**
-- Test 3 sequential chunks
-- Compare voice consistency vs S1 output
-- **STOP if conditioning breaks**
+### Fallback
 
-**3c. Credit cost comparison**
-- Check V3-hd vs S1 cost per character
-- **STOP if >3× cost without human approval**
-
-**3d. M Series investigation**
-- Fish M Series: "Stable, better emotion" (turbo/HD variants)
-- Determine if separate from V3 or same
-- Test Marco compatibility if separate
-
-### Pipeline Changes (conditional on investigation passing)
-
-- Add `"version": "v3-hd"` to all TTS requests
-- Add `"emotion": "calm"` to all TTS requests (or read from `API-Emotion` metadata)
-- Remove any code parsing or injecting emotion tags
-- Remove any code stripping parenthetical content
-- Test `speed=0.9` with first build
-
-### Fallback (if V3 incompatible)
-
-- Stay on S1/v1
+If V3-HD becomes unavailable or degrades:
+- Fall back to S1/v1
 - No in-text emotion tags (they don't work)
 - Rely on expression-through-punctuation (Section 14)
 - Punctuation-based control already produced acceptable results
@@ -1209,11 +1374,29 @@ Session `36-loving-kindness-intro` deployed (12.9 min, Fish/Marco). 3 build atte
 
 ### 7 February 2026 — Bible Consolidation (v2.0)
 
-Full consolidation pass. Resolved contradictions (loudnorm -24 vs -26, block minimum 20 vs 50, five conflicting cleanup chains). Integrated Brief Part 2 items 2-9 and Brief Part 3. Added Gate 10 (speech rate), Gate 3 sliding window fix, stop rule governance, build state persistence, overgeneration retry logic, per-chunk loudnorm. Restructured from chronological amendments to functional sections.
+Full consolidation pass. Resolved contradictions (loudnorm −24 vs −26, block minimum 20 vs 50, five conflicting cleanup chains). Integrated Brief Part 2 items 2–9 and Brief Part 3. Added Gate 10 (speech rate), Gate 3 sliding window fix, stop rule governance, build state persistence, overgeneration retry logic, per-chunk loudnorm. Restructured from chronological amendments to functional sections.
+
+### 7 February 2026 — 14-Gate QA System & Governance (v2.1)
+
+Expanded from 10 gates to 14 gates. All gates now pass/fail — no informational-only gates. Key changes:
+
+**Gate fixes:** Gate 3 sliding window implemented (18 dB calibrated threshold). Gate 6 converted to speech-aware detection (evaluates non-speech regions only — resolved 100% build failure rate from sibilant false positives). Gate 8 Expected-Repetitions metadata replaces global ignore list. Gate 9 converted from informational-only to pass/fail with energy spike detection (10× speech-only median threshold). Gate 10 silence-aware baseline (excludes pause windows from speech rate calculation).
+
+**New gates:** Gate 11 (Silence Region Integrity), Gate 12 (Duration Accuracy), Gate 13 (Ambient Continuity — calibrated at −80 dBFS / 10 dB), Gate 14 (Opening Quality — tighter thresholds on first 60 seconds).
+
+**V3-HD migration:** Complete. All TTS calls use V3-HD with `emotion: calm`. prosody.speed replaces atempo.
+
+**HF shelf cut investigation:** Tested across full tuning range (−2 to −5 dB at 6–8 kHz). Failed — removing 3 kHz boost entirely produced identical Gate 6 flag counts, proving root cause was speech sibilants. Pipeline unchanged.
+
+**Auphonic per-segment:** API does not return per-segment SNR. Noted as platform limitation.
+
+**Governance additions:** No decorative gates principle. No threshold loosening without approval. Brief lifecycle (DRAFT → ACTIVE → INTEGRATED → ARCHIVED). State file separation. Document hierarchy.
+
+**Threshold calibration:** All new gate thresholds validated against known-good deployed sessions (25-introduction-to-mindfulness, 36-loving-kindness-intro). Calibrated values replace brief estimates where they differed.
 
 ---
 
-*Last updated: 7 February 2026 — Bible v2.0: Full consolidation. All contradictions resolved. Brief Parts 2 and 3 integrated.*
+*Last updated: 7 February 2026 — Bible v2.1: 14-gate QA system, speech-aware Gate 6, calibrated thresholds, V3-HD migration, governance expansion.*
 
 ---
 

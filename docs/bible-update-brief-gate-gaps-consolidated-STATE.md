@@ -16,13 +16,13 @@ Last updated: 2026-02-07
 | Phase 3, Step 10: Gate 12 (Duration) | DONE | Duration accuracy — final output within 15% of metadata Duration target |
 | Phase 3, Step 11: Gate 13 (Ambient) | DONE | Ambient continuity — no dead silence (<-80 dBFS) in pauses, ambient consistent within 10 dB |
 | Phase 3, Step 12: Gate 14 (Opening) | DONE | Opening quality — tighter thresholds on first 60s (noise -30dB, HF 4dB, loudness 6dB) |
-| Phase 4, Step 13: Commit | PENDING | |
+| Phase 4, Step 13: Commit | DONE | Committed as 48c5fd7 and c2e0f81, pushed to origin/main |
 | Phase 4, Step 14: Regression test | DONE | See results below |
 
 ## Build State
 - Strike counter: 0
 - Build sequence: 6
-- Current phase: 4 (Regression test complete. Commit pending.)
+- Current phase: COMPLETE (All phases done. Brief INTEGRATED into Bible v2.1.)
 
 ## Regression Test Results
 
@@ -92,6 +92,7 @@ No false positives. All thresholds calibrated correctly. New gates catch real is
 - 2026-02-07 — Phase 4 regression complete. 5 thresholds calibrated against deployed files. 2 genuine pre-existing defects found (not false positives). No threshold changes needed for Phases 1-2 gates.
 - 2026-02-07 — Mindfulness script Duration updated from "10 minutes" to "15 minutes" to match actual 14.4 min build.
 - 2026-02-07 — Fixed bug: qa_loop was referencing `metadata` variable without receiving it as parameter. Added `metadata=None` to signature and `metadata=metadata` to call site.
+- 2026-02-07 — Brief INTEGRATED. Bible v2.1 authored by human, placed into repo at docs/PROJECT-BIBLE.md replacing v2.0. Brief lifecycle: ACTIVE → INTEGRATED.
 
 ## Issues for Human Review
 - **Auphonic per-segment STOP**: Brief Section 2f requires per-segment SNR (≥40 dB pass, <35 dB hard fail) and per-segment background level (≤−55 dB). The Auphonic API returns SNR at aggregate input level only. STOP rule triggered. Awaiting human decision.
