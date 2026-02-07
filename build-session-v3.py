@@ -165,6 +165,7 @@ def parse_script(script_path):
         'category': 'mindfulness',
         'ambient': None,
         'style': 'Warm male narrator',
+        'api_emotion': 'calm',
         'content': content.strip(),
     }
 
@@ -187,9 +188,11 @@ def parse_script(script_path):
             key, value = line.split(':', 1)
             key = key.strip().lower()
             value = value.strip()
-            if key in ['duration', 'category', 'ambient', 'style']:
+            if key in ['duration', 'category', 'ambient', 'style', 'api-emotion']:
                 if key == 'ambient':
                     metadata[key] = value.lower() if value.lower() != 'none' else None
+                elif key == 'api-emotion':
+                    metadata['api_emotion'] = value.lower()
                 else:
                     metadata[key] = value
 
@@ -343,8 +346,8 @@ def humanize_pauses(blocks, seed=42):
 # FISH TTS API (Chunked)
 # ============================================================================
 
-def generate_tts_chunk(text, output_path, chunk_num=0):
-    """Generate TTS for a single chunk."""
+def generate_tts_chunk(text, output_path, chunk_num=0, emotion='calm'):
+    """Generate TTS for a single chunk via Fish Audio V3-HD."""
     import requests
 
     if not FISH_API_KEY:
@@ -360,7 +363,9 @@ def generate_tts_chunk(text, output_path, chunk_num=0):
         "reference_id": FISH_VOICE_ID,
         "format": "mp3",
         "temperature": 0.3,
-        "condition_on_previous_chunks": True,
+        "version": "v3-hd",
+        "emotion": emotion,
+        "prosody": {"speed": 0.95, "volume": 0},
         "sample_rate": SAMPLE_RATE,
     }
 
@@ -2569,11 +2574,14 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
     metadata = parse_script(script_path)
     category = metadata['category']
     ambient = metadata['ambient']
+    api_emotion = metadata.get('api_emotion', 'calm')
 
     print(f"  Title: {metadata['title']}")
     print(f"  Category: {category}")
     print(f"  Ambient: {ambient or 'none'}")
     print(f"  Provider: {provider}")
+    if provider == 'fish':
+        print(f"  V3-HD: emotion={api_emotion}, speed=0.95")
     if provider == 'elevenlabs':
         print(f"  Model: {model}")
         print(f"  Voice: {voice_id or ELEVENLABS_VOICE_ID}")
@@ -2652,13 +2660,13 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
                     chunk_files = []
                     for j, chunk in enumerate(chunks):
                         chunk_path = os.path.join(temp_dir, f"block_{i}_chunk_{j}.mp3")
-                        generate_tts_chunk(chunk, chunk_path, len(voice_files) + j)
+                        generate_tts_chunk(chunk, chunk_path, len(voice_files) + j, emotion=api_emotion)
                         chunk_files.append(chunk_path)
                     block_path = os.path.join(temp_dir, f"block_{i}.mp3")
                     crossfade_audio_files(chunk_files, block_path)
                 else:
                     block_path = os.path.join(temp_dir, f"block_{i}.mp3")
-                    generate_tts_chunk(text, block_path, len(voice_files))
+                    generate_tts_chunk(text, block_path, len(voice_files), emotion=api_emotion)
 
             # Overgeneration retry for Fish (non-deterministic — sometimes produces 3x+ expected)
             duration = get_audio_duration(block_path)
@@ -2672,12 +2680,12 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
                         chunk_files = []
                         for j, chunk in enumerate(chunks):
                             chunk_path = os.path.join(temp_dir, f"block_{i}_chunk_{j}.mp3")
-                            generate_tts_chunk(chunk, chunk_path, len(voice_files) + j)
+                            generate_tts_chunk(chunk, chunk_path, len(voice_files) + j, emotion=api_emotion)
                             chunk_files.append(chunk_path)
                         block_path = os.path.join(temp_dir, f"block_{i}.mp3")
                         crossfade_audio_files(chunk_files, block_path)
                     else:
-                        generate_tts_chunk(text, block_path, len(voice_files))
+                        generate_tts_chunk(text, block_path, len(voice_files), emotion=api_emotion)
                     duration = get_audio_duration(block_path)
                     if duration <= max_dur:
                         break
