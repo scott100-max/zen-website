@@ -36,6 +36,8 @@ CREATE POLICY "authenticated_select_visitor_logs"
   TO authenticated
   USING (true);
 
--- Grant minimal permissions
+-- Grant permissions (schema usage + table access)
+GRANT USAGE ON SCHEMA public TO anon;
+GRANT USAGE ON SCHEMA public TO authenticated;
 GRANT INSERT ON public.visitor_logs TO anon;
 GRANT SELECT ON public.visitor_logs TO authenticated;
