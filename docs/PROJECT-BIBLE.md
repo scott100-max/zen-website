@@ -1043,4 +1043,109 @@ Loose files in the repo root were organised into proper directories:
 
 ---
 
+## Marco Master Audio Standard (Resemble AI)
+
+### Reference Master
+- **Session:** `ss02-the-moonlit-garden` (12.1 min, Resemble Marco T2)
+- **Backed up to:** `content/audio/marco-master/` (raw WAV, mixed MP3, final MP3, manifest)
+- **Quality benchmarks:** Noise floor -27.7 dB, HF hiss (>6kHz) -51.3 dB, stereo, 0 click artifacts
+
+### Voice Configuration
+| Setting | Value | Why |
+|---------|-------|-----|
+| **Voice** | Marco T2 (`da18eeca`) | Custom voice clone — master narration voice |
+| **Preset** | `expressive-story` (`6199a148-cd33-4ad7-b452-f067fdff3894`) | MUST be included in every API call |
+| **pace** | 0.85 | 15% slower than default — natural narration speed for meditation/sleep |
+| **pitch** | 0 | Neutral — do not alter |
+| **useHd** | true | HD synthesis mode — cleaner output, less noise/hiss |
+| **temperature** | 0.8 | Slight variation for natural feel |
+| **exaggeration** | 0.75 | Expressive but controlled — not robotic, not over-the-top |
+
+### What Produces Clean Audio (DO)
+- Always include `voice_settings_preset_uuid` in API payload
+- Use `output_format: wav` from the API (native WAV, no intermediate lossy steps)
+- Use `cleanup medium` for Resemble builds (gentle de-hiss + loudnorm)
+- Keep pace at 0.85 — sounds natural, not rushed
+- Let Resemble handle pacing via SSML `<break>` tags with original pause durations
+- One final MP3 encode at 128kbps as the only lossy step
+
+### What Degrades Audio (DO NOT)
+- Do NOT omit the voice settings preset — produces noisy, hissy output without HD mode
+- Do NOT use pace > 0.9 — too fast for meditation/sleep content
+- Do NOT apply `lowpass=f=10000` (kills clarity)
+- Do NOT apply heavy `afftdn=nf=-25` (muffles the voice)
+- Do NOT use `cleanup full` (Fish chain) — the de-esser and noise gate are for Fish, not Resemble
+- Do NOT use random SSML break durations — use original pause values from the script
+- Do NOT use `cleanup light` for Resemble — insufficient to remove residual TTS noise
+
+### Resemble Pipeline (differs from Fish)
+
+```
+Script (... pause markers)
+        │
+        ▼
+process_script_for_tts() → blocks with pause durations
+        │
+        ▼
+merge_blocks_for_resemble(category) → merged chunks with SSML breaks
+        │                              (original pause durations, capped at 5s)
+        ▼
+generate_tts_chunk_resemble() → Resemble API (HD mode, pace=0.85)
+        │                        Native WAV preserved (no mono forcing)
+        ▼
+concatenate_with_silences() → auto-detect channels, match silence
+        │
+        ▼
+cleanup_audio_medium() → de-hiss without muffling + loudnorm
+        │
+        ▼
+mix_ambient() → ambient mixed at category level
+        │
+        ▼
+SINGLE MP3 ENCODE (128kbps) ← only lossy step
+        │
+        ▼
+qa_loop() → scan → fix → rescan until clean
+        │
+        ▼
+deploy_to_r2() → send_build_email()
+```
+
+### CLI Usage (Resemble)
+
+```bash
+# Standard Resemble build (recommended)
+python3 build-session-v3.py SESSION --provider resemble --cleanup medium
+
+# Dry run first (always)
+python3 build-session-v3.py SESSION --provider resemble --cleanup medium --dry-run
+
+# Build without deploying
+python3 build-session-v3.py SESSION --provider resemble --cleanup medium --no-deploy
+```
+
+### Pre-Build Checklist (Resemble)
+
+Before every Resemble build:
+- [ ] `RESEMBLE_API_KEY` set in `.env`
+- [ ] Voice settings preset UUID matches `expressive-story` in script
+- [ ] Dry run shows correct chunk count and silence totals
+- [ ] Only building ONE session
+- [ ] Cleanup set to `medium` (NOT `light` or `full`)
+- [ ] Ambient file longer than estimated voice track
+
+### Fish vs Resemble: When to Use Each
+
+| | Fish Audio | Resemble AI |
+|---|---|---|
+| **When** | Short sessions (<15 min), budget-conscious | All new production builds |
+| **Voice** | Marco (Fish clone) | Marco T2 (Resemble clone) |
+| **Quality** | Good but needs full cleanup chain | Clean with HD mode, just de-hiss + loudnorm |
+| **Hiss** | De-esser + noise gate needed | Medium cleanup sufficient |
+| **Pacing** | Natural speed, no atempo needed | pace=0.85 via voice preset |
+| **Cleanup** | `--cleanup full` | `--cleanup medium` |
+| **Status** | Legacy — still works | **Preferred for new builds** |
+
+---
+
 *Last updated: 7 February 2026*

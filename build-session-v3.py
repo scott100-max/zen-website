@@ -556,49 +556,51 @@ def get_audio_duration(audio_path):
 # RESEMBLE AI TTS API
 # ============================================================================
 
-def merge_blocks_for_resemble(blocks):
+def merge_blocks_for_resemble(blocks, category='default'):
     """Merge adjacent blocks into chunks under RESEMBLE_CHUNK_MAX chars.
 
-    SSML <break> tags are inserted between merged paragraphs to preserve pacing.
+    SSML <break> tags are inserted between merged paragraphs using the ORIGINAL
+    pause durations from the script (capped at 5s for SSML compatibility).
     Blocks separated by long pauses (>= 10s) are NOT merged — those gaps stay
     as separate silence files for precise control.
     """
+    merge_threshold = 10
     merged = []
-    current_texts = []
+    current_items = []  # List of (text, pause) tuples
     current_chars = 0
-    current_pause = 0
 
     for text, pause in blocks:
-        # Don't merge across structural pauses (>= 10s)
-        if current_texts and (pause >= 10 or current_chars + len(text) + 50 > RESEMBLE_CHUNK_MAX):
+        if current_items and (pause >= merge_threshold or current_chars + len(text) + 50 > RESEMBLE_CHUNK_MAX):
             # Flush current chunk
-            merged_text = _join_with_ssml_breaks(current_texts)
-            merged.append((merged_text, current_pause))
-            current_texts = [text]
+            merged_text = _join_with_ssml_breaks(current_items)
+            merged.append((merged_text, current_items[-1][1]))
+            current_items = [(text, pause)]
             current_chars = len(text)
-            current_pause = pause
         else:
-            current_texts.append(text)
+            current_items.append((text, pause))
             current_chars += len(text) + 50  # Account for SSML break tags
-            current_pause = pause
 
-    if current_texts:
-        merged_text = _join_with_ssml_breaks(current_texts)
-        merged.append((merged_text, current_pause))
+    if current_items:
+        merged_text = _join_with_ssml_breaks(current_items)
+        merged.append((merged_text, current_items[-1][1]))
 
     return merged
 
 
-def _join_with_ssml_breaks(texts):
-    """Join multiple text blocks with SSML break tags between them."""
-    if len(texts) == 1:
-        return texts[0]
+def _join_with_ssml_breaks(items):
+    """Join text blocks with SSML break tags using original pause durations.
+
+    Uses the actual pause value from the script (capped at 5s for SSML).
+    This preserves meditation pacing instead of randomizing to 1-3s.
+    """
+    if len(items) == 1:
+        return items[0][0]
     parts = []
-    for i, text in enumerate(texts):
+    for i, (text, pause) in enumerate(items):
         parts.append(text)
-        if i < len(texts) - 1:
-            # Mostly 1-2s breaks, occasional 3s — no long silences for stories
-            break_ms = random.choice([1000, 1500, 1500, 2000, 2000, 2500, 3000])
+        if i < len(items) - 1:
+            break_ms = min(int(pause * 1000), 5000)
+            break_ms = max(break_ms, 500)
             parts.append(f'<break time="{break_ms}ms" />')
     return ' '.join(parts)
 
@@ -638,18 +640,10 @@ def generate_tts_chunk_resemble(text, output_path, chunk_num=0, voice_id=None):
 
         if data.get("success"):
             audio_bytes = base64.b64decode(data["audio_content"])
-            # Write as WAV, force mono to match Fish pipeline
-            raw_wav = output_path.replace('.mp3', '.raw.wav')
+            # Write native WAV (keep stereo — HD mode quality)
             wav_path = output_path.replace('.mp3', '.wav')
-            Path(raw_wav).write_bytes(audio_bytes)
-            # Force mono WAV (Resemble returns stereo — halves quality at 128kbps)
-            subprocess.run([
-                'ffmpeg', '-y', '-i', raw_wav,
-                '-ac', '1', '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE),
-                wav_path
-            ], capture_output=True, check=True)
-            os.remove(raw_wav)
-            # Convert WAV to MP3
+            Path(wav_path).write_bytes(audio_bytes)
+            # Convert WAV to MP3 (intermediate — concat will re-extract WAV)
             cmd = [
                 'ffmpeg', '-y', '-i', wav_path,
                 '-c:a', 'libmp3lame', '-b:a', '128k',
@@ -673,13 +667,14 @@ def generate_tts_chunk_resemble(text, output_path, chunk_num=0, voice_id=None):
     raise Exception("Resemble API: max retries exceeded")
 
 
-def generate_silence(duration, output_path):
+def generate_silence(duration, output_path, channels=1):
     """Generate silence audio file (WAV for lossless pipeline).
-    Uses mono to match Fish TTS voice chunks.
+    Channels must match voice chunks (mono for Fish, stereo for Resemble).
     """
+    cl = 'stereo' if channels == 2 else 'mono'
     cmd = [
         'ffmpeg', '-y',
-        '-f', 'lavfi', '-i', f'anullsrc=r={SAMPLE_RATE}:cl=mono',
+        '-f', 'lavfi', '-i', f'anullsrc=r={SAMPLE_RATE}:cl={cl}',
         '-t', str(duration),
         '-c:a', 'pcm_s16le',
         output_path
@@ -775,13 +770,20 @@ def concatenate_with_silences(voice_chunks, silences, output_path, temp_dir, cle
     """
     all_files = []
 
+    # Detect channel count from first voice file
+    probe = subprocess.run(
+        ['ffprobe', '-v', 'quiet', '-show_entries', 'stream=channels',
+         '-of', 'csv=p=0', voice_chunks[0]],
+        capture_output=True, text=True
+    )
+    voice_channels = int(probe.stdout.strip()) if probe.stdout.strip() else 1
+
     for i, (voice_file, silence_duration) in enumerate(zip(voice_chunks, silences)):
-        # Convert voice chunk to WAV first (Fish API returns MP3)
-        # Force mono to match silence files and prevent channel mismatch in concat
+        # Convert voice chunk to WAV — preserve native channel count
         wav_voice = os.path.join(temp_dir, f"voice_{i}.wav")
         subprocess.run([
             'ffmpeg', '-y', '-i', voice_file,
-            '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE), '-ac', '1',
+            '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE), '-ac', str(voice_channels),
             wav_voice
         ], capture_output=True, check=True)
 
@@ -791,7 +793,7 @@ def concatenate_with_silences(voice_chunks, silences, output_path, temp_dir, cle
         all_files.append(faded_file)
         if silence_duration > 0:
             silence_file = os.path.join(temp_dir, f"silence_{i}.wav")
-            generate_silence(silence_duration, silence_file)
+            generate_silence(silence_duration, silence_file, channels=voice_channels)
             all_files.append(silence_file)
 
     # Use concat demuxer — all files are WAV
@@ -1253,7 +1255,7 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
         if len(combined_blocks) != len(blocks):
             print(f"  After merging short blocks: {len(combined_blocks)} (from {len(blocks)} raw)")
     elif provider == 'resemble':
-        combined_blocks = merge_blocks_for_resemble(blocks)
+        combined_blocks = merge_blocks_for_resemble(blocks, category=category)
         print(f"  Resemble chunks: {len(combined_blocks)} (from {len(blocks)} raw)")
     else:
         combined_blocks = blocks
