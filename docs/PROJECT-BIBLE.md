@@ -853,18 +853,24 @@ All 5 deployed sessions scanned and patched:
 **Fixes applied:**
 
 1. **Lossless TTS chunk saving** — Resemble API returns native WAV; now saved directly with zero intermediate lossy steps
-2. **Triple-gate QA system:**
+2. **Nine-gate QA system:**
    - Gate 1 (Quality): Measures noise floor and HF hiss in silence regions via astats, compared against master benchmarks
-   - Gate 2 (Clicks): Existing click artifact scan (scan→patch→rescan loop)
+   - Gate 2 (Clicks): Click artifact scan (scan→patch→rescan loop)
    - Gate 3 (Independent Spectral): Compares frequency profile of build against master reference WAV
-   - ALL three gates must pass — any failure blocks deploy
+   - Gate 4 (Voice): MFCC cosine + F0 deviation vs Marco master (uses pre-cleanup audio)
+   - Gate 5 (Loudness): Per-second RMS sliding window — catches per-chunk loudness surges
+   - Gate 6 (HF Hiss): Sliding-window HF-to-total energy ratio — catches localised hiss (3s min duration, 6 dB threshold)
+   - Gate 7 (Volume Surge): Local-mean comparison with silence exclusion — catches surges/drops (8/12 dB thresholds)
+   - Gate 8 (Repeated Content): MFCC fingerprint + Whisper STT — catches TTS repeating itself (meditation-aware ignore list)
+   - Gate 9 (Visual Report): PNG with waveform, spectrogram, energy plot, summary — runs ALWAYS, not pass/fail
+   - Gates 1-8 must ALL pass — any failure blocks deploy. Gate 9 runs regardless for debugging.
 3. **Deploy gate hardened** — Deploy was unconditional before; now respects QA rejection
 4. **Calibrated cleanup chain** — `highpass=80, lowpass=10000, afftdn=-25, loudnorm I=-26` matches master quality benchmarks
 5. **Email always sends** (pass or fail) for visibility
 
 **Lesson:** Click-artifact QA is necessary but NOT sufficient. Quality benchmarks against a known-good master are the only reliable way to prevent degraded audio from shipping. Every new QA mode must be validated against the master before production use.
 
-**Rule change:** "Automated QA (clicks only) is the gate" → "Triple-gate QA (quality + clicks + spectral) is the gate"
+**Rule change:** "Automated QA (clicks only) is the gate" → "Nine-gate QA (quality + clicks + spectral + voice + loudness + hiss + surge + repeat + visual report) is the gate"
 
 ---
 
@@ -1154,11 +1160,17 @@ mix_ambient() → ambient mixed at category level
 SINGLE MP3 ENCODE (128kbps) ← only lossy step
         │
         ▼
-qa_loop() → TRIPLE-GATE QA:
+qa_loop() → NINE-GATE QA:
         │   Gate 1: Quality benchmarks (noise floor, HF hiss vs master)
         │   Gate 2: Click artifact scan (scan → fix → rescan)
         │   Gate 3: Independent spectral comparison vs master WAV
-        │   ALL must pass → deploy, ANY fail → block
+        │   Gate 4: Voice comparison (MFCC + F0 vs Marco master)
+        │   Gate 5: Loudness consistency (per-second RMS spike detection)
+        │   Gate 6: HF hiss detector (sliding-window HF ratio)
+        │   Gate 7: Volume surge/drop (local-mean, silence-aware)
+        │   Gate 8: Repeated content (MFCC + Whisper STT)
+        │   Gate 9: Visual report PNG (ALWAYS runs)
+        │   Gates 1-8 must pass → deploy, ANY fail → block
         │
         ▼
 deploy_to_r2() → send_build_email()
@@ -2505,4 +2517,4 @@ meditation while every punctuation mark is deliberate vocal direction.
 
 ---
 
-*Last updated: 7 February 2026 — Bible v1.3: Auphonic baseline, Marco calibration complete, processing pipeline, expression technique*
+*Last updated: 7 February 2026 — Bible v1.5: Nine-gate QA system (Gates 6-9: HF hiss, volume surge, repeated content, visual report), per-chunk normalization*

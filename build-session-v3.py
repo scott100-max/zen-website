@@ -799,6 +799,24 @@ def apply_edge_fades(audio_path, output_path, fade_ms=15):
     return output_path
 
 
+def normalize_chunk(input_path, output_path, target_lufs=-24):
+    """Per-chunk loudnorm — normalize a single TTS chunk to target LUFS.
+
+    This prevents wildly different loudness levels between Fish chunks
+    from creating surges/drops in the final concatenated audio. The overall
+    loudnorm pass after concatenation only adjusts the global average —
+    it cannot fix per-chunk variations of 6-8 dB.
+    """
+    cmd = [
+        'ffmpeg', '-y', '-i', input_path,
+        '-af', f'loudnorm=I={target_lufs}:TP=-2:LRA=11',
+        '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE),
+        output_path
+    ]
+    subprocess.run(cmd, capture_output=True, check=True)
+    return output_path
+
+
 def concatenate_with_silences(voice_chunks, silences, output_path, temp_dir, cleanup_mode='full',
                                pre_cleanup_path=None):
     """Concatenate voice chunks with silence gaps (lossless WAV pipeline).
@@ -807,8 +825,9 @@ def concatenate_with_silences(voice_chunks, silences, output_path, temp_dir, cle
     pre_cleanup_path: if set, saves a copy of the raw concat BEFORE cleanup
                       (used by Gate 4 voice comparison — must compare raw vs raw master)
 
-    Each voice chunk gets a 15ms fade-in/out applied before concatenation
-    to prevent click artifacts at join boundaries.
+    Each voice chunk is individually loudnorm'd to -24 LUFS BEFORE concatenation
+    to prevent per-chunk loudness surges (Fish generates chunks at wildly different levels).
+    Each chunk also gets a 15ms fade-in/out to prevent click artifacts at join boundaries.
     All intermediate files are WAV to avoid cumulative MP3 compression artifacts.
     """
     all_files = []
@@ -830,9 +849,13 @@ def concatenate_with_silences(voice_chunks, silences, output_path, temp_dir, cle
             wav_voice
         ], capture_output=True, check=True)
 
+        # Per-chunk loudnorm BEFORE concatenation — prevents 6-8 dB level swings
+        normed_chunk = os.path.join(temp_dir, f"normed_{i}.wav")
+        normalize_chunk(wav_voice, normed_chunk)
+
         # Apply edge fades (WAV in, WAV out)
         faded_file = os.path.join(temp_dir, f"faded_{i}.wav")
-        apply_edge_fades(wav_voice, faded_file)
+        apply_edge_fades(normed_chunk, faded_file)
         all_files.append(faded_file)
         if silence_duration > 0:
             silence_file = os.path.join(temp_dir, f"silence_{i}.wav")
@@ -1203,6 +1226,765 @@ def qa_master_voice_check(raw_narration_path):
     return passed, details
 
 
+def qa_loudness_consistency_check(audio_path, manifest_data, max_deviation_db=4.0):
+    """QA GATE 5: Per-second loudness consistency check.
+
+    Loads the entire WAV into memory and computes RMS per second.
+    Flags any speech second where RMS deviates more than max_deviation_db
+    from the median speech RMS. Fast (< 2s for 14 min file).
+
+    Catches per-chunk loudness surges that a single loudnorm pass can't fix.
+    Returns (passed, details_dict).
+    """
+    import wave as _wave
+    import numpy as np
+
+    print(f"\n  QA-LOUDNESS: Scanning for per-segment loudness spikes...")
+
+    # Load WAV into memory
+    try:
+        w = _wave.open(audio_path, 'r')
+    except Exception:
+        # Try converting to WAV first (handles MP3 input)
+        tmp_wav = audio_path + ".loudness_check.wav"
+        subprocess.run([
+            'ffmpeg', '-y', '-i', audio_path,
+            '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE),
+            tmp_wav
+        ], capture_output=True, check=True)
+        w = _wave.open(tmp_wav, 'r')
+
+    n = w.getnframes()
+    sr = w.getframerate()
+    nch = w.getnchannels()
+    raw = w.readframes(n)
+    w.close()
+
+    samples = np.frombuffer(raw, dtype=np.int16).astype(np.float64)
+    if nch > 1:
+        samples = samples.reshape(-1, nch).mean(axis=1)
+
+    # Compute RMS per second
+    window = sr
+    rms_db = []
+    for i in range(0, len(samples) - window, window):
+        chunk = samples[i:i+window]
+        rms = np.sqrt(np.mean(chunk**2))
+        db = 20 * np.log10(rms / 32768) if rms > 0 else -100
+        rms_db.append(db)
+
+    rms_db = np.array(rms_db)
+
+    # Speech regions: > -40 dB RMS (silence is typically < -50 dB)
+    speech_mask = rms_db > -40
+    speech_rms = rms_db[speech_mask]
+
+    if len(speech_rms) < 5:
+        print(f"  QA-LOUDNESS: WARNING — too few speech seconds ({len(speech_rms)})")
+        return True, {'skipped': True}
+
+    median_rms = float(np.median(speech_rms))
+
+    # Find spikes
+    spikes = []
+    for i, db in enumerate(rms_db):
+        if speech_mask[i] and (db - median_rms) > max_deviation_db:
+            mins = i // 60
+            secs = i % 60
+            spikes.append({
+                'time': i,
+                'time_fmt': f'{mins}:{secs:02d}',
+                'rms_db': round(float(db), 1),
+                'deviation_db': round(float(db - median_rms), 1),
+            })
+
+    details = {
+        'median_rms_db': round(median_rms, 1),
+        'min_speech_rms_db': round(float(np.min(speech_rms)), 1),
+        'max_speech_rms_db': round(float(np.max(speech_rms)), 1),
+        'range_db': round(float(np.max(speech_rms) - np.min(speech_rms)), 1),
+        'speech_seconds': int(sum(speech_mask)),
+        'total_seconds': len(rms_db),
+        'threshold_db': max_deviation_db,
+        'spikes': spikes,
+    }
+
+    print(f"  QA-LOUDNESS: {details['speech_seconds']} speech seconds, median RMS={median_rms:.1f} dB")
+    print(f"  QA-LOUDNESS: Range = {details['min_speech_rms_db']} to {details['max_speech_rms_db']} dB ({details['range_db']:.1f} dB)")
+
+    passed = len(spikes) == 0
+    if not passed:
+        print(f"  QA-LOUDNESS: FAIL — {len(spikes)} seconds exceed +{max_deviation_db} dB above median:")
+        for spike in spikes[:10]:
+            print(f"    {spike['time_fmt']} — {spike['rms_db']} dB (+{spike['deviation_db']:.1f} dB)")
+        if len(spikes) > 10:
+            print(f"    ... and {len(spikes) - 10} more")
+    else:
+        print(f"  QA-LOUDNESS: PASSED — all speech within +{max_deviation_db} dB of median")
+
+    # Cleanup temp file if created
+    tmp_wav = audio_path + ".loudness_check.wav"
+    if os.path.exists(tmp_wav):
+        os.remove(tmp_wav)
+
+    return passed, details
+
+
+def qa_hf_hiss_check(audio_path, manifest_data, hp_freq=4000, window_sec=1.0,
+                     overlap_sec=0.5, ratio_threshold_db=6.0, min_duration_sec=3.0):
+    """QA GATE 6: High-frequency hiss detector (sliding-window).
+
+    Measures HF energy RELATIVE to total energy per window. Normal speech has
+    a consistent HF/total ratio; hiss raises HF disproportionately. Only speech
+    windows are compared (silence excluded from baseline).
+
+    Returns (passed, details_dict).
+    """
+    import wave as _wave
+    import numpy as np
+    from scipy.signal import butter, sosfilt
+
+    print(f"\n  QA-HF-HISS: Scanning for localised high-frequency hiss...")
+
+    # Load WAV
+    w = _wave.open(audio_path, 'r')
+    n = w.getnframes()
+    sr = w.getframerate()
+    nch = w.getnchannels()
+    raw = w.readframes(n)
+    w.close()
+
+    samples = np.frombuffer(raw, dtype=np.int16).astype(np.float64)
+    if nch > 1:
+        samples = samples.reshape(-1, nch).mean(axis=1)
+
+    # Highpass filter at hp_freq Hz to isolate hiss band
+    sos = butter(4, hp_freq, btype='high', fs=sr, output='sos')
+    hf_signal = sosfilt(sos, samples)
+
+    # Sliding window: compute both total RMS and HF RMS
+    win_samples = int(window_sec * sr)
+    hop_samples = int((window_sec - overlap_sec) * sr)
+    total_rms_db = []
+    hf_ratio_db = []  # HF - total in dB (higher = more HF relative to total)
+    window_times = []
+
+    for start in range(0, len(samples) - win_samples, hop_samples):
+        total_chunk = samples[start:start + win_samples]
+        hf_chunk = hf_signal[start:start + win_samples]
+
+        total_rms = np.sqrt(np.mean(total_chunk**2))
+        hf_rms = np.sqrt(np.mean(hf_chunk**2))
+
+        t_db = 20 * np.log10(total_rms / 32768) if total_rms > 0 else -100
+        h_db = 20 * np.log10(hf_rms / 32768) if hf_rms > 0 else -100
+
+        total_rms_db.append(t_db)
+        hf_ratio_db.append(h_db - t_db)
+        window_times.append(start / sr)
+
+    total_rms_db = np.array(total_rms_db)
+    hf_ratio_db = np.array(hf_ratio_db)
+    window_times = np.array(window_times)
+
+    # Only speech windows (total RMS > -40 dB)
+    speech_mask = total_rms_db > -40
+    if sum(speech_mask) < 5:
+        print(f"  QA-HF-HISS: WARNING — too few speech windows")
+        return True, {'skipped': True}
+
+    median_ratio = float(np.median(hf_ratio_db[speech_mask]))
+
+    # Flag speech windows where HF ratio exceeds median by threshold
+    spike_mask = np.zeros(len(hf_ratio_db), dtype=bool)
+    for i in range(len(hf_ratio_db)):
+        if speech_mask[i] and (hf_ratio_db[i] - median_ratio) > ratio_threshold_db:
+            spike_mask[i] = True
+
+    # Group consecutive flagged windows into regions
+    flagged_regions = []
+    in_region = False
+    region_start = 0
+
+    for i, is_spike in enumerate(spike_mask):
+        if is_spike and not in_region:
+            in_region = True
+            region_start = i
+        elif not is_spike and in_region:
+            in_region = False
+            region_end = i
+            region_start_time = window_times[region_start]
+            region_end_time = window_times[min(region_end, len(window_times) - 1)] + window_sec
+            duration = region_end_time - region_start_time
+            if duration >= min_duration_sec:
+                max_ratio = float(np.max(hf_ratio_db[region_start:region_end]))
+                flagged_regions.append({
+                    'start': round(region_start_time, 1),
+                    'end': round(region_end_time, 1),
+                    'duration': round(duration, 1),
+                    'max_hf_ratio_db': round(max_ratio, 1),
+                    'deviation_db': round(max_ratio - median_ratio, 1),
+                    'start_fmt': f'{int(region_start_time//60)}:{region_start_time%60:04.1f}',
+                    'end_fmt': f'{int(region_end_time//60)}:{region_end_time%60:04.1f}',
+                })
+
+    if in_region:
+        region_end_time = window_times[-1] + window_sec
+        duration = region_end_time - window_times[region_start]
+        if duration >= min_duration_sec:
+            max_ratio = float(np.max(hf_ratio_db[region_start:]))
+            flagged_regions.append({
+                'start': round(window_times[region_start], 1),
+                'end': round(region_end_time, 1),
+                'duration': round(duration, 1),
+                'max_hf_ratio_db': round(max_ratio, 1),
+                'deviation_db': round(max_ratio - median_ratio, 1),
+                'start_fmt': f'{int(window_times[region_start]//60)}:{window_times[region_start]%60:04.1f}',
+                'end_fmt': f'{int(region_end_time//60)}:{region_end_time%60:04.1f}',
+            })
+
+    details = {
+        'median_hf_ratio_db': round(median_ratio, 1),
+        'threshold_db': ratio_threshold_db,
+        'hp_freq': hp_freq,
+        'flagged_regions': flagged_regions,
+    }
+
+    print(f"  QA-HF-HISS: Median HF ratio = {median_ratio:.1f} dB, threshold = +{ratio_threshold_db} dB above")
+
+    passed = len(flagged_regions) == 0
+    if not passed:
+        print(f"  QA-HF-HISS: FAIL — {len(flagged_regions)} hiss regions detected:")
+        for r in flagged_regions[:10]:
+            print(f"    {r['start_fmt']} → {r['end_fmt']} ({r['duration']}s, +{r['deviation_db']:.1f} dB above median ratio)")
+    else:
+        print(f"  QA-HF-HISS: PASSED — no localised hiss above threshold")
+
+    return passed, details
+
+
+def qa_volume_surge_check(audio_path, manifest_data, window_sec=1.0, overlap_sec=0.5,
+                          surge_threshold_db=8.0, drop_threshold_db=12.0, neighbour_radius=3):
+    """QA GATE 7: Volume surge/drop detector (local-mean comparison).
+
+    Compares each window's RMS to the mean of its immediate neighbours.
+    Excludes windows overlapping known silence regions from manifest
+    (silence-to-speech transitions are intentional, not defects).
+
+    Returns (passed, details_dict).
+    """
+    import wave as _wave
+    import numpy as np
+
+    print(f"\n  QA-SURGE: Scanning for volume surges and drops...")
+
+    # Load WAV
+    w = _wave.open(audio_path, 'r')
+    n = w.getnframes()
+    sr = w.getframerate()
+    nch = w.getnchannels()
+    raw = w.readframes(n)
+    w.close()
+
+    samples = np.frombuffer(raw, dtype=np.int16).astype(np.float64)
+    if nch > 1:
+        samples = samples.reshape(-1, nch).mean(axis=1)
+
+    # Sliding window RMS
+    win_samples = int(window_sec * sr)
+    hop_samples = int((window_sec - overlap_sec) * sr)
+    rms_db = []
+    window_times = []
+
+    for start in range(0, len(samples) - win_samples, hop_samples):
+        chunk = samples[start:start + win_samples]
+        rms = np.sqrt(np.mean(chunk**2))
+        db = 20 * np.log10(rms / 32768) if rms > 0 else -100
+        rms_db.append(db)
+        window_times.append(start / sr)
+
+    rms_db = np.array(rms_db)
+    window_times = np.array(window_times)
+
+    # Build silence region lookup from manifest
+    silence_ranges = []
+    for seg in manifest_data['segments']:
+        if seg['type'] == 'silence':
+            silence_ranges.append((seg['start_time'], seg['start_time'] + seg['duration']))
+
+    def overlaps_silence(t, win=window_sec):
+        """Check if a window overlaps any silence region (with 1s margin)."""
+        for s_start, s_end in silence_ranges:
+            if t < s_end + 1.0 and t + win > s_start - 1.0:
+                return True
+        return False
+
+    # Compare each window to local mean of neighbours
+    surges = []
+    drops = []
+    for i in range(neighbour_radius, len(rms_db) - neighbour_radius):
+        t = window_times[i]
+
+        # Skip windows near silence (transitions are intentional)
+        if overlaps_silence(t):
+            continue
+
+        # Skip near-silence windows
+        if rms_db[i] < -50:
+            continue
+
+        # Local mean of neighbours (excluding self)
+        neighbours = np.concatenate([
+            rms_db[max(0, i - neighbour_radius):i],
+            rms_db[i + 1:min(len(rms_db), i + neighbour_radius + 1)]
+        ])
+        # Only use neighbours with signal
+        active_neighbours = neighbours[neighbours > -50]
+        if len(active_neighbours) < 2:
+            continue
+
+        local_mean = float(np.mean(active_neighbours))
+        deviation = rms_db[i] - local_mean
+
+        if deviation > surge_threshold_db:
+            mins = int(t // 60)
+            secs = t % 60
+            surges.append({
+                'time': round(float(t), 1),
+                'time_fmt': f'{mins}:{secs:04.1f}',
+                'rms_db': round(float(rms_db[i]), 1),
+                'local_mean_db': round(local_mean, 1),
+                'deviation_db': round(float(deviation), 1),
+                'type': 'SURGE',
+            })
+        elif deviation < -drop_threshold_db and rms_db[i] > -35:
+            # Skip drops into near-silence/breath pauses (< -35 dB = not speech)
+            mins = int(t // 60)
+            secs = t % 60
+            drops.append({
+                'time': round(float(t), 1),
+                'time_fmt': f'{mins}:{secs:04.1f}',
+                'rms_db': round(float(rms_db[i]), 1),
+                'local_mean_db': round(local_mean, 1),
+                'deviation_db': round(float(deviation), 1),
+                'type': 'DROP',
+            })
+
+    all_flags = surges + drops
+    all_flags.sort(key=lambda x: x['time'])
+
+    details = {
+        'surge_threshold_db': surge_threshold_db,
+        'drop_threshold_db': drop_threshold_db,
+        'neighbour_radius': neighbour_radius,
+        'surges': len(surges),
+        'drops': len(drops),
+        'flags': all_flags,
+    }
+
+    print(f"  QA-SURGE: {len(surges)} surges (+{surge_threshold_db} dB), {len(drops)} drops (-{drop_threshold_db} dB)")
+
+    passed = len(all_flags) == 0
+    if not passed:
+        print(f"  QA-SURGE: FAIL — {len(all_flags)} anomalies detected:")
+        for f in all_flags[:10]:
+            print(f"    {f['time_fmt']} — {f['type']} {f['rms_db']} dB (local mean {f['local_mean_db']}, dev {f['deviation_db']:+.1f})")
+        if len(all_flags) > 10:
+            print(f"    ... and {len(all_flags) - 10} more")
+    else:
+        print(f"  QA-SURGE: PASSED — no volume anomalies detected")
+
+    return passed, details
+
+
+# Gate 8 meditation repetition ignore lists (per category)
+REPETITION_IGNORE_PHRASES = [
+    "breathe in", "breathe out", "breathing in", "breathing out",
+    "may i be", "may you be", "may they be", "may we be",
+    "may i feel", "may you feel", "may they feel",
+    "let go", "letting go",
+    "notice the sensations", "notice any sensations",
+    "gently bring your attention", "bring your awareness",
+    "take a deep breath", "take another breath",
+    "in and out", "slowly and gently",
+]
+
+
+def qa_repeated_content_check(audio_path, manifest_data, mfcc_sim_threshold=0.92,
+                               min_gap_sec=5.0, min_word_match=3):
+    """QA GATE 8: Repeated content detector (MFCC fingerprint + Whisper STT).
+
+    Approach A: Compare MFCC fingerprints of voiced segments.
+    Approach B: Whisper transcript for repeated word sequences.
+    Meditation-specific ignore list prevents false positives on intentional repetition.
+
+    Returns (passed, details_dict).
+    """
+    import numpy as np
+
+    print(f"\n  QA-REPEAT: Scanning for repeated content...")
+
+    # ── Approach A: MFCC fingerprint comparison ──
+    print(f"  QA-REPEAT: [A] MFCC segment comparison...")
+    try:
+        import librosa
+    except ImportError:
+        print(f"  QA-REPEAT: WARNING — librosa not installed, skipping MFCC check")
+        return True, {'skipped': True, 'reason': 'missing_librosa'}
+
+    # Load audio
+    y, sr = librosa.load(audio_path, sr=22050)
+
+    # Extract voiced segments from manifest
+    text_segments = [s for s in manifest_data['segments'] if s['type'] == 'text' and s.get('duration', 0) > 2]
+
+    # Compute MFCC mean per segment
+    segment_mfccs = []
+    for seg in text_segments:
+        start_sample = int(seg['start_time'] * sr)
+        end_sample = int(seg['end_time'] * sr)
+        if end_sample > len(y):
+            end_sample = len(y)
+        if end_sample - start_sample < sr:  # Skip < 1s
+            segment_mfccs.append(None)
+            continue
+        segment_audio = y[start_sample:end_sample]
+        mfcc = librosa.feature.mfcc(y=segment_audio, sr=sr, n_mfcc=13)
+        segment_mfccs.append(mfcc.mean(axis=1))
+
+    # Compare all pairs
+    mfcc_duplicates = []
+    for i in range(len(segment_mfccs)):
+        if segment_mfccs[i] is None:
+            continue
+        for j in range(i + 1, len(segment_mfccs)):
+            if segment_mfccs[j] is None:
+                continue
+            # Must be > min_gap_sec apart
+            gap = abs(text_segments[j]['start_time'] - text_segments[i]['end_time'])
+            if gap < min_gap_sec:
+                continue
+
+            # Cosine similarity
+            dot = np.dot(segment_mfccs[i], segment_mfccs[j])
+            norm_i = np.linalg.norm(segment_mfccs[i])
+            norm_j = np.linalg.norm(segment_mfccs[j])
+            sim = dot / (norm_i * norm_j) if (norm_i * norm_j) > 0 else 0
+
+            if sim >= mfcc_sim_threshold:
+                mfcc_duplicates.append({
+                    'seg_a': i,
+                    'seg_b': j,
+                    'time_a': text_segments[i]['start_time'],
+                    'time_b': text_segments[j]['start_time'],
+                    'similarity': round(float(sim), 4),
+                })
+
+    if mfcc_duplicates:
+        print(f"  QA-REPEAT: [A] Found {len(mfcc_duplicates)} MFCC-similar segment pairs")
+    else:
+        print(f"  QA-REPEAT: [A] No MFCC duplicates found")
+
+    # ── Approach B: Whisper STT ──
+    print(f"  QA-REPEAT: [B] Running Whisper transcription...")
+    whisper_duplicates = []
+    try:
+        import whisper
+        model = whisper.load_model("base")
+        result = model.transcribe(audio_path, language="en")
+        transcript_segments = result.get('segments', [])
+
+        # Extract words with timestamps
+        words = []
+        for seg in transcript_segments:
+            text = seg['text'].strip().lower()
+            text = re.sub(r'[^\w\s]', '', text)
+            seg_words = text.split()
+            for w_text in seg_words:
+                words.append({'word': w_text, 'time': seg['start']})
+
+        # Find repeated sequences of min_word_match+ consecutive words
+        if len(words) >= min_word_match:
+            # Build n-gram index
+            ngram_index = {}
+            for i in range(len(words) - min_word_match + 1):
+                ngram = ' '.join(w['word'] for w in words[i:i + min_word_match])
+
+                # Check ignore list
+                ignored = False
+                for phrase in REPETITION_IGNORE_PHRASES:
+                    if phrase in ngram:
+                        ignored = True
+                        break
+                if ignored:
+                    continue
+
+                if ngram in ngram_index:
+                    prev_time = ngram_index[ngram]
+                    curr_time = words[i]['time']
+                    if abs(curr_time - prev_time) > min_gap_sec:
+                        whisper_duplicates.append({
+                            'phrase': ngram,
+                            'first_time': round(prev_time, 1),
+                            'second_time': round(curr_time, 1),
+                            'gap_sec': round(abs(curr_time - prev_time), 1),
+                        })
+                else:
+                    ngram_index[ngram] = words[i]['time']
+
+        if whisper_duplicates:
+            print(f"  QA-REPEAT: [B] Found {len(whisper_duplicates)} repeated phrases")
+        else:
+            print(f"  QA-REPEAT: [B] No repeated phrases found")
+
+    except ImportError:
+        print(f"  QA-REPEAT: [B] Whisper not installed — skipping STT check")
+    except Exception as e:
+        print(f"  QA-REPEAT: [B] Whisper error: {e} — skipping STT check")
+
+    # Combined verdict: flag if BOTH approaches agree, or if MFCC similarity is very high (>0.96)
+    confirmed_repeats = []
+    for mfcc_dup in mfcc_duplicates:
+        if mfcc_dup['similarity'] >= 0.96:
+            confirmed_repeats.append({**mfcc_dup, 'method': 'mfcc_high_confidence'})
+        else:
+            # Check if Whisper also found something near these timestamps
+            for w_dup in whisper_duplicates:
+                if (abs(w_dup['first_time'] - mfcc_dup['time_a']) < 5 or
+                    abs(w_dup['second_time'] - mfcc_dup['time_b']) < 5):
+                    confirmed_repeats.append({**mfcc_dup, 'method': 'mfcc+whisper', 'phrase': w_dup['phrase']})
+                    break
+
+    details = {
+        'mfcc_duplicates': mfcc_duplicates,
+        'whisper_duplicates': whisper_duplicates,
+        'confirmed_repeats': confirmed_repeats,
+    }
+
+    passed = len(confirmed_repeats) == 0
+    if not passed:
+        print(f"  QA-REPEAT: FAIL — {len(confirmed_repeats)} confirmed repetitions:")
+        for r in confirmed_repeats[:5]:
+            t_a = r['time_a']
+            t_b = r['time_b']
+            print(f"    {int(t_a//60)}:{t_a%60:04.1f} ↔ {int(t_b//60)}:{t_b%60:04.1f} (sim={r['similarity']}, {r['method']})")
+    else:
+        print(f"  QA-REPEAT: PASSED — no unexpected repetitions")
+
+    return passed, details
+
+
+def qa_visual_report(audio_path, manifest_data, session_name, gate_results, output_dir=None):
+    """QA GATE 9: Visual report generator.
+
+    Generates a 4-panel PNG: waveform, mel spectrogram, energy plot, summary.
+    Runs ALWAYS — even when earlier gates fail. Not a pass/fail gate.
+
+    Returns path to generated PNG.
+    """
+    import numpy as np
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import Rectangle
+
+    print(f"\n  QA-REPORT: Generating visual report...")
+
+    # Load audio
+    import wave as _wave
+    w = _wave.open(audio_path, 'r')
+    n = w.getnframes()
+    sr = w.getframerate()
+    nch = w.getnchannels()
+    raw = w.readframes(n)
+    w.close()
+
+    samples = np.frombuffer(raw, dtype=np.int16).astype(np.float64)
+    if nch > 1:
+        samples = samples.reshape(-1, nch).mean(axis=1)
+
+    duration_sec = len(samples) / sr
+    time_axis = np.arange(len(samples)) / sr
+
+    # Compute per-second RMS for energy plot
+    rms_per_sec = []
+    for i in range(0, len(samples) - sr, sr):
+        chunk = samples[i:i + sr]
+        rms = np.sqrt(np.mean(chunk**2))
+        db = 20 * np.log10(rms / 32768) if rms > 0 else -100
+        rms_per_sec.append(db)
+    rms_per_sec = np.array(rms_per_sec)
+    speech_rms = rms_per_sec[rms_per_sec > -40]
+    median_rms = float(np.median(speech_rms)) if len(speech_rms) > 0 else -30
+
+    # Silence regions from manifest
+    silence_ranges = []
+    for seg in manifest_data['segments']:
+        if seg['type'] == 'silence':
+            silence_ranges.append((seg['start_time'], seg['start_time'] + seg['duration']))
+
+    # Overall verdict
+    overall_pass = all(r.get('passed', True) for r in gate_results.values() if r is not None)
+    verdict = "PASS" if overall_pass else "FAIL"
+    date_str = time.strftime("%Y-%m-%d %H:%M")
+
+    # Styling
+    bg_color = '#1a1a2e'
+    text_color = '#e0e0e0'
+    grid_color = '#2a2a4e'
+    silence_color = '#333355'
+
+    fig, axes = plt.subplots(4, 1, figsize=(20, 16), dpi=150,
+                              gridspec_kw={'height_ratios': [2, 3, 2, 1.5]})
+    fig.patch.set_facecolor(bg_color)
+
+    title_color = '#ff4444' if verdict == "FAIL" else '#44ff44'
+    fig.suptitle(f'{session_name} — QA Report — {date_str} — {verdict}',
+                 fontsize=16, color=title_color, fontweight='bold', y=0.98)
+
+    # ── Panel 1: Waveform ──
+    ax = axes[0]
+    ax.set_facecolor(bg_color)
+
+    # Downsample for plotting (max 10000 points)
+    downsample = max(1, len(samples) // 10000)
+    plot_samples = samples[::downsample] / 32768
+    plot_time = time_axis[::downsample]
+
+    ax.plot(plot_time, plot_samples, color='#4488cc', linewidth=0.3, alpha=0.8)
+
+    # Shade silence regions
+    for s_start, s_end in silence_ranges:
+        ax.axvspan(s_start, s_end, alpha=0.15, color=silence_color)
+
+    # Highlight flagged regions from gates
+    for gate_name, result in gate_results.items():
+        if result and not result.get('passed', True):
+            flags = result.get('details', {})
+            # Gate 6 flagged regions
+            for region in flags.get('flagged_regions', []):
+                ax.axvspan(region['start'], region['end'], alpha=0.3, color='#ff4444')
+            # Gate 7 flags
+            for flag in flags.get('flags', []):
+                ax.axvline(x=flag['time'], color='#ff8800', alpha=0.5, linewidth=1)
+
+    ax.set_ylabel('Amplitude', color=text_color, fontsize=9)
+    ax.set_xlim(0, duration_sec)
+    ax.tick_params(colors=text_color, labelsize=7)
+    ax.grid(True, color=grid_color, alpha=0.3)
+    ax.set_title('Waveform', color=text_color, fontsize=10, loc='left')
+
+    # ── Panel 2: Mel Spectrogram ──
+    ax = axes[1]
+    ax.set_facecolor(bg_color)
+
+    try:
+        import librosa
+        import librosa.display
+        y_librosa = samples / 32768
+        S = librosa.feature.melspectrogram(y=y_librosa, sr=sr, n_mels=128, fmax=10000)
+        S_db = librosa.power_to_db(S, ref=np.max)
+        img = librosa.display.specshow(S_db, x_axis='time', y_axis='mel', sr=sr,
+                                        fmax=10000, ax=ax, cmap='viridis')
+        ax.axhline(y=4000, color='#ffffff', linestyle='--', alpha=0.5, linewidth=0.8)
+        ax.text(duration_sec * 0.98, 4200, '4kHz', color='#ffffff', alpha=0.5,
+                fontsize=7, ha='right')
+    except Exception as e:
+        ax.text(0.5, 0.5, f'Spectrogram unavailable: {e}', transform=ax.transAxes,
+                color=text_color, ha='center')
+
+    ax.set_ylabel('Frequency (Hz)', color=text_color, fontsize=9)
+    ax.tick_params(colors=text_color, labelsize=7)
+    ax.set_title('Mel Spectrogram (0-10kHz)', color=text_color, fontsize=10, loc='left')
+
+    # ── Panel 3: Energy Plot ──
+    ax = axes[2]
+    ax.set_facecolor(bg_color)
+
+    time_secs = np.arange(len(rms_per_sec))
+    colors = []
+    for db in rms_per_sec:
+        if db > median_rms + 4:
+            colors.append('#ff4444')  # Red — spike
+        elif db > median_rms + 2:
+            colors.append('#ffaa00')  # Amber — elevated
+        else:
+            colors.append('#44cc44')  # Green — normal
+
+    ax.bar(time_secs, rms_per_sec, width=1.0, color=colors, alpha=0.8)
+    ax.axhline(y=median_rms, color='#ffffff', linestyle='-', alpha=0.5, linewidth=0.8)
+    ax.axhline(y=median_rms + 4, color='#ff4444', linestyle='--', alpha=0.3, linewidth=0.8)
+    ax.text(len(rms_per_sec) * 0.98, median_rms + 0.5, f'median {median_rms:.0f} dB',
+            color='#ffffff', alpha=0.5, fontsize=7, ha='right')
+
+    # Shade silence regions
+    for s_start, s_end in silence_ranges:
+        ax.axvspan(s_start, s_end, alpha=0.15, color=silence_color)
+
+    ax.set_ylabel('RMS (dB)', color=text_color, fontsize=9)
+    ax.set_xlim(0, duration_sec)
+    ax.set_ylim(max(-60, min(rms_per_sec) - 2), max(rms_per_sec) + 2)
+    ax.tick_params(colors=text_color, labelsize=7)
+    ax.grid(True, color=grid_color, alpha=0.3)
+    ax.set_title('Per-Second Energy', color=text_color, fontsize=10, loc='left')
+
+    # ── Panel 4: Summary ──
+    ax = axes[3]
+    ax.set_facecolor(bg_color)
+    ax.axis('off')
+
+    summary_lines = [
+        f'Session: {session_name}    Duration: {duration_sec/60:.1f} min    Date: {date_str}',
+        '',
+    ]
+
+    for gate_name, result in sorted(gate_results.items()):
+        if result is None:
+            continue
+        status = "PASS" if result.get('passed', True) else "FAIL"
+        emoji = "PASS" if status == "PASS" else "FAIL"
+        extra = ""
+        details = result.get('details', {})
+        if not result.get('passed', True):
+            # Add brief failure info
+            if 'flagged_regions' in details:
+                extra = f" — {len(details['flagged_regions'])} regions"
+            elif 'flags' in details:
+                extra = f" — {len(details['flags'])} anomalies"
+            elif 'spikes' in details:
+                extra = f" — {len(details['spikes'])} spikes"
+            elif 'confirmed_repeats' in details:
+                extra = f" — {len(details['confirmed_repeats'])} repeats"
+        summary_lines.append(f'  [{emoji}] {gate_name}{extra}')
+
+    summary_lines.append('')
+    summary_lines.append(f'VERDICT: {verdict}')
+
+    summary_text = '\n'.join(summary_lines)
+    ax.text(0.02, 0.95, summary_text, transform=ax.transAxes,
+            fontfamily='monospace', fontsize=9, color=text_color,
+            verticalalignment='top')
+
+    plt.tight_layout(rect=[0, 0, 1, 0.96])
+
+    # Save
+    if output_dir is None:
+        output_dir = OUTPUT_DIR
+    report_path = Path(output_dir) / f"{session_name}_QA_REPORT.png"
+    fig.savefig(str(report_path), facecolor=bg_color, edgecolor='none')
+    plt.close(fig)
+
+    # Also save to Audio Quality Analysis directory
+    qa_dir = Path("Audio Quality Analysis") / session_name
+    qa_dir.mkdir(parents=True, exist_ok=True)
+    qa_copy = qa_dir / f"{session_name}_QA_REPORT.png"
+    shutil.copy(str(report_path), str(qa_copy))
+
+    print(f"  QA-REPORT: Saved → {report_path}")
+    print(f"  QA-REPORT: Copy  → {qa_copy}")
+    return str(report_path)
+
+
 def scan_for_clicks(audio_path, manifest_data, threshold=QA_CLICK_THRESHOLD):
     """Scan mixed audio for click artifacts in silence regions.
 
@@ -1407,34 +2189,45 @@ def patch_stitch_clicks(raw_mp3, manifest_data, output_mp3, ambient_name=None, f
 
 
 def qa_loop(final_mp3, raw_mp3, manifest_data, ambient_name=None, raw_narration_wav=None,
-            pre_cleanup_wav=None):
-    """Full quad-gate QA pipeline.
+            pre_cleanup_wav=None, session_name=None):
+    """Full 9-gate QA pipeline.
 
     GATE 1 (Primary): Quality benchmarks — noise floor and HF hiss vs master
     GATE 2 (Click scan): Scan → fix → rescan loop for click artifacts
     GATE 3 (Independent): Spectral comparison against master reference WAV
-    GATE 4 (Voice): MFCC cosine + F0 deviation vs Marco master
-                    Uses PRE-CLEANUP audio (must compare raw vs raw master)
+    GATE 4 (Voice): MFCC cosine + F0 deviation vs Marco master (pre-cleanup)
+    GATE 5 (Loudness): Per-second RMS consistency — catches per-chunk level surges
+    GATE 6 (HF Hiss): Sliding-window high-frequency hiss detector (pre-cleanup)
+    GATE 7 (Surge): Volume surge/drop detector with silence exclusion (pre-cleanup)
+    GATE 8 (Repeat): Repeated content detector — MFCC + Whisper (pre-cleanup)
+    GATE 9 (Report): Visual PNG report — runs ALWAYS, not pass/fail
 
-    ALL FOUR gates must pass. Any failure = no deploy.
-    Human review remains MANDATORY — Gate 4 cannot catch subtle prosody issues.
-    Returns True only if all gates pass.
+    Gates 1-8 must ALL pass. Any failure = no deploy.
+    Gate 9 runs regardless of pass/fail for debugging.
+    Human review remains MANDATORY.
+    Returns True only if all gates 1-8 pass.
     """
     print(f"\n{'='*60}")
-    print("  QA: QUAD-GATE QUALITY ASSURANCE")
+    print("  QA: 9-GATE QUALITY ASSURANCE")
     print(f"{'='*60}")
+
+    gate_results = {}
+    any_failed = False
+
+    # Choose audio for pre-cleanup gates (6-8 and 4)
+    pre_wav = pre_cleanup_wav if (pre_cleanup_wav and os.path.exists(pre_cleanup_wav)) else raw_narration_wav
 
     # ── GATE 1: Quality benchmarks ──
     if raw_narration_wav and os.path.exists(raw_narration_wav):
         quality_passed, quality_details = qa_quality_check(raw_narration_wav, manifest_data)
+        gate_results['Gate 1: Quality'] = {'passed': quality_passed, 'details': quality_details}
         if not quality_passed:
-            print(f"\n  QA: REJECTED — audio quality below master threshold")
-            print(f"  QA: Build will NOT be deployed")
-            return False
+            any_failed = True
     else:
         print(f"  QA-QUALITY: SKIPPED (no raw narration WAV available)")
 
     # ── GATE 2: Click artifacts ──
+    clicks_passed = True
     for qa_pass in range(1, QA_MAX_PASSES + 1):
         clicks = scan_for_clicks(final_mp3, manifest_data)
 
@@ -1443,7 +2236,7 @@ def qa_loop(final_mp3, raw_mp3, manifest_data, ambient_name=None, raw_narration_
             break
 
         print(f"  QA PASS {qa_pass}: FOUND {len(clicks)} click artifacts")
-        for ts, jump, peak in clicks[:5]:  # Show first 5
+        for ts, jump, peak in clicks[:5]:
             mins = int(ts // 60)
             secs = ts % 60
             print(f"    {mins}:{secs:05.2f} — jump={jump}, peak={peak}")
@@ -1455,29 +2248,73 @@ def qa_loop(final_mp3, raw_mp3, manifest_data, ambient_name=None, raw_narration_
         patches = patch_stitch_clicks(raw_mp3, manifest_data, final_mp3, ambient_name, click_times=click_timestamps)
         print(f"  QA PASS {qa_pass}: Applied crossfades at {patches} stitch points")
     else:
-        # Final check after last pass
         clicks = scan_for_clicks(final_mp3, manifest_data)
         if clicks:
-            print(f"  QA: REJECTED — {len(clicks)} clicks remain after {QA_MAX_PASSES} passes")
-            return False
+            clicks_passed = False
+            print(f"  QA: {len(clicks)} clicks remain after {QA_MAX_PASSES} passes")
+
+    gate_results['Gate 2: Clicks'] = {'passed': clicks_passed, 'details': {'remaining_clicks': len(clicks) if not clicks_passed else 0}}
+    if not clicks_passed:
+        any_failed = True
 
     # ── GATE 3: Independent spectral verification ──
     if raw_narration_wav and os.path.exists(raw_narration_wav):
         independent_passed, independent_details = qa_independent_check(raw_narration_wav, manifest_data)
+        gate_results['Gate 3: Spectral'] = {'passed': independent_passed, 'details': independent_details}
         if not independent_passed:
-            print(f"\n  QA: REJECTED — independent quality check failed")
-            print(f"  QA: Build will NOT be deployed")
-            return False
+            any_failed = True
 
     # ── GATE 4: Master voice comparison (MFCC + F0) ──
-    # Uses PRE-CLEANUP audio — cleanup changes spectral fingerprint significantly
-    voice_check_wav = pre_cleanup_wav or raw_narration_wav
-    if voice_check_wav and os.path.exists(voice_check_wav):
-        voice_passed, voice_details = qa_master_voice_check(voice_check_wav)
+    if pre_wav and os.path.exists(pre_wav):
+        voice_passed, voice_details = qa_master_voice_check(pre_wav)
+        gate_results['Gate 4: Voice'] = {'passed': voice_passed, 'details': voice_details}
         if not voice_passed:
-            print(f"\n  QA: REJECTED — voice does not match Marco master")
-            print(f"  QA: Build will NOT be deployed")
-            return False
+            any_failed = True
+
+    # ── GATE 5: Loudness consistency (per-second RMS) ──
+    if raw_narration_wav and os.path.exists(raw_narration_wav):
+        loudness_passed, loudness_details = qa_loudness_consistency_check(
+            raw_narration_wav, manifest_data)
+        gate_results['Gate 5: Loudness'] = {'passed': loudness_passed, 'details': loudness_details}
+        if not loudness_passed:
+            any_failed = True
+
+    # ── GATE 6: HF hiss detector (pre-cleanup) ──
+    if pre_wav and os.path.exists(pre_wav):
+        hiss_passed, hiss_details = qa_hf_hiss_check(pre_wav, manifest_data)
+        gate_results['Gate 6: HF Hiss'] = {'passed': hiss_passed, 'details': hiss_details}
+        if not hiss_passed:
+            any_failed = True
+
+    # ── GATE 7: Volume surge/drop detector (pre-cleanup) ──
+    if pre_wav and os.path.exists(pre_wav):
+        surge_passed, surge_details = qa_volume_surge_check(pre_wav, manifest_data)
+        gate_results['Gate 7: Surge'] = {'passed': surge_passed, 'details': surge_details}
+        if not surge_passed:
+            any_failed = True
+
+    # ── GATE 8: Repeated content detector (pre-cleanup) ──
+    if pre_wav and os.path.exists(pre_wav):
+        repeat_passed, repeat_details = qa_repeated_content_check(pre_wav, manifest_data)
+        gate_results['Gate 8: Repeat'] = {'passed': repeat_passed, 'details': repeat_details}
+        if not repeat_passed:
+            any_failed = True
+
+    # ── GATE 9: Visual report (ALWAYS runs) ──
+    report_wav = pre_wav or raw_narration_wav
+    s_name = session_name or 'unknown'
+    if report_wav and os.path.exists(report_wav):
+        try:
+            qa_visual_report(report_wav, manifest_data, s_name, gate_results)
+        except Exception as e:
+            print(f"  QA-REPORT: ERROR generating report: {e}")
+
+    # ── VERDICT ──
+    if any_failed:
+        failed_gates = [name for name, r in gate_results.items() if not r.get('passed', True)]
+        print(f"\n  QA: REJECTED — {len(failed_gates)} gate(s) failed: {', '.join(failed_gates)}")
+        print(f"  QA: Build will NOT be deployed")
+        return False
 
     print(f"\n  QA: ALL GATES PASSED")
     print(f"  QA: REMINDER — Human review is MANDATORY. Automated gates cannot catch subtle prosody issues.")
@@ -1775,7 +2612,8 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
     pre_cleanup_for_qa = str(pre_cleanup_wav_path) if pre_cleanup_wav_path.exists() else None
     qa_passed = qa_loop(str(final_path), raw_for_qa, manifest_data, ambient,
                         raw_narration_wav=str(raw_wav_path) if raw_wav_path.exists() else None,
-                        pre_cleanup_wav=pre_cleanup_for_qa)
+                        pre_cleanup_wav=pre_cleanup_for_qa,
+                        session_name=session_name)
 
     if qa_passed:
         # Update mixed copy after QA patching
