@@ -1558,8 +1558,8 @@ def qa_volume_surge_check(audio_path, manifest_data, window_sec=1.0, overlap_sec
                 'deviation_db': round(float(deviation), 1),
                 'type': 'SURGE',
             })
-        elif deviation < -drop_threshold_db and rms_db[i] > -35:
-            # Skip drops into near-silence/breath pauses (< -35 dB = not speech)
+        elif deviation < -drop_threshold_db and rms_db[i] > -33:
+            # Skip drops into near-silence/breath pauses (< -33 dB = not speech)
             mins = int(t // 60)
             secs = t % 60
             drops.append({
