@@ -154,6 +154,17 @@ AMBIENT_FADE_OUT_DURATION = 8    # 8 seconds fade-out (per spec)
 # SCRIPT PARSING
 # ============================================================================
 
+# Fish Audio S1 emotion tag profiles — default tag applied when block has no explicit tag
+EMOTION_PROFILES = {
+    'meditation-gentle': '(relaxed)',
+    'meditation-sleep': '(calm)',
+    'meditation-compassion': '(comforting)',
+    'meditation-focus': '(sincere)',
+    'meditation-grounding': '(sincere)',
+}
+EMOTION_TAG_PATTERN = re.compile(r'^(\([\w\s]+\))+\s*')
+
+
 def parse_script(script_path):
     """Parse script file with metadata header."""
     content = script_path.read_text()
@@ -165,6 +176,7 @@ def parse_script(script_path):
         'category': 'mindfulness',
         'ambient': None,
         'style': 'Warm male narrator',
+        'emotion_profile': None,
         'content': content.strip(),
     }
 
@@ -187,9 +199,11 @@ def parse_script(script_path):
             key, value = line.split(':', 1)
             key = key.strip().lower()
             value = value.strip()
-            if key in ['duration', 'category', 'ambient', 'style']:
+            if key in ['duration', 'category', 'ambient', 'style', 'emotion-profile']:
                 if key == 'ambient':
                     metadata[key] = value.lower() if value.lower() != 'none' else None
+                elif key == 'emotion-profile':
+                    metadata['emotion_profile'] = value.lower()
                 else:
                     metadata[key] = value
 
@@ -2447,6 +2461,21 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
     # Process script into blocks with pauses
     blocks = process_script_for_tts(metadata['content'], category)
 
+    # ── Emotion tag application (Fish Audio S1) ──
+    emotion_profile = metadata.get('emotion_profile')
+    default_tag = EMOTION_PROFILES.get(emotion_profile, EMOTION_PROFILES.get('meditation-gentle'))
+    explicit_count = 0
+    defaulted_count = 0
+    tagged_blocks = []
+    for text, pause in blocks:
+        if EMOTION_TAG_PATTERN.match(text):
+            explicit_count += 1
+            tagged_blocks.append((text, pause))
+        else:
+            defaulted_count += 1
+            tagged_blocks.append((f"{default_tag} {text}", pause))
+    blocks = tagged_blocks
+
     total_text = ' '.join(text for text, _ in blocks)
     total_silence = sum(pause for _, pause in blocks)
 
@@ -2455,6 +2484,9 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
     print(f"  Est. narration: {len(total_text)/1000*1.2:.1f} min")
     print(f"  Total silence: {total_silence/60:.1f} min")
     print(f"  Est. total: {len(total_text)/1000*1.2 + total_silence/60:.1f} min")
+    if emotion_profile:
+        print(f"  Emotion profile: {emotion_profile} (default: {default_tag})")
+    print(f"  Emotion tags: {explicit_count} explicit, {defaulted_count} defaulted")
 
     # Provider-specific block merging
     if provider == 'elevenlabs':
@@ -2475,9 +2507,13 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
 
     if dry_run:
         print(f"\n  DRY RUN - would generate {len(combined_blocks)} voice blocks")
-        if provider == 'elevenlabs':
-            for i, (text, pause) in enumerate(combined_blocks):
-                print(f"    Block {i+1}: {len(text)} chars, {pause}s pause")
+        for i, (text, pause) in enumerate(combined_blocks):
+            tag_match = EMOTION_TAG_PATTERN.match(text)
+            tag = tag_match.group(0).strip() if tag_match else '(none)'
+            print(f"    Block {i+1}: {tag} \"{text[len(tag_match.group(0)) if tag_match else 0:][:50]}...\" [{len(text)} chars, {pause}s]")
+        print(f"\n  Emotion profile: {emotion_profile or 'meditation-gentle (default)'}")
+        print(f"  Blocks with explicit tags: {explicit_count}/{len(blocks)}")
+        print(f"  Blocks using default: {defaulted_count}/{len(blocks)}")
         return True
 
     # ================================================================
