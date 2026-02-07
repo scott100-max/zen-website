@@ -1742,18 +1742,18 @@ def qa_repeated_content_check(audio_path, manifest_data, mfcc_sim_threshold=0.92
     except Exception as e:
         print(f"  QA-REPEAT: [B] Whisper error: {e} — skipping STT check")
 
-    # Combined verdict: flag if BOTH approaches agree, or if MFCC similarity is very high (>0.96)
+    # Combined verdict: require BOTH MFCC + Whisper agreement for all detections.
+    # MFCC alone cannot flag — meditation monotone voice produces >0.96 similarity
+    # between ALL segments. Only when Whisper also finds matching text at the same
+    # timestamps do we confirm a real duplicate.
     confirmed_repeats = []
     for mfcc_dup in mfcc_duplicates:
-        if mfcc_dup['similarity'] >= 0.96:
-            confirmed_repeats.append({**mfcc_dup, 'method': 'mfcc_high_confidence'})
-        else:
-            # Check if Whisper also found something near these timestamps
-            for w_dup in whisper_duplicates:
-                if (abs(w_dup['first_time'] - mfcc_dup['time_a']) < 5 or
-                    abs(w_dup['second_time'] - mfcc_dup['time_b']) < 5):
-                    confirmed_repeats.append({**mfcc_dup, 'method': 'mfcc+whisper', 'phrase': w_dup['phrase']})
-                    break
+        # Only flag if Whisper also found repeated text near these timestamps
+        for w_dup in whisper_duplicates:
+            if (abs(w_dup['first_time'] - mfcc_dup['time_a']) < 10 and
+                abs(w_dup['second_time'] - mfcc_dup['time_b']) < 10):
+                confirmed_repeats.append({**mfcc_dup, 'method': 'mfcc+whisper', 'phrase': w_dup['phrase']})
+                break
 
     details = {
         'mfcc_duplicates': mfcc_duplicates,
