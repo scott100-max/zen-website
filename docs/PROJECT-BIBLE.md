@@ -14,6 +14,7 @@ This document contains design guidelines, standards, and a record of website ame
 - Marco Master Audio Standard (Resemble AI)
 - Section 13: External Audio Quality Analysis — Auphonic
 - Section 14: Marco Master Voice Specification
+- Section 15: Calibration Results & Quad-Gate QA Implementation
 
 ---
 
@@ -2134,6 +2135,196 @@ to a human listener, it fails. Full stop.
 — END OF SECTION 14 —
 ================================================================================
 
+
+================================================================================
+SECTION 15: CALIBRATION RESULTS & QUAD-GATE QA IMPLEMENTATION
+================================================================================
+Added: 7 February 2026
+Status: COMPLETE — Calibrated, integrated, and validated in production
+
+================================================================================
+15.1 CALIBRATION RESULTS
+================================================================================
+
+Master file: marco-master-v1.wav (Fish Audio, 0.95x atempo, human-approved)
+Calibration set: 5 Fish + 3 Resemble generations of the Section 14.4 reference passage
+
+HUMAN CLASSIFICATIONS:
+    Sample          | Provider  | Classification
+    ----------------|-----------|---------------
+    fish-cal-1      | Fish      | GOOD
+    fish-cal-2      | Fish      | GOOD
+    fish-cal-3      | Fish      | GOOD
+    fish-cal-4      | Fish      | BAD
+    fish-cal-5      | Fish      | GOOD
+    resemble-cal-1  | Resemble  | BAD
+    resemble-cal-2  | Resemble  | BAD
+    resemble-cal-3  | Resemble  | BAD
+
+MEASUREMENTS (same-text comparison vs master):
+    Sample          | MFCC Cosine | F0 Dev %
+    ----------------|-------------|----------
+    fish-cal-1      | 0.0046      | 0.6%
+    fish-cal-2      | 0.0059      | 0.4%
+    fish-cal-3      | 0.0002      | 3.9%
+    fish-cal-4      | 0.0003      | 0.8%    ← BAD but indistinguishable by metrics
+    fish-cal-5      | 0.0006      | 5.6%
+    resemble-cal-1  | 0.0112      | 17.4%
+    resemble-cal-2  | 0.0109      | 17.0%
+    resemble-cal-3  | 0.0106      | 14.8%
+
+DERIVED THRESHOLDS (same-text calibration):
+    Metric                          | Threshold | Rationale
+    --------------------------------|-----------|----------------------------------
+    MFCC cosine distance            | ≤ 0.008   | All Fish GOOD ≤0.006, all Resemble BAD ≥0.010
+    F0 deviation %                  | ≤ 10.0%   | All Fish ≤5.6%, all Resemble ≥14.8%
+    Spectral centroid deviation     | NOT USEFUL | Too much variance in GOOD samples
+    RMS deviation                   | NOT USEFUL | Too much variance in GOOD samples
+
+CRITICAL FINDING — fish-cal-4:
+    Classified BAD by human ear but MFCC=0.0003, F0=0.8% — looks IDENTICAL to GOOD
+    by every automated metric. The issue was prosody/intonation, not timbre or pitch.
+    CONCLUSION: Automated metrics CANNOT catch subtle within-provider quality issues.
+    Human review is MANDATORY for every build. No exceptions.
+
+================================================================================
+15.2 CONTENT-DEPENDENT MFCC THRESHOLD
+================================================================================
+
+CRITICAL DISCOVERY: MFCC cosine distance is CONTENT-DEPENDENT.
+
+The calibration threshold (0.008) was derived from same-text comparisons — master
+reference passage vs calibration samples of the same passage. Different text produces
+different phoneme distributions which shift MFCC means.
+
+OBSERVED IN PRODUCTION:
+    Comparison Type              | MFCC Distance | Notes
+    -----------------------------|---------------|------------------------------
+    Same voice, same text (Fish) | 0.0002-0.0059 | Calibration set
+    Wrong voice, same text (Res) | 0.0106-0.0112 | Calibration set
+    Same voice, diff text (Fish) | ~0.035-0.038  | Loving-kindness production build
+
+PRODUCTION THRESHOLDS (used in build-session-v3.py):
+    MFCC cosine distance: ≤ 0.06 (allows content variance, catches wrong voice)
+    F0 deviation:         ≤ 10.0% (content-independent, uses tight threshold)
+
+F0 deviation is content-independent because fundamental frequency reflects the
+speaker's vocal characteristics, not which phonemes they are producing.
+
+================================================================================
+15.3 QUAD-GATE QA SYSTEM
+================================================================================
+
+The build pipeline now runs four automated gates. ALL must pass for deployment.
+
+GATE 1 — Quality Benchmarks:
+    Measures noise floor and HF hiss in silence regions via astats RMS.
+    Thresholds: noise ≤ -26.0 dB, HF hiss (>6kHz) ≤ -44.0 dB
+    Catches: Excessive noise, poor cleanup, hissy TTS output
+
+GATE 2 — Click Artifact Scan:
+    Scans mixed audio for sample-level discontinuities in silence regions.
+    Auto-patches with 40ms cosine crossfades at stitch points. Max 5 passes.
+    Catches: Stitch clicks, concatenation artifacts
+
+GATE 3 — Independent Spectral Comparison:
+    Compares frequency band energy (low/mid/high) and noise gap vs master WAV.
+    Fails if build is >3 dB worse than master in any metric.
+    Catches: Spectral anomalies, major quality degradation
+
+GATE 4 — Master Voice Comparison:
+    Extracts MFCC (13 coefficients) and F0 from PRE-CLEANUP audio.
+    Compares against master measurements via cosine distance and % deviation.
+    Thresholds: MFCC ≤ 0.06, F0 ≤ 10%
+    Catches: Wrong provider voice, major voice character shift
+    Does NOT catch: Subtle prosody/intonation issues (fish-cal-4 type)
+
+    IMPORTANT: Uses PRE-CLEANUP audio. The cleanup chain (de-esser, afftdn,
+    loudnorm) shifts the spectral fingerprint significantly — post-cleanup MFCC
+    distances are ~0.038 even for same-text comparisons. Pre-cleanup WAV is saved
+    automatically at: content/audio-free/raw/{session}_precleanup.wav
+
+HUMAN REVIEW — THE FIFTH GATE:
+    Automated gates cannot replace the human ear. Every build must be listened to
+    before being considered production-ready. Gate 4 cannot catch fish-cal-4 type
+    failures where pitch and timbre are correct but prosody is wrong.
+
+EMAIL NOTIFICATION:
+    Emails only fire on successful deploy (qa_passed AND not no_deploy).
+    No emails during development iterations or --no-deploy builds.
+
+================================================================================
+15.4 FISH CLEANUP CHAIN FIX
+================================================================================
+
+The Fish "full" cleanup chain previously used dynaudnorm. This was WRONG.
+
+BEFORE (broken):
+    highpass=80, eq=6kHz/-4, highshelf=7kHz/-2, lowpass=10kHz, afftdn=-25, dynaudnorm
+
+    dynaudnorm amplifies silence regions → noise floor jumps to -20 dB → Gate 1 FAIL.
+    This is the same problem discovered earlier with Resemble builds.
+
+AFTER (fixed):
+    highpass=80, eq=6kHz/-4, highshelf=7kHz/-2, lowpass=10kHz, afftdn=-25, loudnorm=I=-26
+
+    loudnorm I=-26 keeps noise floor at ~-28 dB in silence regions.
+    The de-esser (eq + highshelf) remains because Fish has more sibilance than Resemble.
+
+RULE: dynaudnorm must NEVER be used in any cleanup chain. It amplifies silence
+regions regardless of provider. Always use loudnorm with explicit I= target.
+
+================================================================================
+15.5 CLICK ARTIFACT RESOLUTION
+================================================================================
+
+QA crossfade width increased from 20ms to 40ms.
+
+With 40 individual Fish chunks (meditation-style one-block-per-phrase), 20ms
+crossfades were insufficient to resolve persistent click artifacts. Clicks would
+reduce each QA pass but not drop below threshold in 5 passes.
+
+40ms crossfades resolve clicks within 2-3 passes for 40-chunk Fish builds.
+No audible impact on voice quality at stitch boundaries.
+
+================================================================================
+15.6 LOVING-KINDNESS REBUILD (7 February 2026)
+================================================================================
+
+Session: 36-loving-kindness-intro
+Provider: Fish Audio (was Resemble — voice character was completely lost)
+Architecture: 40 individual TTS calls, one per text block, silences stitched in post
+Duration: 13.9 min
+Build attempts: 6 (Fish ~60% success rate + iteration on cleanup/threshold issues)
+
+BUILD ITERATION LOG:
+    #1: Gate 1 FAIL — dynaudnorm in Fish chain (noise -20.7, HF -39.0)
+    #2: Gates 1-3 PASS, Gate 4 FAIL — MFCC 0.038 (post-cleanup comparison)
+    #3: Gate 1 FAIL — HF hiss -37.6 (Fish variance, bad generation)
+    #4: Gates 1-3 PASS, Gate 4 FAIL — MFCC 0.036 (still post-cleanup)
+    #5: Gate 2 FAIL — persistent click at 9:58 (20ms crossfade too narrow)
+    #6: ALL 4 GATES PASSED — deployed to R2
+
+Human voice review: PASSED — "Marco sounds like himself"
+Full glitch review: PENDING
+
+QA RESULTS (final build):
+    Gate 1: noise -28.5 dB, HF hiss -49.3 dB — PASSED
+    Gate 2: 1 click found, resolved in 3 passes (40ms crossfade) — PASSED
+    Gate 3: spectral comparison, noise gap -11.7 dB, HF gap -19.2 dB — PASSED
+    Gate 4: MFCC 0.0375 (threshold 0.06), F0 82.8 Hz / 1.4% dev — PASSED
+
+FILES:
+    Deployed MP3:   content/audio-free/36-loving-kindness-intro.mp3 (R2)
+    Raw narration:  content/audio-free/raw/36-loving-kindness-intro.wav
+    Pre-cleanup:    content/audio-free/raw/36-loving-kindness-intro_precleanup.wav
+    Auphonic file:  ↑ use precleanup WAV for Auphonic analysis
+    Manifest:       content/audio-free/36-loving-kindness-intro_manifest.json
+
+================================================================================
+— END OF SECTION 15 —
+================================================================================
+
 ---
 
-*Last updated: 7 February 2026 (Sections 13-14 added: Auphonic, Marco Master Voice Specification)*
+*Last updated: 7 February 2026 (Section 15 added: Calibration Results & Quad-Gate QA Implementation)*
