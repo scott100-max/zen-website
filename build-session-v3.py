@@ -24,6 +24,7 @@ import argparse
 import time
 import random
 from pathlib import Path
+import urllib.request
 
 # Load .env manually
 env_path = Path(".env")
@@ -1088,6 +1089,49 @@ def deploy_to_r2(local_path, r2_key):
 
 
 # ============================================================================
+# EMAIL NOTIFICATION
+# ============================================================================
+
+def send_build_email(session_name, duration_min, qa_passed, r2_url):
+    """Send build completion email via Resend API."""
+    api_key = os.environ.get('RESEND_API_KEY')
+    if not api_key:
+        print("  EMAIL: Skipped (no RESEND_API_KEY)")
+        return
+
+    qa_status = "PASSED" if qa_passed else "REVIEW NEEDED"
+    body = (
+        f"Session: {session_name}\n"
+        f"Duration: {duration_min:.1f} min\n"
+        f"QA: {qa_status}\n\n"
+        f"Audio: {r2_url}\n"
+        f"Page: https://salus-mind.com/sessions/{session_name.split('-', 1)[1] if '-' in session_name else session_name}.html"
+    )
+
+    payload = json.dumps({
+        "from": "Salus Build <onboarding@resend.dev>",
+        "to": ["scottripley@icloud.com"],
+        "subject": f"{session_name} — LIVE",
+        "text": body
+    }).encode()
+
+    req = urllib.request.Request(
+        "https://api.resend.com/emails",
+        data=payload,
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+            "User-Agent": "SalusBuild/1.0"
+        }
+    )
+    try:
+        urllib.request.urlopen(req)
+        print(f"  EMAIL: Sent to scottripley@icloud.com")
+    except Exception as e:
+        print(f"  EMAIL: Failed — {e}")
+
+
+# ============================================================================
 # MAIN BUILD
 # ============================================================================
 
@@ -1342,6 +1386,11 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
     print(f"  Duration: {final_duration/60:.1f} min")
     print(f"  QA: {'PASSED' if qa_passed else 'REVIEW NEEDED'}")
     print(f"{'='*60}")
+
+    # Email notification
+    if not no_deploy:
+        r2_url = f"https://media.salus-mind.com/{R2_PATH_PREFIX}/{session_name}.mp3"
+        send_build_email(session_name, final_duration / 60, qa_passed, r2_url)
 
     return True
 
