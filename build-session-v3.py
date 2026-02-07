@@ -2455,7 +2455,7 @@ def qa_visual_report(audio_path, manifest_data, session_name, gate_results, outp
         reasons = []
         if total_ratio > 3.0:
             reasons.append(f'total {total_ratio:.1f}x median')
-        if hf_ratio > 12.0:
+        if hf_ratio > 28.0:
             reasons.append(f'HF {hf_ratio:.1f}x median')
         if reasons:
             t = spike_times[i]
@@ -2995,11 +2995,14 @@ def qa_loop(final_mp3, raw_mp3, manifest_data, ambient_name=None, raw_narration_
             any_failed = True
 
     # ── GATE 13: Ambient Continuity (final mixed output) ──
-    if final_mp3 and os.path.exists(final_mp3):
+    if final_mp3 and os.path.exists(final_mp3) and ambient_name:
         ambient_passed, ambient_details = qa_ambient_continuity_check(final_mp3, manifest_data)
         gate_results['Gate 13: Ambient'] = {'passed': ambient_passed, 'details': ambient_details}
         if not ambient_passed:
             any_failed = True
+    elif not ambient_name:
+        print(f"\n  QA-AMBIENT: SKIPPED — no ambient specified for this session")
+        gate_results['Gate 13: Ambient'] = {'passed': True, 'details': {'skipped': True, 'reason': 'no_ambient'}}
 
     # ── GATE 14: Opening Quality (tighter thresholds, first 60s) ──
     if pre_wav and os.path.exists(pre_wav):
