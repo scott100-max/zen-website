@@ -99,6 +99,7 @@ RESEMBLE_API_URL = "https://app.resemble.ai/api/v2"
 RESEMBLE_VOICE_ID = "9f1fb457"  # Amanda — most expressive voice design
 RESEMBLE_CHUNK_MAX = 2500  # Stay under 3000 char API limit
 RESEMBLE_DELAY_MS = 500  # Rate limiting between API calls
+RESEMBLE_VOICE_SETTINGS_PRESET = "6199a148-cd33-4ad7-b452-f067fdff3894"  # pace=0.85, exaggeration=0.75
 
 # Audio settings
 SAMPLE_RATE = 44100
@@ -625,6 +626,7 @@ def generate_tts_chunk_resemble(text, output_path, chunk_num=0, voice_id=None):
         "data": text,
         "output_format": "wav",
         "sample_rate": SAMPLE_RATE,
+        "voice_settings_preset_uuid": RESEMBLE_VOICE_SETTINGS_PRESET,
     }
 
     print(f"    Chunk {chunk_num + 1}: {len(text)} chars...", end=" ", flush=True)
@@ -636,9 +638,17 @@ def generate_tts_chunk_resemble(text, output_path, chunk_num=0, voice_id=None):
 
         if data.get("success"):
             audio_bytes = base64.b64decode(data["audio_content"])
-            # Write as WAV, then convert to MP3 for pipeline compatibility
+            # Write as WAV, force mono to match Fish pipeline
+            raw_wav = output_path.replace('.mp3', '.raw.wav')
             wav_path = output_path.replace('.mp3', '.wav')
-            Path(wav_path).write_bytes(audio_bytes)
+            Path(raw_wav).write_bytes(audio_bytes)
+            # Force mono WAV (Resemble returns stereo — halves quality at 128kbps)
+            subprocess.run([
+                'ffmpeg', '-y', '-i', raw_wav,
+                '-ac', '1', '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE),
+                wav_path
+            ], capture_output=True, check=True)
+            os.remove(raw_wav)
             # Convert WAV to MP3
             cmd = [
                 'ffmpeg', '-y', '-i', wav_path,

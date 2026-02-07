@@ -602,6 +602,7 @@ No atempo needed for Fish/Marco — natural speed is correct.
 7. **Deploy is automatic.** Build passes QA → uploads to R2 → live. Use `--no-deploy` to hold.
 8. **Email is mandatory.** Every completed build cycle ends with an email to scottripley@icloud.com — pass or fail.
 9. **Fully autonomous.** No human interaction between receiving a brief and the audio being live. Handle every step.
+10. **No OneDrive.** All files go to git (code) or Cloudflare R2 (media). Never copy files to OneDrive.
 
 ### CLI Usage
 
