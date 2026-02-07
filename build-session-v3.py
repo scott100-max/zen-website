@@ -154,17 +154,6 @@ AMBIENT_FADE_OUT_DURATION = 8    # 8 seconds fade-out (per spec)
 # SCRIPT PARSING
 # ============================================================================
 
-# Fish Audio S1 emotion tag profiles — default tag applied when block has no explicit tag
-EMOTION_PROFILES = {
-    'meditation-gentle': '(relaxed)',
-    'meditation-sleep': '(calm)',
-    'meditation-compassion': '(comforting)',
-    'meditation-focus': '(sincere)',
-    'meditation-grounding': '(sincere)',
-}
-EMOTION_TAG_PATTERN = re.compile(r'^(\([\w\s]+\))+\s*')
-
-
 def parse_script(script_path):
     """Parse script file with metadata header."""
     content = script_path.read_text()
@@ -176,7 +165,6 @@ def parse_script(script_path):
         'category': 'mindfulness',
         'ambient': None,
         'style': 'Warm male narrator',
-        'emotion_profile': None,
         'content': content.strip(),
     }
 
@@ -199,11 +187,9 @@ def parse_script(script_path):
             key, value = line.split(':', 1)
             key = key.strip().lower()
             value = value.strip()
-            if key in ['duration', 'category', 'ambient', 'style', 'emotion-profile']:
+            if key in ['duration', 'category', 'ambient', 'style']:
                 if key == 'ambient':
                     metadata[key] = value.lower() if value.lower() != 'none' else None
-                elif key == 'emotion-profile':
-                    metadata['emotion_profile'] = value.lower()
                 else:
                     metadata[key] = value
 
@@ -1547,17 +1533,22 @@ def qa_volume_surge_check(audio_path, manifest_data, window_sec=1.0, overlap_sec
         if rms_db[i] < -50:
             continue
 
-        # Local mean of neighbours (excluding self)
-        neighbours = np.concatenate([
-            rms_db[max(0, i - neighbour_radius):i],
-            rms_db[i + 1:min(len(rms_db), i + neighbour_radius + 1)]
-        ])
-        # Only use neighbours with signal
-        active_neighbours = neighbours[neighbours > -50]
-        if len(active_neighbours) < 2:
+        # Local mean of neighbours (excluding self and silence-adjacent)
+        neighbour_indices = list(range(max(0, i - neighbour_radius), i)) + \
+                           list(range(i + 1, min(len(rms_db), i + neighbour_radius + 1)))
+        # Filter: must have signal AND not overlap silence regions
+        active_vals = [rms_db[j] for j in neighbour_indices
+                       if rms_db[j] > -50 and not overlaps_silence(window_times[j])]
+        if len(active_vals) < 2:
             continue
 
-        local_mean = float(np.mean(active_neighbours))
+        local_mean = float(np.mean(active_vals))
+
+        # Skip if local mean is below speech level — neighbours are ambient/transition,
+        # not real speech, so the comparison is meaningless (e.g. session opening)
+        if local_mean < -28:
+            continue
+
         deviation = rms_db[i] - local_mean
 
         if deviation > surge_threshold_db:
@@ -1618,7 +1609,9 @@ REPETITION_IGNORE_PHRASES = [
     "may all beings be", "may all beings",
     "may i feel", "may you feel", "may they feel",
     "may i live", "may you live", "may all beings live",
-    "live with ease",
+    "live with ease", "ease and peace",
+    "safe and protected", "protected from harm",
+    "happy and content", "healthy and strong",
     "let go", "letting go", "let it go", "gently let",
     "notice the sensations", "notice any sensations",
     "gently bring your attention", "bring your awareness",
@@ -1627,6 +1620,8 @@ REPETITION_IGNORE_PHRASES = [
     "be safe", "be happy", "be healthy",
     "when youre ready", "when you're ready",
     "and gently", "gently now",
+    "offer them", "offer the same", "same wishes",
+    "nowhere else you need", "nothing else that needs",
 ]
 
 
@@ -2461,21 +2456,6 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
     # Process script into blocks with pauses
     blocks = process_script_for_tts(metadata['content'], category)
 
-    # ── Emotion tag application (Fish Audio S1) ──
-    emotion_profile = metadata.get('emotion_profile')
-    default_tag = EMOTION_PROFILES.get(emotion_profile, EMOTION_PROFILES.get('meditation-gentle'))
-    explicit_count = 0
-    defaulted_count = 0
-    tagged_blocks = []
-    for text, pause in blocks:
-        if EMOTION_TAG_PATTERN.match(text):
-            explicit_count += 1
-            tagged_blocks.append((text, pause))
-        else:
-            defaulted_count += 1
-            tagged_blocks.append((f"{default_tag} {text}", pause))
-    blocks = tagged_blocks
-
     total_text = ' '.join(text for text, _ in blocks)
     total_silence = sum(pause for _, pause in blocks)
 
@@ -2484,9 +2464,6 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
     print(f"  Est. narration: {len(total_text)/1000*1.2:.1f} min")
     print(f"  Total silence: {total_silence/60:.1f} min")
     print(f"  Est. total: {len(total_text)/1000*1.2 + total_silence/60:.1f} min")
-    if emotion_profile:
-        print(f"  Emotion profile: {emotion_profile} (default: {default_tag})")
-    print(f"  Emotion tags: {explicit_count} explicit, {defaulted_count} defaulted")
 
     # Provider-specific block merging
     if provider == 'elevenlabs':
@@ -2508,12 +2485,7 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
     if dry_run:
         print(f"\n  DRY RUN - would generate {len(combined_blocks)} voice blocks")
         for i, (text, pause) in enumerate(combined_blocks):
-            tag_match = EMOTION_TAG_PATTERN.match(text)
-            tag = tag_match.group(0).strip() if tag_match else '(none)'
-            print(f"    Block {i+1}: {tag} \"{text[len(tag_match.group(0)) if tag_match else 0:][:50]}...\" [{len(text)} chars, {pause}s]")
-        print(f"\n  Emotion profile: {emotion_profile or 'meditation-gentle (default)'}")
-        print(f"  Blocks with explicit tags: {explicit_count}/{len(blocks)}")
-        print(f"  Blocks using default: {defaulted_count}/{len(blocks)}")
+            print(f"    Block {i+1}: \"{text[:60]}...\" [{len(text)} chars, {pause}s]")
         return True
 
     # ================================================================
@@ -2559,9 +2531,31 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
                     block_path = os.path.join(temp_dir, f"block_{i}.mp3")
                     generate_tts_chunk(text, block_path, len(voice_files))
 
-            # Build manifest
+            # Overgeneration retry for Fish (non-deterministic — sometimes produces 3x+ expected)
             duration = get_audio_duration(block_path)
             expected = len(text) / 15.0  # ~15 chars/sec estimate
+            max_dur = max(expected * 2.5, 20.0)
+            if provider == 'fish' and duration > max_dur:
+                for retry in range(2):
+                    print(f"    OVERGENERATION: {duration:.1f}s (max {max_dur:.1f}s) — retrying ({retry+1}/2)")
+                    if len(text) > CHUNK_SIZE:
+                        chunks = chunk_text_at_sentences(text)
+                        chunk_files = []
+                        for j, chunk in enumerate(chunks):
+                            chunk_path = os.path.join(temp_dir, f"block_{i}_chunk_{j}.mp3")
+                            generate_tts_chunk(chunk, chunk_path, len(voice_files) + j)
+                            chunk_files.append(chunk_path)
+                        block_path = os.path.join(temp_dir, f"block_{i}.mp3")
+                        crossfade_audio_files(chunk_files, block_path)
+                    else:
+                        generate_tts_chunk(text, block_path, len(voice_files))
+                    duration = get_audio_duration(block_path)
+                    if duration <= max_dur:
+                        break
+                else:
+                    print(f"    WARNING: Overgeneration persisted after 2 retries ({duration:.1f}s)")
+
+            # Build manifest
             manifest_segments.append({
                 "index": len(manifest_segments),
                 "type": "text",
