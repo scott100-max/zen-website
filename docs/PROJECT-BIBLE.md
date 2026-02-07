@@ -485,7 +485,7 @@ npx wrangler r2 object put salus-mind/content/audio-free/FILENAME.mp3 --file=./F
 | **Chunks** | ~147 small blocks per 45-min story | ~12 merged blocks per 45-min story |
 | **Drift risk** | High on long content (voice changes across many chunks) | Low (fewer chunks = fewer drift points) |
 | **First-build success** | ~40% for 45-min stories, ~95% for <15 min | Expected ~90%+ for all lengths |
-| **Audio quality** | Needs full cleanup chain (de-esser, noise reduction) | Clean output, just loudnorm needed |
+| **Audio quality** | Needs full cleanup chain (highpass + afftdn + loudnorm + highshelf) — consistently produces HF hiss | Clean output, just loudnorm needed |
 | **API auth** | `Bearer` token | `xi-api-key` header |
 | **Pacing** | Explicit silence files between every block | Paragraph breaks (`\n\n`) render as natural pauses |
 | **Cost** | Lower per-character | Higher per-character |
@@ -859,9 +859,9 @@ All 5 deployed sessions scanned and patched:
    - Gate 3 (Independent Spectral): Compares frequency profile of build against master reference WAV
    - Gate 4 (Voice): MFCC cosine + F0 deviation vs Marco master (uses pre-cleanup audio)
    - Gate 5 (Loudness): Per-second RMS sliding window — catches per-chunk loudness surges
-   - Gate 6 (HF Hiss): Sliding-window HF-to-total energy ratio — catches localised hiss (3s min duration, 6 dB threshold)
+   - Gate 6 (HF Hiss): Sliding-window HF-to-total energy ratio on POST-CLEANUP audio — catches sustained hiss that survives cleanup (10s min duration, 6 dB threshold)
    - Gate 7 (Volume Surge): Local-mean comparison with silence exclusion — catches surges/drops (8/12 dB thresholds)
-   - Gate 8 (Repeated Content): MFCC fingerprint + Whisper STT — catches TTS repeating itself (meditation-aware ignore list)
+   - Gate 8 (Repeated Content): MFCC fingerprint + Whisper STT with DUAL AGREEMENT — both must flag the same timestamps to confirm (meditation-aware ignore list, 8-word minimum)
    - Gate 9 (Visual Report): PNG with waveform, spectrogram, energy plot, summary — runs ALWAYS, not pass/fail
    - Gates 1-8 must ALL pass — any failure blocks deploy. Gate 9 runs regardless for debugging.
 3. **Deploy gate hardened** — Deploy was unconditional before; now respects QA rejection
@@ -2517,4 +2517,4 @@ meditation while every punctuation mark is deliberate vocal direction.
 
 ---
 
-*Last updated: 7 February 2026 — Bible v1.5: Nine-gate QA system (Gates 6-9: HF hiss, volume surge, repeated content, visual report), per-chunk normalization*
+*Last updated: 7 February 2026 — Bible v1.6: Fish cleanup chain upgraded (afftdn denoising), Gate 6 runs post-cleanup, Gate 8 requires MFCC+Whisper dual agreement, threshold tuning for Fish characteristics*
