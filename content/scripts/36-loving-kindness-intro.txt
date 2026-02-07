@@ -3,6 +3,7 @@ Duration: 12 minutes
 Category: mindfulness
 Ambient: loving-kindness-ambient
 Style: Warm, grounded male narrator
+Expected-Repetitions: may i be, may you be, may they be, may all beings be
 ---
 Find a comfortable position, wherever you are right now, and gently allow your eyes to close.
 ...
