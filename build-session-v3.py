@@ -939,7 +939,7 @@ def mix_ambient(voice_path, ambient_name, output_path):
             f"[1:a]volume={AMBIENT_VOLUME_DB}dB,"
             f"afade=t=in:st={AMBIENT_FADE_IN_START}:d={AMBIENT_FADE_IN_DURATION},"
             f"afade=t=out:st={fade_out_start}:d={AMBIENT_FADE_OUT_DURATION}[amb];"
-            f"[0:a][amb]amix=inputs=2:duration=first:dropout_transition=2"
+            f"[0:a][amb]amix=inputs=2:duration=first:dropout_transition=2:normalize=0"
         ),
         '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE),
         output_path
@@ -2814,7 +2814,7 @@ def patch_stitch_clicks(raw_mp3, manifest_data, output_mp3, ambient_name=None, f
                     f"[1:a]volume={AMBIENT_VOLUME_DB}dB,"
                     f"afade=t=in:st={AMBIENT_FADE_IN_START}:d={AMBIENT_FADE_IN_DURATION},"
                     f"afade=t=out:st={fade_out_start}:d={AMBIENT_FADE_OUT_DURATION}[amb];"
-                    f"[0:a][amb]amix=inputs=2:duration=first:dropout_transition=2"
+                    f"[0:a][amb]amix=inputs=2:duration=first:dropout_transition=2:normalize=0"
                 ),
                 '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE),
                 mixed_wav
