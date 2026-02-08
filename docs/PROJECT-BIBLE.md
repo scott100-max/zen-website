@@ -1,6 +1,6 @@
 # Salus Project Bible
 
-**Version:** 2.2
+**Version:** 3.0
 **Updated:** 8 February 2026
 **Purpose:** Single source of truth for all Salus website and audio production standards
 
@@ -174,6 +174,13 @@ npx wrangler r2 object put salus-mind/content/audio-free/FILENAME.mp3 --file=./F
 - Sounds (ASMR): `content/sounds/`
 - Video: `content/video/`
 - Reference: `reference/` (marco master etc.)
+
+**ASMR sounds:**
+- All ASMR audio is user-provided (downloaded from YouTube, cut to 1 hour each). Not procedurally generated.
+- 14 sounds: rain, ocean, forest, thunder, birds, fire, stream, cafe, garden, library, night, temple, waterfall, white noise
+- 1-hour cuts stored locally in `content/audio-free/` (e.g. `asmr-stream.mp3`)
+- Short clips on R2 at `content/sounds/` for ASMR page playback
+- Full-length YouTube source downloads in `content/audio/ambient/youtube-downloads/`
 
 **Media references in HTML — two player types:**
 
@@ -976,6 +983,7 @@ Certain words cause consistent artifacts in Fish/Marco output. Most are sibilant
 | be (standalone) | voice shift | Embed in longer phrases — never isolate |
 | breath in | hiss | breathe in, inhale, draw a breath |
 | filling your lungs completely | hiss | Rewrite as shorter phrase — "breathe in fully" |
+| nowhere else | voice shift | "right here", "all you need is to be here" |
 
 **Pattern:** Most triggers are soft, sibilant-heavy words or words with sustained vowels where Fish needs to hold a gentle, open tone. These are the exact words that appear constantly in meditation content.
 
@@ -1536,8 +1544,6 @@ Expanded from 10 gates to 14 gates. All gates now pass/fail — no informational
 
 **Login buttons:** Fixed `href="#"` → `login.html` across 11 files (22 instances). Articles subdirectory uses `../login.html`.
 
-**ASMR audio:** Web Audio API procedural sound generation added to all 14 sound cards. Supports simultaneous layered playback. Each sound type has unique algorithm (pink noise for rain/ocean, brown noise for forest/stream, modulated sine for birds, crackle for fire, etc.). Smooth gain ramping via `setTargetAtTime` (50ms time constant).
-
 **Mindfulness page cleanup:** Removed 6 content sections (276 lines): What is Mindfulness, The Science, Core Practices, How to Start, Mindfulness in Daily Life, FAQ. All had light gradient backgrounds causing white bands. Page now shows session cards + course banners + CTA only.
 
 **Footer routing:** `sounds.html` → `asmr.html` across 60 files (root pages + sessions/ + newsletters/).
@@ -1545,6 +1551,26 @@ Expanded from 10 gates to 14 gates. All gates now pass/fail — no informational
 **Premium CTA routing:** `newsletter.html` → `apps.html` in media.html, sounds.html, newsletter.html.
 
 **Subsequent completion (same day):** All 15 remaining pages converted to dark theme. Unified `hb-footer` applied to all 82 pages. breathe.html and timer.html heroes rebuilt with dark-theme pattern (radial glow, gradient text). Reading page: miniature book covers via Open Library Covers API, increased description font. Mindfulness page: fixed 7-day course 404 link.
+
+---
+
+### 8 February 2026 — Learn & Applied Psychology Content Launch
+
+**Learn section (education.html):**
+- 17 Learn articles deployed to `articles/` directory across 6 categories: Neuroscience (4), Breathwork (3), Sleep (3), Stress (3), Focus (2), Compassion (2)
+- education.html rebuilt: placeholder topic grid replaced with interactive topic-card layout linking to all 17 articles
+- Learn vs Applied Psychology distinction tiles added (Learn scrolls to #articles, AP links to applied-psychology.html)
+- Each article wrapped in site template (nav, footer, supabase auth, scripts), all back links point to `education.html`
+
+**Applied Psychology section:**
+- 9 Applied Psychology articles deployed to `articles/` directory
+- Liability review conducted: citation mismatches fixed, crisis language softened
+
+**Site-wide updates:**
+- "Growing by the Week" added to session stat labels (sessions.html hero, section header; index.html category card)
+- Introduction to Mindfulness locked as premium on mindfulness page (badge changed, data-src removed)
+- Sleep story cards: ambient sound labels removed (Garden sounds, Train rhythm, Rain on glass, Ocean & fog horn)
+- ASMR audio: clarified as user-provided YouTube downloads cut to 1 hour (not procedurally generated)
 
 ---
 
@@ -1580,7 +1606,7 @@ Expanded from 10 gates to 14 gates. All gates now pass/fail — no informational
 
 ---
 
-*Last updated: 8 February 2026 — v2.2c (corrected): Rule 6/7/11/12 conflicts resolved, document governance restored, threshold approvals documented, ambient masking strategy and dynamic ambient codified, per-session ambient tracking added. Session 36 shipped, review workflow established, R2 CORS, mindfulness players wired, Resend email fix.*
+*Last updated: 8 February 2026 — v3.0: Learn section launched (17 articles across 6 categories), education.html rebuilt with interactive topic-card grid, Applied Psychology articles deployed (9 articles), ASMR audio clarified as user-provided (not procedural), sleep story ambient labels removed, Introduction to Mindfulness locked as premium on mindfulness page, "Growing by the Week" added to session stat labels.*
 
 ---
 
