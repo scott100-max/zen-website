@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Two-Minute Rule and Why It Actually Works — Salus Mind</title>
+  <meta name="description" content="Habit formation isn't about willpower. It's about reducing friction until the behaviour becomes automatic. The research consistently points to one counterintuit">
+  <link rel="canonical" href="https://salus-mind.com/articles/two-minute-rule.html">
+  <meta property="og:title" content="The Two-Minute Rule and Why It Actually Works — Salus Mind">
+  <meta property="og:description" content="Habit formation isn't about willpower. It's about reducing friction until the behaviour becomes automatic. The research consistently points to one counterintuit">
+  <meta property="og:url" content="https://salus-mind.com/articles/two-minute-rule.html">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://salus-mind.com/images/meditation-woman-outdoor.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css?v=1770564391">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script src="../js/auth.js?v=1770564391"></script>
+<style>
+  /* ═══════════════ NAVIGATION ═══════════════ */
+  .nav-wrap{position:fixed;top:0;left:0;right:0;z-index:1000;transition:background .4s ease,box-shadow .4s ease;background:rgba(6,8,16,0.5);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+  .nav-wrap.scrolled{background:rgba(6,8,16,0.92);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);box-shadow:0 1px 0 rgba(255,255,255,0.06),0 12px 40px rgba(0,0,0,0.3)}
+  .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px}
+  .nav-row-1{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .nav-brand{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.5rem;letter-spacing:.12em;text-decoration:none;color:#f0eefc;transition:opacity .3s ease;flex-shrink:0}
+  .nav-brand:hover{opacity:.8}
+  .nav-primary{display:flex;align-items:center;gap:4px;list-style:none}
+  .nav-primary a{font-weight:300;font-size:.82rem;letter-spacing:.02em;color:rgba(240,238,252,0.6);text-decoration:none;padding:6px 13px;border-radius:8px;transition:all .3s ease;position:relative;white-space:nowrap}
+  .nav-primary a:hover{color:#f0eefc;background:rgba(255,255,255,0.04)}
+  .nav-primary a.active{color:#f0eefc;background:rgba(255,255,255,0.06)}
+  .nav-primary a.active::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:16px;height:2px;border-radius:1px;background:#4ecdc4;opacity:.7}
+  .nav-ctas{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  .nav-cta{font-family:'Outfit',sans-serif;font-weight:400;font-size:.78rem;letter-spacing:.04em;padding:7px 18px;border-radius:40px;cursor:pointer;text-decoration:none;transition:all .35s cubic-bezier(.22,1,.36,1);white-space:nowrap}
+  .nav-cta--subscribe{color:#060810;background:#4ecdc4;border:1px solid #4ecdc4}
+  .nav-cta--subscribe:hover{background:#5ed8d0;transform:translateY(-1px);box-shadow:0 4px 16px rgba(78,205,196,0.25)}
+  .nav-cta--login{color:rgba(240,238,252,0.6);background:transparent;border:1px solid rgba(255,255,255,0.1)}
+  .nav-cta--login:hover{color:#f0eefc;border-color:rgba(255,255,255,0.22);background:rgba(255,255,255,0.04)}
+  .nav-row-2{display:flex;align-items:center;justify-content:center;gap:32px;height:34px;border-top:1px solid rgba(255,255,255,0.06);transition:height .4s ease,opacity .3s ease,border-top-color .3s ease;overflow:hidden}
+  .nav-wrap.scrolled .nav-row-2{height:0;opacity:0;border-top-color:transparent}
+  .nav-row-2 a{font-weight:300;font-size:.72rem;letter-spacing:.03em;color:rgba(240,238,252,0.4);text-decoration:none;transition:color .3s ease;white-space:nowrap}
+  .nav-row-2 a:hover{color:rgba(240,238,252,0.6)}
+  .nav-burger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;transition:background .3s ease}
+  .nav-burger:hover{background:rgba(255,255,255,0.04)}
+  .nav-burger span{display:block;width:100%;height:1.5px;background:rgba(240,238,252,0.6);border-radius:1px;transition:all .3s ease;transform-origin:center}
+  .nav-burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+  .nav-burger.open span:nth-child(2){opacity:0}
+  .nav-burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+  .nav-drawer{display:none;position:fixed;top:56px;left:0;right:0;bottom:0;background:rgba(6,8,16,0.95);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);z-index:999;flex-direction:column;padding:32px 28px 40px;overflow-y:auto;opacity:0;transform:translateY(-8px);transition:opacity .3s ease,transform .3s ease}
+  .nav-drawer.open{display:flex;opacity:1;transform:translateY(0)}
+  .nav-drawer__section-label{font-weight:300;font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(240,238,252,0.4);margin-bottom:14px;margin-top:24px}
+  .nav-drawer__section-label:first-child{margin-top:0}
+  .nav-drawer__link{display:flex;align-items:center;gap:12px;font-weight:300;font-size:1.05rem;color:rgba(240,238,252,0.6);text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);transition:color .3s ease}
+  .nav-drawer__link:hover{color:#f0eefc}
+  .nav-drawer__link-dot{width:5px;height:5px;border-radius:50%;background:#4ecdc4;opacity:.5}
+  .nav-drawer__ctas{display:flex;gap:10px;margin-top:32px}
+  .nav-drawer__ctas .nav-cta{flex:1;text-align:center;padding:12px 20px;font-size:.88rem}
+  @media(max-width:860px){.nav-primary,.nav-row-2,.nav-ctas{display:none}.nav-burger{display:flex}.nav-row-1{height:56px}}
+
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --deep:#060810;--ink:#0a0d18;--surface:#0e1120;--accent:#4ecdc4;--accent-muted:rgba(78,205,196,0.6);
+    --text-bright:#f2f0fa;--text-body:rgba(242,240,250,0.72);--text-muted:rgba(242,240,250,0.45);--text-faint:rgba(242,240,250,0.3);--text-mid:rgba(242,240,250,0.65);--border:rgba(255,255,255,0.06);
+  }
+  html{font-size:16px;scroll-behavior:smooth}
+  body{background:var(--deep);color:var(--text-body);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+  /* ═══ HERO ═══ */
+  .hero{position:relative;padding:120px 24px 80px;text-align:center;overflow:hidden}
+  .hero__orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.15;pointer-events:none}
+  .hero__orb--1{width:300px;height:300px;top:-60px;right:15%;background:#4ecdc4}
+  .hero__orb--2{width:200px;height:200px;bottom:-40px;left:10%;background:#2dd4bf}
+  .hero__back{display:inline-flex;align-items:center;gap:6px;font-weight:300;font-size:.74rem;color:var(--text-muted);text-decoration:none;margin-bottom:32px;transition:color .3s ease}
+  .hero__back:hover{color:var(--text-bright)}
+  .hero__back svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5}
+  .hero__topic{display:inline-block;font-weight:400;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;padding:4px 14px;border-radius:20px;color:rgba(78,205,196,0.8);background:rgba(78,205,196,0.08);border:1px solid rgba(78,205,196,0.15);margin-bottom:20px}
+  .hero h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,5vw,3rem);line-height:1.15;color:var(--text-bright);max-width:680px;margin:0 auto 16px}
+  .hero__meta{font-weight:200;font-size:.76rem;color:var(--text-muted)}
+  .hero__meta span{margin:0 6px;opacity:.4}
+
+  /* ═══ ARTICLE ═══ */
+  .article{max-width:680px;margin:0 auto;padding:0 24px 48px}
+  .article p{font-weight:300;font-size:.92rem;line-height:1.85;margin-bottom:20px}
+  .article h2{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.6rem;color:var(--text-bright);margin:48px 0 20px;line-height:1.25}
+  .article h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.25rem;color:var(--text-bright);margin:36px 0 16px;line-height:1.3}
+
+  .lede{font-size:1.05rem !important;font-weight:200 !important;line-height:1.9 !important;color:var(--text-bright);border-left:2px solid rgba(78,205,196,0.3);padding-left:20px;margin-bottom:32px !important}
+
+  /* ═══ CITE BOX ═══ */
+  .cite-box{display:flex;gap:14px;padding:24px;border-radius:12px;background:var(--surface);border:1px solid var(--border);margin:28px 0}
+  .cite-box__icon{width:36px;height:36px;border-radius:50%;background:rgba(78,205,196,0.06);border:1px solid rgba(78,205,196,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .cite-box__icon svg{width:16px;height:16px;fill:none;stroke:rgba(78,205,196,0.6);stroke-width:1.5}
+  .cite-box__text{font-weight:300;font-size:.84rem;line-height:1.7;color:var(--text-mid)}
+  .cite-box__text strong{font-weight:500;color:var(--text-bright)}
+
+  /* ═══ CONCEPT ═══ */
+  .concept{padding:24px;border-radius:12px;border:1px solid rgba(78,205,196,0.1);background:rgba(78,205,196,0.03);margin:28px 0}
+  .concept__label{font-weight:400;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-muted);margin-bottom:10px}
+  .concept p{font-weight:300;font-size:.86rem;line-height:1.75;color:var(--text-mid);margin-bottom:0}
+
+  /* ═══ PULL QUOTE ═══ */
+  .pull{margin:40px 0;padding-left:24px;border-left:2px solid rgba(78,205,196,0.25)}
+  .pull p{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:300;font-style:italic;line-height:1.55;color:var(--text-bright);margin-bottom:0}
+
+  /* ═══ NUMBERED LIST ═══ */
+  .steps{counter-reset:step;margin:24px 0;padding:0;list-style:none}
+  .steps li{counter-increment:step;display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--border)}
+  .steps li:last-child{border-bottom:none}
+  .steps li::before{content:counter(step);font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;color:var(--accent-muted);flex-shrink:0;width:28px;text-align:center;padding-top:2px}
+  .steps__text{font-weight:300;font-size:.86rem;line-height:1.7;color:var(--text-mid)}
+  .steps__text strong{font-weight:400;color:var(--text-bright)}
+
+  /* ═══ TRY TODAY ═══ */
+  .try{padding:32px;border-radius:16px;background:linear-gradient(135deg,rgba(78,205,196,0.06) 0%,rgba(45,212,191,0.03) 100%);border:1px solid rgba(78,205,196,0.1);margin:40px 0}
+  .try__label{font-weight:400;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-muted);margin-bottom:14px}
+  .try__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.3rem;color:var(--text-bright);margin-bottom:16px}
+
+  /* ═══ REFERENCES ═══ */
+  .references{max-width:680px;margin:0 auto;padding:0 24px 32px}
+  .references__title{font-weight:400;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px}
+  .ref{font-weight:200;font-size:.74rem;line-height:1.65;color:var(--text-faint);margin-bottom:8px}
+  .ref em{font-style:italic}
+
+  /* ═══ DISCLAIMER ═══ */
+  .disclaimer{max-width:680px;margin:0 auto;padding:0 24px 48px}
+  .disclaimer__inner{padding:20px 24px;border-radius:12px;border:1px solid rgba(251,191,36,0.08);background:rgba(251,191,36,0.02)}
+  .disclaimer__title{font-weight:400;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(251,191,36,0.5);margin-bottom:8px}
+  .disclaimer__text{font-weight:200;font-size:.74rem;line-height:1.7;color:var(--text-muted)}
+
+  /* ═══ RELATED ═══ */
+  .related{max-width:680px;margin:0 auto;padding:0 24px 80px}
+  .related__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.1rem;color:var(--text-bright);margin-bottom:16px}
+  .related__grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .related__card{padding:20px;border-radius:12px;background:var(--surface);border:1px solid var(--border);text-decoration:none;transition:border-color .3s ease,transform .3s ease}
+  .related__card:hover{border-color:rgba(255,255,255,0.1);transform:translateY(-2px)}
+  .related__card-topic{font-weight:400;font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
+  .related__card-title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.05rem;line-height:1.25;color:var(--text-bright);margin-bottom:4px}
+  .related__card-meta{font-weight:200;font-size:.66rem;color:var(--text-faint)}
+
+  @media(max-width:700px){
+    .hero{padding:80px 24px 60px}
+    .related__grid{grid-template-columns:1fr}
+    .pull{margin:32px 0;padding-left:20px}
+  }
+
+</style>
+</head>
+<body>
+<nav class="nav-wrap" id="navWrap">
+  <div class="nav-inner">
+    <div class="nav-row-1">
+      <a href="../index.html" class="nav-brand">SALUS</a>
+      <ul class="nav-primary">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../sessions.html">Meditations</a></li>
+        <li><a href="../mindfulness.html">Mindfulness</a></li>
+        <li><a href="../asmr.html">ASMR</a></li>
+        <li><a href="../sleep-stories.html">Sleep Stories</a></li>
+        <li><a href="../education.html">Learn</a></li>
+        <li><a href="../about.html">About</a></li>
+      </ul>
+      <div class="nav-ctas">
+        <a href="../apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+        <a href="../login.html" class="nav-cta nav-cta--login">Log In</a>
+      </div>
+      <button class="nav-burger" id="burgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+    <div class="nav-row-2">
+      <a href="../tools.html">Tools</a>
+      <a href="../reading.html">Reading</a>
+      <a href="../applied-psychology.html">Applied Psychology</a>
+      <a href="../newsletter.html">Newsletter</a>
+      <a href="../contact.html">Contact</a>
+    </div>
+  </div>
+</nav>
+<div class="nav-drawer" id="navDrawer">
+  <div class="nav-drawer__section-label">Main</div>
+  <a href="../index.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Home</a>
+  <a href="../sessions.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Meditations</a>
+  <a href="../mindfulness.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Mindfulness</a>
+  <a href="../asmr.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>ASMR</a>
+  <a href="../sleep-stories.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Sleep Stories</a>
+  <a href="../education.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Learn</a>
+  <a href="../about.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>About</a>
+  <div class="nav-drawer__section-label">More</div>
+  <a href="../tools.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Tools</a>
+  <a href="../reading.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Reading</a>
+  <a href="../applied-psychology.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Applied Psychology</a>
+  <a href="../newsletter.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Newsletter</a>
+  <a href="../contact.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Contact</a>
+  <div class="nav-drawer__ctas">
+    <a href="../apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+    <a href="../login.html" class="nav-cta nav-cta--login">Log In</a>
+  </div>
+</div>
+
+
+<!-- ═══ HERO ═══ -->
+<header class="hero">
+  <div class="hero__orb hero__orb--1"></div>
+  <div class="hero__orb hero__orb--2"></div>
+  <a href="../applied-psychology.html" class="hero__back"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Back to Applied Psychology</a>
+  <div class="hero__topic">Habits</div>
+  <h1>The Two-Minute Rule and Why It Actually Works</h1>
+  <div class="hero__meta">6 min read <span>·</span> Published February 2026</div>
+</header>
+
+<!-- ═══ ARTICLE ═══ -->
+<article class="article">
+
+  <p class="lede">Habit formation isn't about willpower. It's about reducing friction until the behaviour becomes automatic. The research consistently points to one counterintuitive finding: the smaller you start, the more likely you are to stick with it. Not because small actions produce big results immediately — but because they rewire the system that produces action in the first place.</p>
+
+  <h2>Why Most Habits Fail Before They Start</h2>
+
+  <p>The standard approach to behaviour change follows a familiar pattern. You decide to exercise more, so you commit to an hour at the gym five days a week. You want to meditate, so you download an app and aim for thirty minutes every morning. You want to read more, so you set a target of a book a week.</p>
+
+  <p>Within a fortnight, most of these commitments have collapsed. Not because you lack discipline, but because you've designed the habit around the outcome you want rather than the process your brain can actually sustain. You've asked yourself to sprint before you've learnt to walk.</p>
+
+  <div class="cite-box">
+    <div class="cite-box__icon"><svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg></div>
+    <div class="cite-box__text"><strong>BJ Fogg</strong>, behaviour scientist at Stanford University and author of <em>Tiny Habits</em>, has spent over twenty years studying why people fail to change their behaviour. His research identifies a fundamental error: we set the bar at the level of the desired outcome, not at the level of the actual behaviour. The result is that we rely on motivation — which is inherently unreliable — rather than building systems that work even when motivation is absent.</div>
+  </div>
+
+  <h2>The Two-Minute Rule</h2>
+
+  <p>The principle is disarmingly simple: when you want to build a new habit, scale it down until it takes no more than two minutes to complete. Want to run? Put your trainers on and step outside. Want to meditate? Sit down and take three breaths. Want to read? Open the book and read one page.</p>
+
+  <p>This feels almost insultingly small. That's the point. The two-minute version isn't the goal — it's the gateway. You're not trying to build the habit of running five kilometres. You're trying to build the habit of becoming the kind of person who shows up.</p>
+
+  <div class="concept">
+    <div class="concept__label">Key Concept</div>
+    <p>James Clear, author of <em>Atomic Habits</em>, describes this as optimising for the "entry point" rather than the "end point." Every habit is a series of steps, and the first step — what he calls the "decisive moment" — determines everything that follows. If you master the art of showing up, the rest tends to take care of itself. The two-minute rule ensures that showing up is never the hard part.</p>
+  </div>
+
+  <h2>What the Neuroscience Says</h2>
+
+  <p>The reason this works lies in how the brain encodes habits. The basal ganglia — a cluster of structures deep within the brain — are responsible for pattern recognition and procedural learning. When you repeat a behaviour consistently, the basal ganglia gradually take over from the prefrontal cortex, which handles conscious decision-making. The behaviour moves from something you have to think about to something that happens automatically.</p>
+
+  <p>This is what neuroscientists call "chunking" — a process first described in detail by Ann Graybiel at MIT's McGovern Institute for Brain Research. Her work with laboratory animals showed that as habits form, neural activity shifts from the executive planning regions to the basal ganglia. The brain essentially learns to run the behaviour on autopilot.</p>
+
+  <div class="cite-box">
+    <div class="cite-box__icon"><svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg></div>
+    <div class="cite-box__text"><strong>Phillippa Lally</strong> and colleagues at University College London published a landmark study in the <em>European Journal of Social Psychology</em> in 2010 examining how long habits actually take to form. Their finding — an average of 66 days, not the commonly cited 21 — came with an important caveat: <strong>missing a single day had no measurable impact on long-term habit formation</strong>. Consistency mattered far more than perfection.</div>
+  </div>
+
+  <p>This is where the two-minute rule reveals its deeper logic. The critical variable isn't the duration or intensity of the behaviour — it's the consistency of the cue-response loop. Every time you respond to a cue by performing even the smallest version of the habit, you're strengthening the neural pathway. You're voting for the identity of someone who does this thing.</p>
+
+  <h2>Friction: The Hidden Architecture of Behaviour</h2>
+
+  <p>Fogg's research identifies another factor that is often more powerful than motivation: friction. Friction is anything that makes a behaviour harder to initiate — physical effort, time, mental load, or the number of steps between intention and action.</p>
+
+  <div class="pull">
+    <p>The behaviours you perform most reliably are not the ones you care most about. They are the ones with the least friction between trigger and action.</p>
+  </div>
+
+  <p>This is why you check your phone without deciding to. The friction between the impulse and the action is essentially zero — the phone is in your hand, the screen lights up, and the app is one tap away. No willpower required, no conscious decision. The habit runs itself.</p>
+
+  <p>The two-minute rule works because it strips friction from the target behaviour. If meditation requires you to find a quiet room, set up a cushion, light a candle, open an app, select a session, and commit to twenty minutes — that's six points of friction before you've even started. If meditation requires you to close your eyes wherever you are and take three breaths — that's zero friction. The behaviour becomes as easy as checking your phone.</p>
+
+  <h2>The Identity Shift</h2>
+
+  <p>Clear makes a distinction between outcome-based habits and identity-based habits. Outcome-based habits focus on what you want to achieve: lose weight, run a marathon, write a book. Identity-based habits focus on who you want to become: someone who moves their body, someone who runs, someone who writes.</p>
+
+  <p>The difference matters because identity drives behaviour more reliably than goals do. Once you see yourself as "someone who meditates," the daily practice becomes an expression of who you are rather than a task on a to-do list. And the fastest way to build that identity is through small, repeated actions — each one a vote cast for the person you're becoming.</p>
+
+  <div class="concept">
+    <div class="concept__label">Research Note</div>
+    <p>Wendy Wood, professor of psychology and business at the University of Southern California and author of <em>Good Habits, Bad Habits</em>, found that approximately 43% of daily behaviours are performed habitually — that is, without conscious deliberation. Her research suggests that the most effective behaviour change strategies don't fight this tendency but work with it, making desired behaviours as automatic as the ones you're trying to replace.</p>
+  </div>
+
+  <h2>When Two Minutes Becomes Twenty</h2>
+
+  <p>There's a natural objection here: if I only do two minutes, I'll never actually meditate properly. But the research suggests the opposite. Fogg's data shows that people who start with "tiny habits" naturally expand them over time — not because they force themselves to, but because momentum builds. You put your trainers on and step outside, and before you know it you've walked around the block. You open the book and read one page, and twenty minutes later you're still reading.</p>
+
+  <p>The mechanism is what psychologists call the "Zeigarnik effect" — named after Soviet psychologist Bluma Zeigarnik, who observed that incomplete tasks create a kind of cognitive tension that motivates completion. Once you've started, your brain wants to continue. The two-minute rule exploits this by removing the barrier to starting, then letting the brain's natural momentum carry you forward.</p>
+
+  <p>Critically, the rule also removes the pressure. If you meditate for two minutes and stop, that's a success — not a failure. You showed up. You cast your vote. And that success makes it more likely you'll show up tomorrow.</p>
+
+  <!-- ═══ TRY TODAY ═══ -->
+  <div class="try">
+    <div class="try__label">Something to Try Today</div>
+    <div class="try__title">The Two-Minute Start</div>
+    <ol class="steps">
+      <li><span class="steps__text"><strong>Choose one habit you've been meaning to start.</strong> Exercise, meditation, journaling, reading — anything you've struggled to maintain.</span></li>
+      <li><span class="steps__text"><strong>Scale it down to two minutes or less.</strong> Not a simplified version — the genuine first two minutes. Put on your trainers. Open the journal. Sit down and close your eyes.</span></li>
+      <li><span class="steps__text"><strong>Attach it to something you already do.</strong> After your morning coffee. Before you check your phone. When you sit down at your desk. The existing behaviour becomes the trigger.</span></li>
+      <li><span class="steps__text"><strong>Do only the two-minute version for the first week.</strong> Resist the urge to do more. The goal right now is not the behaviour — it's the showing up.</span></li>
+      <li><span class="steps__text"><strong>After a week, let it grow naturally.</strong> Don't set a new target. Just notice whether you want to continue past two minutes. Most people do. If you don't, that's fine — two minutes is still a success.</span></li>
+    </ol>
+  </div>
+
+</article>
+
+<!-- ═══ REFERENCES ═══ -->
+<div class="references">
+  <div class="references__title">References</div>
+  <p class="ref">Clear, J. (2018). <em>Atomic Habits: An Easy &amp; Proven Way to Build Good Habits &amp; Break Bad Ones</em>. Avery.</p>
+  <p class="ref">Fogg, B. J. (2020). <em>Tiny Habits: The Small Changes That Change Everything</em>. Houghton Mifflin Harcourt.</p>
+  <p class="ref">Graybiel, A. M. (2008). Habits, rituals, and the evaluative brain. <em>Annual Review of Neuroscience</em>, 31, 359–387.</p>
+  <p class="ref">Lally, P., van Jaarsveld, C. H. M., Potts, H. W. W., &amp; Wardle, J. (2010). How are habits formed: Modelling habit formation in the real world. <em>European Journal of Social Psychology</em>, 40(6), 998–1009.</p>
+  <p class="ref">Wood, W. (2019). <em>Good Habits, Bad Habits: The Science of Making Positive Changes That Stick</em>. Macmillan.</p>
+  <p class="ref">Zeigarnik, B. (1927). Über das Behalten von erledigten und unerledigten Handlungen. <em>Psychologische Forschung</em>, 9, 1–85.</p>
+</div>
+
+<!-- ═══ DISCLAIMER ═══ -->
+<div class="disclaimer">
+  <div class="disclaimer__inner">
+    <div class="disclaimer__title">Important Notice</div>
+    <div class="disclaimer__text">This article is for educational purposes only. It is not a substitute for professional medical or psychological advice, diagnosis, or treatment. The techniques described are drawn from published research and are intended as general guidance, not personalised recommendations. If you are struggling with compulsive behaviours or find that habit change is causing distress, please consult a qualified professional.</div>
+  </div>
+</div>
+
+<!-- ═══ RELATED ═══ -->
+<div class="related">
+  <h3 class="related__title">Continue Reading</h3>
+  <div class="related__grid">
+    <a href="#" class="related__card">
+      <div class="related__card-topic">Thinking</div>
+      <div class="related__card-title">Cognitive Distortions: The Lies Your Brain Tells on Repeat</div>
+      <div class="related__card-meta">7 min read</div>
+    </a>
+    <a href="#" class="related__card">
+      <div class="related__card-topic">Habits</div>
+      <div class="related__card-title">Why Motivation Is Overrated</div>
+      <div class="related__card-meta">6 min read</div>
+    </a>
+  </div>
+</div>
+
+
+<script>
+  // Navigation
+  const navWrap=document.getElementById("navWrap");
+  window.addEventListener("scroll",()=>{navWrap.classList.toggle("scrolled",window.scrollY>30)},{passive:true});
+  const burger=document.getElementById("burgerBtn");
+  const drawer=document.getElementById("navDrawer");
+  burger.addEventListener("click",()=>{burger.classList.toggle("open");drawer.classList.toggle("open");document.body.style.overflow=drawer.classList.contains("open")?"hidden":""});
+  drawer.querySelectorAll(".nav-drawer__link").forEach(l=>{l.addEventListener("click",()=>{burger.classList.remove("open");drawer.classList.remove("open");document.body.style.overflow=""})});
+</script>
+<script src="../js/main.js?v=1770564391"></script>
+<script src="../js/tracker.js"></script>
+
+<footer class="hb-footer">
+  <div class="hb-footer__inner">
+    <div class="hb-footer__brand">
+      <span class="hb-footer__logo">Salus</span>
+      <p class="hb-footer__tagline">A quieter kind of self-care. Guided meditations, sleep stories, ASMR, and mindfulness tools &mdash; built by a family.</p>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Practice</h4>
+      <ul class="hb-footer__links">
+        <li><a href="../sessions.html">Guided Meditations</a></li>
+        <li><a href="../mindfulness.html">Mindfulness</a></li>
+        <li><a href="../asmr.html">ASMR &amp; Sounds</a></li>
+        <li><a href="../sleep-stories.html">Sleep Stories</a></li>
+        <li><a href="../tools.html">Tools</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Discover</h4>
+      <ul class="hb-footer__links">
+        <li><a href="../education.html">Learn</a></li>
+        <li><a href="../reading.html">Reading</a></li>
+        <li><a href="../applied-psychology.html">Applied Psychology</a></li>
+        <li><a href="../newsletter.html">Newsletter</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Salus</h4>
+      <ul class="hb-footer__links">
+        <li><a href="../about.html">About Us</a></li>
+        <li><a href="../apps.html">Go Premium</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="footer-disclaimer">Salus does not provide medical advice. Content is for general wellbeing and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified health provider with any health concerns.</p>
+  <div class="hb-footer__bottom">
+    <span class="hb-footer__copy">&copy; 2026 Salus Mind. All rights reserved.</span>
+    <a href="#" class="hb-footer__back-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">
+      Back to top
+      <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+    </a>
+  </div>
+</footer>
+</body>
+</html>

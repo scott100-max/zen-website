@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cognitive Distortions: The Lies Your Brain Tells on Repeat — Salus Mind</title>
+  <meta name="description" content="All-or-nothing thinking, catastrophising, mind reading — your brain has a shortlist of distortions it reaches for under stress. They feel like accurate assessme">
+  <link rel="canonical" href="https://salus-mind.com/articles/cognitive-distortions.html">
+  <meta property="og:title" content="Cognitive Distortions: The Lies Your Brain Tells on Repeat — Salus Mind">
+  <meta property="og:description" content="All-or-nothing thinking, catastrophising, mind reading — your brain has a shortlist of distortions it reaches for under stress. They feel like accurate assessme">
+  <meta property="og:url" content="https://salus-mind.com/articles/cognitive-distortions.html">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://salus-mind.com/images/meditation-woman-outdoor.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css?v=1770564391">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script src="../js/auth.js?v=1770564391"></script>
+<style>
+  /* ═══════════════ NAVIGATION ═══════════════ */
+  .nav-wrap{position:fixed;top:0;left:0;right:0;z-index:1000;transition:background .4s ease,box-shadow .4s ease;background:rgba(6,8,16,0.5);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+  .nav-wrap.scrolled{background:rgba(6,8,16,0.92);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);box-shadow:0 1px 0 rgba(255,255,255,0.06),0 12px 40px rgba(0,0,0,0.3)}
+  .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px}
+  .nav-row-1{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .nav-brand{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.5rem;letter-spacing:.12em;text-decoration:none;color:#f0eefc;transition:opacity .3s ease;flex-shrink:0}
+  .nav-brand:hover{opacity:.8}
+  .nav-primary{display:flex;align-items:center;gap:4px;list-style:none}
+  .nav-primary a{font-weight:300;font-size:.82rem;letter-spacing:.02em;color:rgba(240,238,252,0.6);text-decoration:none;padding:6px 13px;border-radius:8px;transition:all .3s ease;position:relative;white-space:nowrap}
+  .nav-primary a:hover{color:#f0eefc;background:rgba(255,255,255,0.04)}
+  .nav-primary a.active{color:#f0eefc;background:rgba(255,255,255,0.06)}
+  .nav-primary a.active::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:16px;height:2px;border-radius:1px;background:#4ecdc4;opacity:.7}
+  .nav-ctas{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  .nav-cta{font-family:'Outfit',sans-serif;font-weight:400;font-size:.78rem;letter-spacing:.04em;padding:7px 18px;border-radius:40px;cursor:pointer;text-decoration:none;transition:all .35s cubic-bezier(.22,1,.36,1);white-space:nowrap}
+  .nav-cta--subscribe{color:#060810;background:#4ecdc4;border:1px solid #4ecdc4}
+  .nav-cta--subscribe:hover{background:#5ed8d0;transform:translateY(-1px);box-shadow:0 4px 16px rgba(78,205,196,0.25)}
+  .nav-cta--login{color:rgba(240,238,252,0.6);background:transparent;border:1px solid rgba(255,255,255,0.1)}
+  .nav-cta--login:hover{color:#f0eefc;border-color:rgba(255,255,255,0.22);background:rgba(255,255,255,0.04)}
+  .nav-row-2{display:flex;align-items:center;justify-content:center;gap:32px;height:34px;border-top:1px solid rgba(255,255,255,0.06);transition:height .4s ease,opacity .3s ease,border-top-color .3s ease;overflow:hidden}
+  .nav-wrap.scrolled .nav-row-2{height:0;opacity:0;border-top-color:transparent}
+  .nav-row-2 a{font-weight:300;font-size:.72rem;letter-spacing:.03em;color:rgba(240,238,252,0.4);text-decoration:none;transition:color .3s ease;white-space:nowrap}
+  .nav-row-2 a:hover{color:rgba(240,238,252,0.6)}
+  .nav-burger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;transition:background .3s ease}
+  .nav-burger:hover{background:rgba(255,255,255,0.04)}
+  .nav-burger span{display:block;width:100%;height:1.5px;background:rgba(240,238,252,0.6);border-radius:1px;transition:all .3s ease;transform-origin:center}
+  .nav-burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+  .nav-burger.open span:nth-child(2){opacity:0}
+  .nav-burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+  .nav-drawer{display:none;position:fixed;top:56px;left:0;right:0;bottom:0;background:rgba(6,8,16,0.95);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);z-index:999;flex-direction:column;padding:32px 28px 40px;overflow-y:auto;opacity:0;transform:translateY(-8px);transition:opacity .3s ease,transform .3s ease}
+  .nav-drawer.open{display:flex;opacity:1;transform:translateY(0)}
+  .nav-drawer__section-label{font-weight:300;font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(240,238,252,0.4);margin-bottom:14px;margin-top:24px}
+  .nav-drawer__section-label:first-child{margin-top:0}
+  .nav-drawer__link{display:flex;align-items:center;gap:12px;font-weight:300;font-size:1.05rem;color:rgba(240,238,252,0.6);text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);transition:color .3s ease}
+  .nav-drawer__link:hover{color:#f0eefc}
+  .nav-drawer__link-dot{width:5px;height:5px;border-radius:50%;background:#4ecdc4;opacity:.5}
+  .nav-drawer__ctas{display:flex;gap:10px;margin-top:32px}
+  .nav-drawer__ctas .nav-cta{flex:1;text-align:center;padding:12px 20px;font-size:.88rem}
+  @media(max-width:860px){.nav-primary,.nav-row-2,.nav-ctas{display:none}.nav-burger{display:flex}.nav-row-1{height:56px}}
+
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --deep:#060810;--ink:#0a0d18;--surface:#0e1120;--accent:#fbbf24;--accent-muted:rgba(251,191,36,0.6);
+    --text-bright:#f2f0fa;--text-body:rgba(242,240,250,0.72);--text-muted:rgba(242,240,250,0.45);--text-faint:rgba(242,240,250,0.3);--text-mid:rgba(242,240,250,0.65);--border:rgba(255,255,255,0.06);
+  }
+  html{font-size:16px;scroll-behavior:smooth}
+  body{background:var(--deep);color:var(--text-body);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+  /* ═══ HERO ═══ */
+  .hero{position:relative;padding:120px 24px 80px;text-align:center;overflow:hidden}
+  .hero__orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.15;pointer-events:none}
+  .hero__orb--1{width:300px;height:300px;top:-60px;right:15%;background:#fbbf24}
+  .hero__orb--2{width:200px;height:200px;bottom:-40px;left:10%;background:#f59e0b}
+  .hero__back{display:inline-flex;align-items:center;gap:6px;font-weight:300;font-size:.74rem;color:var(--text-muted);text-decoration:none;margin-bottom:32px;transition:color .3s ease}
+  .hero__back:hover{color:var(--text-bright)}
+  .hero__back svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5}
+  .hero__topic{display:inline-block;font-weight:400;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;padding:4px 14px;border-radius:20px;color:rgba(251,191,36,0.8);background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.15);margin-bottom:20px}
+  .hero h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,5vw,3rem);line-height:1.15;color:var(--text-bright);max-width:680px;margin:0 auto 16px}
+  .hero__meta{font-weight:200;font-size:.76rem;color:var(--text-muted)}
+  .hero__meta span{margin:0 6px;opacity:.4}
+
+  /* ═══ ARTICLE ═══ */
+  .article{max-width:680px;margin:0 auto;padding:0 24px 48px}
+  .article p{font-weight:300;font-size:.92rem;line-height:1.85;margin-bottom:20px}
+  .article h2{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.6rem;color:var(--text-bright);margin:48px 0 20px;line-height:1.25}
+  .article h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.25rem;color:var(--text-bright);margin:36px 0 16px;line-height:1.3}
+
+  .lede{font-size:1.05rem !important;font-weight:200 !important;line-height:1.9 !important;color:var(--text-bright);border-left:2px solid rgba(251,191,36,0.3);padding-left:20px;margin-bottom:32px !important}
+
+  /* ═══ CITE BOX ═══ */
+  .cite-box{display:flex;gap:14px;padding:24px;border-radius:12px;background:var(--surface);border:1px solid var(--border);margin:28px 0}
+  .cite-box__icon{width:36px;height:36px;border-radius:50%;background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .cite-box__icon svg{width:16px;height:16px;fill:none;stroke:rgba(251,191,36,0.6);stroke-width:1.5}
+  .cite-box__text{font-weight:300;font-size:.84rem;line-height:1.7;color:var(--text-mid)}
+  .cite-box__text strong{font-weight:500;color:var(--text-bright)}
+
+  /* ═══ CONCEPT ═══ */
+  .concept{padding:24px;border-radius:12px;border:1px solid rgba(251,191,36,0.1);background:rgba(251,191,36,0.03);margin:28px 0}
+  .concept__label{font-weight:400;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-muted);margin-bottom:10px}
+  .concept p{font-weight:300;font-size:.86rem;line-height:1.75;color:var(--text-mid);margin-bottom:0}
+
+  /* ═══ DISTORTION CARDS ═══ */
+  .distortion{padding:20px 24px;border-radius:12px;background:var(--surface);border:1px solid var(--border);margin:16px 0}
+  .distortion__name{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.1rem;color:var(--text-bright);margin-bottom:6px}
+  .distortion__def{font-weight:300;font-size:.84rem;line-height:1.7;color:var(--text-mid);margin-bottom:8px}
+  .distortion__example{font-weight:200;font-size:.8rem;font-style:italic;line-height:1.65;color:var(--text-muted);padding-left:14px;border-left:2px solid rgba(251,191,36,0.15)}
+
+  /* ═══ PULL QUOTE ═══ */
+  .pull{margin:40px 0;padding-left:24px;border-left:2px solid rgba(251,191,36,0.25)}
+  .pull p{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:300;font-style:italic;line-height:1.55;color:var(--text-bright);margin-bottom:0}
+
+  /* ═══ NUMBERED LIST ═══ */
+  .steps{counter-reset:step;margin:24px 0;padding:0;list-style:none}
+  .steps li{counter-increment:step;display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--border)}
+  .steps li:last-child{border-bottom:none}
+  .steps li::before{content:counter(step);font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;color:var(--accent-muted);flex-shrink:0;width:28px;text-align:center;padding-top:2px}
+  .steps__text{font-weight:300;font-size:.86rem;line-height:1.7;color:var(--text-mid)}
+  .steps__text strong{font-weight:400;color:var(--text-bright)}
+
+  /* ═══ TRY TODAY ═══ */
+  .try{padding:32px;border-radius:16px;background:linear-gradient(135deg,rgba(251,191,36,0.06) 0%,rgba(245,158,11,0.03) 100%);border:1px solid rgba(251,191,36,0.1);margin:40px 0}
+  .try__label{font-weight:400;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-muted);margin-bottom:14px}
+  .try__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.3rem;color:var(--text-bright);margin-bottom:16px}
+
+  /* ═══ REFERENCES ═══ */
+  .references{max-width:680px;margin:0 auto;padding:0 24px 32px}
+  .references__title{font-weight:400;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px}
+  .ref{font-weight:200;font-size:.74rem;line-height:1.65;color:var(--text-faint);margin-bottom:8px}
+  .ref em{font-style:italic}
+
+  /* ═══ DISCLAIMER ═══ */
+  .disclaimer{max-width:680px;margin:0 auto;padding:0 24px 48px}
+  .disclaimer__inner{padding:20px 24px;border-radius:12px;border:1px solid rgba(251,191,36,0.08);background:rgba(251,191,36,0.02)}
+  .disclaimer__title{font-weight:400;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(251,191,36,0.5);margin-bottom:8px}
+  .disclaimer__text{font-weight:200;font-size:.74rem;line-height:1.7;color:var(--text-muted)}
+
+  /* ═══ RELATED ═══ */
+  .related{max-width:680px;margin:0 auto;padding:0 24px 80px}
+  .related__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.1rem;color:var(--text-bright);margin-bottom:16px}
+  .related__grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .related__card{padding:20px;border-radius:12px;background:var(--surface);border:1px solid var(--border);text-decoration:none;transition:border-color .3s ease,transform .3s ease}
+  .related__card:hover{border-color:rgba(255,255,255,0.1);transform:translateY(-2px)}
+  .related__card-topic{font-weight:400;font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
+  .related__card-title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.05rem;line-height:1.25;color:var(--text-bright);margin-bottom:4px}
+  .related__card-meta{font-weight:200;font-size:.66rem;color:var(--text-faint)}
+
+  @media(max-width:700px){
+    .hero{padding:80px 24px 60px}
+    .related__grid{grid-template-columns:1fr}
+    .pull{margin:32px 0;padding-left:20px}
+  }
+
+</style>
+</head>
+<body>
+<nav class="nav-wrap" id="navWrap">
+  <div class="nav-inner">
+    <div class="nav-row-1">
+      <a href="../index.html" class="nav-brand">SALUS</a>
+      <ul class="nav-primary">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../sessions.html">Meditations</a></li>
+        <li><a href="../mindfulness.html">Mindfulness</a></li>
+        <li><a href="../asmr.html">ASMR</a></li>
+        <li><a href="../sleep-stories.html">Sleep Stories</a></li>
+        <li><a href="../education.html">Learn</a></li>
+        <li><a href="../about.html">About</a></li>
+      </ul>
+      <div class="nav-ctas">
+        <a href="../apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+        <a href="../login.html" class="nav-cta nav-cta--login">Log In</a>
+      </div>
+      <button class="nav-burger" id="burgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+    <div class="nav-row-2">
+      <a href="../tools.html">Tools</a>
+      <a href="../reading.html">Reading</a>
+      <a href="../applied-psychology.html">Applied Psychology</a>
+      <a href="../newsletter.html">Newsletter</a>
+      <a href="../contact.html">Contact</a>
+    </div>
+  </div>
+</nav>
+<div class="nav-drawer" id="navDrawer">
+  <div class="nav-drawer__section-label">Main</div>
+  <a href="../index.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Home</a>
+  <a href="../sessions.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Meditations</a>
+  <a href="../mindfulness.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Mindfulness</a>
+  <a href="../asmr.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>ASMR</a>
+  <a href="../sleep-stories.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Sleep Stories</a>
+  <a href="../education.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Learn</a>
+  <a href="../about.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>About</a>
+  <div class="nav-drawer__section-label">More</div>
+  <a href="../tools.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Tools</a>
+  <a href="../reading.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Reading</a>
+  <a href="../applied-psychology.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Applied Psychology</a>
+  <a href="../newsletter.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Newsletter</a>
+  <a href="../contact.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Contact</a>
+  <div class="nav-drawer__ctas">
+    <a href="../apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+    <a href="../login.html" class="nav-cta nav-cta--login">Log In</a>
+  </div>
+</div>
+
+
+<!-- ═══ HERO ═══ -->
+<header class="hero">
+  <div class="hero__orb hero__orb--1"></div>
+  <div class="hero__orb hero__orb--2"></div>
+  <a href="../applied-psychology.html" class="hero__back"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Back to Applied Psychology</a>
+  <div class="hero__topic">Thinking</div>
+  <h1>Cognitive Distortions: The Lies Your Brain Tells on Repeat</h1>
+  <div class="hero__meta">7 min read <span>·</span> Published February 2026</div>
+</header>
+
+<!-- ═══ ARTICLE ═══ -->
+<article class="article">
+
+  <p class="lede">All-or-nothing thinking, catastrophising, mind reading — your brain has a shortlist of distortions it reaches for under stress. They feel like accurate assessments of reality. They're not. They're mental shortcuts that evolved to keep you alive, not to keep you accurate. Learning to spot them is half the battle.</p>
+
+  <h2>The Brain's Built-In Bias</h2>
+
+  <p>Your brain is not designed to show you the truth. It's designed to keep you safe. And for most of human history, those two things were in direct conflict. A brain that assumed the rustling in the bushes was a predator — even when it was just the wind — survived more often than a brain that calmly weighed the probabilities.</p>
+
+  <p>This is what cognitive scientists call the "negativity bias." The brain gives disproportionate weight to threat, loss, and failure because in evolutionary terms, missing a genuine threat was fatal while missing an opportunity was merely inconvenient. The result is a mind that is, by default, slightly pessimistic, slightly paranoid, and reliably inaccurate in predictable ways.</p>
+
+  <div class="cite-box">
+    <div class="cite-box__icon"><svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg></div>
+    <div class="cite-box__text"><strong>Aaron T. Beck</strong>, widely regarded as the father of cognitive therapy, was the first to systematically identify and categorise these predictable errors in thinking. Working with depressed patients at the University of Pennsylvania in the 1960s, Beck noticed that their emotional distress was not caused by events themselves, but by the <strong>interpretations</strong> they placed on those events — interpretations that followed consistent, identifiable patterns.</div>
+  </div>
+
+  <p>Beck called these patterns "cognitive distortions" — systematic errors in thinking that reinforce negative beliefs about oneself, the world, and the future. What he discovered was not that some people think distortedly and others don't. Everyone does it. The question is how often, how rigidly, and whether you notice.</p>
+
+  <h2>The Most Common Distortions</h2>
+
+  <p>Beck, and later his student David Burns in the influential book <em>Feeling Good</em>, identified a core set of distortions that appear across cultures, ages, and clinical presentations. These are not rare glitches. They are the brain's factory settings.</p>
+
+  <div class="distortion">
+    <div class="distortion__name">All-or-Nothing Thinking</div>
+    <div class="distortion__def">Seeing things in binary categories with no middle ground. If a situation falls short of perfect, it registers as a total failure.</div>
+    <div class="distortion__example">"I made one mistake in the presentation. The whole thing was a disaster."</div>
+  </div>
+
+  <div class="distortion">
+    <div class="distortion__name">Catastrophising</div>
+    <div class="distortion__def">Jumping to the worst possible outcome and treating it as the most likely one. The brain fast-forwards through an escalating chain of consequences without pausing to check the probabilities.</div>
+    <div class="distortion__example">"My manager wants a meeting. I'm probably being sacked."</div>
+  </div>
+
+  <div class="distortion">
+    <div class="distortion__name">Mind Reading</div>
+    <div class="distortion__def">Assuming you know what other people are thinking — and invariably assuming it's negative. This distortion treats inference as fact.</div>
+    <div class="distortion__example">"She didn't reply to my message. She obviously thinks I'm annoying."</div>
+  </div>
+
+  <div class="distortion">
+    <div class="distortion__name">Emotional Reasoning</div>
+    <div class="distortion__def">Taking your feelings as evidence for reality. Because something feels true, it must be true — regardless of objective evidence to the contrary.</div>
+    <div class="distortion__example">"I feel like a failure, so I must be one."</div>
+  </div>
+
+  <div class="distortion">
+    <div class="distortion__name">Personalisation</div>
+    <div class="distortion__def">Assigning yourself responsibility for events that are not within your control. The brain defaults to "this is about me" even when it plainly isn't.</div>
+    <div class="distortion__example">"The team missed the deadline. It's my fault for not working harder."</div>
+  </div>
+
+  <div class="distortion">
+    <div class="distortion__name">Discounting the Positive</div>
+    <div class="distortion__def">Dismissing positive experiences by insisting they "don't count." Achievements are minimised while failures are amplified.</div>
+    <div class="distortion__example">"They only said my work was good to be polite."</div>
+  </div>
+
+  <h2>Why Knowing Isn't Enough</h2>
+
+  <p>Here's the uncomfortable part: knowing about cognitive distortions doesn't automatically stop them. You can read every word on this page, memorise all six patterns, and still catastrophise about tomorrow's meeting. The knowing is necessary but not sufficient.</p>
+
+  <div class="cite-box">
+    <div class="cite-box__icon"><svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg></div>
+    <div class="cite-box__text"><strong>Daniel Kahneman</strong>, Nobel laureate and author of <em>Thinking, Fast and Slow</em>, draws a distinction between two systems of thought. System 1 is fast, automatic, and intuitive — it produces cognitive distortions without your permission. System 2 is slow, deliberate, and analytical — it can catch and correct those distortions, but only when it's actively engaged. The problem is that <strong>System 2 is lazy</strong>. It defaults to accepting whatever System 1 produces unless there is a reason to intervene.</div>
+  </div>
+
+  <p>This is why distortions feel so real. They arrive pre-packaged as conclusions, not hypotheses. Your brain doesn't present "She didn't reply, which could mean many things" — it presents "She thinks I'm annoying" as a finished thought. The distortion has already been accepted before you've had a chance to question it.</p>
+
+  <div class="pull">
+    <p>The goal is not to eliminate distortions — that would require a different brain. The goal is to create a gap between the thought arriving and you believing it.</p>
+  </div>
+
+  <h2>Creating the Gap</h2>
+
+  <p>The most effective approaches share a common mechanism: they slow down the space between stimulus and response long enough for System 2 to engage. This is the principle behind CBT, but it also underpins mindfulness-based approaches, which take a slightly different angle.</p>
+
+  <div class="cite-box">
+    <div class="cite-box__icon"><svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg></div>
+    <div class="cite-box__text"><strong>Zindel Segal</strong>, co-developer of Mindfulness-Based Cognitive Therapy (MBCT) at the University of Toronto, found that regular mindfulness practice changes the way people relate to their own thoughts. Rather than challenging the content of a distortion — as traditional CBT does — MBCT teaches people to observe thoughts as <strong>mental events</strong> rather than facts. The thought still arrives, but the automatic endorsement weakens.</div>
+  </div>
+
+  <p>Segal's research, published in collaboration with Mark Williams and John Teasdale, demonstrated that MBCT reduced the recurrence of major depression by approximately 50% in patients with three or more previous episodes. The mechanism was not that people had fewer negative thoughts, but that they responded to those thoughts differently — with curiosity rather than conviction.</p>
+
+  <p>This is what psychologists sometimes call "metacognition" — thinking about thinking. It's the capacity to notice that you're catastrophising rather than being swept along by the catastrophe. It's a skill, not a personality trait, and it can be developed through practice.</p>
+
+  <div class="concept">
+    <div class="concept__label">Research Note</div>
+    <p>A 2019 meta-analysis by Faissner and colleagues in <em>Clinical Psychology Review</em> examined 53 studies on metacognitive therapy and found large effect sizes for reducing anxiety and depression symptoms. The authors concluded that interventions targeting the process of thinking — rather than its content — may be at least as effective as traditional cognitive restructuring.</p>
+  </div>
+
+  <!-- ═══ TRY TODAY ═══ -->
+  <div class="try">
+    <div class="try__label">Something to Try Today</div>
+    <div class="try__title">The Thought Record</div>
+    <ol class="steps">
+      <li><span class="steps__text"><strong>Catch a moment of distress.</strong> The next time you notice a shift in mood — anxiety, frustration, sadness — pause and mentally bookmark the moment.</span></li>
+      <li><span class="steps__text"><strong>Identify the thought.</strong> What was the sentence that ran through your mind just before the feeling arrived? Write it down exactly as it appeared, not a tidied-up version.</span></li>
+      <li><span class="steps__text"><strong>Name the pattern.</strong> Does it match any of the distortions above? All-or-nothing? Catastrophising? Mind reading? You don't need to be precise — just naming it creates distance.</span></li>
+      <li><span class="steps__text"><strong>Ask one question.</strong> Not "is this true?" — that's too easy to dismiss. Instead ask: "Would I say this to a friend who was in the same situation?" If the answer is no, that tells you something about the distortion.</span></li>
+      <li><span class="steps__text"><strong>Let the thought be there.</strong> You don't have to replace it with a positive one. Simply noticing it, naming it, and questioning it is enough. The gap between thought and belief will widen on its own with practice.</span></li>
+    </ol>
+  </div>
+
+</article>
+
+<!-- ═══ REFERENCES ═══ -->
+<div class="references">
+  <div class="references__title">References</div>
+  <p class="ref">Beck, A. T. (1976). <em>Cognitive Therapy and the Emotional Disorders</em>. International Universities Press.</p>
+  <p class="ref">Burns, D. D. (1980). <em>Feeling Good: The New Mood Therapy</em>. William Morrow.</p>
+  <p class="ref">Faissner, M., Kriston, L., Moritz, S., &amp; Jelinek, L. (2019). Course and stability of cognitive and metacognitive beliefs in depression. <em>Clinical Psychology Review</em>, 74, 101779.</p>
+  <p class="ref">Kahneman, D. (2011). <em>Thinking, Fast and Slow</em>. Farrar, Straus and Giroux.</p>
+  <p class="ref">Segal, Z. V., Williams, J. M. G., &amp; Teasdale, J. D. (2013). <em>Mindfulness-Based Cognitive Therapy for Depression</em> (2nd ed.). Guilford Press.</p>
+  <p class="ref">Teasdale, J. D., Segal, Z. V., Williams, J. M. G., et al. (2000). Prevention of relapse/recurrence in major depression by mindfulness-based cognitive therapy. <em>Journal of Consulting and Clinical Psychology</em>, 68(4), 615–623.</p>
+</div>
+
+<!-- ═══ DISCLAIMER ═══ -->
+<div class="disclaimer">
+  <div class="disclaimer__inner">
+    <div class="disclaimer__title">Important Notice</div>
+    <div class="disclaimer__text">This article is for educational purposes only. It is not a substitute for professional medical or psychological advice, diagnosis, or treatment. Cognitive distortions are a normal feature of human thinking, but if you find that negative thought patterns are significantly affecting your daily life, relationships, or wellbeing, please seek support from a qualified mental health professional.</div>
+  </div>
+</div>
+
+<!-- ═══ RELATED ═══ -->
+<div class="related">
+  <h3 class="related__title">Continue Reading</h3>
+  <div class="related__grid">
+    <a href="#" class="related__card">
+      <div class="related__card-topic">Emotions</div>
+      <div class="related__card-title">Why You Can't Think Your Way Out of Anxiety</div>
+      <div class="related__card-meta">8 min read</div>
+    </a>
+    <a href="#" class="related__card">
+      <div class="related__card-topic">Resilience</div>
+      <div class="related__card-title">Post-Traumatic Growth: What Comes After the Worst</div>
+      <div class="related__card-meta">5 min read</div>
+    </a>
+  </div>
+</div>
+
+
+<script>
+  // Navigation
+  const navWrap=document.getElementById("navWrap");
+  window.addEventListener("scroll",()=>{navWrap.classList.toggle("scrolled",window.scrollY>30)},{passive:true});
+  const burger=document.getElementById("burgerBtn");
+  const drawer=document.getElementById("navDrawer");
+  burger.addEventListener("click",()=>{burger.classList.toggle("open");drawer.classList.toggle("open");document.body.style.overflow=drawer.classList.contains("open")?"hidden":""});
+  drawer.querySelectorAll(".nav-drawer__link").forEach(l=>{l.addEventListener("click",()=>{burger.classList.remove("open");drawer.classList.remove("open");document.body.style.overflow=""})});
+</script>
+<script src="../js/main.js?v=1770564391"></script>
+<script src="../js/tracker.js"></script>
+
+<footer class="hb-footer">
+  <div class="hb-footer__inner">
+    <div class="hb-footer__brand">
+      <span class="hb-footer__logo">Salus</span>
+      <p class="hb-footer__tagline">A quieter kind of self-care. Guided meditations, sleep stories, ASMR, and mindfulness tools &mdash; built by a family.</p>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Practice</h4>
+      <ul class="hb-footer__links">
+        <li><a href="../sessions.html">Guided Meditations</a></li>
+        <li><a href="../mindfulness.html">Mindfulness</a></li>
+        <li><a href="../asmr.html">ASMR &amp; Sounds</a></li>
+        <li><a href="../sleep-stories.html">Sleep Stories</a></li>
+        <li><a href="../tools.html">Tools</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Discover</h4>
+      <ul class="hb-footer__links">
+        <li><a href="../education.html">Learn</a></li>
+        <li><a href="../reading.html">Reading</a></li>
+        <li><a href="../applied-psychology.html">Applied Psychology</a></li>
+        <li><a href="../newsletter.html">Newsletter</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Salus</h4>
+      <ul class="hb-footer__links">
+        <li><a href="../about.html">About Us</a></li>
+        <li><a href="../apps.html">Go Premium</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="footer-disclaimer">Salus does not provide medical advice. Content is for general wellbeing and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified health provider with any health concerns.</p>
+  <div class="hb-footer__bottom">
+    <span class="hb-footer__copy">&copy; 2026 Salus Mind. All rights reserved.</span>
+    <a href="#" class="hb-footer__back-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">
+      Back to top
+      <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+    </a>
+  </div>
+</footer>
+</body>
+</html>
