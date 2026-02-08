@@ -103,22 +103,26 @@
   /* ═══ BOOK LIST ═══ */
   .rd-book-list{display:flex;flex-direction:column;gap:1px;background:rgba(255,255,255,0.06);border-radius:16px;overflow:hidden}
 
-  .rd-book{background:#0a0d18;padding:24px 28px;display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:center;transition:background .3s ease}
+  .rd-book{background:#0a0d18;padding:24px 28px;display:grid;grid-template-columns:auto auto 1fr auto;gap:20px;align-items:center;transition:background .3s ease}
   .rd-book:hover{background:rgba(14,18,30,1)}
 
   .rd-book__num{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:1.6rem;color:rgba(78,205,196,0.25);min-width:36px;text-align:right}
 
+  .rd-book__cover{width:48px;height:70px;border-radius:4px;overflow:hidden;flex-shrink:0;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06)}
+  .rd-book__cover img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .4s ease}
+  .rd-book__cover img.loaded{opacity:1}
+
   .rd-book__info{display:flex;flex-direction:column;gap:4px}
   .rd-book__title{font-weight:400;font-size:.9rem;color:var(--text-bright)}
   .rd-book__author{font-weight:200;font-size:.78rem;color:var(--text-muted)}
-  .rd-book__why{font-weight:200;font-size:.76rem;line-height:1.5;color:rgba(255,255,255,0.4);margin-top:2px}
+  .rd-book__why{font-weight:200;font-size:.88rem;line-height:1.55;color:rgba(255,255,255,0.45);margin-top:2px}
 
   .rd-book__genre{font-weight:300;font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,0.06);color:var(--text-muted);white-space:nowrap;align-self:center}
 
   @media(max-width:700px){
-    .rd-book{grid-template-columns:1fr;gap:8px}
+    .rd-book{grid-template-columns:auto 1fr;gap:12px}
     .rd-book__num{display:none}
-    .rd-book__genre{justify-self:start}
+    .rd-book__genre{grid-column:1/-1;justify-self:start}
   }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -215,6 +219,7 @@
 
     <div class="rd-book" data-genre="mindfulness">
       <span class="rd-book__num">01</span>
+      <div class="rd-book__cover"><img src="https://covers.openlibrary.org/b/isbn/9781401307783-M.jpg" alt="Wherever You Go, There You Are" loading="lazy" onload="this.classList.add('loaded')"></div>
       <div class="rd-book__info">
         <span class="rd-book__title">Wherever You Go, There You Are</span>
         <span class="rd-book__author">Jon Kabat-Zinn</span>
@@ -225,6 +230,7 @@
 
     <div class="rd-book" data-genre="neuroscience">
       <span class="rd-book__num">02</span>
+      <div class="rd-book__cover"><img src="https://covers.openlibrary.org/b/isbn/9780143127741-M.jpg" alt="The Body Keeps the Score" loading="lazy" onload="this.classList.add('loaded')"></div>
       <div class="rd-book__info">
         <span class="rd-book__title">The Body Keeps the Score</span>
         <span class="rd-book__author">Bessel van der Kolk</span>
@@ -235,6 +241,7 @@
 
     <div class="rd-book" data-genre="philosophy">
       <span class="rd-book__num">03</span>
+      <div class="rd-book__cover"><img src="https://covers.openlibrary.org/b/isbn/9780140449334-M.jpg" alt="Meditations" loading="lazy" onload="this.classList.add('loaded')"></div>
       <div class="rd-book__info">
         <span class="rd-book__title">Meditations</span>
         <span class="rd-book__author">Marcus Aurelius</span>
@@ -245,6 +252,7 @@
 
     <div class="rd-book" data-genre="sleep">
       <span class="rd-book__num">04</span>
+      <div class="rd-book__cover"><img src="https://covers.openlibrary.org/b/isbn/9781501144325-M.jpg" alt="Why We Sleep" loading="lazy" onload="this.classList.add('loaded')"></div>
       <div class="rd-book__info">
         <span class="rd-book__title">Why We Sleep</span>
         <span class="rd-book__author">Matthew Walker</span>
@@ -255,6 +263,7 @@
 
     <div class="rd-book" data-genre="psychology">
       <span class="rd-book__num">05</span>
+      <div class="rd-book__cover"><img src="https://covers.openlibrary.org/b/isbn/9780807014295-M.jpg" alt="Man's Search for Meaning" loading="lazy" onload="this.classList.add('loaded')"></div>
       <div class="rd-book__info">
         <span class="rd-book__title">Man's Search for Meaning</span>
         <span class="rd-book__author">Viktor Frankl</span>
@@ -265,6 +274,7 @@
 
     <div class="rd-book" data-genre="mindfulness">
       <span class="rd-book__num">06</span>
+      <div class="rd-book__cover"><img src="https://covers.openlibrary.org/b/isbn/9780807012390-M.jpg" alt="The Miracle of Mindfulness" loading="lazy" onload="this.classList.add('loaded')"></div>
       <div class="rd-book__info">
         <span class="rd-book__title">The Miracle of Mindfulness</span>
         <span class="rd-book__author">Thich Nhat Hanh</span>
@@ -275,6 +285,7 @@
 
     <div class="rd-book" data-genre="neuroscience">
       <span class="rd-book__num">07</span>
+      <div class="rd-book__cover"><img src="https://covers.openlibrary.org/b/isbn/9780735213616-M.jpg" alt="Breath" loading="lazy" onload="this.classList.add('loaded')"></div>
       <div class="rd-book__info">
         <span class="rd-book__title">Breath</span>
         <span class="rd-book__author">James Nestor</span>
@@ -285,6 +296,7 @@
 
     <div class="rd-book" data-genre="psychology">
       <span class="rd-book__num">08</span>
+      <div class="rd-book__cover"><img src="https://covers.openlibrary.org/b/isbn/9780374533557-M.jpg" alt="Thinking, Fast and Slow" loading="lazy" onload="this.classList.add('loaded')"></div>
       <div class="rd-book__info">
         <span class="rd-book__title">Thinking, Fast and Slow</span>
         <span class="rd-book__author">Daniel Kahneman</span>
@@ -295,6 +307,7 @@
 
     <div class="rd-book" data-genre="mindfulness">
       <span class="rd-book__num">09</span>
+      <div class="rd-book__cover"><img src="https://covers.openlibrary.org/b/isbn/9781451636024-M.jpg" alt="Waking Up" loading="lazy" onload="this.classList.add('loaded')"></div>
       <div class="rd-book__info">
         <span class="rd-book__title">Waking Up</span>
         <span class="rd-book__author">Sam Harris</span>
@@ -305,6 +318,7 @@
 
     <div class="rd-book" data-genre="philosophy">
       <span class="rd-book__num">10</span>
+      <div class="rd-book__cover"><img src="https://covers.openlibrary.org/b/isbn/9780061142666-M.jpg" alt="Tao Te Ching" loading="lazy" onload="this.classList.add('loaded')"></div>
       <div class="rd-book__info">
         <span class="rd-book__title">The Tao Te Ching</span>
         <span class="rd-book__author">Lao Tzu (Stephen Mitchell translation)</span>
@@ -315,6 +329,7 @@
 
     <div class="rd-book" data-genre="psychology">
       <span class="rd-book__num">11</span>
+      <div class="rd-book__cover"><img src="https://covers.openlibrary.org/b/isbn/9780061733529-M.jpg" alt="Self-Compassion" loading="lazy" onload="this.classList.add('loaded')"></div>
       <div class="rd-book__info">
         <span class="rd-book__title">Self-Compassion</span>
         <span class="rd-book__author">Kristin Neff</span>
@@ -325,6 +340,7 @@
 
     <div class="rd-book" data-genre="neuroscience">
       <span class="rd-book__num">12</span>
+      <div class="rd-book__cover"><img src="https://covers.openlibrary.org/b/isbn/9780399184383-M.jpg" alt="Altered Traits" loading="lazy" onload="this.classList.add('loaded')"></div>
       <div class="rd-book__info">
         <span class="rd-book__title">Altered Traits</span>
         <span class="rd-book__author">Daniel Goleman &amp; Richard Davidson</span>
