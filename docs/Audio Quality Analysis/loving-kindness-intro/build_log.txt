@@ -1,0 +1,30 @@
+=== BUILD LOG ===
+Session: 36-loving-kindness-intro
+
+--- Build Attempt 1 (Strike 1) ---
+Timestamp: Sat  7 Feb 2026 09:55:05 GMT
+TTS chunks: 40
+Duration: 21.4 min (FAIL — target 12 min)
+Reason: Chunk 3 generated 47.6s audio for 46 chars (Fish TTS glitch)
+QA: 320 artifacts (ambient track transients, not stitch clicks)
+Decision: REBUILD — Fish non-deterministic, retry
+
+--- Build Attempt 2 (Strike 2) ---
+Timestamp: Sat  7 Feb 2026 ~10:00 GMT
+TTS chunks: 40
+Duration: 20.9 min (FAIL — target 12 min)
+Reason: Chunk 36 generated 47.6s audio for 99 chars (Fish TTS glitch)
+Bug found: Channel mismatch — silence was stereo, voice chunks mono
+  → Concat demuxer doubled silence durations (428s extra)
+  → Manifest said 13.8 min but WAV was 20.9 min
+Fix: Changed generate_silence() to cl=mono, added -ac 1 to voice WAV conversion
+Decision: REBUILD with channel fix
+
+--- Build Attempt 3 (SUCCESS) ---
+Timestamp: Sat  7 Feb 2026
+TTS chunks: 40
+Duration: 12.9 min (PASS — target 12 min, within 10%)
+No TTS glitches — all chunks reasonable
+QA: PASSED — 0 click artifacts (lossless WAV pipeline eliminated stitch clicks)
+Deployed to R2: https://media.salus-mind.com/content/audio-free/36-loving-kindness-intro.mp3
+Channel mismatch fix confirmed working

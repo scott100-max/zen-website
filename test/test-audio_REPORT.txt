@@ -1,0 +1,51 @@
+======================================================================
+SALUS AUDIO QUALITY ANALYSIS REPORT v2
+======================================================================
+
+File: test-audio.mp3
+Duration: 17:48 (1068.9s)
+Sample Rate: 22050Hz
+Analysis Date: 2026-02-04 10:11
+
+----------------------------------------------------------------------
+SUMMARY
+----------------------------------------------------------------------
+Total Issues Found: 4
+  HIGH severity: 2
+  MEDIUM severity: 1
+  LOW severity: 1
+
+By Type:
+  HISSING: 1
+  LONG_SILENCE: 1
+  VOICE_SHIFT: 2
+
+----------------------------------------------------------------------
+QUALITY VERDICT
+----------------------------------------------------------------------
+FAIL - 2 voice shift(s) require attention
+
+Priority timestamps for human review:
+  03:54 - Voice inconsistency at block 65: brightness shift 2716Hz
+  03:56 - Voice inconsistency at block 66: brightness shift 2774Hz
+
+----------------------------------------------------------------------
+DETAILED ISSUES (sorted by timestamp)
+----------------------------------------------------------------------
+
+  1. [HIGH  ] 03:54 - VOICE_SHIFT
+     Voice inconsistency at block 65: brightness shift 2716Hz
+
+  2. [HIGH  ] 03:56 - VOICE_SHIFT
+     Voice inconsistency at block 66: brightness shift 2774Hz
+
+  3. [LOW   ] 12:20 - LONG_SILENCE
+     Extended pause (60.7s) - verify intentional
+
+  4. [MEDIUM] 14:37 - HISSING
+     High-frequency noise region (14:37-14:37)
+
+
+======================================================================
+END OF REPORT
+======================================================================

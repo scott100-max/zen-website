@@ -1,0 +1,9 @@
+Salus Stripe Payment Links
+==========================
+
+Product ID: prod_TuQx8Ftmn7D1v5
+Monthly Price ID: price_1Swc5qAIwCqKZOfVljcbHrBK
+Yearly Price ID: price_1Swc5rAIwCqKZOfVtRz0K0qi
+
+MONTHLY LINK (£5.99/mo): https://buy.stripe.com/aFacN46Yr4kmffLec0eAg01
+YEARLY LINK (£49.99/yr): https://buy.stripe.com/8x24gy4Qj9EGffL8RGeAg02
