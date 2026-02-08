@@ -293,7 +293,7 @@ var SalusAuth = (function() {
 
     if (authBtn) {
       if (currentUser) {
-        authBtn.textContent = 'Account';
+        authBtn.textContent = 'My Account';
         authBtn.href = pathPrefix + 'dashboard.html';
       } else {
         authBtn.textContent = 'Log In';
@@ -305,7 +305,7 @@ var SalusAuth = (function() {
     var drawerLogin = document.querySelector('.nav-drawer .nav-cta--login');
     if (drawerLogin) {
       if (currentUser) {
-        drawerLogin.textContent = 'Account';
+        drawerLogin.textContent = 'My Account';
         drawerLogin.href = pathPrefix + 'dashboard.html';
       } else {
         drawerLogin.textContent = 'Log In';
@@ -317,7 +317,12 @@ var SalusAuth = (function() {
     if (isPremium()) {
       document.querySelectorAll('a[href="apps.html"], a[href="../apps.html"]').forEach(function(link) {
         var text = link.textContent.trim();
-        // Nav/footer subscribe buttons → redirect to dashboard
+        // Nav subscribe buttons → hide (login button already shows "My Account")
+        if (text === 'Subscribe' && link.classList.contains('nav-cta--subscribe')) {
+          link.style.display = 'none';
+          return;
+        }
+        // Footer/page subscribe CTAs → redirect to dashboard
         if (text === 'Subscribe' || text === 'Upgrade to Premium' || text === 'Get Salus Premium' || text === 'Go Premium') {
           link.textContent = 'My Account';
           link.href = pathPrefix + 'dashboard.html';
