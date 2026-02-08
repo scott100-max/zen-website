@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Stories We Tell Ourselves — Salus Mind</title>
+  <meta name="description" content="Narrative identity — the idea that who you are is shaped by the story you construct about your life. What happens when you realise you can edit the narrative? Not by denying what happened, but by chan">
+  <link rel="canonical" href="https://salus-mind.com/articles/stories-we-tell.html">
+  <meta property="og:title" content="The Stories We Tell Ourselves — Salus Mind">
+  <meta property="og:description" content="Narrative identity — the idea that who you are is shaped by the story you construct about your life. What happens when you realise you can edit the narrative? Not by denying what happened, but by chan">
+  <meta property="og:url" content="https://salus-mind.com/articles/stories-we-tell.html">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://salus-mind.com/images/meditation-woman-outdoor.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css?v=1770564391">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script src="../js/auth.js?v=1770564391"></script>
+<style>
+  /* ═══════════════ NAVIGATION ═══════════════ */
+  .nav-wrap{position:fixed;top:0;left:0;right:0;z-index:1000;transition:background .4s ease,box-shadow .4s ease;background:rgba(6,8,16,0.5);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+  .nav-wrap.scrolled{background:rgba(6,8,16,0.92);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);box-shadow:0 1px 0 rgba(255,255,255,0.06),0 12px 40px rgba(0,0,0,0.3)}
+  .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px}
+  .nav-row-1{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .nav-brand{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.5rem;letter-spacing:.12em;text-decoration:none;color:#f0eefc;transition:opacity .3s ease;flex-shrink:0}
+  .nav-brand:hover{opacity:.8}
+  .nav-primary{display:flex;align-items:center;gap:4px;list-style:none}
+  .nav-primary a{font-weight:300;font-size:.82rem;letter-spacing:.02em;color:rgba(240,238,252,0.6);text-decoration:none;padding:6px 13px;border-radius:8px;transition:all .3s ease;position:relative;white-space:nowrap}
+  .nav-primary a:hover{color:#f0eefc;background:rgba(255,255,255,0.04)}
+  .nav-primary a.active{color:#f0eefc;background:rgba(255,255,255,0.06)}
+  .nav-primary a.active::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:16px;height:2px;border-radius:1px;background:#4ecdc4;opacity:.7}
+  .nav-ctas{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  .nav-cta{font-family:'Outfit',sans-serif;font-weight:400;font-size:.78rem;letter-spacing:.04em;padding:7px 18px;border-radius:40px;cursor:pointer;text-decoration:none;transition:all .35s cubic-bezier(.22,1,.36,1);white-space:nowrap}
+  .nav-cta--subscribe{color:#060810;background:#4ecdc4;border:1px solid #4ecdc4}
+  .nav-cta--subscribe:hover{background:#5ed8d0;transform:translateY(-1px);box-shadow:0 4px 16px rgba(78,205,196,0.25)}
+  .nav-cta--login{color:rgba(240,238,252,0.6);background:transparent;border:1px solid rgba(255,255,255,0.1)}
+  .nav-cta--login:hover{color:#f0eefc;border-color:rgba(255,255,255,0.22);background:rgba(255,255,255,0.04)}
+  .nav-row-2{display:flex;align-items:center;justify-content:center;gap:32px;height:34px;border-top:1px solid rgba(255,255,255,0.06);transition:height .4s ease,opacity .3s ease,border-top-color .3s ease;overflow:hidden}
+  .nav-wrap.scrolled .nav-row-2{height:0;opacity:0;border-top-color:transparent}
+  .nav-row-2 a{font-weight:300;font-size:.72rem;letter-spacing:.03em;color:rgba(240,238,252,0.4);text-decoration:none;transition:color .3s ease;white-space:nowrap}
+  .nav-row-2 a:hover{color:rgba(240,238,252,0.6)}
+  .nav-burger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;transition:background .3s ease}
+  .nav-burger:hover{background:rgba(255,255,255,0.04)}
+  .nav-burger span{display:block;width:100%;height:1.5px;background:rgba(240,238,252,0.6);border-radius:1px;transition:all .3s ease;transform-origin:center}
+  .nav-burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+  .nav-burger.open span:nth-child(2){opacity:0}
+  .nav-burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+  .nav-drawer{display:none;position:fixed;top:56px;left:0;right:0;bottom:0;background:rgba(6,8,16,0.95);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);z-index:999;flex-direction:column;padding:32px 28px 40px;overflow-y:auto;opacity:0;transform:translateY(-8px);transition:opacity .3s ease,transform .3s ease}
+  .nav-drawer.open{display:flex;opacity:1;transform:translateY(0)}
+  .nav-drawer__section-label{font-weight:300;font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(240,238,252,0.4);margin-bottom:14px;margin-top:24px}
+  .nav-drawer__section-label:first-child{margin-top:0}
+  .nav-drawer__link{display:flex;align-items:center;gap:12px;font-weight:300;font-size:1.05rem;color:rgba(240,238,252,0.6);text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);transition:color .3s ease}
+  .nav-drawer__link:hover{color:#f0eefc}
+  .nav-drawer__link-dot{width:5px;height:5px;border-radius:50%;background:#4ecdc4;opacity:.5}
+  .nav-drawer__ctas{display:flex;gap:10px;margin-top:32px}
+  .nav-drawer__ctas .nav-cta{flex:1;text-align:center;padding:12px 20px;font-size:.88rem}
+  @media(max-width:860px){.nav-primary,.nav-row-2,.nav-ctas{display:none}.nav-burger{display:flex}.nav-row-1{height:56px}}
+
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --deep:#060810;--ink:#0a0d18;--surface:#0e1120;--accent:#38bdf8;--accent-muted:rgba(56,189,248,0.6);
+    --text-bright:#f2f0fa;--text-body:rgba(242,240,250,0.72);--text-muted:rgba(242,240,250,0.45);--text-faint:rgba(242,240,250,0.3);--text-mid:rgba(242,240,250,0.65);--border:rgba(255,255,255,0.06);
+  }
+  html{font-size:16px;scroll-behavior:smooth}
+  body{background:var(--deep);color:var(--text-body);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+  .hero{position:relative;padding:120px 24px 80px;text-align:center;overflow:hidden}
+  .hero__orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.15;pointer-events:none}
+  .hero__orb--1{width:300px;height:300px;top:-60px;right:15%;background:#38bdf8}
+  .hero__orb--2{width:200px;height:200px;bottom:-40px;left:10%;background:#0ea5e9}
+  .hero__back{display:inline-flex;align-items:center;gap:6px;font-weight:300;font-size:.74rem;color:var(--text-muted);text-decoration:none;margin-bottom:32px;transition:color .3s ease}
+  .hero__back:hover{color:var(--text-bright)}
+  .hero__back svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5}
+  .hero__topic{display:inline-block;font-weight:400;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;padding:4px 14px;border-radius:20px;color:rgba(56,189,248,0.8);background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.15);margin-bottom:20px}
+  .hero h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,5vw,3rem);line-height:1.15;color:var(--text-bright);max-width:680px;margin:0 auto 16px}
+  .hero__meta{font-weight:200;font-size:.76rem;color:var(--text-muted)}
+  .hero__meta span{margin:0 6px;opacity:.4}
+
+  .article{max-width:680px;margin:0 auto;padding:0 24px 48px}
+  .article p{font-weight:300;font-size:.92rem;line-height:1.85;margin-bottom:20px}
+  .article h2{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.6rem;color:var(--text-bright);margin:48px 0 20px;line-height:1.25}
+  .article h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.25rem;color:var(--text-bright);margin:36px 0 16px;line-height:1.3}
+
+  .lede{font-size:1.05rem !important;font-weight:200 !important;line-height:1.9 !important;color:var(--text-bright);border-left:2px solid rgba(56,189,248,0.3);padding-left:20px;margin-bottom:32px !important}
+
+  .cite-box{display:flex;gap:14px;padding:24px;border-radius:12px;background:var(--surface);border:1px solid var(--border);margin:28px 0}
+  .cite-box__icon{width:36px;height:36px;border-radius:50%;background:rgba(56,189,248,0.06);border:1px solid rgba(56,189,248,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .cite-box__icon svg{width:16px;height:16px;fill:none;stroke:rgba(56,189,248,0.6);stroke-width:1.5}
+  .cite-box__text{font-weight:300;font-size:.84rem;line-height:1.7;color:var(--text-mid)}
+  .cite-box__text strong{font-weight:500;color:var(--text-bright)}
+
+  .concept{padding:24px;border-radius:12px;border:1px solid rgba(56,189,248,0.1);background:rgba(56,189,248,0.03);margin:28px 0}
+  .concept__label{font-weight:400;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-muted);margin-bottom:10px}
+  .concept p{font-weight:300;font-size:.86rem;line-height:1.75;color:var(--text-mid);margin-bottom:0}
+
+  .narrative{padding:20px 24px;border-radius:12px;background:var(--surface);border:1px solid var(--border);margin:16px 0}
+  .narrative__label{font-weight:400;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-muted);margin-bottom:8px}
+  .narrative__before{font-weight:300;font-size:.84rem;line-height:1.7;color:var(--text-muted);margin-bottom:10px;font-style:italic}
+  .narrative__after{font-weight:300;font-size:.84rem;line-height:1.7;color:var(--text-bright)}
+
+  .pull{margin:40px 0;padding-left:24px;border-left:2px solid rgba(56,189,248,0.25)}
+  .pull p{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:300;font-style:italic;line-height:1.55;color:var(--text-bright);margin-bottom:0}
+
+  .steps{counter-reset:step;margin:24px 0;padding:0;list-style:none}
+  .steps li{counter-increment:step;display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--border)}
+  .steps li:last-child{border-bottom:none}
+  .steps li::before{content:counter(step);font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;color:var(--accent-muted);flex-shrink:0;width:28px;text-align:center;padding-top:2px}
+  .steps__text{font-weight:300;font-size:.86rem;line-height:1.7;color:var(--text-mid)}
+  .steps__text strong{font-weight:400;color:var(--text-bright)}
+
+  .try{padding:32px;border-radius:16px;background:linear-gradient(135deg,rgba(56,189,248,0.06) 0%,rgba(14,165,233,0.03) 100%);border:1px solid rgba(56,189,248,0.1);margin:40px 0}
+  .try__label{font-weight:400;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-muted);margin-bottom:14px}
+  .try__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.3rem;color:var(--text-bright);margin-bottom:16px}
+
+  .references{max-width:680px;margin:0 auto;padding:0 24px 32px}
+  .references__title{font-weight:400;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px}
+  .ref{font-weight:200;font-size:.74rem;line-height:1.65;color:var(--text-faint);margin-bottom:8px}
+  .ref em{font-style:italic}
+
+  .disclaimer{max-width:680px;margin:0 auto;padding:0 24px 48px}
+  .disclaimer__inner{padding:20px 24px;border-radius:12px;border:1px solid rgba(251,191,36,0.08);background:rgba(251,191,36,0.02)}
+  .disclaimer__title{font-weight:400;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(251,191,36,0.5);margin-bottom:8px}
+  .disclaimer__text{font-weight:200;font-size:.74rem;line-height:1.7;color:var(--text-muted)}
+
+  .related{max-width:680px;margin:0 auto;padding:0 24px 80px}
+  .related__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.1rem;color:var(--text-bright);margin-bottom:16px}
+  .related__grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .related__card{padding:20px;border-radius:12px;background:var(--surface);border:1px solid var(--border);text-decoration:none;transition:border-color .3s ease,transform .3s ease}
+  .related__card:hover{border-color:rgba(255,255,255,0.1);transform:translateY(-2px)}
+  .related__card-topic{font-weight:400;font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
+  .related__card-title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.05rem;line-height:1.25;color:var(--text-bright);margin-bottom:4px}
+  .related__card-meta{font-weight:200;font-size:.66rem;color:var(--text-faint)}
+
+  @media(max-width:700px){
+    .hero{padding:80px 24px 60px}
+    .related__grid{grid-template-columns:1fr}
+    .pull{margin:32px 0;padding-left:20px}
+  }
+
+</style>
+</head>
+<body>
+<nav class="nav-wrap" id="navWrap">
+  <div class="nav-inner">
+    <div class="nav-row-1">
+      <a href="../index.html" class="nav-brand">SALUS</a>
+      <ul class="nav-primary">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../sessions.html">Meditations</a></li>
+        <li><a href="../mindfulness.html">Mindfulness</a></li>
+        <li><a href="../asmr.html">ASMR</a></li>
+        <li><a href="../sleep-stories.html">Sleep Stories</a></li>
+        <li><a href="../education.html">Learn</a></li>
+        <li><a href="../about.html">About</a></li>
+      </ul>
+      <div class="nav-ctas">
+        <a href="../apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+        <a href="../login.html" class="nav-cta nav-cta--login">Log In</a>
+      </div>
+      <button class="nav-burger" id="burgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+    <div class="nav-row-2">
+      <a href="../tools.html">Tools</a>
+      <a href="../reading.html">Reading</a>
+      <a href="../applied-psychology.html">Applied Psychology</a>
+      <a href="../newsletter.html">Newsletter</a>
+      <a href="../contact.html">Contact</a>
+    </div>
+  </div>
+</nav>
+<div class="nav-drawer" id="navDrawer">
+  <div class="nav-drawer__section-label">Main</div>
+  <a href="../index.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Home</a>
+  <a href="../sessions.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Meditations</a>
+  <a href="../mindfulness.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Mindfulness</a>
+  <a href="../asmr.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>ASMR</a>
+  <a href="../sleep-stories.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Sleep Stories</a>
+  <a href="../education.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Learn</a>
+  <a href="../about.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>About</a>
+  <div class="nav-drawer__section-label">More</div>
+  <a href="../tools.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Tools</a>
+  <a href="../reading.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Reading</a>
+  <a href="../applied-psychology.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Applied Psychology</a>
+  <a href="../newsletter.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Newsletter</a>
+  <a href="../contact.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Contact</a>
+  <div class="nav-drawer__ctas">
+    <a href="../apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+    <a href="../login.html" class="nav-cta nav-cta--login">Log In</a>
+  </div>
+</div>
+
+
+<header class="hero">
+  <div class="hero__orb hero__orb--1"></div>
+  <div class="hero__orb hero__orb--2"></div>
+  <a href="../applied-psychology.html" class="hero__back"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Back to Applied Psychology</a>
+  <div class="hero__topic">Identity</div>
+  <h1>The Stories We Tell Ourselves</h1>
+  <div class="hero__meta">8 min read <span>·</span> Published February 2026</div>
+</header>
+
+<article class="article">
+
+  <p class="lede">Narrative identity — the idea that who you are is shaped by the story you construct about your life. What happens when you realise you can edit the narrative? Not by denying what happened, but by changing what it means. The research suggests this is one of the most powerful psychological tools available — and one of the least understood.</p>
+
+  <h2>You Are the Story You Tell</h2>
+
+  <p>Every human being carries an internal narrative — a running account of who they are, how they got here, and where they're headed. This isn't a luxury of the introspective. It's a fundamental feature of human cognition. We are, as the psychologist Jerome Bruner put it, "narrative creatures." We don't just experience events — we organise them into stories, and those stories become the architecture of identity.</p>
+
+  <p>Your narrative identity is not a diary of facts. It's an edited, interpreted, emotionally coloured account that emphasises certain events and downplays others, draws causal connections that may or may not hold up to scrutiny, and assigns meaning to moments that, at the time, may have felt arbitrary. It is, in other words, a construction — and like any construction, it can be rebuilt.</p>
+
+  <div class="cite-box">
+    <div class="cite-box__icon"><svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg></div>
+    <div class="cite-box__text"><strong>Dan McAdams</strong>, professor of psychology at Northwestern University and one of the foremost researchers on narrative identity, has spent over three decades studying the life stories people construct. His research shows that the way people narrate their lives — the themes they emphasise, the turning points they identify, the tone they adopt — <strong>predicts psychological wellbeing more reliably than the events themselves</strong>. Two people can live through identical circumstances and construct radically different stories about what those circumstances mean.</div>
+  </div>
+
+  <h2>Redemption and Contamination</h2>
+
+  <p>McAdams identified two master narrative patterns that recur across thousands of life stories and that predict very different outcomes.</p>
+
+  <p>The first is the "redemption sequence" — a narrative arc where bad events are followed by good outcomes. The structure is: something terrible happened, but it led to growth, insight, or positive change. "I lost my job, but it forced me to rethink what I actually wanted." "The illness was devastating, but it brought my family closer." The bad thing doesn't disappear from the story — it becomes a turning point that leads somewhere meaningful.</p>
+
+  <p>The second is the "contamination sequence" — the inverse. A good situation is followed by a bad outcome. "Things were going well, and then everything fell apart." "I was happy for a while, but it didn't last." In contamination narratives, positive experiences are undermined by what comes after them. The good is always provisional, always at risk.</p>
+
+  <div class="concept">
+    <div class="concept__label">Key Concept</div>
+    <p>McAdams' research found that people whose life stories were dominated by redemption sequences showed higher levels of generativity (concern for future generations), psychological wellbeing, and life satisfaction. Those whose stories were dominated by contamination sequences showed higher rates of depression and anxiety. Crucially, these patterns were not determined by what had actually happened to people — they were determined by how people narrated what had happened.</p>
+  </div>
+
+  <div class="pull">
+    <p>The most important story you will ever tell is the one you tell yourself about yourself. And you are both the author and the protagonist.</p>
+  </div>
+
+  <h2>The Editing Room</h2>
+
+  <p>If narrative identity is a construction, it follows that it can be reconstructed. This is not a matter of positive thinking or wishful rewriting. It's a more rigorous process: examining the stories you've been telling yourself, questioning whether they're the only interpretation available, and — where the evidence supports it — exploring alternative narratives that are equally true but more useful.</p>
+
+  <div class="cite-box">
+    <div class="cite-box__icon"><svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg></div>
+    <div class="cite-box__text"><strong>James Pennebaker</strong>, professor of psychology at the University of Texas at Austin, pioneered the study of expressive writing — the practice of writing about emotionally significant experiences for 15–20 minutes a day. Over decades of research, Pennebaker demonstrated that this simple intervention improved immune function, reduced doctor visits, lowered anxiety and depression scores, and improved academic performance. The mechanism, his research suggests, is <strong>narrative construction</strong> — the act of organising chaotic emotional experience into a coherent story gives the brain a framework for processing it.</div>
+  </div>
+
+  <p>Pennebaker's key insight was that it wasn't just the expression of emotion that mattered — it was the structure. Participants who showed the greatest health improvements were those whose writing became more organised over the course of the exercise: they moved from fragmented emotional outpouring to a more coherent narrative with cause and effect, perspective shifts, and insight. They weren't just venting. They were making sense.</p>
+
+  <h2>Narrative Therapy</h2>
+
+  <p>The idea that people can deliberately reconstruct their life stories forms the foundation of narrative therapy, developed by Michael White and David Epston in the late 1980s. The approach rests on a deceptively simple premise: the person is not the problem; the problem is the problem. And the way the problem is storied — the narrative that surrounds it — determines how much power it holds.</p>
+
+  <div class="cite-box">
+    <div class="cite-box__icon"><svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg></div>
+    <div class="cite-box__text"><strong>Michael White</strong> developed the technique of "externalisation" — separating the person from the problem by linguistic means. Instead of "I am anxious," the reframe is "Anxiety visits me." Instead of "I'm a failure," it becomes "The failure story has been dominant." This isn't semantic trickery. Externalisation creates psychological distance between a person and their difficulties, opening space for <strong>agency</strong> — the recognition that the story can be told differently.</div>
+  </div>
+
+  <p>A central technique in narrative therapy is the search for "unique outcomes" — moments when the dominant problem story didn't hold. If someone's narrative is "I always freeze under pressure," the therapist might ask about a time when they didn't — a time when they responded differently, even slightly. These moments exist in every life, but they're often invisible because they don't fit the dominant narrative. Finding them, and weaving them into the story, begins to shift the plot.</p>
+
+  <div class="narrative">
+    <div class="narrative__label">Dominant narrative</div>
+    <div class="narrative__before">"I've always been someone who can't handle conflict. I shut down. It's just who I am."</div>
+    <div class="narrative__label" style="margin-top:12px">Alternative narrative</div>
+    <div class="narrative__after">"I've struggled with conflict for a long time, but there have been moments — with my sister last year, with my manager in March — when I did speak up. It was hard, but I did it. There might be more capacity there than the story suggests."</div>
+  </div>
+
+  <div class="narrative">
+    <div class="narrative__label">Dominant narrative</div>
+    <div class="narrative__before">"I wasted my twenties. I didn't achieve anything. Everyone else was building their careers while I was just drifting."</div>
+    <div class="narrative__label" style="margin-top:12px">Alternative narrative</div>
+    <div class="narrative__after">"My twenties didn't follow a conventional path. But I moved countries, recovered from something difficult, and figured out what I didn't want — which eventually helped me find what I did. The path wasn't wasted. It was just different from the one I expected."</div>
+  </div>
+
+  <h2>The Limits of Re-Storying</h2>
+
+  <p>There's an important boundary to this work. Narrative reconstruction is not about lying to yourself. It's not about turning tragedy into triumph through sheer force of positivity. Some experiences are unambiguously terrible, and any narrative that tries to spin them into something "meant to be" is not alternative storytelling — it's denial.</p>
+
+  <p>The goal is not to find a silver lining in everything. The goal is to notice where you've been telling yourself a story that is narrower, more fixed, or more damning than the evidence warrants — and to ask whether a more complete version might be available. Not a happier version. A more accurate one.</p>
+
+  <div class="concept">
+    <div class="concept__label">Research Note</div>
+    <p>Jonathan Adler at Olin College of Engineering conducted longitudinal studies tracking changes in people's life narratives during therapy. He found that shifts toward "agency" (the sense that one can influence outcomes) and "communion" (connection with others) in people's narratives preceded improvements in mental health — not the other way around. The story changed first, and the wellbeing followed. This suggests that narrative change is not merely a reflection of recovery but an active mechanism driving it.</p>
+  </div>
+
+  <div class="try">
+    <div class="try__label">Something to Try Today</div>
+    <div class="try__title">The Life Chapter Exercise</div>
+    <ol class="steps">
+      <li><span class="steps__text"><strong>Imagine your life as a book with chapters.</strong> Give each chapter a title — not a summary, but a title that captures the emotional tone or central theme. "The Year Everything Changed." "Learning to Be Alone." "Starting Again." Don't overthink it; go with what comes.</span></li>
+      <li><span class="steps__text"><strong>Look at the chapter you're in now.</strong> What's its title? What's the dominant narrative? Is it a story of struggle, of stagnation, of building something, of recovering? Notice the tone without judging it.</span></li>
+      <li><span class="steps__text"><strong>Ask: who is the narrator?</strong> Is this the version of you who is anxious? Defeated? Hopeful? Self-critical? The narrator shapes the story more than the events do. Could a different version of you tell the same chapter differently?</span></li>
+      <li><span class="steps__text"><strong>Find one scene that doesn't fit the dominant narrative.</strong> If the chapter is "I'm stuck," look for a moment — even a small one — where you moved. If it's "I can't do this," find a moment where you did something hard. These moments exist. The dominant story just hasn't been including them.</span></li>
+      <li><span class="steps__text"><strong>Write a paragraph about what the next chapter could be called.</strong> Not what you wish would happen — what you'd like the theme to be. Not the plot, but the tone. This isn't prediction. It's intention. And intention shapes attention, which shapes what you notice, which shapes the story.</span></li>
+    </ol>
+  </div>
+
+</article>
+
+<div class="references">
+  <div class="references__title">References</div>
+  <p class="ref">Adler, J. M. (2012). Living into the story: Agency and coherence in a longitudinal study of narrative identity development and mental health over the course of psychotherapy. <em>Journal of Personality and Social Psychology</em>, 102(2), 367–389.</p>
+  <p class="ref">Bruner, J. (1991). The narrative construction of reality. <em>Critical Inquiry</em>, 18(1), 1–21.</p>
+  <p class="ref">McAdams, D. P. (2006). <em>The Redemptive Self: Stories Americans Live By</em>. Oxford University Press.</p>
+  <p class="ref">McAdams, D. P., &amp; McLean, K. C. (2013). Narrative identity. <em>Current Directions in Psychological Science</em>, 22(3), 233–238.</p>
+  <p class="ref">Pennebaker, J. W. (1997). Writing about emotional experiences as a therapeutic process. <em>Psychological Science</em>, 8(3), 162–166.</p>
+  <p class="ref">White, M., &amp; Epston, D. (1990). <em>Narrative Means to Therapeutic Ends</em>. W. W. Norton.</p>
+</div>
+
+<div class="disclaimer">
+  <div class="disclaimer__inner">
+    <div class="disclaimer__title">Important Notice</div>
+    <div class="disclaimer__text">This article is for educational purposes only. It is not a substitute for professional medical or psychological advice, diagnosis, or treatment. If you are struggling with your sense of identity, persistent negative self-narratives, or trauma-related difficulties, please seek support from a qualified mental health professional. Narrative techniques can be powerful tools, but they work best with skilled guidance.</div>
+  </div>
+</div>
+
+<div class="related">
+  <h3 class="related__title">Continue Reading</h3>
+  <div class="related__grid">
+    <a href="#" class="related__card">
+      <div class="related__card-topic">Resilience</div>
+      <div class="related__card-title">Post-Traumatic Growth: What Comes After the Worst</div>
+      <div class="related__card-meta">5 min read</div>
+    </a>
+    <a href="#" class="related__card">
+      <div class="related__card-topic">Relationships</div>
+      <div class="related__card-title">The Gottman Ratio: What Keeps Relationships Alive</div>
+      <div class="related__card-meta">7 min read</div>
+    </a>
+  </div>
+</div>
+
+
+<script>
+  // Navigation
+  const navWrap=document.getElementById("navWrap");
+  window.addEventListener("scroll",()=>{navWrap.classList.toggle("scrolled",window.scrollY>30)},{passive:true});
+  const burger=document.getElementById("burgerBtn");
+  const drawer=document.getElementById("navDrawer");
+  burger.addEventListener("click",()=>{burger.classList.toggle("open");drawer.classList.toggle("open");document.body.style.overflow=drawer.classList.contains("open")?"hidden":""});
+  drawer.querySelectorAll(".nav-drawer__link").forEach(l=>{l.addEventListener("click",()=>{burger.classList.remove("open");drawer.classList.remove("open");document.body.style.overflow=""})});
+</script>
+<script src="../js/main.js?v=1770564391"></script>
+<script src="../js/tracker.js"></script>
+
+<footer class="hb-footer">
+  <div class="hb-footer__inner">
+    <div class="hb-footer__brand">
+      <span class="hb-footer__logo">Salus</span>
+      <p class="hb-footer__tagline">A quieter kind of self-care. Guided meditations, sleep stories, ASMR, and mindfulness tools &mdash; built by a family.</p>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Practice</h4>
+      <ul class="hb-footer__links">
+        <li><a href="../sessions.html">Guided Meditations</a></li>
+        <li><a href="../mindfulness.html">Mindfulness</a></li>
+        <li><a href="../asmr.html">ASMR &amp; Sounds</a></li>
+        <li><a href="../sleep-stories.html">Sleep Stories</a></li>
+        <li><a href="../tools.html">Tools</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Discover</h4>
+      <ul class="hb-footer__links">
+        <li><a href="../education.html">Learn</a></li>
+        <li><a href="../reading.html">Reading</a></li>
+        <li><a href="../applied-psychology.html">Applied Psychology</a></li>
+        <li><a href="../newsletter.html">Newsletter</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Salus</h4>
+      <ul class="hb-footer__links">
+        <li><a href="../about.html">About Us</a></li>
+        <li><a href="../apps.html">Go Premium</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="footer-disclaimer">Salus does not provide medical advice. Content is for general wellbeing and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified health provider with any health concerns.</p>
+  <div class="hb-footer__bottom">
+    <span class="hb-footer__copy">&copy; 2026 Salus Mind. All rights reserved.</span>
+    <a href="#" class="hb-footer__back-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">
+      Back to top
+      <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+    </a>
+  </div>
+</footer>
+</body>
+</html>

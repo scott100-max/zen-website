@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emotional Granularity: Why &quot;I Feel Bad&quot; Isn't Enough — Salus Mind</title>
+  <meta name="description" content="People who can precisely label their emotions handle them better. The research is clear: expanding your emotional vocabulary literally changes how you experience feelings. It's not about being articul">
+  <link rel="canonical" href="https://salus-mind.com/articles/emotional-granularity.html">
+  <meta property="og:title" content="Emotional Granularity: Why &quot;I Feel Bad&quot; Isn't Enough — Salus Mind">
+  <meta property="og:description" content="People who can precisely label their emotions handle them better. The research is clear: expanding your emotional vocabulary literally changes how you experience feelings. It's not about being articul">
+  <meta property="og:url" content="https://salus-mind.com/articles/emotional-granularity.html">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://salus-mind.com/images/meditation-woman-outdoor.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css?v=1770564391">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script src="../js/auth.js?v=1770564391"></script>
+<style>
+  /* ═══════════════ NAVIGATION ═══════════════ */
+  .nav-wrap{position:fixed;top:0;left:0;right:0;z-index:1000;transition:background .4s ease,box-shadow .4s ease;background:rgba(6,8,16,0.5);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+  .nav-wrap.scrolled{background:rgba(6,8,16,0.92);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);box-shadow:0 1px 0 rgba(255,255,255,0.06),0 12px 40px rgba(0,0,0,0.3)}
+  .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px}
+  .nav-row-1{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .nav-brand{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.5rem;letter-spacing:.12em;text-decoration:none;color:#f0eefc;transition:opacity .3s ease;flex-shrink:0}
+  .nav-brand:hover{opacity:.8}
+  .nav-primary{display:flex;align-items:center;gap:4px;list-style:none}
+  .nav-primary a{font-weight:300;font-size:.82rem;letter-spacing:.02em;color:rgba(240,238,252,0.6);text-decoration:none;padding:6px 13px;border-radius:8px;transition:all .3s ease;position:relative;white-space:nowrap}
+  .nav-primary a:hover{color:#f0eefc;background:rgba(255,255,255,0.04)}
+  .nav-primary a.active{color:#f0eefc;background:rgba(255,255,255,0.06)}
+  .nav-primary a.active::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:16px;height:2px;border-radius:1px;background:#4ecdc4;opacity:.7}
+  .nav-ctas{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  .nav-cta{font-family:'Outfit',sans-serif;font-weight:400;font-size:.78rem;letter-spacing:.04em;padding:7px 18px;border-radius:40px;cursor:pointer;text-decoration:none;transition:all .35s cubic-bezier(.22,1,.36,1);white-space:nowrap}
+  .nav-cta--subscribe{color:#060810;background:#4ecdc4;border:1px solid #4ecdc4}
+  .nav-cta--subscribe:hover{background:#5ed8d0;transform:translateY(-1px);box-shadow:0 4px 16px rgba(78,205,196,0.25)}
+  .nav-cta--login{color:rgba(240,238,252,0.6);background:transparent;border:1px solid rgba(255,255,255,0.1)}
+  .nav-cta--login:hover{color:#f0eefc;border-color:rgba(255,255,255,0.22);background:rgba(255,255,255,0.04)}
+  .nav-row-2{display:flex;align-items:center;justify-content:center;gap:32px;height:34px;border-top:1px solid rgba(255,255,255,0.06);transition:height .4s ease,opacity .3s ease,border-top-color .3s ease;overflow:hidden}
+  .nav-wrap.scrolled .nav-row-2{height:0;opacity:0;border-top-color:transparent}
+  .nav-row-2 a{font-weight:300;font-size:.72rem;letter-spacing:.03em;color:rgba(240,238,252,0.4);text-decoration:none;transition:color .3s ease;white-space:nowrap}
+  .nav-row-2 a:hover{color:rgba(240,238,252,0.6)}
+  .nav-burger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;transition:background .3s ease}
+  .nav-burger:hover{background:rgba(255,255,255,0.04)}
+  .nav-burger span{display:block;width:100%;height:1.5px;background:rgba(240,238,252,0.6);border-radius:1px;transition:all .3s ease;transform-origin:center}
+  .nav-burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+  .nav-burger.open span:nth-child(2){opacity:0}
+  .nav-burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+  .nav-drawer{display:none;position:fixed;top:56px;left:0;right:0;bottom:0;background:rgba(6,8,16,0.95);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);z-index:999;flex-direction:column;padding:32px 28px 40px;overflow-y:auto;opacity:0;transform:translateY(-8px);transition:opacity .3s ease,transform .3s ease}
+  .nav-drawer.open{display:flex;opacity:1;transform:translateY(0)}
+  .nav-drawer__section-label{font-weight:300;font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(240,238,252,0.4);margin-bottom:14px;margin-top:24px}
+  .nav-drawer__section-label:first-child{margin-top:0}
+  .nav-drawer__link{display:flex;align-items:center;gap:12px;font-weight:300;font-size:1.05rem;color:rgba(240,238,252,0.6);text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);transition:color .3s ease}
+  .nav-drawer__link:hover{color:#f0eefc}
+  .nav-drawer__link-dot{width:5px;height:5px;border-radius:50%;background:#4ecdc4;opacity:.5}
+  .nav-drawer__ctas{display:flex;gap:10px;margin-top:32px}
+  .nav-drawer__ctas .nav-cta{flex:1;text-align:center;padding:12px 20px;font-size:.88rem}
+  @media(max-width:860px){.nav-primary,.nav-row-2,.nav-ctas{display:none}.nav-burger{display:flex}.nav-row-1{height:56px}}
+
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --deep:#060810;--ink:#0a0d18;--surface:#0e1120;--accent:#f472b6;--accent-muted:rgba(244,114,182,0.6);
+    --text-bright:#f2f0fa;--text-body:rgba(242,240,250,0.72);--text-muted:rgba(242,240,250,0.45);--text-faint:rgba(242,240,250,0.3);--text-mid:rgba(242,240,250,0.65);--border:rgba(255,255,255,0.06);
+  }
+  html{font-size:16px;scroll-behavior:smooth}
+  body{background:var(--deep);color:var(--text-body);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+  .hero{position:relative;padding:120px 24px 80px;text-align:center;overflow:hidden}
+  .hero__orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.15;pointer-events:none}
+  .hero__orb--1{width:300px;height:300px;top:-60px;right:15%;background:#f472b6}
+  .hero__orb--2{width:200px;height:200px;bottom:-40px;left:10%;background:#ec4899}
+  .hero__back{display:inline-flex;align-items:center;gap:6px;font-weight:300;font-size:.74rem;color:var(--text-muted);text-decoration:none;margin-bottom:32px;transition:color .3s ease}
+  .hero__back:hover{color:var(--text-bright)}
+  .hero__back svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5}
+  .hero__topic{display:inline-block;font-weight:400;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;padding:4px 14px;border-radius:20px;color:rgba(244,114,182,0.8);background:rgba(244,114,182,0.08);border:1px solid rgba(244,114,182,0.15);margin-bottom:20px}
+  .hero h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,5vw,3rem);line-height:1.15;color:var(--text-bright);max-width:680px;margin:0 auto 16px}
+  .hero__meta{font-weight:200;font-size:.76rem;color:var(--text-muted)}
+  .hero__meta span{margin:0 6px;opacity:.4}
+
+  .article{max-width:680px;margin:0 auto;padding:0 24px 48px}
+  .article p{font-weight:300;font-size:.92rem;line-height:1.85;margin-bottom:20px}
+  .article h2{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.6rem;color:var(--text-bright);margin:48px 0 20px;line-height:1.25}
+  .article h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.25rem;color:var(--text-bright);margin:36px 0 16px;line-height:1.3}
+
+  .lede{font-size:1.05rem !important;font-weight:200 !important;line-height:1.9 !important;color:var(--text-bright);border-left:2px solid rgba(244,114,182,0.3);padding-left:20px;margin-bottom:32px !important}
+
+  .cite-box{display:flex;gap:14px;padding:24px;border-radius:12px;background:var(--surface);border:1px solid var(--border);margin:28px 0}
+  .cite-box__icon{width:36px;height:36px;border-radius:50%;background:rgba(244,114,182,0.06);border:1px solid rgba(244,114,182,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .cite-box__icon svg{width:16px;height:16px;fill:none;stroke:rgba(244,114,182,0.6);stroke-width:1.5}
+  .cite-box__text{font-weight:300;font-size:.84rem;line-height:1.7;color:var(--text-mid)}
+  .cite-box__text strong{font-weight:500;color:var(--text-bright)}
+
+  .concept{padding:24px;border-radius:12px;border:1px solid rgba(244,114,182,0.1);background:rgba(244,114,182,0.03);margin:28px 0}
+  .concept__label{font-weight:400;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-muted);margin-bottom:10px}
+  .concept p{font-weight:300;font-size:.86rem;line-height:1.75;color:var(--text-mid);margin-bottom:0}
+
+  .spectrum{padding:20px 24px;border-radius:12px;background:var(--surface);border:1px solid var(--border);margin:16px 0}
+  .spectrum__label{font-weight:400;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-muted);margin-bottom:10px}
+  .spectrum__row{display:flex;flex-wrap:wrap;gap:8px}
+  .spectrum__word{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1rem;color:var(--text-bright);padding:4px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(244,114,182,0.03)}
+
+  .pull{margin:40px 0;padding-left:24px;border-left:2px solid rgba(244,114,182,0.25)}
+  .pull p{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:300;font-style:italic;line-height:1.55;color:var(--text-bright);margin-bottom:0}
+
+  .steps{counter-reset:step;margin:24px 0;padding:0;list-style:none}
+  .steps li{counter-increment:step;display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--border)}
+  .steps li:last-child{border-bottom:none}
+  .steps li::before{content:counter(step);font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;color:var(--accent-muted);flex-shrink:0;width:28px;text-align:center;padding-top:2px}
+  .steps__text{font-weight:300;font-size:.86rem;line-height:1.7;color:var(--text-mid)}
+  .steps__text strong{font-weight:400;color:var(--text-bright)}
+
+  .try{padding:32px;border-radius:16px;background:linear-gradient(135deg,rgba(244,114,182,0.06) 0%,rgba(236,72,153,0.03) 100%);border:1px solid rgba(244,114,182,0.1);margin:40px 0}
+  .try__label{font-weight:400;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-muted);margin-bottom:14px}
+  .try__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.3rem;color:var(--text-bright);margin-bottom:16px}
+
+  .references{max-width:680px;margin:0 auto;padding:0 24px 32px}
+  .references__title{font-weight:400;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px}
+  .ref{font-weight:200;font-size:.74rem;line-height:1.65;color:var(--text-faint);margin-bottom:8px}
+  .ref em{font-style:italic}
+
+  .disclaimer{max-width:680px;margin:0 auto;padding:0 24px 48px}
+  .disclaimer__inner{padding:20px 24px;border-radius:12px;border:1px solid rgba(251,191,36,0.08);background:rgba(251,191,36,0.02)}
+  .disclaimer__title{font-weight:400;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(251,191,36,0.5);margin-bottom:8px}
+  .disclaimer__text{font-weight:200;font-size:.74rem;line-height:1.7;color:var(--text-muted)}
+
+  .related{max-width:680px;margin:0 auto;padding:0 24px 80px}
+  .related__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.1rem;color:var(--text-bright);margin-bottom:16px}
+  .related__grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .related__card{padding:20px;border-radius:12px;background:var(--surface);border:1px solid var(--border);text-decoration:none;transition:border-color .3s ease,transform .3s ease}
+  .related__card:hover{border-color:rgba(255,255,255,0.1);transform:translateY(-2px)}
+  .related__card-topic{font-weight:400;font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
+  .related__card-title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.05rem;line-height:1.25;color:var(--text-bright);margin-bottom:4px}
+  .related__card-meta{font-weight:200;font-size:.66rem;color:var(--text-faint)}
+
+  @media(max-width:700px){
+    .hero{padding:80px 24px 60px}
+    .related__grid{grid-template-columns:1fr}
+    .pull{margin:32px 0;padding-left:20px}
+  }
+
+</style>
+</head>
+<body>
+<nav class="nav-wrap" id="navWrap">
+  <div class="nav-inner">
+    <div class="nav-row-1">
+      <a href="../index.html" class="nav-brand">SALUS</a>
+      <ul class="nav-primary">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../sessions.html">Meditations</a></li>
+        <li><a href="../mindfulness.html">Mindfulness</a></li>
+        <li><a href="../asmr.html">ASMR</a></li>
+        <li><a href="../sleep-stories.html">Sleep Stories</a></li>
+        <li><a href="../education.html">Learn</a></li>
+        <li><a href="../about.html">About</a></li>
+      </ul>
+      <div class="nav-ctas">
+        <a href="../apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+        <a href="../login.html" class="nav-cta nav-cta--login">Log In</a>
+      </div>
+      <button class="nav-burger" id="burgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+    <div class="nav-row-2">
+      <a href="../tools.html">Tools</a>
+      <a href="../reading.html">Reading</a>
+      <a href="../applied-psychology.html">Applied Psychology</a>
+      <a href="../newsletter.html">Newsletter</a>
+      <a href="../contact.html">Contact</a>
+    </div>
+  </div>
+</nav>
+<div class="nav-drawer" id="navDrawer">
+  <div class="nav-drawer__section-label">Main</div>
+  <a href="../index.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Home</a>
+  <a href="../sessions.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Meditations</a>
+  <a href="../mindfulness.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Mindfulness</a>
+  <a href="../asmr.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>ASMR</a>
+  <a href="../sleep-stories.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Sleep Stories</a>
+  <a href="../education.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Learn</a>
+  <a href="../about.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>About</a>
+  <div class="nav-drawer__section-label">More</div>
+  <a href="../tools.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Tools</a>
+  <a href="../reading.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Reading</a>
+  <a href="../applied-psychology.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Applied Psychology</a>
+  <a href="../newsletter.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Newsletter</a>
+  <a href="../contact.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Contact</a>
+  <div class="nav-drawer__ctas">
+    <a href="../apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+    <a href="../login.html" class="nav-cta nav-cta--login">Log In</a>
+  </div>
+</div>
+
+
+<header class="hero">
+  <div class="hero__orb hero__orb--1"></div>
+  <div class="hero__orb hero__orb--2"></div>
+  <a href="../applied-psychology.html" class="hero__back"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Back to Applied Psychology</a>
+  <div class="hero__topic">Emotions</div>
+  <h1>Emotional Granularity: Why "I Feel Bad" Isn't Enough</h1>
+  <div class="hero__meta">6 min read <span>·</span> Published February 2026</div>
+</header>
+
+<article class="article">
+
+  <p class="lede">People who can precisely label their emotions handle them better. The research is clear: expanding your emotional vocabulary literally changes how you experience feelings. It's not about being articulate for its own sake — it's about giving your brain the resolution it needs to respond appropriately to what's actually happening inside you.</p>
+
+  <h2>The Problem with "Fine"</h2>
+
+  <p>Ask most people how they feel and you'll get one of a handful of words: good, bad, fine, stressed, tired. These are not emotions. They are emotional postcodes — vast territories compressed into a single label that tells you almost nothing about the terrain.</p>
+
+  <p>"Bad" could mean disappointed, humiliated, lonely, resentful, grieving, overwhelmed, or betrayed. Each of those carries a different cause, a different meaning, and a different path forward. But if your brain files them all under "bad," it responds to each the same way — typically with a blunt coping strategy like withdrawal, distraction, or numbing. The response doesn't match the problem because the label didn't capture the problem.</p>
+
+  <div class="cite-box">
+    <div class="cite-box__icon"><svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg></div>
+    <div class="cite-box__text"><strong>Lisa Feldman Barrett</strong>, professor of psychology at Northeastern University and author of <em>How Emotions Are Made</em>, has fundamentally reshaped how scientists understand emotion. Her research demonstrates that emotions are not hardwired biological reactions triggered by events. They are <strong>constructed</strong> by the brain — predictions based on past experience, bodily signals, and the conceptual categories available to you. The richer your emotional vocabulary, the more precisely your brain can construct — and therefore regulate — emotional experience.</div>
+  </div>
+
+  <p>Barrett calls this capacity "emotional granularity" — the ability to make fine-grained distinctions between emotional states. It's the difference between a painter working with six colours and one working with sixty. The palette doesn't change what's in front of you, but it dramatically changes what you can do with it.</p>
+
+  <h2>What the Research Shows</h2>
+
+  <p>The evidence for emotional granularity is remarkably consistent across studies. People who can distinguish precisely between negative emotions show better emotional regulation, less reactive aggression, lower rates of alcohol use as a coping mechanism, and reduced activity in the amygdala during stressful experiences.</p>
+
+  <div class="cite-box">
+    <div class="cite-box__icon"><svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg></div>
+    <div class="cite-box__text"><strong>Todd Kashdan</strong> and colleagues at George Mason University published a series of studies demonstrating that people with high emotional granularity were <strong>40% less likely to retaliate aggressively</strong> when provoked, and significantly less likely to use alcohol to manage negative emotions. The mechanism appears to be that precise labelling narrows the range of responses the brain considers appropriate — creating a more targeted, less impulsive reaction.</div>
+  </div>
+
+  <p>This isn't just about negative emotions. Granularity on the positive side matters too. People who can distinguish between, say, contentment and excitement, or between gratitude and relief, tend to experience more sustained wellbeing. They're better at identifying what actually makes them feel good — rather than pursuing a generic sense of "happiness" that never quite arrives.</p>
+
+  <h2>Why Labelling Works</h2>
+
+  <p>The mechanism behind emotional granularity connects to a well-established finding in affective neuroscience called "affect labelling." When you put a specific name to what you're feeling, the prefrontal cortex — the brain's regulatory centre — becomes more active, while the amygdala — the threat detection system — becomes less active.</p>
+
+  <div class="concept">
+    <div class="concept__label">Key Concept</div>
+    <p>Matthew Lieberman at UCLA demonstrated through fMRI studies that the simple act of labelling an emotion — saying "I feel anxious" rather than just experiencing the anxiety — reduces amygdala activation. He describes this as "putting feelings into words." The label doesn't eliminate the emotion, but it shifts the brain's processing from a purely reactive mode to one that includes regulatory input. Naming is, neurologically speaking, a form of taming.</p>
+  </div>
+
+  <p>But here's the critical detail: the precision of the label matters. Saying "I feel bad" produces less regulatory effect than saying "I feel disappointed." And "I feel disappointed because I expected more from myself" is more effective still. Each layer of specificity gives the brain more information to work with — and more information means a more calibrated response.</p>
+
+  <h2>Building the Vocabulary</h2>
+
+  <p>If emotional granularity is a skill — and the research strongly suggests it is — then the question becomes how to develop it. Barrett's work points to a straightforward answer: expand your emotional concepts.</p>
+
+  <p>Most people operate with a surprisingly narrow emotional vocabulary. Research suggests the average adult regularly uses between twenty and thirty emotion words. But the English language contains several hundred. The gap between what we could name and what we do name is enormous.</p>
+
+  <div class="spectrum">
+    <div class="spectrum__label">Instead of "angry," consider</div>
+    <div class="spectrum__row">
+      <span class="spectrum__word">Frustrated</span>
+      <span class="spectrum__word">Resentful</span>
+      <span class="spectrum__word">Indignant</span>
+      <span class="spectrum__word">Bitter</span>
+      <span class="spectrum__word">Exasperated</span>
+      <span class="spectrum__word">Irritated</span>
+      <span class="spectrum__word">Contemptuous</span>
+    </div>
+  </div>
+
+  <div class="spectrum">
+    <div class="spectrum__label">Instead of "sad," consider</div>
+    <div class="spectrum__row">
+      <span class="spectrum__word">Melancholic</span>
+      <span class="spectrum__word">Disappointed</span>
+      <span class="spectrum__word">Lonely</span>
+      <span class="spectrum__word">Grieving</span>
+      <span class="spectrum__word">Nostalgic</span>
+      <span class="spectrum__word">Dejected</span>
+      <span class="spectrum__word">Wistful</span>
+    </div>
+  </div>
+
+  <div class="spectrum">
+    <div class="spectrum__label">Instead of "happy," consider</div>
+    <div class="spectrum__row">
+      <span class="spectrum__word">Content</span>
+      <span class="spectrum__word">Grateful</span>
+      <span class="spectrum__word">Elated</span>
+      <span class="spectrum__word">Relieved</span>
+      <span class="spectrum__word">Proud</span>
+      <span class="spectrum__word">Serene</span>
+      <span class="spectrum__word">Hopeful</span>
+    </div>
+  </div>
+
+  <p>These aren't synonyms. Each one describes a different internal state with a different cause and a different implication. "Lonely" and "disappointed" are both filed under "sad," but they point in entirely different directions. One suggests you need connection; the other suggests you need to recalibrate expectations. Getting the label right is the first step toward getting the response right.</p>
+
+  <div class="pull">
+    <p>You cannot regulate what you cannot differentiate. The precision of the label determines the precision of the response.</p>
+  </div>
+
+  <h2>The Cultural Dimension</h2>
+
+  <p>One of the more fascinating findings in Barrett's research is that emotional granularity is partly cultural. Different languages carve up the emotional landscape differently. The German word "Schadenfreude" — pleasure at another's misfortune — captures something that English requires an entire phrase to describe. The Japanese concept of "amae" — a pleasurable dependence on another person — has no direct English equivalent.</p>
+
+  <div class="concept">
+    <div class="concept__label">Research Note</div>
+    <p>Tim Lomas at Harvard compiled a lexicography of over 200 untranslatable emotion words from across the world's languages. His research, published in the <em>Journal of Positive Psychology</em>, suggests that learning emotion words from other languages can expand emotional granularity — not just linguistically, but experientially. When you have a word for an emotional state, you become more likely to notice and differentiate that state in your own experience.</p>
+  </div>
+
+  <p>This has a practical implication: reading widely, learning other languages, or simply paying attention to the emotional vocabulary of others can expand your own internal palette. The concepts don't have to be exotic. Even moving from "stressed" to distinguishing between "overwhelmed," "under-resourced," "time-pressured," and "emotionally depleted" gives you four different problems instead of one undifferentiated blob — and four problems are far easier to address than one that you can't properly identify.</p>
+
+  <div class="try">
+    <div class="try__label">Something to Try Today</div>
+    <div class="try__title">The Emotion Audit</div>
+    <ol class="steps">
+      <li><span class="steps__text"><strong>Set three check-in points.</strong> Morning, midday, and evening. Use your phone alarm or attach it to something you already do — your first cup of tea, lunch, and brushing your teeth.</span></li>
+      <li><span class="steps__text"><strong>At each point, pause and ask: what exactly am I feeling?</strong> Not "good" or "bad." Push past the first label. If "stressed" comes up, ask: stressed how? Overwhelmed? Anxious about something specific? Frustrated by a lack of control? Physically tense?</span></li>
+      <li><span class="steps__text"><strong>Write down the most precise word you can find.</strong> One word is enough. If you can't find the right one, describe the physical sensation instead — "tight chest," "restless legs," "heavy shoulders." The body often knows before the vocabulary catches up.</span></li>
+      <li><span class="steps__text"><strong>Notice what the label tells you about what you need.</strong> "Lonely" points toward connection. "Overwhelmed" points toward boundaries. "Resentful" points toward a conversation you haven't had. The more precise the name, the clearer the path forward.</span></li>
+      <li><span class="steps__text"><strong>Do this for one week.</strong> By the end, you'll likely notice that your emotional vocabulary has expanded without deliberate effort — simply because you started paying closer attention to the distinctions your brain was already making but not naming.</span></li>
+    </ol>
+  </div>
+
+</article>
+
+<div class="references">
+  <div class="references__title">References</div>
+  <p class="ref">Barrett, L. F. (2017). <em>How Emotions Are Made: The Secret Life of the Brain</em>. Houghton Mifflin Harcourt.</p>
+  <p class="ref">Barrett, L. F., Gross, J., Christensen, T. C., &amp; Benvenuto, M. (2001). Knowing what you're feeling and knowing what to do about it: Mapping the relation between emotion differentiation and emotion regulation. <em>Cognition &amp; Emotion</em>, 15(6), 713–724.</p>
+  <p class="ref">Kashdan, T. B., Barrett, L. F., &amp; McKnight, P. E. (2015). Unpacking emotion differentiation: Transforming unpleasant experience by perceiving distinctions in negativity. <em>Current Directions in Psychological Science</em>, 24(1), 10–16.</p>
+  <p class="ref">Lieberman, M. D., Eisenberger, N. I., Crockett, M. J., et al. (2007). Putting feelings into words: Affect labelling disrupts amygdala activity in response to affective stimuli. <em>Psychological Science</em>, 18(5), 421–428.</p>
+  <p class="ref">Lomas, T. (2016). Towards a positive cross-cultural lexicography: Enriching our emotional landscape through 216 'untranslatable' words pertaining to well-being. <em>The Journal of Positive Psychology</em>, 11(5), 546–558.</p>
+</div>
+
+<div class="disclaimer">
+  <div class="disclaimer__inner">
+    <div class="disclaimer__title">Important Notice</div>
+    <div class="disclaimer__text">This article is for educational purposes only. It is not a substitute for professional medical or psychological advice, diagnosis, or treatment. If you find it consistently difficult to identify or describe your emotions — a condition known as alexithymia — please consider speaking with a qualified mental health professional who can offer tailored support.</div>
+  </div>
+</div>
+
+<div class="related">
+  <h3 class="related__title">Continue Reading</h3>
+  <div class="related__grid">
+    <a href="#" class="related__card">
+      <div class="related__card-topic">Emotions</div>
+      <div class="related__card-title">Why You Can't Think Your Way Out of Anxiety</div>
+      <div class="related__card-meta">8 min read</div>
+    </a>
+    <a href="#" class="related__card">
+      <div class="related__card-topic">Thinking</div>
+      <div class="related__card-title">Cognitive Distortions: The Lies Your Brain Tells on Repeat</div>
+      <div class="related__card-meta">7 min read</div>
+    </a>
+  </div>
+</div>
+
+
+<script>
+  // Navigation
+  const navWrap=document.getElementById("navWrap");
+  window.addEventListener("scroll",()=>{navWrap.classList.toggle("scrolled",window.scrollY>30)},{passive:true});
+  const burger=document.getElementById("burgerBtn");
+  const drawer=document.getElementById("navDrawer");
+  burger.addEventListener("click",()=>{burger.classList.toggle("open");drawer.classList.toggle("open");document.body.style.overflow=drawer.classList.contains("open")?"hidden":""});
+  drawer.querySelectorAll(".nav-drawer__link").forEach(l=>{l.addEventListener("click",()=>{burger.classList.remove("open");drawer.classList.remove("open");document.body.style.overflow=""})});
+</script>
+<script src="../js/main.js?v=1770564391"></script>
+<script src="../js/tracker.js"></script>
+
+<footer class="hb-footer">
+  <div class="hb-footer__inner">
+    <div class="hb-footer__brand">
+      <span class="hb-footer__logo">Salus</span>
+      <p class="hb-footer__tagline">A quieter kind of self-care. Guided meditations, sleep stories, ASMR, and mindfulness tools &mdash; built by a family.</p>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Practice</h4>
+      <ul class="hb-footer__links">
+        <li><a href="../sessions.html">Guided Meditations</a></li>
+        <li><a href="../mindfulness.html">Mindfulness</a></li>
+        <li><a href="../asmr.html">ASMR &amp; Sounds</a></li>
+        <li><a href="../sleep-stories.html">Sleep Stories</a></li>
+        <li><a href="../tools.html">Tools</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Discover</h4>
+      <ul class="hb-footer__links">
+        <li><a href="../education.html">Learn</a></li>
+        <li><a href="../reading.html">Reading</a></li>
+        <li><a href="../applied-psychology.html">Applied Psychology</a></li>
+        <li><a href="../newsletter.html">Newsletter</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Salus</h4>
+      <ul class="hb-footer__links">
+        <li><a href="../about.html">About Us</a></li>
+        <li><a href="../apps.html">Go Premium</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="footer-disclaimer">Salus does not provide medical advice. Content is for general wellbeing and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified health provider with any health concerns.</p>
+  <div class="hb-footer__bottom">
+    <span class="hb-footer__copy">&copy; 2026 Salus Mind. All rights reserved.</span>
+    <a href="#" class="hb-footer__back-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">
+      Back to top
+      <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+    </a>
+  </div>
+</footer>
+</body>
+</html>

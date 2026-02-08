@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Gottman Ratio: What Keeps Relationships Alive — Salus Mind</title>
+  <meta name="description" content="Five positive interactions for every negative one. That's the ratio that predicts whether a relationship survives. It sounds simple — deceptively so. Here's what it means in practice, why the negative">
+  <link rel="canonical" href="https://salus-mind.com/articles/gottman-ratio.html">
+  <meta property="og:title" content="The Gottman Ratio: What Keeps Relationships Alive — Salus Mind">
+  <meta property="og:description" content="Five positive interactions for every negative one. That's the ratio that predicts whether a relationship survives. It sounds simple — deceptively so. Here's what it means in practice, why the negative">
+  <meta property="og:url" content="https://salus-mind.com/articles/gottman-ratio.html">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://salus-mind.com/images/meditation-woman-outdoor.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css?v=1770564391">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script src="../js/auth.js?v=1770564391"></script>
+<style>
+  /* ═══════════════ NAVIGATION ═══════════════ */
+  .nav-wrap{position:fixed;top:0;left:0;right:0;z-index:1000;transition:background .4s ease,box-shadow .4s ease;background:rgba(6,8,16,0.5);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+  .nav-wrap.scrolled{background:rgba(6,8,16,0.92);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);box-shadow:0 1px 0 rgba(255,255,255,0.06),0 12px 40px rgba(0,0,0,0.3)}
+  .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px}
+  .nav-row-1{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .nav-brand{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.5rem;letter-spacing:.12em;text-decoration:none;color:#f0eefc;transition:opacity .3s ease;flex-shrink:0}
+  .nav-brand:hover{opacity:.8}
+  .nav-primary{display:flex;align-items:center;gap:4px;list-style:none}
+  .nav-primary a{font-weight:300;font-size:.82rem;letter-spacing:.02em;color:rgba(240,238,252,0.6);text-decoration:none;padding:6px 13px;border-radius:8px;transition:all .3s ease;position:relative;white-space:nowrap}
+  .nav-primary a:hover{color:#f0eefc;background:rgba(255,255,255,0.04)}
+  .nav-primary a.active{color:#f0eefc;background:rgba(255,255,255,0.06)}
+  .nav-primary a.active::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:16px;height:2px;border-radius:1px;background:#4ecdc4;opacity:.7}
+  .nav-ctas{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  .nav-cta{font-family:'Outfit',sans-serif;font-weight:400;font-size:.78rem;letter-spacing:.04em;padding:7px 18px;border-radius:40px;cursor:pointer;text-decoration:none;transition:all .35s cubic-bezier(.22,1,.36,1);white-space:nowrap}
+  .nav-cta--subscribe{color:#060810;background:#4ecdc4;border:1px solid #4ecdc4}
+  .nav-cta--subscribe:hover{background:#5ed8d0;transform:translateY(-1px);box-shadow:0 4px 16px rgba(78,205,196,0.25)}
+  .nav-cta--login{color:rgba(240,238,252,0.6);background:transparent;border:1px solid rgba(255,255,255,0.1)}
+  .nav-cta--login:hover{color:#f0eefc;border-color:rgba(255,255,255,0.22);background:rgba(255,255,255,0.04)}
+  .nav-row-2{display:flex;align-items:center;justify-content:center;gap:32px;height:34px;border-top:1px solid rgba(255,255,255,0.06);transition:height .4s ease,opacity .3s ease,border-top-color .3s ease;overflow:hidden}
+  .nav-wrap.scrolled .nav-row-2{height:0;opacity:0;border-top-color:transparent}
+  .nav-row-2 a{font-weight:300;font-size:.72rem;letter-spacing:.03em;color:rgba(240,238,252,0.4);text-decoration:none;transition:color .3s ease;white-space:nowrap}
+  .nav-row-2 a:hover{color:rgba(240,238,252,0.6)}
+  .nav-burger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;transition:background .3s ease}
+  .nav-burger:hover{background:rgba(255,255,255,0.04)}
+  .nav-burger span{display:block;width:100%;height:1.5px;background:rgba(240,238,252,0.6);border-radius:1px;transition:all .3s ease;transform-origin:center}
+  .nav-burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+  .nav-burger.open span:nth-child(2){opacity:0}
+  .nav-burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+  .nav-drawer{display:none;position:fixed;top:56px;left:0;right:0;bottom:0;background:rgba(6,8,16,0.95);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);z-index:999;flex-direction:column;padding:32px 28px 40px;overflow-y:auto;opacity:0;transform:translateY(-8px);transition:opacity .3s ease,transform .3s ease}
+  .nav-drawer.open{display:flex;opacity:1;transform:translateY(0)}
+  .nav-drawer__section-label{font-weight:300;font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(240,238,252,0.4);margin-bottom:14px;margin-top:24px}
+  .nav-drawer__section-label:first-child{margin-top:0}
+  .nav-drawer__link{display:flex;align-items:center;gap:12px;font-weight:300;font-size:1.05rem;color:rgba(240,238,252,0.6);text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);transition:color .3s ease}
+  .nav-drawer__link:hover{color:#f0eefc}
+  .nav-drawer__link-dot{width:5px;height:5px;border-radius:50%;background:#4ecdc4;opacity:.5}
+  .nav-drawer__ctas{display:flex;gap:10px;margin-top:32px}
+  .nav-drawer__ctas .nav-cta{flex:1;text-align:center;padding:12px 20px;font-size:.88rem}
+  @media(max-width:860px){.nav-primary,.nav-row-2,.nav-ctas{display:none}.nav-burger{display:flex}.nav-row-1{height:56px}}
+
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --deep:#060810;--ink:#0a0d18;--surface:#0e1120;--accent:#a78bfa;--accent-muted:rgba(167,139,250,0.6);
+    --text-bright:#f2f0fa;--text-body:rgba(242,240,250,0.72);--text-muted:rgba(242,240,250,0.45);--text-faint:rgba(242,240,250,0.3);--text-mid:rgba(242,240,250,0.65);--border:rgba(255,255,255,0.06);
+  }
+  html{font-size:16px;scroll-behavior:smooth}
+  body{background:var(--deep);color:var(--text-body);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+  .hero{position:relative;padding:120px 24px 80px;text-align:center;overflow:hidden}
+  .hero__orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.15;pointer-events:none}
+  .hero__orb--1{width:300px;height:300px;top:-60px;right:15%;background:#a78bfa}
+  .hero__orb--2{width:200px;height:200px;bottom:-40px;left:10%;background:#8b5cf6}
+  .hero__back{display:inline-flex;align-items:center;gap:6px;font-weight:300;font-size:.74rem;color:var(--text-muted);text-decoration:none;margin-bottom:32px;transition:color .3s ease}
+  .hero__back:hover{color:var(--text-bright)}
+  .hero__back svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5}
+  .hero__topic{display:inline-block;font-weight:400;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;padding:4px 14px;border-radius:20px;color:rgba(167,139,250,0.8);background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.15);margin-bottom:20px}
+  .hero h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,5vw,3rem);line-height:1.15;color:var(--text-bright);max-width:680px;margin:0 auto 16px}
+  .hero__meta{font-weight:200;font-size:.76rem;color:var(--text-muted)}
+  .hero__meta span{margin:0 6px;opacity:.4}
+
+  .article{max-width:680px;margin:0 auto;padding:0 24px 48px}
+  .article p{font-weight:300;font-size:.92rem;line-height:1.85;margin-bottom:20px}
+  .article h2{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.6rem;color:var(--text-bright);margin:48px 0 20px;line-height:1.25}
+  .article h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.25rem;color:var(--text-bright);margin:36px 0 16px;line-height:1.3}
+
+  .lede{font-size:1.05rem !important;font-weight:200 !important;line-height:1.9 !important;color:var(--text-bright);border-left:2px solid rgba(167,139,250,0.3);padding-left:20px;margin-bottom:32px !important}
+
+  .cite-box{display:flex;gap:14px;padding:24px;border-radius:12px;background:var(--surface);border:1px solid var(--border);margin:28px 0}
+  .cite-box__icon{width:36px;height:36px;border-radius:50%;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .cite-box__icon svg{width:16px;height:16px;fill:none;stroke:rgba(167,139,250,0.6);stroke-width:1.5}
+  .cite-box__text{font-weight:300;font-size:.84rem;line-height:1.7;color:var(--text-mid)}
+  .cite-box__text strong{font-weight:500;color:var(--text-bright)}
+
+  .concept{padding:24px;border-radius:12px;border:1px solid rgba(167,139,250,0.1);background:rgba(167,139,250,0.03);margin:28px 0}
+  .concept__label{font-weight:400;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-muted);margin-bottom:10px}
+  .concept p{font-weight:300;font-size:.86rem;line-height:1.75;color:var(--text-mid);margin-bottom:0}
+
+  .horseman{padding:20px 24px;border-radius:12px;background:var(--surface);border:1px solid var(--border);margin:16px 0}
+  .horseman__name{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.1rem;color:var(--text-bright);margin-bottom:6px}
+  .horseman__desc{font-weight:300;font-size:.84rem;line-height:1.7;color:var(--text-mid);margin-bottom:8px}
+  .horseman__antidote{font-weight:200;font-size:.8rem;line-height:1.65;color:var(--accent-muted);padding-left:14px;border-left:2px solid rgba(167,139,250,0.15)}
+
+  .pull{margin:40px 0;padding-left:24px;border-left:2px solid rgba(167,139,250,0.25)}
+  .pull p{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:300;font-style:italic;line-height:1.55;color:var(--text-bright);margin-bottom:0}
+
+  .steps{counter-reset:step;margin:24px 0;padding:0;list-style:none}
+  .steps li{counter-increment:step;display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--border)}
+  .steps li:last-child{border-bottom:none}
+  .steps li::before{content:counter(step);font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;color:var(--accent-muted);flex-shrink:0;width:28px;text-align:center;padding-top:2px}
+  .steps__text{font-weight:300;font-size:.86rem;line-height:1.7;color:var(--text-mid)}
+  .steps__text strong{font-weight:400;color:var(--text-bright)}
+
+  .try{padding:32px;border-radius:16px;background:linear-gradient(135deg,rgba(167,139,250,0.06) 0%,rgba(139,92,246,0.03) 100%);border:1px solid rgba(167,139,250,0.1);margin:40px 0}
+  .try__label{font-weight:400;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-muted);margin-bottom:14px}
+  .try__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.3rem;color:var(--text-bright);margin-bottom:16px}
+
+  .references{max-width:680px;margin:0 auto;padding:0 24px 32px}
+  .references__title{font-weight:400;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px}
+  .ref{font-weight:200;font-size:.74rem;line-height:1.65;color:var(--text-faint);margin-bottom:8px}
+  .ref em{font-style:italic}
+
+  .disclaimer{max-width:680px;margin:0 auto;padding:0 24px 48px}
+  .disclaimer__inner{padding:20px 24px;border-radius:12px;border:1px solid rgba(251,191,36,0.08);background:rgba(251,191,36,0.02)}
+  .disclaimer__title{font-weight:400;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(251,191,36,0.5);margin-bottom:8px}
+  .disclaimer__text{font-weight:200;font-size:.74rem;line-height:1.7;color:var(--text-muted)}
+
+  .related{max-width:680px;margin:0 auto;padding:0 24px 80px}
+  .related__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.1rem;color:var(--text-bright);margin-bottom:16px}
+  .related__grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .related__card{padding:20px;border-radius:12px;background:var(--surface);border:1px solid var(--border);text-decoration:none;transition:border-color .3s ease,transform .3s ease}
+  .related__card:hover{border-color:rgba(255,255,255,0.1);transform:translateY(-2px)}
+  .related__card-topic{font-weight:400;font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
+  .related__card-title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.05rem;line-height:1.25;color:var(--text-bright);margin-bottom:4px}
+  .related__card-meta{font-weight:200;font-size:.66rem;color:var(--text-faint)}
+
+  @media(max-width:700px){
+    .hero{padding:80px 24px 60px}
+    .related__grid{grid-template-columns:1fr}
+    .pull{margin:32px 0;padding-left:20px}
+  }
+
+</style>
+</head>
+<body>
+<nav class="nav-wrap" id="navWrap">
+  <div class="nav-inner">
+    <div class="nav-row-1">
+      <a href="../index.html" class="nav-brand">SALUS</a>
+      <ul class="nav-primary">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../sessions.html">Meditations</a></li>
+        <li><a href="../mindfulness.html">Mindfulness</a></li>
+        <li><a href="../asmr.html">ASMR</a></li>
+        <li><a href="../sleep-stories.html">Sleep Stories</a></li>
+        <li><a href="../education.html">Learn</a></li>
+        <li><a href="../about.html">About</a></li>
+      </ul>
+      <div class="nav-ctas">
+        <a href="../apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+        <a href="../login.html" class="nav-cta nav-cta--login">Log In</a>
+      </div>
+      <button class="nav-burger" id="burgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+    <div class="nav-row-2">
+      <a href="../tools.html">Tools</a>
+      <a href="../reading.html">Reading</a>
+      <a href="../applied-psychology.html">Applied Psychology</a>
+      <a href="../newsletter.html">Newsletter</a>
+      <a href="../contact.html">Contact</a>
+    </div>
+  </div>
+</nav>
+<div class="nav-drawer" id="navDrawer">
+  <div class="nav-drawer__section-label">Main</div>
+  <a href="../index.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Home</a>
+  <a href="../sessions.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Meditations</a>
+  <a href="../mindfulness.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Mindfulness</a>
+  <a href="../asmr.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>ASMR</a>
+  <a href="../sleep-stories.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Sleep Stories</a>
+  <a href="../education.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Learn</a>
+  <a href="../about.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>About</a>
+  <div class="nav-drawer__section-label">More</div>
+  <a href="../tools.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Tools</a>
+  <a href="../reading.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Reading</a>
+  <a href="../applied-psychology.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Applied Psychology</a>
+  <a href="../newsletter.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Newsletter</a>
+  <a href="../contact.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Contact</a>
+  <div class="nav-drawer__ctas">
+    <a href="../apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+    <a href="../login.html" class="nav-cta nav-cta--login">Log In</a>
+  </div>
+</div>
+
+
+<header class="hero">
+  <div class="hero__orb hero__orb--1"></div>
+  <div class="hero__orb hero__orb--2"></div>
+  <a href="../applied-psychology.html" class="hero__back"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Back to Applied Psychology</a>
+  <div class="hero__topic">Relationships</div>
+  <h1>The Gottman Ratio: What Keeps Relationships Alive</h1>
+  <div class="hero__meta">7 min read <span>·</span> Published February 2026</div>
+</header>
+
+<article class="article">
+
+  <p class="lede">Five positive interactions for every negative one. That's the ratio that predicts whether a relationship survives. It sounds simple — deceptively so. Here's what it means in practice, why the negative interactions carry such disproportionate weight, and how to shift the balance without pretending conflict doesn't exist.</p>
+
+  <h2>The Love Lab</h2>
+
+  <p>In the early 1990s, psychologist John Gottman and mathematician James Murray set up what the media would eventually call "The Love Lab" — a research apartment at the University of Washington where couples were observed during ordinary conversations and disagreements. Heart rate, skin conductance, facial expressions, and dialogue were all recorded and coded.</p>
+
+  <p>The results were extraordinary. After watching a couple interact for just fifteen minutes, Gottman could predict with over 90% accuracy whether they would still be together six years later. The key variable was not how much they argued, what they argued about, or how passionately they disagreed. It was the ratio of positive to negative interactions during the conversation.</p>
+
+  <div class="cite-box">
+    <div class="cite-box__icon"><svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg></div>
+    <div class="cite-box__text"><strong>John Gottman</strong> and <strong>Robert Levenson</strong> identified the critical threshold: stable, satisfied couples maintained a ratio of at least <strong>5:1</strong> — five positive interactions for every negative one — during conflict discussions. Couples whose ratio dropped below this threshold were significantly more likely to divorce. The finding has been replicated across cultures and relationship types and remains one of the most robust predictors in relationship science.</div>
+  </div>
+
+  <h2>Why Negative Weighs More</h2>
+
+  <p>The 5:1 ratio might seem lopsided. Why should one negative moment require five positive ones to compensate? The answer lies in a principle that runs through nearly all of human psychology: negative events carry more weight than positive ones.</p>
+
+  <p>This is what psychologists call the "negativity bias" — the brain's tendency to register, process, and remember negative information more deeply than positive information. A criticism lodges in memory more firmly than a compliment. A moment of contempt lingers longer than a moment of warmth. One hostile exchange can undo hours of pleasant conversation.</p>
+
+  <div class="concept">
+    <div class="concept__label">Key Concept</div>
+    <p>Roy Baumeister and colleagues at Case Western Reserve University published an influential review titled "Bad Is Stronger Than Good," examining the negativity bias across dozens of domains — relationships, learning, memory, impression formation. Their conclusion was unequivocal: in virtually every area of human experience, negative events produce larger, longer-lasting, and more cognitively demanding responses than positive events of equivalent magnitude. In relationships, this means that a single cruel remark can require multiple acts of repair to neutralise.</p>
+  </div>
+
+  <p>This doesn't mean relationships should avoid all negativity — that would be both impossible and unhealthy. Gottman's research is clear that conflict itself is not the problem. Every couple argues. The couples who lasted were not the ones who never fought; they were the ones who maintained enough positivity around the conflict to keep the relationship's emotional account in credit.</p>
+
+  <h2>The Four Horsemen</h2>
+
+  <p>Not all negative interactions are equal. Gottman identified four specific patterns that are particularly destructive — so reliably corrosive that he called them "The Four Horsemen of the Apocalypse." When these patterns become habitual, the 5:1 ratio collapses and the relationship enters what Gottman calls "negative sentiment override" — a state where even neutral or positive actions are interpreted through a lens of hostility.</p>
+
+  <div class="horseman">
+    <div class="horseman__name">Criticism</div>
+    <div class="horseman__desc">Attacking your partner's character rather than addressing a specific behaviour. The difference between "You didn't take the bins out" (complaint) and "You never think about anyone but yourself" (criticism). Complaints address actions; criticism attacks identity.</div>
+    <div class="horseman__antidote">Antidote: Use "I" statements focused on a specific situation. "I felt frustrated when the bins weren't taken out" keeps the conversation about the event, not the person.</div>
+  </div>
+
+  <div class="horseman">
+    <div class="horseman__name">Contempt</div>
+    <div class="horseman__desc">The single greatest predictor of divorce. Contempt communicates disgust and superiority — eye-rolling, sarcasm, mockery, name-calling. It treats the other person as beneath consideration. Gottman's research found that contempt was more damaging to relationships than any other negative behaviour.</div>
+    <div class="horseman__antidote">Antidote: Build a culture of appreciation. Regularly express what you value about your partner — not in grand gestures, but in small, specific acknowledgements. Contempt cannot coexist with genuine respect.</div>
+  </div>
+
+  <div class="horseman">
+    <div class="horseman__name">Defensiveness</div>
+    <div class="horseman__desc">Responding to a complaint by deflecting responsibility — making excuses, counter-attacking, or playing the victim. Defensiveness signals to your partner that their concerns won't be heard, which escalates the conflict rather than resolving it.</div>
+    <div class="horseman__antidote">Antidote: Accept responsibility for even a small part of the problem. "You're right, I should have told you I'd be late" is more effective than a paragraph of justification.</div>
+  </div>
+
+  <div class="horseman">
+    <div class="horseman__name">Stonewalling</div>
+    <div class="horseman__desc">Withdrawing from the interaction entirely — shutting down, going silent, physically leaving. Often a response to emotional flooding (when the nervous system becomes overwhelmed), stonewalling leaves the other person talking to a wall. The message received is: "You don't matter enough for me to engage."</div>
+    <div class="horseman__antidote">Antidote: Self-soothe and return. If you're flooded, say so: "I need twenty minutes to calm down, and then I want to continue this conversation." The break must be time-limited and the return must be genuine.</div>
+  </div>
+
+  <div class="pull">
+    <p>The opposite of contempt is not niceness. It is respect — the daily, unglamorous practice of treating someone as though their experience matters as much as your own.</p>
+  </div>
+
+  <h2>What the Positive Interactions Actually Look Like</h2>
+
+  <p>The "five" in the 5:1 ratio is not about grand romantic gestures. Gottman's research found that the positive interactions that sustain relationships are remarkably ordinary. He calls them "bids" — small moments of connection that happen dozens of times a day.</p>
+
+  <p>A bid might be: looking up when your partner walks into the room. Responding when they point something out. Asking about their day and actually listening to the answer. Touching their shoulder as you pass. Laughing at something together. Saying "thank you" for something routine.</p>
+
+  <div class="cite-box">
+    <div class="cite-box__icon"><svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg></div>
+    <div class="cite-box__text"><strong>Gottman and Janice Driver</strong> studied how couples respond to bids and found that couples who were still together after six years had "turned toward" each other's bids <strong>86% of the time</strong>. Couples who had divorced had turned toward only 33% of the time. The difference was not in the size of the gestures but in the <strong>consistency of attention</strong> — the willingness to show up for the small moments, repeatedly, over years.</div>
+  </div>
+
+  <p>This is the mechanism behind the ratio. You build the 5:1 balance not through occasional grand gestures but through the accumulation of tiny, consistent acts of attention. Each bid that is met with a turn-toward deposits something into the relationship's emotional account. Each bid that is ignored or dismissed makes a withdrawal. The balance sheet determines whether the relationship can survive the inevitable conflicts.</p>
+
+  <h2>Repair Attempts</h2>
+
+  <p>Gottman identified one more variable that separates lasting relationships from those that fail: the success of "repair attempts." A repair attempt is any action — a joke, an apology, a change of subject, a touch — that tries to de-escalate a conflict before it becomes destructive.</p>
+
+  <p>In happy relationships, repair attempts are noticed and accepted. In struggling relationships, they're missed or rejected — often because negative sentiment override has made the receiving partner unable to perceive them as genuine. The same joke that would diffuse tension in a healthy relationship is heard as dismissiveness in a deteriorating one.</p>
+
+  <div class="concept">
+    <div class="concept__label">Research Note</div>
+    <p>Gottman's longitudinal studies, tracking couples over periods of up to twenty years, found that the ability to make and receive repair attempts was a stronger predictor of relationship longevity than the severity or frequency of conflict. In other words, it's not whether you fight — it's whether you can find your way back to each other afterwards.</p>
+  </div>
+
+  <div class="try">
+    <div class="try__label">Something to Try This Week</div>
+    <div class="try__title">The Bid Audit</div>
+    <ol class="steps">
+      <li><span class="steps__text"><strong>For one day, notice the bids.</strong> Every time your partner (or a close friend, family member, or colleague) makes a bid for connection — a comment, a question, a glance, a touch — notice it. Don't change your response yet. Just observe how often it happens.</span></li>
+      <li><span class="steps__text"><strong>Notice your typical response.</strong> Do you turn toward (engage), turn away (ignore), or turn against (respond dismissively)? Be honest. Most people discover they turn away more often than they realised — not out of hostility, but out of distraction.</span></li>
+      <li><span class="steps__text"><strong>For the next six days, deliberately turn toward.</strong> This doesn't require long conversations. It means: looking up from your phone. Making eye contact. Responding to the small comment with a small response. The bar is low — but the cumulative effect is significant.</span></li>
+      <li><span class="steps__text"><strong>Make one specific appreciation statement per day.</strong> Not "you're great" — something concrete. "I noticed you made tea without me asking. Thank you." Specificity signals that you're paying attention, which is what appreciation actually communicates.</span></li>
+      <li><span class="steps__text"><strong>After a week, check in with yourself.</strong> Has anything shifted in how the relationship feels? The research suggests that even small, deliberate increases in positive interactions can change the emotional tone of a relationship within days.</span></li>
+    </ol>
+  </div>
+
+</article>
+
+<div class="references">
+  <div class="references__title">References</div>
+  <p class="ref">Baumeister, R. F., Bratslavsky, E., Finkenauer, C., &amp; Vohs, K. D. (2001). Bad is stronger than good. <em>Review of General Psychology</em>, 5(4), 323–370.</p>
+  <p class="ref">Gottman, J. M. (1994). <em>What Predicts Divorce? The Relationship Between Marital Processes and Marital Outcomes</em>. Lawrence Erlbaum Associates.</p>
+  <p class="ref">Gottman, J. M., &amp; Silver, N. (1999). <em>The Seven Principles for Making Marriage Work</em>. Crown.</p>
+  <p class="ref">Gottman, J. M., &amp; Levenson, R. W. (1992). Marital processes predictive of later dissolution: Behavior, physiology, and health. <em>Journal of Personality and Social Psychology</em>, 63(2), 221–233.</p>
+  <p class="ref">Gottman, J. M., &amp; Driver, J. L. (2005). Dysfunctional marital conflict and everyday marital interaction. <em>Journal of Divorce &amp; Remarriage</em>, 43(3–4), 63–77.</p>
+  <p class="ref">Gottman, J. M., Coan, J., Carrere, S., &amp; Swanson, C. (1998). Predicting marital happiness and stability from newlywed interactions. <em>Journal of Marriage and the Family</em>, 60(1), 5–22.</p>
+</div>
+
+<div class="disclaimer">
+  <div class="disclaimer__inner">
+    <div class="disclaimer__title">Important Notice</div>
+    <div class="disclaimer__text">This article is for educational purposes only. It is not a substitute for professional relationship counselling or therapy. If you are experiencing significant relationship distress, domestic abuse, or emotional harm, please seek support from a qualified professional. The concepts described here are drawn from published research and are intended as general guidance, not a replacement for personalised support.</div>
+  </div>
+</div>
+
+<div class="related">
+  <h3 class="related__title">Continue Reading</h3>
+  <div class="related__grid">
+    <a href="#" class="related__card">
+      <div class="related__card-topic">Emotions</div>
+      <div class="related__card-title">Emotional Granularity: Why "I Feel Bad" Isn't Enough</div>
+      <div class="related__card-meta">6 min read</div>
+    </a>
+    <a href="#" class="related__card">
+      <div class="related__card-topic">Identity</div>
+      <div class="related__card-title">The Stories We Tell Ourselves</div>
+      <div class="related__card-meta">8 min read</div>
+    </a>
+  </div>
+</div>
+
+
+<script>
+  // Navigation
+  const navWrap=document.getElementById("navWrap");
+  window.addEventListener("scroll",()=>{navWrap.classList.toggle("scrolled",window.scrollY>30)},{passive:true});
+  const burger=document.getElementById("burgerBtn");
+  const drawer=document.getElementById("navDrawer");
+  burger.addEventListener("click",()=>{burger.classList.toggle("open");drawer.classList.toggle("open");document.body.style.overflow=drawer.classList.contains("open")?"hidden":""});
+  drawer.querySelectorAll(".nav-drawer__link").forEach(l=>{l.addEventListener("click",()=>{burger.classList.remove("open");drawer.classList.remove("open");document.body.style.overflow=""})});
+</script>
+<script src="../js/main.js?v=1770564391"></script>
+<script src="../js/tracker.js"></script>
+
+<footer class="hb-footer">
+  <div class="hb-footer__inner">
+    <div class="hb-footer__brand">
+      <span class="hb-footer__logo">Salus</span>
+      <p class="hb-footer__tagline">A quieter kind of self-care. Guided meditations, sleep stories, ASMR, and mindfulness tools &mdash; built by a family.</p>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Practice</h4>
+      <ul class="hb-footer__links">
+        <li><a href="../sessions.html">Guided Meditations</a></li>
+        <li><a href="../mindfulness.html">Mindfulness</a></li>
+        <li><a href="../asmr.html">ASMR &amp; Sounds</a></li>
+        <li><a href="../sleep-stories.html">Sleep Stories</a></li>
+        <li><a href="../tools.html">Tools</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Discover</h4>
+      <ul class="hb-footer__links">
+        <li><a href="../education.html">Learn</a></li>
+        <li><a href="../reading.html">Reading</a></li>
+        <li><a href="../applied-psychology.html">Applied Psychology</a></li>
+        <li><a href="../newsletter.html">Newsletter</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Salus</h4>
+      <ul class="hb-footer__links">
+        <li><a href="../about.html">About Us</a></li>
+        <li><a href="../apps.html">Go Premium</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="footer-disclaimer">Salus does not provide medical advice. Content is for general wellbeing and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified health provider with any health concerns.</p>
+  <div class="hb-footer__bottom">
+    <span class="hb-footer__copy">&copy; 2026 Salus Mind. All rights reserved.</span>
+    <a href="#" class="hb-footer__back-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">
+      Back to top
+      <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+    </a>
+  </div>
+</footer>
+</body>
+</html>
