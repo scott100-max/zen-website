@@ -13,7 +13,7 @@
   <meta property="og:image" content="https://salus-mind.com/images/meditation-woman-outdoor.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=1770053724">
   <style>
     @media (max-width: 600px) {
@@ -120,6 +120,21 @@
       background: #e0e0e0;
       border-radius: 3px;
     }
+    .stop-all-btn {
+      display: none;
+      margin: 20px auto 0;
+      padding: 10px 24px;
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .stop-all-btn:hover { background: #c0392b; }
+    .stop-all-btn.visible { display: block; }
     .sound-volume-icon {
       color: var(--mid-gray);
       flex-shrink: 0;
@@ -244,7 +259,7 @@
 
       <div class="section-header fade-in" style="margin-bottom:32px;">
         <h2>Sample Sounds</h2>
-        <p>Play these right now to try Salus.</p>
+        <p>Play these right now to try Salus. Layer multiple sounds together.</p>
       </div>
 
       <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:900px;margin:0 auto;" id="soundGrid">
@@ -298,6 +313,8 @@
         </div>
 
       </div>
+
+      <button class="stop-all-btn" id="stopAllBtn">Stop All Sounds</button>
 
       <!-- Premium Sounds -->
       <div class="section-header fade-in" style="margin-top:60px;margin-bottom:32px;">
@@ -514,11 +531,29 @@
       unlockPremiumSounds();
     })();
 
-    // Sound card players
+    // Sound card players — shared state across all init calls
+    var allAudioElements = {};
+    var playIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+    var pauseIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+
+    function updateStopAllBtn() {
+      var anyPlaying = Object.keys(allAudioElements).some(function(k) { return !allAudioElements[k].paused; });
+      document.getElementById('stopAllBtn').classList.toggle('visible', anyPlaying);
+    }
+
+    document.getElementById('stopAllBtn').addEventListener('click', function() {
+      Object.keys(allAudioElements).forEach(function(key) {
+        allAudioElements[key].pause();
+        var card = document.querySelector('[data-src="' + key + '"]');
+        if (card) {
+          var btn = card.querySelector('.sound-play-btn');
+          if (btn) { btn.innerHTML = playIcon; btn.classList.remove('playing'); }
+        }
+      });
+      updateStopAllBtn();
+    });
+
     function initSoundPlayers() {
-      var audioElements = {};
-      var playIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
-      var pauseIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
 
       document.querySelectorAll('.sound-card:not(.sound-locked)').forEach(function(card) {
         var src = card.getAttribute('data-src');
@@ -528,26 +563,14 @@
         if (!playBtn || !volumeSlider) return;
 
         playBtn.addEventListener('click', function() {
-          // Create audio element if doesn't exist
-          if (!audioElements[src]) {
-            audioElements[src] = new Audio(src);
-            audioElements[src].loop = true;
-            audioElements[src].volume = volumeSlider.value / 100;
+          if (!allAudioElements[src]) {
+            allAudioElements[src] = new Audio(src);
+            allAudioElements[src].loop = true;
+            allAudioElements[src].volume = volumeSlider.value / 100;
           }
-          var audio = audioElements[src];
+          var audio = allAudioElements[src];
 
           if (audio.paused) {
-            // Stop all other sounds
-            Object.keys(audioElements).forEach(function(key) {
-              if (key !== src && !audioElements[key].paused) {
-                audioElements[key].pause();
-                var otherCard = document.querySelector('[data-src="' + key + '"]');
-                if (otherCard) {
-                  otherCard.querySelector('.sound-play-btn').innerHTML = playIcon;
-                  otherCard.querySelector('.sound-play-btn').classList.remove('playing');
-                }
-              }
-            });
             audio.play();
             playBtn.innerHTML = pauseIcon;
             playBtn.classList.add('playing');
@@ -556,6 +579,7 @@
             playBtn.innerHTML = playIcon;
             playBtn.classList.remove('playing');
           }
+          updateStopAllBtn();
         });
 
         // Update slider visual on input
@@ -567,12 +591,14 @@
         // Initialize slider background
         updateSliderBackground(volumeSlider);
 
-        volumeSlider.addEventListener('input', function() {
-          updateSliderBackground(this);
-          if (audioElements[src]) {
-            audioElements[src].volume = this.value / 100;
+        function onVolumeChange() {
+          updateSliderBackground(volumeSlider);
+          if (allAudioElements[src]) {
+            allAudioElements[src].volume = volumeSlider.value / 100;
           }
-        });
+        }
+        volumeSlider.addEventListener('input', onVolumeChange);
+        volumeSlider.addEventListener('change', onVolumeChange);
       });
     }
     // Initialize players for free sounds on page load
