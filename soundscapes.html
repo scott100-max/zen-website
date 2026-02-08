@@ -495,67 +495,98 @@
     </div>
   </footer>
 
+  <script>
+    // Rename custom-player -> mixer-player BEFORE main.js loads
+    // This prevents main.js from creating competing Audio objects
+    document.querySelectorAll('.custom-player').forEach(function(p) {
+      p.classList.remove('custom-player');
+      p.classList.add('mixer-player');
+    });
+  </script>
   <script src="js/main.js?v=1770053724"></script>
   <script>
-    // Override custom-players as ambient mixable loopers
+    // Soundscape Mixer — lazy-load audio, allow simultaneous playback
     (function() {
-      document.querySelectorAll('.custom-player').forEach(function(player) {
+      document.querySelectorAll('.mixer-player').forEach(function(player) {
         var src = player.dataset.src;
         if (!src) return;
 
         var audio = new Audio();
         audio.loop = true;
-        audio.preload = 'auto';
-        audio.volume = 0;
-        audio.src = src;
         var playing = false;
+        var loaded = false;
 
-        // Replace play button (strips old main.js listeners)
-        var oldBtn = player.querySelector('.cp-play');
-        var btn = oldBtn.cloneNode(true);
-        oldBtn.parentNode.replaceChild(btn, oldBtn);
+        // Get controls (no cloning needed — main.js never touched these)
+        var btn = player.querySelector('.cp-play');
+        if (!btn) return;
 
-        // Replace seek bar with volume slider (strips old listeners)
-        var oldSeek = player.querySelector('.cp-seek');
-        var vol = oldSeek.cloneNode(true);
+        // Convert seek bar to volume slider
+        var vol = player.querySelector('.cp-seek');
+        if (!vol) return;
         vol.value = 0;
         vol.className = 'cp-vol';
-        oldSeek.parentNode.replaceChild(vol, oldSeek);
 
-        // Replace time display with volume label
+        // Volume label
         var timeEl = player.querySelector('.cp-time');
-        timeEl.textContent = 'Off';
-        timeEl.style.minWidth = '40px';
+        if (timeEl) {
+          timeEl.textContent = 'Off';
+          timeEl.style.minWidth = '40px';
+        }
+
+        function setLabel(t) { if (timeEl) timeEl.textContent = t; }
+
+        function startPlay(volume) {
+          if (!loaded) {
+            audio.src = src;
+            loaded = true;
+          }
+          audio.volume = volume;
+          setLabel('...');
+          btn.disabled = true;
+          audio.play().then(function() {
+            playing = true;
+            btn.innerHTML = '&#9646;&#9646;';
+            btn.disabled = false;
+            setLabel(Math.round(volume * 100) + '%');
+          }).catch(function() {
+            playing = false;
+            btn.innerHTML = '&#9654;';
+            btn.disabled = false;
+            setLabel('Retry');
+            loaded = false;
+          });
+        }
+
+        function stopPlay() {
+          audio.pause();
+          playing = false;
+          btn.innerHTML = '&#9654;';
+        }
 
         btn.addEventListener('click', function() {
           if (!playing) {
-            audio.play().catch(function() {});
-            if (vol.value == 0) {
-              vol.value = 70;
-              audio.volume = 0.7;
-              timeEl.textContent = '70%';
-            }
-            btn.innerHTML = '&#9646;&#9646;';
-            playing = true;
+            var v = parseInt(vol.value) || 70;
+            vol.value = v;
+            startPlay(v / 100);
           } else {
-            audio.pause();
-            btn.innerHTML = '&#9654;';
-            playing = false;
+            stopPlay();
+            var v = parseInt(vol.value);
+            setLabel(v === 0 ? 'Off' : v + '%');
           }
         });
 
         vol.addEventListener('input', function() {
           var v = parseInt(vol.value);
-          audio.volume = v / 100;
-          timeEl.textContent = v === 0 ? 'Off' : v + '%';
-          if (v > 0 && !playing) {
-            audio.play().catch(function() {});
-            btn.innerHTML = '&#9646;&#9646;';
-            playing = true;
-          } else if (v === 0 && playing) {
-            audio.pause();
-            btn.innerHTML = '&#9654;';
-            playing = false;
+          if (v > 0) {
+            if (!playing) {
+              startPlay(v / 100);
+            } else {
+              audio.volume = v / 100;
+              setLabel(v + '%');
+            }
+          } else {
+            stopPlay();
+            setLabel('Off');
           }
         });
       });
