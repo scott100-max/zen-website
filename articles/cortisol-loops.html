@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cortisol Loops: When Your Body Forgets to Stand Down — Salus Mind</title>
+  <meta name="description" content="Cortisol is useful in short bursts. But when the feedback loop doesn't close, it erodes sleep quality, weakens memory, and suppresses immunity. Here's how mindfulness practice interrupts the cycle.">
+  <link rel="canonical" href="https://salus-mind.com/articles/cortisol-loops.html">
+  <meta property="og:title" content="Cortisol Loops: When Your Body Forgets to Stand Down — Salus Mind">
+  <meta property="og:description" content="Cortisol is useful in short bursts. But when the feedback loop doesn't close, it erodes sleep quality, weakens memory, and suppresses immunity. Here's how mindfulness practice interrupts the cycle.">
+  <meta property="og:url" content="https://salus-mind.com/articles/cortisol-loops.html">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://salus-mind.com/images/meditation-woman-outdoor.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css?v=1770564391">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script src="../js/auth.js?v=1770564391"></script>
+<style>
+  /* ═══════════════ NAVIGATION ═══════════════ */
+  .nav-wrap{position:fixed;top:0;left:0;right:0;z-index:1000;transition:background .4s ease,box-shadow .4s ease;background:rgba(6,8,16,0.5);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+  .nav-wrap.scrolled{background:rgba(6,8,16,0.92);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);box-shadow:0 1px 0 rgba(255,255,255,0.06),0 12px 40px rgba(0,0,0,0.3)}
+  .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px}
+  .nav-row-1{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .nav-brand{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.5rem;letter-spacing:.12em;text-decoration:none;color:#f0eefc;transition:opacity .3s ease;flex-shrink:0}
+  .nav-brand:hover{opacity:.8}
+  .nav-primary{display:flex;align-items:center;gap:4px;list-style:none}
+  .nav-primary a{font-weight:300;font-size:.82rem;letter-spacing:.02em;color:rgba(240,238,252,0.6);text-decoration:none;padding:6px 13px;border-radius:8px;transition:all .3s ease;position:relative;white-space:nowrap}
+  .nav-primary a:hover{color:#f0eefc;background:rgba(255,255,255,0.04)}
+  .nav-primary a.active{color:#f0eefc;background:rgba(255,255,255,0.06)}
+  .nav-primary a.active::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:16px;height:2px;border-radius:1px;background:#4ecdc4;opacity:.7}
+  .nav-ctas{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  .nav-cta{font-family:'Outfit',sans-serif;font-weight:400;font-size:.78rem;letter-spacing:.04em;padding:7px 18px;border-radius:40px;cursor:pointer;text-decoration:none;transition:all .35s cubic-bezier(.22,1,.36,1);white-space:nowrap}
+  .nav-cta--subscribe{color:#060810;background:#4ecdc4;border:1px solid #4ecdc4}
+  .nav-cta--subscribe:hover{background:#5ed8d0;transform:translateY(-1px);box-shadow:0 4px 16px rgba(78,205,196,0.25)}
+  .nav-cta--login{color:rgba(240,238,252,0.6);background:transparent;border:1px solid rgba(255,255,255,0.1)}
+  .nav-cta--login:hover{color:#f0eefc;border-color:rgba(255,255,255,0.22);background:rgba(255,255,255,0.04)}
+  .nav-row-2{display:flex;align-items:center;justify-content:center;gap:32px;height:34px;border-top:1px solid rgba(255,255,255,0.06);transition:height .4s ease,opacity .3s ease,border-top-color .3s ease;overflow:hidden}
+  .nav-wrap.scrolled .nav-row-2{height:0;opacity:0;border-top-color:transparent}
+  .nav-row-2 a{font-weight:300;font-size:.72rem;letter-spacing:.03em;color:rgba(240,238,252,0.4);text-decoration:none;transition:color .3s ease;white-space:nowrap}
+  .nav-row-2 a:hover{color:rgba(240,238,252,0.6)}
+  .nav-burger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;transition:background .3s ease}
+  .nav-burger:hover{background:rgba(255,255,255,0.04)}
+  .nav-burger span{display:block;width:100%;height:1.5px;background:rgba(240,238,252,0.6);border-radius:1px;transition:all .3s ease;transform-origin:center}
+  .nav-burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+  .nav-burger.open span:nth-child(2){opacity:0}
+  .nav-burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+  .nav-drawer{display:none;position:fixed;top:56px;left:0;right:0;bottom:0;background:rgba(6,8,16,0.95);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);z-index:999;flex-direction:column;padding:32px 28px 40px;overflow-y:auto;opacity:0;transform:translateY(-8px);transition:opacity .3s ease,transform .3s ease}
+  .nav-drawer.open{display:flex;opacity:1;transform:translateY(0)}
+  .nav-drawer__section-label{font-weight:300;font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(240,238,252,0.4);margin-bottom:14px;margin-top:24px}
+  .nav-drawer__section-label:first-child{margin-top:0}
+  .nav-drawer__link{display:flex;align-items:center;gap:12px;font-weight:300;font-size:1.05rem;color:rgba(240,238,252,0.6);text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);transition:color .3s ease}
+  .nav-drawer__link:hover{color:#f0eefc}
+  .nav-drawer__link-dot{width:5px;height:5px;border-radius:50%;background:#4ecdc4;opacity:.5}
+  .nav-drawer__ctas{display:flex;gap:10px;margin-top:32px}
+  .nav-drawer__ctas .nav-cta{flex:1;text-align:center;padding:12px 20px;font-size:.88rem}
+  @media(max-width:860px){.nav-primary,.nav-row-2,.nav-ctas{display:none}.nav-burger{display:flex}.nav-row-1{height:56px}}
+
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --deep:#060810;--ink:#0a0d18;--accent:#34d399;
+    --text-bright:#f2f0fa;--text-muted:rgba(242,240,250,0.45);--text-mid:rgba(242,240,250,0.65);
+    --border:rgba(255,255,255,0.06);
+  }
+  html{font-size:16px;scroll-behavior:smooth}
+  body{background:var(--deep);color:var(--text-bright);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+  /* ═══ HERO ═══ */
+  .hero{position:relative;padding:120px 24px 60px;text-align:center;overflow:hidden}
+  .hero::before{content:'';position:absolute;inset:0;background:linear-gradient(145deg, #064e3b 0%, #065f46 40%, #047857 100%);opacity:.6;z-index:0}
+  .hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 60%,var(--deep) 100%);z-index:1}
+  .hero__orb{position:absolute;width:300px;height:300px;border-radius:50%;background:rgba(52,211,153,0.12);filter:blur(80px);top:-60px;left:50%;transform:translateX(-50%);z-index:0}
+  .hero__inner{position:relative;z-index:2;max-width:680px;margin:0 auto}
+  .hero__back{display:inline-flex;align-items:center;gap:6px;font-weight:300;font-size:.74rem;color:rgba(52,211,153,0.6);text-decoration:none;margin-bottom:24px;transition:color .3s ease}
+  .hero__back:hover{color:rgba(52,211,153,0.9)}
+  .hero__back svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.5}
+  .hero__topic{display:inline-flex;align-items:center;gap:8px;font-weight:400;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(52,211,153,0.7);padding:5px 14px;border-radius:20px;border:1px solid rgba(52,211,153,0.15);background:rgba(52,211,153,0.06);margin-bottom:16px}
+  .hero__meta{font-weight:300;font-size:.76rem;color:rgba(255,255,255,0.35);margin-bottom:14px}
+  .hero h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.8rem,4.5vw,2.8rem);line-height:1.2;margin-bottom:16px}
+  .hero__desc{font-weight:200;font-size:.92rem;color:var(--text-muted);line-height:1.8;max-width:580px;margin:0 auto}
+
+  /* ═══ ARTICLE BODY ═══ */
+  .art{max-width:680px;margin:0 auto;padding:48px 24px 60px}
+  .art__block{margin-bottom:36px}
+  .art__subhead{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.2rem;line-height:1.35;margin-bottom:10px;color:var(--text-bright)}
+  .art__para{font-weight:200;font-size:.88rem;line-height:1.85;color:var(--text-mid)}
+
+  /* ═══ ARTICLE NAV ═══ */
+  .art-nav{display:flex;gap:16px;max-width:680px;margin:0 auto;padding:0 24px 80px}
+  .art-nav__link{flex:1;padding:20px;border-radius:14px;background:var(--ink);border:1px solid var(--border);text-decoration:none;color:#fff;transition:border-color .3s ease,transform .3s ease}
+  .art-nav__link:hover{border-color:rgba(52,211,153,0.2);transform:translateY(-2px)}
+  .art-nav__link--next{text-align:right}
+  .art-nav__dir{display:block;font-weight:300;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(52,211,153,0.5);margin-bottom:6px}
+  .art-nav__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1rem;line-height:1.3;color:var(--text-mid)}
+
+  /* ═══ BACK TO LEARN ═══ */
+  .back-learn{text-align:center;padding:0 24px 80px}
+  .back-learn a{display:inline-flex;align-items:center;gap:8px;font-weight:300;font-size:.78rem;color:rgba(52,211,153,0.5);text-decoration:none;padding:10px 20px;border-radius:40px;border:1px solid var(--border);transition:all .3s ease}
+  .back-learn a:hover{color:rgba(52,211,153,0.8);border-color:rgba(52,211,153,0.2)}
+  .back-learn a svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.5}
+
+  @media(max-width:600px){
+    .art-nav{flex-direction:column}
+    .art-nav__link--next{text-align:left}
+  }
+</style>
+</head>
+<body>
+<nav class="nav-wrap" id="navWrap">
+  <div class="nav-inner">
+    <div class="nav-row-1">
+      <a href="../index.html" class="nav-brand">SALUS</a>
+      <ul class="nav-primary">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../sessions.html">Meditations</a></li>
+        <li><a href="../mindfulness.html">Mindfulness</a></li>
+        <li><a href="../asmr.html">ASMR</a></li>
+        <li><a href="../sleep-stories.html">Sleep Stories</a></li>
+        <li><a href="../education.html">Learn</a></li>
+        <li><a href="../about.html">About</a></li>
+      </ul>
+      <div class="nav-ctas">
+        <a href="../apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+        <a href="../login.html" class="nav-cta nav-cta--login">Log In</a>
+      </div>
+      <button class="nav-burger" id="burgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+    <div class="nav-row-2">
+      <a href="../tools.html">Tools</a>
+      <a href="../reading.html">Reading</a>
+      <a href="../applied-psychology.html">Applied Psychology</a>
+      <a href="../newsletter.html">Newsletter</a>
+      <a href="../contact.html">Contact</a>
+    </div>
+  </div>
+</nav>
+<div class="nav-drawer" id="navDrawer">
+  <div class="nav-drawer__section-label">Main</div>
+  <a href="../index.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Home</a>
+  <a href="../sessions.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Meditations</a>
+  <a href="../mindfulness.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Mindfulness</a>
+  <a href="../asmr.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>ASMR</a>
+  <a href="../sleep-stories.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Sleep Stories</a>
+  <a href="../education.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Learn</a>
+  <a href="../about.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>About</a>
+  <div class="nav-drawer__section-label">More</div>
+  <a href="../tools.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Tools</a>
+  <a href="../reading.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Reading</a>
+  <a href="../applied-psychology.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Applied Psychology</a>
+  <a href="../newsletter.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Newsletter</a>
+  <a href="../contact.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Contact</a>
+  <div class="nav-drawer__ctas">
+    <a href="../apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+    <a href="../login.html" class="nav-cta nav-cta--login">Log In</a>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="hero__orb"></div>
+  <div class="hero__inner">
+    <a href="../education.html" class="hero__back"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Back to Learn</a>
+    <div class="hero__topic">Stress & the Nervous System</div>
+    <div class="hero__meta">4 min read</div>
+    <h1>Cortisol Loops: When Your Body Forgets to Stand Down</h1>
+    <p class="hero__desc">Cortisol is useful in short bursts. But when the feedback loop doesn't close, it erodes sleep quality, weakens memory, and suppresses immunity. Here's how mindfulness practice interrupts the cycle.</p>
+  </div>
+</section>
+
+<article class="art">
+      <div class="art__block">
+        <h3 class="art__subhead">Cortisol isn't the enemy.</h3>
+        <p class="art__para">It's a vital hormone that helps you wake up in the morning (the cortisol awakening response), maintain energy through the day, and respond to genuine emergencies. The problem isn't cortisol itself — it's cortisol that doesn't return to baseline.</p>
+      </div>
+      <div class="art__block">
+        <h3 class="art__subhead">A healthy cortisol curve follows a predictable pattern.</h3>
+        <p class="art__para">Levels peak within about thirty minutes of waking, providing the energy and alertness needed to start the day. They decline gradually through the afternoon and reach their lowest point in the late evening, allowing melatonin to rise and sleep to begin. This diurnal rhythm is one of the most important hormonal cycles in the body.</p>
+      </div>
+      <div class="art__block">
+        <h3 class="art__subhead">Chronic stress flattens the curve.</h3>
+        <p class="art__para">When the HPA axis fires too frequently, the cortisol curve loses its shape. Morning peaks become blunted (leading to difficulty waking and morning fatigue), whilst evening levels remain elevated (leading to insomnia and restless sleep). The system loses its rhythm, and with it, the body loses its ability to distinguish between active and recovery phases.</p>
+      </div>
+      <div class="art__block">
+        <h3 class="art__subhead">Sleep suffers first.</h3>
+        <p class="art__para">Elevated evening cortisol directly antagonises melatonin. The result is difficulty falling asleep, frequent waking during the night, and reduced time in deep slow-wave sleep — the very stage responsible for clearing adenosine and performing physical repair. Poor sleep then elevates next-day cortisol, creating a self-reinforcing loop: stress degrades sleep, and degraded sleep amplifies stress.</p>
+      </div>
+      <div class="art__block">
+        <h3 class="art__subhead">Memory and cognition erode next.</h3>
+        <p class="art__para">The hippocampus — critical for forming new memories and learning — is densely packed with cortisol receptors. Under acute stress, cortisol actually enhances memory formation (which is why you vividly remember frightening events). But under chronic exposure, the same receptors become overloaded, impairing memory consolidation and eventually contributing to hippocampal volume loss.</p>
+      </div>
+      <div class="art__block">
+        <h3 class="art__subhead">Mindfulness interrupts the loop at the source.</h3>
+        <p class="art__para">A growing body of research suggests that mindfulness meditation can reduce cortisol levels — both acutely (during and immediately after practice) and over time (as a sustained reduction in baseline cortisol across weeks of regular practice), though effect sizes vary across studies. The mechanism is straightforward: by activating the parasympathetic nervous system and reducing amygdala reactivity, meditation sends a clear "stand down" signal to the HPA axis. It helps the feedback loop close. Over time, this restores the natural cortisol rhythm, improving sleep, supporting memory, and allowing the immune system to function without suppression.</p>
+      </div>
+</article>
+
+
+    <nav class="art-nav">
+        <a href="hpa-axis.html" class="art-nav__link art-nav__link--prev">
+          <span class="art-nav__dir">Previous</span>
+          <span class="art-nav__title">The HPA Axis: How Stress Becomes Chronic</span>
+        </a>
+    </nav>
+
+<div class="back-learn">
+  <a href="../education.html"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> All Learn topics</a>
+</div>
+
+<script>
+  // Navigation
+  const navWrap=document.getElementById("navWrap");
+  window.addEventListener("scroll",()=>{navWrap.classList.toggle("scrolled",window.scrollY>30)},{passive:true});
+  const burger=document.getElementById("burgerBtn");
+  const drawer=document.getElementById("navDrawer");
+  burger.addEventListener("click",()=>{burger.classList.toggle("open");drawer.classList.toggle("open");document.body.style.overflow=drawer.classList.contains("open")?"hidden":""});
+  drawer.querySelectorAll(".nav-drawer__link").forEach(l=>{l.addEventListener("click",()=>{burger.classList.remove("open");drawer.classList.remove("open");document.body.style.overflow=""})});
+</script>
+<script src="../js/main.js?v=1770564391"></script>
+<script src="../js/tracker.js"></script>
+
+<footer class="hb-footer">
+  <div class="hb-footer__inner">
+    <div class="hb-footer__brand">
+      <span class="hb-footer__logo">Salus</span>
+      <p class="hb-footer__tagline">A quieter kind of self-care. Guided meditations, sleep stories, ASMR, and mindfulness tools &mdash; built by a family.</p>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Practice</h4>
+      <ul class="hb-footer__links">
+        <li><a href="../sessions.html">Guided Meditations</a></li>
+        <li><a href="../mindfulness.html">Mindfulness</a></li>
+        <li><a href="../asmr.html">ASMR &amp; Sounds</a></li>
+        <li><a href="../sleep-stories.html">Sleep Stories</a></li>
+        <li><a href="../tools.html">Tools</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Discover</h4>
+      <ul class="hb-footer__links">
+        <li><a href="../education.html">Learn</a></li>
+        <li><a href="../reading.html">Reading</a></li>
+        <li><a href="../applied-psychology.html">Applied Psychology</a></li>
+        <li><a href="../newsletter.html">Newsletter</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Salus</h4>
+      <ul class="hb-footer__links">
+        <li><a href="../about.html">About Us</a></li>
+        <li><a href="../apps.html">Go Premium</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="footer-disclaimer">Salus does not provide medical advice. Content is for general wellbeing and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified health provider with any health concerns.</p>
+  <div class="hb-footer__bottom">
+    <span class="hb-footer__copy">&copy; 2026 Salus Mind. All rights reserved.</span>
+    <a href="#" class="hb-footer__back-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">
+      Back to top
+      <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+    </a>
+  </div>
+</footer>
+</body>
+</html>
