@@ -3299,20 +3299,19 @@ def send_build_email(session_name, duration_min, qa_passed, r2_url):
         "to": ["scottripley@icloud.com"],
         "subject": f"{session_name} — LIVE",
         "text": body
-    }).encode()
+    })
 
-    req = urllib.request.Request(
-        "https://api.resend.com/emails",
-        data=payload,
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json",
-            "User-Agent": "SalusBuild/1.0"
-        }
-    )
     try:
-        urllib.request.urlopen(req)
-        print(f"  EMAIL: Sent to scottripley@icloud.com")
+        result = subprocess.run([
+            'curl', '-s', '-X', 'POST', 'https://api.resend.com/emails',
+            '-H', f'Authorization: Bearer {api_key}',
+            '-H', 'Content-Type: application/json',
+            '-d', payload
+        ], capture_output=True, text=True, timeout=15)
+        if '"id"' in result.stdout:
+            print(f"  EMAIL: Sent to scottripley@icloud.com")
+        else:
+            print(f"  EMAIL: Failed — {result.stdout}")
     except Exception as e:
         print(f"  EMAIL: Failed — {e}")
 
