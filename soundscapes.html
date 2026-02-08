@@ -188,128 +188,214 @@
       .asmr-hero .hero-subtitle { max-width: 90%; }
     }
 
+    /* ═══════════════════════════════════════════
+       ASMR SOUND MIXER
+    ═══════════════════════════════════════════ */
+    .asmr-mixer {
+      background: #0a0a12;
+      color: #f0eefc;
+      font-family: 'Outfit', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      padding: 60px 24px 120px;
+    }
+    .asmr-mixer .mx-header { text-align: center; margin-bottom: 48px; }
+    .asmr-mixer .mx-header__label {
+      font-weight: 300; font-size: 0.72rem; letter-spacing: 0.28em;
+      text-transform: uppercase; color: #4ecdc4; margin-bottom: 12px;
+    }
+    .asmr-mixer .mx-header__title {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(1.8rem, 4vw, 2.6rem); color: #f0eefc; margin-bottom: 10px;
+    }
+    .asmr-mixer .mx-header__sub { font-weight: 200; font-size: 0.9rem; color: rgba(240, 238, 252, 0.4); }
+    .asmr-mixer .mx-filters {
+      display: flex; justify-content: center; gap: 8px; margin-bottom: 36px; flex-wrap: wrap;
+    }
+    .asmr-mixer .mx-filter-btn {
+      font-family: 'Outfit', sans-serif; font-weight: 300; font-size: 0.75rem;
+      letter-spacing: 0.08em; color: rgba(240, 238, 252, 0.4);
+      background: transparent; border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 7px 18px; border-radius: 40px; cursor: pointer; transition: all 0.3s ease;
+    }
+    .asmr-mixer .mx-filter-btn:hover,
+    .asmr-mixer .mx-filter-btn.active {
+      color: #f0eefc; border-color: rgba(124, 108, 240, 0.4); background: rgba(124, 108, 240, 0.08);
+    }
+    .asmr-mixer .mx-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px; max-width: 1000px; margin: 0 auto;
+    }
+    .asmr-mixer .mx-card {
+      position: relative; display: flex; flex-direction: column;
+      background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px; padding: 14px 16px 12px;
+      transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      overflow: hidden; user-select: none;
+      opacity: 0; transform: translateY(16px); animation: mxCardIn 0.5s ease-out forwards;
+    }
+    .asmr-mixer .mx-card::before {
+      content: ''; position: absolute; inset: 0; border-radius: 14px;
+      opacity: 0; transition: opacity 0.35s ease; pointer-events: none;
+    }
+    .asmr-mixer .mx-card:hover {
+      background: rgba(255, 255, 255, 0.055); border-color: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    .asmr-mixer .mx-card:hover::before { opacity: 1; }
+    .asmr-mixer .mx-card.playing {
+      border-color: color-mix(in srgb, var(--card-accent, #7c6cf0) 40%, transparent);
+      background: color-mix(in srgb, var(--card-accent, #7c6cf0) 6%, transparent);
+    }
+    .asmr-mixer .mx-card__top { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+    .asmr-mixer .mx-card__icon {
+      position: relative; width: 40px; height: 40px; border-radius: 11px;
+      display: flex; align-items: center; justify-content: center; font-size: 1.15rem;
+      flex-shrink: 0; transition: transform 0.3s ease;
+    }
+    .asmr-mixer .mx-card:hover .mx-card__icon { transform: scale(1.06); }
+    .asmr-mixer .mx-card__wave {
+      position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 2px; opacity: 0; transition: opacity 0.3s ease;
+    }
+    .asmr-mixer .mx-card.playing .mx-card__wave { opacity: 1; }
+    .asmr-mixer .mx-card__wave span {
+      width: 2px; border-radius: 1px; background: var(--card-accent, #7c6cf0);
+      animation: mxWaveBar 0.8s ease-in-out infinite alternate;
+    }
+    .asmr-mixer .mx-card__wave span:nth-child(1) { height: 4px; animation-delay: 0s; }
+    .asmr-mixer .mx-card__wave span:nth-child(2) { height: 6px; animation-delay: 0.15s; }
+    .asmr-mixer .mx-card__wave span:nth-child(3) { height: 5px; animation-delay: 0.3s; }
+    .asmr-mixer .mx-card__wave span:nth-child(4) { height: 7px; animation-delay: 0.1s; }
+    .asmr-mixer .mx-card__wave span:nth-child(5) { height: 4px; animation-delay: 0.25s; }
+    @keyframes mxWaveBar { 0% { transform: scaleY(0.4); } 100% { transform: scaleY(1.5); } }
+    @keyframes mxCardIn { to { opacity: 1; transform: translateY(0); } }
+    .asmr-mixer .mx-card__info { flex: 1; min-width: 0; }
+    .asmr-mixer .mx-card__name { font-weight: 400; font-size: 0.86rem; color: #f0eefc; line-height: 1.3; margin-bottom: 1px; }
+    .asmr-mixer .mx-card__meta { display: flex; align-items: center; gap: 6px; }
+    .asmr-mixer .mx-card__tag { font-weight: 300; font-size: 0.62rem; letter-spacing: 0.06em; color: rgba(240, 238, 252, 0.4); text-transform: uppercase; }
+    .asmr-mixer .mx-card__dot { width: 2px; height: 2px; border-radius: 50%; background: rgba(240, 238, 252, 0.4); }
+    .asmr-mixer .mx-card__duration { font-weight: 300; font-size: 0.62rem; color: rgba(240, 238, 252, 0.4); }
+    .asmr-mixer .mx-card__toggle {
+      width: 30px; height: 30px; border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.03);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.3s ease;
+    }
+    .asmr-mixer .mx-card:hover .mx-card__toggle { border-color: rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.05); }
+    .asmr-mixer .mx-card.playing .mx-card__toggle {
+      border-color: color-mix(in srgb, var(--card-accent, #7c6cf0) 50%, transparent);
+      background: color-mix(in srgb, var(--card-accent, #7c6cf0) 15%, transparent);
+    }
+    .asmr-mixer .mx-card__toggle svg { width: 11px; height: 11px; fill: rgba(240, 238, 252, 0.6); transition: fill 0.3s ease; }
+    .asmr-mixer .mx-card.playing .mx-card__toggle svg { fill: var(--card-accent, #7c6cf0); }
+    .asmr-mixer .mx-card__toggle .mx-icon-pause { display: none; }
+    .asmr-mixer .mx-card.playing .mx-card__toggle .mx-icon-play { display: none; }
+    .asmr-mixer .mx-card.playing .mx-card__toggle .mx-icon-pause { display: block; }
+    .asmr-mixer .mx-card__volume-row {
+      display: flex; align-items: center; gap: 8px; margin-top: 0; padding-top: 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      max-height: 0; overflow: hidden; opacity: 0;
+      transition: max-height 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease, margin-top 0.4s ease, padding-top 0.4s ease;
+    }
+    .asmr-mixer .mx-card.playing .mx-card__volume-row,
+    .asmr-mixer .mx-card:hover .mx-card__volume-row {
+      max-height: 40px; opacity: 1; margin-top: 10px; padding-top: 10px;
+    }
+    .asmr-mixer .mx-card__vol-icon { flex-shrink: 0; display: flex; align-items: center; }
+    .asmr-mixer .mx-card__vol-icon svg { width: 13px; height: 13px; fill: rgba(240, 238, 252, 0.4); transition: fill 0.3s ease; }
+    .asmr-mixer .mx-card.playing .mx-card__vol-icon svg { fill: var(--card-accent, #7c6cf0); }
+    .asmr-mixer .mx-card__slider {
+      flex: 1; -webkit-appearance: none; appearance: none; height: 3px;
+      border-radius: 2px; background: rgba(255, 255, 255, 0.08); outline: none; cursor: pointer;
+    }
+    .asmr-mixer .mx-card__slider::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%;
+      background: var(--card-accent, #7c6cf0); border: 2px solid #0a0a12;
+      box-shadow: 0 0 8px color-mix(in srgb, var(--card-accent, #7c6cf0) 40%, transparent);
+      cursor: pointer; transition: transform 0.2s ease;
+    }
+    .asmr-mixer .mx-card__slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+    .asmr-mixer .mx-card__slider::-moz-range-thumb {
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--card-accent, #7c6cf0); border: 2px solid #0a0a12; cursor: pointer;
+    }
+    .asmr-mixer .mx-card__slider::-moz-range-track { height: 3px; border-radius: 2px; background: rgba(255, 255, 255, 0.08); }
+    .asmr-mixer .mx-card__vol-value { font-weight: 300; font-size: 0.62rem; color: rgba(240, 238, 252, 0.4); width: 26px; text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+    /* Per-card accent colours */
+    .asmr-mixer .mx-card[data-sound="rain"]       { --card-accent: #38bdf8; }
+    .asmr-mixer .mx-card[data-sound="ocean"]      { --card-accent: #4ecdc4; }
+    .asmr-mixer .mx-card[data-sound="forest"]     { --card-accent: #34d399; }
+    .asmr-mixer .mx-card[data-sound="thunder"]    { --card-accent: #818cf8; }
+    .asmr-mixer .mx-card[data-sound="birds"]      { --card-accent: #fbbf24; }
+    .asmr-mixer .mx-card[data-sound="fire"]       { --card-accent: #f7a072; }
+    .asmr-mixer .mx-card[data-sound="stream"]     { --card-accent: #4ecdc4; }
+    .asmr-mixer .mx-card[data-sound="cafe"]       { --card-accent: #f7a072; }
+    .asmr-mixer .mx-card[data-sound="garden"]     { --card-accent: #34d399; }
+    .asmr-mixer .mx-card[data-sound="library"]    { --card-accent: #818cf8; }
+    .asmr-mixer .mx-card[data-sound="night"]      { --card-accent: #7c6cf0; }
+    .asmr-mixer .mx-card[data-sound="temple"]     { --card-accent: #f472b6; }
+    .asmr-mixer .mx-card[data-sound="waterfall"]  { --card-accent: #38bdf8; }
+    .asmr-mixer .mx-card[data-sound="whitenoise"] { --card-accent: rgba(240,238,252,0.6); }
+    .asmr-mixer .mx-card[data-sound="rain"] .mx-card__icon       { background: rgba(56,189,248,0.1); }
+    .asmr-mixer .mx-card[data-sound="ocean"] .mx-card__icon      { background: rgba(78,205,196,0.1); }
+    .asmr-mixer .mx-card[data-sound="forest"] .mx-card__icon     { background: rgba(52,211,153,0.1); }
+    .asmr-mixer .mx-card[data-sound="thunder"] .mx-card__icon    { background: rgba(129,140,248,0.1); }
+    .asmr-mixer .mx-card[data-sound="birds"] .mx-card__icon      { background: rgba(251,191,36,0.1); }
+    .asmr-mixer .mx-card[data-sound="fire"] .mx-card__icon       { background: rgba(247,160,114,0.1); }
+    .asmr-mixer .mx-card[data-sound="stream"] .mx-card__icon     { background: rgba(78,205,196,0.1); }
+    .asmr-mixer .mx-card[data-sound="cafe"] .mx-card__icon       { background: rgba(247,160,114,0.08); }
+    .asmr-mixer .mx-card[data-sound="garden"] .mx-card__icon     { background: rgba(52,211,153,0.08); }
+    .asmr-mixer .mx-card[data-sound="library"] .mx-card__icon    { background: rgba(129,140,248,0.08); }
+    .asmr-mixer .mx-card[data-sound="night"] .mx-card__icon      { background: rgba(124,108,240,0.1); }
+    .asmr-mixer .mx-card[data-sound="temple"] .mx-card__icon     { background: rgba(244,114,182,0.08); }
+    .asmr-mixer .mx-card[data-sound="waterfall"] .mx-card__icon  { background: rgba(56,189,248,0.08); }
+    .asmr-mixer .mx-card[data-sound="whitenoise"] .mx-card__icon { background: rgba(240,238,252,0.06); }
+    .asmr-mixer .mx-card[data-sound="rain"]::before       { background: radial-gradient(ellipse at 20% 50%, rgba(56,189,248,0.06), transparent 70%); }
+    .asmr-mixer .mx-card[data-sound="ocean"]::before      { background: radial-gradient(ellipse at 20% 50%, rgba(78,205,196,0.06), transparent 70%); }
+    .asmr-mixer .mx-card[data-sound="forest"]::before     { background: radial-gradient(ellipse at 20% 50%, rgba(52,211,153,0.06), transparent 70%); }
+    .asmr-mixer .mx-card[data-sound="thunder"]::before    { background: radial-gradient(ellipse at 20% 50%, rgba(129,140,248,0.06), transparent 70%); }
+    .asmr-mixer .mx-card[data-sound="fire"]::before       { background: radial-gradient(ellipse at 20% 50%, rgba(247,160,114,0.06), transparent 70%); }
+    .asmr-mixer .mx-card[data-sound="temple"]::before     { background: radial-gradient(ellipse at 20% 50%, rgba(244,114,182,0.05), transparent 70%); }
+    .asmr-mixer .mx-card[data-sound="night"]::before      { background: radial-gradient(ellipse at 20% 50%, rgba(124,108,240,0.06), transparent 70%); }
+    /* Floating mixer bar */
+    .mx-bar {
+      position: fixed; bottom: -80px; left: 50%; transform: translateX(-50%); z-index: 100;
+      display: flex; align-items: center; gap: 16px;
+      background: rgba(14, 14, 24, 0.92); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 60px;
+      padding: 10px 12px 10px 20px; transition: bottom 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+    }
+    .mx-bar.visible { bottom: 28px; }
+    .mx-bar__active { display: flex; align-items: center; gap: 6px; }
+    .mx-bar__pip {
+      width: 7px; height: 7px; border-radius: 50%; animation: mxPipPulse 2s ease-in-out infinite;
+    }
+    @keyframes mxPipPulse { 0%, 100% { opacity: 0.5; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
+    .mx-bar__count { font-weight: 300; font-size: 0.78rem; color: rgba(240, 238, 252, 0.6); }
+    .mx-bar__count strong { font-weight: 500; color: #f0eefc; }
+    .mx-bar__sep { width: 1px; height: 20px; background: rgba(255, 255, 255, 0.1); }
+    .mx-bar__stop {
+      font-family: 'Outfit', sans-serif; font-weight: 400; font-size: 0.75rem;
+      letter-spacing: 0.06em; color: #f0eefc;
+      background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 8px 20px; border-radius: 40px; cursor: pointer; transition: all 0.3s ease;
+    }
+    .mx-bar__stop:hover {
+      background: rgba(239, 68, 68, 0.12); border-color: rgba(239, 68, 68, 0.35); color: #fca5a5;
+    }
     @media (max-width: 600px) {
-      #soundGrid, #moreSoundsGrid { grid-template-columns: 1fr !important; }
+      .asmr-mixer .mx-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .asmr-mixer .mx-card { padding: 12px 12px 10px; }
+      .asmr-mixer .mx-card__icon { width: 34px; height: 34px; font-size: 1rem; }
+      .asmr-mixer .mx-card__toggle { width: 26px; height: 26px; }
+      .asmr-mixer .mx-card__toggle svg { width: 10px; height: 10px; }
+      .asmr-mixer .mx-card__name { font-size: 0.78rem; }
+      .asmr-mixer .mx-card__slider::-webkit-slider-thumb { width: 12px; height: 12px; }
+      .mx-bar { padding: 8px 10px 8px 16px; gap: 10px; }
+      .mx-bar__count { font-size: 0.72rem; }
     }
-    .sound-card {
-      background: #fff;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .sound-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-    }
-    .sound-card-image {
-      height: 120px;
-      background-size: cover;
-      background-position: center;
-      position: relative;
-    }
-    .sound-card-image::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.6));
-    }
-    .sound-card-title {
-      position: absolute;
-      bottom: 10px;
-      left: 12px;
-      color: #fff;
-      font-weight: 600;
-      font-size: 1.1rem;
-      z-index: 1;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
-    }
-    .sound-card-category {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: rgba(255,255,255,0.9);
-      padding: 3px 8px;
-      border-radius: 12px;
-      font-size: 0.7rem;
-      font-weight: 500;
-      color: var(--dark-gray);
-      z-index: 1;
-    }
-    .sound-card-controls {
-      padding: 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .sound-play-btn {
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: background 0.2s;
-    }
-    .sound-play-btn:hover { background: #3d5bd9; }
-    .sound-play-btn.playing { background: #e74c3c; }
-    .sound-volume {
-      flex: 1;
-      height: 6px;
-      -webkit-appearance: none;
-      appearance: none;
-      background: linear-gradient(to right, var(--accent) 0%, var(--accent) 80%, #e0e0e0 80%, #e0e0e0 100%);
-      border-radius: 3px;
-      cursor: pointer;
-      outline: none;
-    }
-    .sound-volume::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 16px;
-      height: 16px;
-      background: var(--accent);
-      border-radius: 50%;
-      cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-    .sound-volume::-moz-range-thumb {
-      width: 16px;
-      height: 16px;
-      background: var(--accent);
-      border-radius: 50%;
-      cursor: pointer;
-      border: none;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-    .sound-volume::-moz-range-track {
-      height: 6px;
-      background: #e0e0e0;
-      border-radius: 3px;
-    }
-    .stop-all-btn {
-      display: none;
-      margin: 20px auto 0;
-      padding: 10px 24px;
-      background: #e74c3c;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .stop-all-btn:hover { background: #c0392b; }
-    .stop-all-btn.visible { display: block; }
-    .sound-volume-icon {
-      color: var(--mid-gray);
-      flex-shrink: 0;
+    @media (max-width: 380px) {
+      .asmr-mixer .mx-grid { grid-template-columns: 1fr; }
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -432,201 +518,32 @@
     </div>
   </section>
 
-  <!-- Category Filters -->
-  <section style="padding:0 0 20px;background:#f8f6f3;">
-    <div class="container">
-      <div class="filter-bar" id="filterBar">
-        <button class="filter-btn active" data-filter="all">All</button>
-        <button class="filter-btn" data-filter="nature">Nature</button>
-        <button class="filter-btn" data-filter="weather">Weather</button>
-        <button class="filter-btn" data-filter="ambient">Ambient</button>
-        <button class="filter-btn" data-filter="apothecary">Apothecary</button>
-        <button class="filter-btn" data-filter="mixes">Mixes</button>
-      </div>
+  <!-- Sound Mixer -->
+  <section class="asmr-mixer" id="soundGrid">
+    <div class="mx-header">
+      <p class="mx-header__label">Sound Library</p>
+      <h2 class="mx-header__title">Immersive Soundscapes</h2>
+      <p class="mx-header__sub">Layer sounds together. Create your perfect mix.</p>
     </div>
+
+    <div class="mx-filters" id="mxFilters">
+      <button class="mx-filter-btn active" data-filter="all">All</button>
+      <button class="mx-filter-btn" data-filter="nature">Nature</button>
+      <button class="mx-filter-btn" data-filter="weather">Weather</button>
+      <button class="mx-filter-btn" data-filter="spaces">Spaces</button>
+      <button class="mx-filter-btn" data-filter="ambient">Ambient</button>
+    </div>
+
+    <div class="mx-grid" id="mxGrid"></div>
   </section>
 
-  <!-- Soundscapes Grid -->
-  <section style="padding-top:40px;background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%);">
-    <div class="container">
-
-      <div class="section-header fade-in" style="margin-bottom:32px;">
-        <h2>Sample Sounds</h2>
-        <p>Play these right now to try Salus. Layer multiple sounds together.</p>
-      </div>
-
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:900px;margin:0 auto;" id="soundGrid">
-
-        <div class="sound-card fade-in" data-category="weather" data-src="https://media.salus-mind.com/content/sounds/rain.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=400&q=70');">
-            <span class="sound-card-category">Weather</span>
-            <span class="sound-card-title">Rain</span>
-          </div>
-          <div class="sound-card-controls">
-            <button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-            <svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-            <input type="range" class="sound-volume" min="0" max="100" value="80">
-          </div>
-        </div>
-
-        <div class="sound-card fade-in" data-category="nature" data-src="https://media.salus-mind.com/content/sounds/ocean.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=400&q=70');">
-            <span class="sound-card-category">Nature</span>
-            <span class="sound-card-title">Ocean</span>
-          </div>
-          <div class="sound-card-controls">
-            <button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-            <svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-            <input type="range" class="sound-volume" min="0" max="100" value="80">
-          </div>
-        </div>
-
-        <div class="sound-card fade-in" data-category="nature" data-src="https://media.salus-mind.com/content/sounds/forest.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1448375240586-882707db888b?w=400&q=70');">
-            <span class="sound-card-category">Nature</span>
-            <span class="sound-card-title">Forest</span>
-          </div>
-          <div class="sound-card-controls">
-            <button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-            <svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-            <input type="range" class="sound-volume" min="0" max="100" value="80">
-          </div>
-        </div>
-
-        <div class="sound-card fade-in" data-category="weather" data-src="https://media.salus-mind.com/content/sounds/thunder.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1605727216801-e27ce1d0cc28?w=400&q=70');">
-            <span class="sound-card-category">Weather</span>
-            <span class="sound-card-title">Thunder</span>
-          </div>
-          <div class="sound-card-controls">
-            <button class="sound-play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-            <svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-            <input type="range" class="sound-volume" min="0" max="100" value="80">
-          </div>
-        </div>
-
-      </div>
-
-      <button class="stop-all-btn" id="stopAllBtn">Stop All Sounds</button>
-
-      <!-- Premium Sounds -->
-      <div class="section-header fade-in" style="margin-top:60px;margin-bottom:32px;">
-        <h2>Premium Sounds</h2>
-        <p>Premium the full library.</p>
-      </div>
-
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:900px;margin:0 auto;" id="moreSoundsGrid">
-
-
-        <div class="sound-card fade-in sound-locked" data-category="nature" data-src="https://media.salus-mind.com/content/sounds/birds.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1444464666168-49d633b86797?w=400&q=70');"><span class="sound-card-category">Nature</span><span class="sound-card-title">Birds</span></div>
-          <div class="sound-card-controls" style="justify-content:center;"><a href="apps.html" style="display:flex;align-items:center;gap:6px;color:var(--accent);font-size:0.85rem;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Premium</a></div>
-        </div>
-
-        <div class="sound-card fade-in sound-locked" data-category="nature" data-src="https://media.salus-mind.com/content/sounds/night.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1507400492013-162706c8c05e?w=400&q=70');"><span class="sound-card-category">Nature</span><span class="sound-card-title">Night</span></div>
-          <div class="sound-card-controls" style="justify-content:center;"><a href="apps.html" style="display:flex;align-items:center;gap:6px;color:var(--accent);font-size:0.85rem;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Premium</a></div>
-        </div>
-
-        <div class="sound-card fade-in sound-locked" data-category="nature" data-src="https://media.salus-mind.com/content/sounds/stream.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&q=70');"><span class="sound-card-category">Nature</span><span class="sound-card-title">Stream</span></div>
-          <div class="sound-card-controls" style="justify-content:center;"><a href="apps.html" style="display:flex;align-items:center;gap:6px;color:var(--accent);font-size:0.85rem;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Premium</a></div>
-        </div>
-
-        <div class="sound-card fade-in sound-locked" data-category="ambient" data-src="https://media.salus-mind.com/content/sounds/cafe.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400&q=70');"><span class="sound-card-category">Ambient</span><span class="sound-card-title">Cafe</span></div>
-          <div class="sound-card-controls" style="justify-content:center;"><a href="apps.html" style="display:flex;align-items:center;gap:6px;color:var(--accent);font-size:0.85rem;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Premium</a></div>
-        </div>
-
-        <div class="sound-card fade-in sound-locked" data-category="ambient" data-src="https://media.salus-mind.com/content/sounds/keyboard.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&q=70');"><span class="sound-card-category">Ambient</span><span class="sound-card-title">Keyboard</span></div>
-          <div class="sound-card-controls" style="justify-content:center;"><a href="apps.html" style="display:flex;align-items:center;gap:6px;color:var(--accent);font-size:0.85rem;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Premium</a></div>
-        </div>
-
-        <div class="sound-card fade-in sound-locked" data-category="ambient" data-src="https://media.salus-mind.com/content/sounds/train.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=400&q=70');"><span class="sound-card-category">Ambient</span><span class="sound-card-title">Train</span></div>
-          <div class="sound-card-controls" style="justify-content:center;"><a href="apps.html" style="display:flex;align-items:center;gap:6px;color:var(--accent);font-size:0.85rem;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Premium</a></div>
-        </div>
-
-        <div class="sound-card fade-in sound-locked" data-category="apothecary" data-src="https://media.salus-mind.com/content/sounds/potions.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400&q=70');"><span class="sound-card-category">Apothecary</span><span class="sound-card-title">Potions</span></div>
-          <div class="sound-card-controls" style="justify-content:center;"><a href="apps.html" style="display:flex;align-items:center;gap:6px;color:var(--accent);font-size:0.85rem;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Premium</a></div>
-        </div>
-
-        <div class="sound-card fade-in sound-locked" data-category="nature" data-src="https://media.salus-mind.com/content/sounds/waves.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=400&q=70');"><span class="sound-card-category">Nature</span><span class="sound-card-title">Waves</span></div>
-          <div class="sound-card-controls" style="justify-content:center;"><a href="apps.html" style="display:flex;align-items:center;gap:6px;color:var(--accent);font-size:0.85rem;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Premium</a></div>
-        </div>
-
-        <div class="sound-card fade-in sound-locked" data-category="weather" data-src="https://media.salus-mind.com/content/sounds/wind.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1505672678657-cc7037095e60?w=400&q=70');"><span class="sound-card-category">Weather</span><span class="sound-card-title">Wind</span></div>
-          <div class="sound-card-controls" style="justify-content:center;"><a href="apps.html" style="display:flex;align-items:center;gap:6px;color:var(--accent);font-size:0.85rem;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Premium</a></div>
-        </div>
-
-        <div class="sound-card fade-in sound-locked" data-category="ambient" data-src="https://media.salus-mind.com/content/sounds/library.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&q=70');"><span class="sound-card-category">Ambient</span><span class="sound-card-title">Library</span></div>
-          <div class="sound-card-controls" style="justify-content:center;"><a href="apps.html" style="display:flex;align-items:center;gap:6px;color:var(--accent);font-size:0.85rem;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Premium</a></div>
-        </div>
-
-        <div class="sound-card fade-in sound-locked" data-category="weather" data-src="https://media.salus-mind.com/content/sounds/snowfall.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1491002052546-bf38f186af56?w=400&q=70');"><span class="sound-card-category">Weather</span><span class="sound-card-title">Snowfall</span></div>
-          <div class="sound-card-controls" style="justify-content:center;"><a href="apps.html" style="display:flex;align-items:center;gap:6px;color:var(--accent);font-size:0.85rem;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Premium</a></div>
-        </div>
-
-        <div class="sound-card fade-in sound-locked" data-category="nature" data-src="https://media.salus-mind.com/content/sounds/garden.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&q=70');"><span class="sound-card-category">Nature</span><span class="sound-card-title">Garden</span></div>
-          <div class="sound-card-controls" style="justify-content:center;"><a href="apps.html" style="display:flex;align-items:center;gap:6px;color:var(--accent);font-size:0.85rem;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Premium</a></div>
-        </div>
-
-        <div class="sound-card fade-in sound-locked" data-category="nature" data-src="https://media.salus-mind.com/content/sounds/waterfall.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=400&q=70');"><span class="sound-card-category">Nature</span><span class="sound-card-title">Waterfall</span></div>
-          <div class="sound-card-controls" style="justify-content:center;"><a href="apps.html" style="display:flex;align-items:center;gap:6px;color:var(--accent);font-size:0.85rem;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Premium</a></div>
-        </div>
-
-        <div class="sound-card fade-in sound-locked" data-category="ambient" data-src="https://media.salus-mind.com/content/sounds/wind-chimes.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1505455184862-554165e5f6ba?w=400&q=70');"><span class="sound-card-category">Ambient</span><span class="sound-card-title">Wind Chimes</span></div>
-          <div class="sound-card-controls" style="justify-content:center;"><a href="apps.html" style="display:flex;align-items:center;gap:6px;color:var(--accent);font-size:0.85rem;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Premium</a></div>
-        </div>
-
-        <div class="sound-card fade-in sound-locked" data-category="ambient" data-src="https://media.salus-mind.com/content/sounds/white-noise.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?w=400&q=70');"><span class="sound-card-category">Ambient</span><span class="sound-card-title">White Noise</span></div>
-          <div class="sound-card-controls" style="justify-content:center;"><a href="apps.html" style="display:flex;align-items:center;gap:6px;color:var(--accent);font-size:0.85rem;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Premium</a></div>
-        </div>
-
-        <div class="sound-card fade-in sound-locked" data-category="nature" data-src="https://media.salus-mind.com/content/sounds/woodland.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=400&q=70');"><span class="sound-card-category">Nature</span><span class="sound-card-title">Woodland</span></div>
-          <div class="sound-card-controls" style="justify-content:center;"><a href="apps.html" style="display:flex;align-items:center;gap:6px;color:var(--accent);font-size:0.85rem;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Premium</a></div>
-        </div>
-
-        <div class="sound-card fade-in sound-locked" data-category="mixes" data-src="https://media.salus-mind.com/content/sounds/rain-on-cabin.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1449247709967-d4461a6a6103?w=400&q=70');"><span class="sound-card-category">Mixes</span><span class="sound-card-title">Rain on Cabin</span></div>
-          <div class="sound-card-controls" style="justify-content:center;"><a href="apps.html" style="display:flex;align-items:center;gap:6px;color:var(--accent);font-size:0.85rem;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Premium</a></div>
-        </div>
-
-        <div class="sound-card fade-in sound-locked" data-category="mixes" data-src="https://media.salus-mind.com/content/sounds/rain-on-campervan.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=400&q=70');"><span class="sound-card-category">Mixes</span><span class="sound-card-title">Rain on Campervan</span></div>
-          <div class="sound-card-controls" style="justify-content:center;"><a href="apps.html" style="display:flex;align-items:center;gap:6px;color:var(--accent);font-size:0.85rem;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Premium</a></div>
-        </div>
-
-        <div class="sound-card fade-in sound-locked" data-category="mixes" data-src="https://media.salus-mind.com/content/sounds/storm-fire.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1475776408506-9a5371e7a068?w=400&q=70');"><span class="sound-card-category">Mixes</span><span class="sound-card-title">Storm + Fire</span></div>
-          <div class="sound-card-controls" style="justify-content:center;"><a href="apps.html" style="display:flex;align-items:center;gap:6px;color:var(--accent);font-size:0.85rem;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Premium</a></div>
-        </div>
-
-        <div class="sound-card fade-in sound-locked" data-category="mixes" data-src="https://media.salus-mind.com/content/sounds/ocean-breeze.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&q=70');"><span class="sound-card-category">Mixes</span><span class="sound-card-title">Ocean Breeze</span></div>
-          <div class="sound-card-controls" style="justify-content:center;"><a href="apps.html" style="display:flex;align-items:center;gap:6px;color:var(--accent);font-size:0.85rem;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Premium</a></div>
-        </div>
-
-        <div class="sound-card fade-in sound-locked" data-category="mixes" data-src="https://media.salus-mind.com/content/sounds/rainy-morning.mp3">
-          <div class="sound-card-image" style="background-image:url('https://images.unsplash.com/photo-1428592953211-077101b2021b?w=400&q=70');"><span class="sound-card-category">Mixes</span><span class="sound-card-title">Rainy Morning</span></div>
-          <div class="sound-card-controls" style="justify-content:center;"><a href="apps.html" style="display:flex;align-items:center;gap:6px;color:var(--accent);font-size:0.85rem;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Premium</a></div>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
+  <!-- Floating mixer bar -->
+  <div class="mx-bar" id="mxBar">
+    <div class="mx-bar__active" id="mxPips"></div>
+    <span class="mx-bar__count"><strong id="mxCount">0</strong> sounds playing</span>
+    <div class="mx-bar__sep"></div>
+    <button class="mx-bar__stop" id="mxStopAll">Stop All</button>
+  </div>
 
   <!-- CTA -->
   <section class="cta-banner">
@@ -753,118 +670,137 @@
     })();
   </script>
   <script>
-    // Category filtering
-    document.getElementById('filterBar').addEventListener('click', function(e) {
-      if (!e.target.classList.contains('filter-btn')) return;
-      document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
-      e.target.classList.add('active');
-      var filter = e.target.getAttribute('data-filter');
-      document.querySelectorAll('[data-category]').forEach(function(card) {
-        if (filter === 'all' || card.getAttribute('data-category').indexOf(filter) !== -1) {
-          card.style.display = '';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    });
-
-    // Unlock premium sounds for subscribers
+    // Sound Mixer
     (function() {
-      async function unlockPremiumSounds() {
-        await SalusAuth.init();
-        if (!SalusAuth.isPremium()) return;
+      var sounds = [
+        { id: 'rain',       name: 'Rain',        icon: '\uD83C\uDF27', category: 'weather', duration: '1:57', src: 'https://media.salus-mind.com/content/sounds/rain.mp3' },
+        { id: 'ocean',      name: 'Ocean',       icon: '\uD83C\uDF0A', category: 'nature',  duration: '2:00', src: 'https://media.salus-mind.com/content/sounds/ocean.mp3' },
+        { id: 'forest',     name: 'Forest',      icon: '\uD83C\uDF32', category: 'nature',  duration: '1:01', src: 'https://media.salus-mind.com/content/sounds/forest.mp3' },
+        { id: 'thunder',    name: 'Thunder',     icon: '\u26A1',       category: 'weather', duration: '0:23', src: 'https://media.salus-mind.com/content/sounds/thunder.mp3' },
+        { id: 'birds',      name: 'Birds',       icon: '\uD83D\uDC26', category: 'nature',  duration: '3:29', src: 'https://media.salus-mind.com/content/sounds/birds.mp3' },
+        { id: 'fire',       name: 'Fire',        icon: '\uD83D\uDD25', category: 'ambient', duration: '1:00', src: 'https://media.salus-mind.com/content/sounds/fire.mp3' },
+        { id: 'stream',     name: 'Stream',      icon: '\uD83D\uDCA7', category: 'nature',  duration: '3:00', src: 'https://media.salus-mind.com/content/sounds/stream.mp3' },
+        { id: 'cafe',       name: 'Caf\u00e9',   icon: '\u2615',       category: 'spaces',  duration: '2:00', src: 'https://media.salus-mind.com/content/sounds/cafe.mp3' },
+        { id: 'garden',     name: 'Garden',      icon: '\uD83C\uDF3F', category: 'nature',  duration: '1:50', src: 'https://media.salus-mind.com/content/sounds/garden.mp3' },
+        { id: 'library',    name: 'Library',     icon: '\uD83D\uDCDA', category: 'spaces',  duration: '0:42', src: 'https://media.salus-mind.com/content/sounds/library.mp3' },
+        { id: 'night',      name: 'Night',       icon: '\uD83C\uDF19', category: 'ambient', duration: '1:30', src: 'https://media.salus-mind.com/content/sounds/night.mp3' },
+        { id: 'temple',     name: 'Temple',      icon: '\uD83D\uDD14', category: 'spaces',  duration: '2:33', src: 'https://media.salus-mind.com/content/sounds/temple.mp3' },
+        { id: 'waterfall',  name: 'Waterfall',   icon: '\uD83D\uDCA6', category: 'nature',  duration: '1:12', src: 'https://media.salus-mind.com/content/sounds/waterfall.mp3' },
+        { id: 'whitenoise', name: 'White Noise', icon: '\u3030',       category: 'ambient', duration: '3:00', src: 'https://media.salus-mind.com/content/sounds/white-noise.mp3' }
+      ];
 
-        var playIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
-        var volumeIcon = '<svg class="sound-volume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>';
+      var accentMap = {
+        rain: '#38bdf8', ocean: '#4ecdc4', forest: '#34d399', thunder: '#818cf8',
+        birds: '#fbbf24', fire: '#f7a072', stream: '#4ecdc4', cafe: '#f7a072',
+        garden: '#34d399', library: '#818cf8', night: '#7c6cf0', temple: '#f472b6',
+        waterfall: '#38bdf8', whitenoise: 'rgba(240,238,252,0.6)'
+      };
 
-        document.querySelectorAll('.sound-locked').forEach(function(card) {
-          card.classList.remove('sound-locked');
-          var controls = card.querySelector('.sound-card-controls');
-          controls.removeAttribute('style');
-          controls.innerHTML =
-            '<button class="sound-play-btn">' + playIcon + '</button>' +
-            volumeIcon +
-            '<input type="range" class="sound-volume" min="0" max="100" value="80">';
-        });
+      var grid = document.getElementById('mxGrid');
+      var mixerBar = document.getElementById('mxBar');
+      var mixerCount = document.getElementById('mxCount');
+      var mixerPips = document.getElementById('mxPips');
+      var stopAllBtn = document.getElementById('mxStopAll');
+      var audioElements = {};
 
-        // Re-initialize players for newly unlocked cards
-        initSoundPlayers();
+      function updateMixer() {
+        var playing = document.querySelectorAll('.mx-card.playing');
+        var count = playing.length;
+        mixerCount.textContent = count;
+        mixerPips.innerHTML = '';
+        for (var i = 0; i < playing.length; i++) {
+          var pip = document.createElement('span');
+          pip.className = 'mx-bar__pip';
+          pip.style.background = accentMap[playing[i].dataset.sound] || '#7c6cf0';
+          pip.style.animationDelay = (Math.random() * 1) + 's';
+          mixerPips.appendChild(pip);
+        }
+        if (count > 0) { mixerBar.classList.add('visible'); } else { mixerBar.classList.remove('visible'); }
       }
-      unlockPremiumSounds();
-    })();
 
-    // Sound card players — shared state across all init calls
-    var allAudioElements = {};
-    var playIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
-    var pauseIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+      // Build cards
+      sounds.forEach(function(s, i) {
+        var card = document.createElement('div');
+        card.className = 'mx-card';
+        card.dataset.sound = s.id;
+        card.dataset.category = s.category;
+        card.style.animationDelay = (i * 0.05) + 's';
 
-    function updateStopAllBtn() {
-      var anyPlaying = Object.keys(allAudioElements).some(function(k) { return !allAudioElements[k].paused; });
-      document.getElementById('stopAllBtn').classList.toggle('visible', anyPlaying);
-    }
+        card.innerHTML =
+          '<div class="mx-card__top">' +
+            '<div class="mx-card__icon">' + s.icon +
+              '<div class="mx-card__wave"><span></span><span></span><span></span><span></span><span></span></div>' +
+            '</div>' +
+            '<div class="mx-card__info">' +
+              '<div class="mx-card__name">' + s.name + '</div>' +
+              '<div class="mx-card__meta">' +
+                '<span class="mx-card__tag">' + s.category + '</span>' +
+                '<span class="mx-card__dot"></span>' +
+                '<span class="mx-card__duration">' + s.duration + '</span>' +
+              '</div>' +
+            '</div>' +
+            '<div class="mx-card__toggle">' +
+              '<svg class="mx-icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>' +
+              '<svg class="mx-icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>' +
+            '</div>' +
+          '</div>' +
+          '<div class="mx-card__volume-row">' +
+            '<div class="mx-card__vol-icon"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg></div>' +
+            '<input type="range" class="mx-card__slider" min="0" max="100" value="70" />' +
+            '<span class="mx-card__vol-value">70%</span>' +
+          '</div>';
 
-    document.getElementById('stopAllBtn').addEventListener('click', function() {
-      Object.keys(allAudioElements).forEach(function(key) {
-        allAudioElements[key].pause();
-        var card = document.querySelector('[data-src="' + key + '"]');
-        if (card) {
-          var btn = card.querySelector('.sound-play-btn');
-          if (btn) { btn.innerHTML = playIcon; btn.classList.remove('playing'); }
-        }
-      });
-      updateStopAllBtn();
-    });
-
-    function initSoundPlayers() {
-
-      document.querySelectorAll('.sound-card:not(.sound-locked)').forEach(function(card) {
-        var src = card.getAttribute('data-src');
-        if (!src) return;
-        var playBtn = card.querySelector('.sound-play-btn');
-        var volumeSlider = card.querySelector('.sound-volume');
-        if (!playBtn || !volumeSlider) return;
-
-        playBtn.addEventListener('click', function() {
-          if (!allAudioElements[src]) {
-            allAudioElements[src] = new Audio(src);
-            allAudioElements[src].loop = true;
-            allAudioElements[src].volume = volumeSlider.value / 100;
+        // Play/pause
+        var topRow = card.querySelector('.mx-card__top');
+        topRow.addEventListener('click', function() {
+          var isPlaying = card.classList.toggle('playing');
+          if (!audioElements[s.id]) {
+            audioElements[s.id] = new Audio(s.src);
+            audioElements[s.id].loop = true;
+            audioElements[s.id].volume = card.querySelector('.mx-card__slider').value / 100;
           }
-          var audio = allAudioElements[src];
-
-          if (audio.paused) {
-            audio.play();
-            playBtn.innerHTML = pauseIcon;
-            playBtn.classList.add('playing');
-          } else {
-            audio.pause();
-            playBtn.innerHTML = playIcon;
-            playBtn.classList.remove('playing');
-          }
-          updateStopAllBtn();
+          if (isPlaying) { audioElements[s.id].play(); } else { audioElements[s.id].pause(); }
+          updateMixer();
         });
 
-        // Update slider visual on input
-        function updateSliderBackground(slider) {
-          var val = slider.value;
-          slider.style.background = 'linear-gradient(to right, var(--accent) 0%, var(--accent) ' + val + '%, #e0e0e0 ' + val + '%, #e0e0e0 100%)';
-        }
+        // Volume
+        var slider = card.querySelector('.mx-card__slider');
+        var valLabel = card.querySelector('.mx-card__vol-value');
+        slider.addEventListener('input', function(e) {
+          valLabel.textContent = e.target.value + '%';
+          if (audioElements[s.id]) { audioElements[s.id].volume = e.target.value / 100; }
+        });
+        slider.addEventListener('click', function(e) { e.stopPropagation(); });
 
-        // Initialize slider background
-        updateSliderBackground(volumeSlider);
+        grid.appendChild(card);
+      });
 
-        function onVolumeChange() {
-          updateSliderBackground(volumeSlider);
-          if (allAudioElements[src]) {
-            allAudioElements[src].volume = volumeSlider.value / 100;
+      // Stop all
+      stopAllBtn.addEventListener('click', function() {
+        document.querySelectorAll('.mx-card.playing').forEach(function(c) { c.classList.remove('playing'); });
+        Object.keys(audioElements).forEach(function(k) { audioElements[k].pause(); });
+        updateMixer();
+      });
+
+      // Filters
+      document.getElementById('mxFilters').addEventListener('click', function(e) {
+        if (!e.target.classList.contains('mx-filter-btn')) return;
+        document.querySelectorAll('.mx-filter-btn').forEach(function(b) { b.classList.remove('active'); });
+        e.target.classList.add('active');
+        var filter = e.target.dataset.filter;
+        var cards = document.querySelectorAll('.mx-card');
+        for (var i = 0; i < cards.length; i++) {
+          var show = filter === 'all' || cards[i].dataset.category === filter;
+          cards[i].style.display = show ? 'flex' : 'none';
+          if (show) {
+            cards[i].style.animation = 'none';
+            cards[i].offsetHeight;
+            cards[i].style.animation = 'mxCardIn 0.4s ' + (i * 0.03) + 's ease-out forwards';
+            cards[i].style.opacity = '0';
           }
         }
-        volumeSlider.addEventListener('input', onVolumeChange);
-        volumeSlider.addEventListener('change', onVolumeChange);
       });
-    }
-    // Initialize players for free sounds on page load
-    initSoundPlayers();
+    })();
   </script>
 </body>
 </html>
