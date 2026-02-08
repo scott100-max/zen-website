@@ -742,7 +742,7 @@
       </ul>
       <div class="nav-ctas">
         <a href="apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
-        <a href="#" class="nav-cta nav-cta--login">Log In</a>
+        <a href="login.html" class="nav-cta nav-cta--login">Log In</a>
       </div>
       <button class="nav-burger" id="burgerBtn" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -774,7 +774,7 @@
   <a href="contact.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Contact</a>
   <div class="nav-drawer__ctas">
     <a href="apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
-    <a href="#" class="nav-cta nav-cta--login">Log In</a>
+    <a href="login.html" class="nav-cta nav-cta--login">Log In</a>
   </div>
 </div>
 
@@ -979,7 +979,7 @@
   // SOUND CARD BUILDER
   // ═══════════════════════════════════════════
   (function() {
-    const sounds = [
+    const soundDefs = [
       { id: 'rain',       name: 'Rain',        icon: '\u{1F327}', category: 'weather', duration: '1:57' },
       { id: 'ocean',      name: 'Ocean',       icon: '\u{1F30A}', category: 'nature',  duration: '2:00' },
       { id: 'forest',     name: 'Forest',      icon: '\u{1F332}', category: 'nature',  duration: '1:01' },
@@ -996,9 +996,106 @@
       { id: 'whitenoise', name: 'White Noise', icon: '\u3030',    category: 'ambient', duration: '3:00' },
     ];
 
+    let audioCtx = null;
+    const sounds = {}; // active audio nodes per sound ID: { source, gain, started }
+
+    function createNoise(type) {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      const bufferSize = audioCtx.sampleRate * 4;
+      const buffer = audioCtx.createBuffer(2, bufferSize, audioCtx.sampleRate);
+
+      for (let ch = 0; ch < 2; ch++) {
+        const data = buffer.getChannelData(ch);
+        let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+
+          if (type === 'rain' || type === 'ocean') {
+            // Pink noise (filtered)
+            b0 = 0.99886 * b0 + white * 0.0555179;
+            b1 = 0.99332 * b1 + white * 0.0750759;
+            b2 = 0.96900 * b2 + white * 0.1538520;
+            b3 = 0.86650 * b3 + white * 0.3104856;
+            b4 = 0.55000 * b4 + white * 0.5329522;
+            b5 = -0.7616 * b5 - white * 0.0168980;
+            data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.08;
+            b6 = white * 0.115926;
+
+          } else if (type === 'forest' || type === 'garden' || type === 'stream' || type === 'waterfall') {
+            // Brown noise
+            data[i] = (b0 + white * 0.02) * 0.5;
+            b0 = data[i] / 0.5;
+            data[i] *= 3.5;
+
+          } else if (type === 'birds') {
+            // Modulated high-frequency sine
+            data[i] = Math.sin(i * 0.05 * (1 + Math.sin(i * 0.0003))) * white * 0.15;
+
+          } else if (type === 'fire') {
+            // Crackle: filtered white noise with pops
+            b0 = 0.97 * b0 + white * 0.03;
+            data[i] = b0 * 2 + (Math.random() < 0.002 ? white * 0.8 : 0);
+
+          } else if (type === 'thunder') {
+            // Low brown noise with occasional rumbles
+            data[i] = (b0 + white * 0.01) * 0.5;
+            b0 = data[i] / 0.5;
+            data[i] *= 4.0;
+            if (Math.random() < 0.0001) {
+              for (let r = 0; r < Math.min(800, bufferSize - i); r++) {
+                data[i + r] += (Math.random() * 2 - 1) * 0.6 * Math.exp(-r / 300);
+              }
+            }
+
+          } else if (type === 'cafe' || type === 'library') {
+            // Light brown noise
+            data[i] = (b0 + white * 0.015) * 0.5;
+            b0 = data[i] / 0.5;
+            data[i] *= 2.5;
+
+          } else if (type === 'night') {
+            // Very quiet brown noise + occasional chirps
+            data[i] = (b0 + white * 0.008) * 0.5;
+            b0 = data[i] / 0.5;
+            data[i] *= 2.0;
+            if (Math.random() < 0.0003) {
+              for (let c = 0; c < Math.min(400, bufferSize - i); c++) {
+                data[i + c] += Math.sin(c * 0.3) * 0.08 * Math.exp(-c / 100);
+              }
+            }
+
+          } else if (type === 'temple') {
+            // Filtered sine wave with overtones
+            const fundamental = 0.006;
+            data[i] = (
+              Math.sin(i * fundamental) * 0.3 +
+              Math.sin(i * fundamental * 2) * 0.15 +
+              Math.sin(i * fundamental * 3) * 0.08 +
+              Math.sin(i * fundamental * 5) * 0.04
+            ) * (0.8 + white * 0.2);
+
+          } else if (type === 'whitenoise') {
+            // White noise
+            data[i] = white * 0.5;
+          }
+        }
+      }
+
+      const source = audioCtx.createBufferSource();
+      source.buffer = buffer;
+      source.loop = true;
+      const gain = audioCtx.createGain();
+      gain.gain.value = 0;
+      source.connect(gain);
+      gain.connect(audioCtx.destination);
+      return { source: source, gain: gain, started: false };
+    }
+
     const grid = document.getElementById('soundGrid');
 
-    sounds.forEach((s, i) => {
+    soundDefs.forEach((s, i) => {
       const card = document.createElement('div');
       card.className = 'sound-card';
       card.dataset.sound = s.id;
@@ -1030,9 +1127,34 @@
       `;
 
       card.addEventListener('click', () => {
-        const wasPlaying = card.classList.contains('playing');
-        document.querySelectorAll('.sound-card.playing').forEach(c => c.classList.remove('playing'));
-        if (!wasPlaying) card.classList.add('playing');
+        const id = s.id;
+        const isPlaying = card.classList.contains('playing');
+
+        // Resume AudioContext if suspended (browser autoplay policy)
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+
+        if (isPlaying) {
+          // Stop: fade gain to 0, remove playing class
+          if (sounds[id]) {
+            sounds[id].gain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.05);
+          }
+          card.classList.remove('playing');
+        } else {
+          // Create noise node if not yet created for this sound
+          if (!sounds[id]) {
+            sounds[id] = createNoise(id);
+          }
+          // Start source if never started
+          if (!sounds[id].started) {
+            sounds[id].source.start();
+            sounds[id].started = true;
+          }
+          // Ramp gain to 0.7 (default 70% volume)
+          sounds[id].gain.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.05);
+          card.classList.add('playing');
+        }
       });
 
       grid.appendChild(card);
