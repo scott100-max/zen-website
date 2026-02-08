@@ -3654,10 +3654,12 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
                 print(f"\n  ✓ PER-CHUNK QA: All chunks scored above threshold")
 
         # ================================================================
-        # PHASE 1.5: LALAL.AI AUDIO CLEANING (optional)
+        # PHASE 1.5: LALAL.AI AUDIO CLEANING (DISABLED — degrades voice quality)
+        # Testing showed LALAL strips vocal character from Marco. Echo/voice shift
+        # are TTS generation problems, not post-processing problems.
         # ================================================================
-        if LALAL_API_KEY and provider == 'fish':
-            voice_files = lalal_clean_chunks(voice_files, temp_dir)
+        # if LALAL_API_KEY and provider == 'fish':
+        #     voice_files = lalal_clean_chunks(voice_files, temp_dir)
 
         # ================================================================
         # PHASE 2: CONCATENATE + MIX (lossless WAV pipeline)

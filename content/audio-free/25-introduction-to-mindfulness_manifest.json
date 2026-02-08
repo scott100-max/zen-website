@@ -1,9 +1,9 @@
 {
-  "generated": "2026-02-08 17:08:04",
+  "generated": "2026-02-08 18:39:31",
   "script": "25-introduction-to-mindfulness",
   "category": "mindfulness",
   "ambient": "garden",
-  "total_tts_duration": 211.12,
+  "total_tts_duration": 200.75,
   "total_silence": 782,
   "text_segments": 36,
   "segments": [
@@ -12,584 +12,626 @@
       "type": "text",
       "start_time": 0.0,
       "text": "This is a simple introduction to mindfulness. There is nothing complicated about it.",
-      "duration": 5.85,
+      "duration": 5.9,
       "expected": 5.6,
-      "end_time": 5.85
+      "end_time": 5.9
     },
     {
       "index": 1,
       "type": "silence",
-      "start_time": 5.85,
+      "start_time": 5.9,
       "duration": 8,
-      "end_time": 13.85
+      "end_time": 13.9
     },
     {
       "index": 2,
       "type": "text",
-      "start_time": 13.851375,
+      "start_time": 13.903625,
       "text": "We are just going to practice paying attention together, starting right now.",
-      "duration": 4.73,
+      "duration": 4.75,
       "expected": 5.07,
-      "end_time": 18.58
+      "end_time": 18.66
     },
     {
       "index": 3,
       "type": "silence",
-      "start_time": 18.58,
+      "start_time": 18.66,
       "duration": 8,
-      "end_time": 26.58
+      "end_time": 26.66
     },
     {
       "index": 4,
       "type": "text",
-      "start_time": 26.579500000000003,
+      "start_time": 26.657875,
       "text": "Find somewhere comfortable to sit or lie down, and let your hands rest wherever is natural.",
-      "duration": 6.37,
+      "duration": 5.93,
       "expected": 6.07,
-      "end_time": 32.95
+      "end_time": 32.59
     },
     {
       "index": 5,
       "type": "silence",
-      "start_time": 32.95,
+      "start_time": 32.59,
       "duration": 8,
-      "end_time": 40.95
+      "end_time": 40.59
     },
     {
       "index": 6,
       "type": "text",
-      "start_time": 40.953375,
+      "start_time": 40.587625,
       "text": "Close your eyes whenever you are ready, and allow yourself to arrive in this moment.",
-      "duration": 6.01,
+      "duration": 5.51,
       "expected": 5.6,
-      "end_time": 46.96
+      "end_time": 46.1
     },
     {
       "index": 7,
       "type": "silence",
-      "start_time": 46.96,
+      "start_time": 46.1,
       "duration": 50,
-      "end_time": 96.96
+      "end_time": 96.1
     },
     {
       "index": 8,
       "type": "text",
-      "start_time": 96.9615,
+      "start_time": 96.099438,
       "text": "Let's start with your breath. Not because it's special, but because it's always there.",
-      "duration": 6.92,
+      "duration": 5.04,
       "expected": 5.73,
-      "end_time": 103.88
+      "end_time": 101.14
     },
     {
       "index": 9,
       "type": "silence",
-      "start_time": 103.88,
+      "start_time": 101.14,
       "duration": 8,
-      "end_time": 111.88
+      "end_time": 109.14
     },
     {
       "index": 10,
       "type": "text",
-      "start_time": 111.883938,
+      "start_time": 109.141063,
       "text": "Don't try to change anything. Just notice the air coming in, and notice it leaving.",
-      "duration": 7.37,
+      "duration": 5.51,
       "expected": 5.53,
-      "end_time": 119.25
+      "end_time": 114.65
     },
     {
       "index": 11,
       "type": "silence",
-      "start_time": 119.25,
+      "start_time": 114.65,
       "duration": 25,
-      "end_time": 144.25
+      "end_time": 139.65
     },
     {
       "index": 12,
       "type": "text",
-      "start_time": 144.250438,
+      "start_time": 139.652876,
       "text": "That's all this is. Noticing what's already happening, moment by moment.",
-      "duration": 5.43,
+      "duration": 5.69,
       "expected": 4.8,
-      "end_time": 149.68
+      "end_time": 145.35
     },
     {
       "index": 13,
       "type": "silence",
-      "start_time": 149.68,
+      "start_time": 145.35,
       "duration": 50,
-      "end_time": 199.68
+      "end_time": 195.35
     },
     {
       "index": 14,
       "type": "text",
-      "start_time": 199.683876,
+      "start_time": 195.347564,
       "text": "Notice your chest rise slightly as you breathe in, and notice it soften as you breathe out.",
-      "duration": 7.42,
+      "duration": 6.14,
       "expected": 6.07,
-      "end_time": 207.1
+      "end_time": 201.49
     },
     {
       "index": 15,
       "type": "silence",
-      "start_time": 207.1,
+      "start_time": 201.49,
       "duration": 25,
-      "end_time": 232.1
+      "end_time": 226.49
     },
     {
       "index": 16,
       "type": "text",
-      "start_time": 232.102626,
+      "start_time": 226.486314,
       "text": "Your mind will wander. That is not a problem at all.",
-      "duration": 4.36,
+      "duration": 4.28,
       "expected": 3.47,
-      "end_time": 236.47
+      "end_time": 230.77
     },
     {
       "index": 17,
       "type": "silence",
-      "start_time": 236.47,
+      "start_time": 230.77,
       "duration": 8,
-      "end_time": 244.47
+      "end_time": 238.77
     },
     {
       "index": 18,
       "type": "text",
-      "start_time": 244.46506399999998,
+      "start_time": 238.770377,
       "text": "When you notice it has wandered, just come back to the breath, gently and without judgement.",
-      "duration": 5.96,
+      "duration": 7.5,
       "expected": 6.13,
-      "end_time": 250.42
+      "end_time": 246.27
     },
     {
       "index": 19,
       "type": "silence",
-      "start_time": 250.42,
+      "start_time": 246.27,
       "duration": 25,
-      "end_time": 275.42
+      "end_time": 271.27
     },
     {
       "index": 20,
       "type": "text",
-      "start_time": 275.420939,
+      "start_time": 271.26750200000004,
       "text": "That moment of noticing, that is the whole practice right there.",
-      "duration": 6.22,
+      "duration": 4.83,
       "expected": 4.27,
-      "end_time": 281.64
+      "end_time": 276.1
     },
     {
       "index": 21,
       "type": "silence",
-      "start_time": 281.64,
+      "start_time": 276.1,
       "duration": 25,
-      "end_time": 306.64
+      "end_time": 301.1
     },
     {
       "index": 22,
       "type": "text",
-      "start_time": 306.638064,
+      "start_time": 301.10012700000004,
       "text": "You don't need to stop your thoughts. You just need to see them for what they are.",
-      "duration": 5.36,
+      "duration": 5.17,
       "expected": 5.47,
-      "end_time": 311.99
+      "end_time": 306.27
     },
     {
       "index": 23,
       "type": "silence",
-      "start_time": 311.99,
+      "start_time": 306.27,
       "duration": 8,
-      "end_time": 319.99
+      "end_time": 314.27
     },
     {
       "index": 24,
       "type": "text",
-      "start_time": 319.99312699999996,
+      "start_time": 314.27231500000005,
       "text": "And then let them pass, like clouds moving through a wide open sky.",
-      "duration": 5.69,
+      "duration": 6.19,
       "expected": 4.47,
-      "end_time": 325.69
+      "end_time": 320.46
     },
     {
       "index": 25,
       "type": "silence",
-      "start_time": 325.69,
+      "start_time": 320.46,
       "duration": 45,
-      "end_time": 370.69
+      "end_time": 365.46
     },
     {
       "index": 26,
       "type": "text",
-      "start_time": 370.68781499999994,
+      "start_time": 365.463315,
       "text": "Breathe in slowly through your nose, and breathe out gently through your mouth.",
-      "duration": 5.04,
+      "duration": 5.72,
       "expected": 5.27,
-      "end_time": 375.73
+      "end_time": 371.18
     },
     {
       "index": 27,
       "type": "silence",
-      "start_time": 375.73,
+      "start_time": 371.18,
       "duration": 25,
-      "end_time": 400.73
+      "end_time": 396.18
     },
     {
       "index": 28,
       "type": "text",
-      "start_time": 400.72943999999995,
-      "text": "There is nowhere else you need to be right now. This moment is yours completely.",
-      "duration": 6.4,
+      "start_time": 396.18412800000004,
+      "text": "All you need to do is be right here, right now. This moment is yours completely.",
+      "duration": 5.85,
       "expected": 5.33,
-      "end_time": 407.13
+      "end_time": 402.04
     },
     {
       "index": 29,
       "type": "silence",
-      "start_time": 407.13,
+      "start_time": 402.04,
       "duration": 25,
-      "end_time": 432.13
+      "end_time": 427.04
     },
     {
       "index": 30,
       "type": "text",
-      "start_time": 432.12943999999993,
+      "start_time": 427.03550300000006,
       "text": "If a thought pulls you away, that is absolutely fine. Just notice it happened.",
-      "duration": 6.56,
+      "duration": 6.19,
       "expected": 5.2,
-      "end_time": 438.69
+      "end_time": 433.23
     },
     {
       "index": 31,
       "type": "silence",
-      "start_time": 438.69,
+      "start_time": 433.23,
       "duration": 8,
-      "end_time": 446.69
+      "end_time": 441.23
     },
     {
       "index": 32,
       "type": "text",
-      "start_time": 446.68612799999994,
+      "start_time": 441.22650300000004,
       "text": "Name it quietly if that helps. Planning. Remembering. Worrying. Whatever it may be.",
-      "duration": 7.21,
+      "duration": 7.89,
       "expected": 5.53,
-      "end_time": 453.9
+      "end_time": 449.12
     },
     {
       "index": 33,
       "type": "silence",
-      "start_time": 453.9,
+      "start_time": 449.12,
       "duration": 8,
-      "end_time": 461.9
+      "end_time": 457.12
     },
     {
       "index": 34,
       "type": "text",
-      "start_time": 461.8958779999999,
+      "start_time": 457.11544100000003,
       "text": "And when you are ready, gently come back to the breath once more.",
-      "duration": 4.47,
+      "duration": 4.55,
       "expected": 4.33,
-      "end_time": 466.36
+      "end_time": 461.66
     },
     {
       "index": 35,
       "type": "silence",
-      "start_time": 466.36,
+      "start_time": 461.66,
       "duration": 45,
-      "end_time": 511.36
+      "end_time": 506.66
     },
     {
       "index": 36,
       "type": "text",
-      "start_time": 511.36281599999995,
+      "start_time": 506.66069100000004,
       "text": "You are doing this exactly right, even if it does not quite seem like it.",
-      "duration": 5.36,
+      "duration": 5.67,
       "expected": 4.87,
-      "end_time": 516.72
+      "end_time": 512.33
     },
     {
       "index": 37,
       "type": "silence",
-      "start_time": 516.72,
+      "start_time": 512.33,
       "duration": 8,
-      "end_time": 524.72
+      "end_time": 520.33
     },
     {
       "index": 38,
       "type": "text",
-      "start_time": 524.7178789999999,
+      "start_time": 520.329254,
       "text": "Even if nothing seems to be happening, something very real is taking place inside you.",
-      "duration": 5.33,
+      "duration": 6.01,
       "expected": 5.73,
-      "end_time": 530.05
+      "end_time": 526.34
     },
     {
       "index": 39,
       "type": "silence",
-      "start_time": 530.05,
+      "start_time": 526.34,
       "duration": 25,
-      "end_time": 555.05
+      "end_time": 551.34
     },
     {
       "index": 40,
       "type": "text",
-      "start_time": 555.0468169999999,
+      "start_time": 551.3373789999999,
       "text": "You are building a habit of returning, of being here, in this present moment.",
-      "duration": 5.62,
+      "duration": 5.85,
       "expected": 5.13,
-      "end_time": 560.66
+      "end_time": 557.19
     },
     {
       "index": 41,
       "type": "silence",
-      "start_time": 560.66,
+      "start_time": 557.19,
       "duration": 25,
-      "end_time": 585.66
+      "end_time": 582.19
     },
     {
       "index": 42,
       "type": "text",
-      "start_time": 585.6631299999999,
+      "start_time": 582.1887539999999,
       "text": "Let's take a few more breaths together now, gently and without any rushing.",
-      "duration": 5.07,
+      "duration": 5.02,
       "expected": 5.0,
-      "end_time": 590.73
+      "end_time": 587.2
     },
     {
       "index": 43,
       "type": "silence",
-      "start_time": 590.73,
+      "start_time": 587.2,
       "duration": 8,
-      "end_time": 598.73
+      "end_time": 595.2
     },
     {
       "index": 44,
       "type": "text",
-      "start_time": 598.73088,
+      "start_time": 595.2042539999999,
       "text": "Breathe in gently through your nose, allowing the warmth to enter.",
-      "duration": 5.12,
+      "duration": 4.83,
       "expected": 4.4,
-      "end_time": 603.85
+      "end_time": 600.04
     },
     {
       "index": 45,
       "type": "silence",
-      "start_time": 603.85,
+      "start_time": 600.04,
       "duration": 25,
-      "end_time": 628.85
+      "end_time": 625.04
     },
     {
       "index": 46,
       "type": "text",
-      "start_time": 628.85088,
+      "start_time": 625.0368789999999,
       "text": "And let it all go, releasing any tension that remains in your body.",
-      "duration": 5.98,
+      "duration": 4.88,
       "expected": 4.47,
-      "end_time": 634.83
+      "end_time": 629.92
     },
     {
       "index": 47,
       "type": "silence",
-      "start_time": 634.83,
+      "start_time": 629.92,
       "duration": 8,
-      "end_time": 642.83
+      "end_time": 637.92
     },
     {
       "index": 48,
       "type": "text",
-      "start_time": 642.8328799999999,
+      "start_time": 637.9217539999999,
       "text": "Breathe in once more, as slowly and as naturally as you can manage.",
-      "duration": 5.51,
+      "duration": 6.32,
       "expected": 4.47,
-      "end_time": 648.34
+      "end_time": 644.24
     },
     {
       "index": 49,
       "type": "silence",
-      "start_time": 648.34,
+      "start_time": 644.24,
       "duration": 25,
-      "end_time": 673.34
+      "end_time": 669.24
     },
     {
       "index": 50,
       "type": "text",
-      "start_time": 673.3446929999999,
+      "start_time": 669.2433789999999,
       "text": "And release everything, letting your body grow soft and completely at rest.",
-      "duration": 6.82,
+      "duration": 6.19,
       "expected": 5.0,
-      "end_time": 680.16
+      "end_time": 675.43
     },
     {
       "index": 51,
       "type": "silence",
-      "start_time": 680.16,
+      "start_time": 675.43,
       "duration": 50,
-      "end_time": 730.16
+      "end_time": 725.43
     },
     {
       "index": 52,
       "type": "text",
-      "start_time": 730.1626309999999,
+      "start_time": 725.4343789999999,
       "text": "The thing about mindfulness is that it goes with you wherever you are.",
-      "duration": 4.81,
+      "duration": 5.02,
       "expected": 4.67,
-      "end_time": 734.97
+      "end_time": 730.45
     },
     {
       "index": 53,
       "type": "silence",
-      "start_time": 734.97,
+      "start_time": 730.45,
       "duration": 8,
-      "end_time": 742.97
+      "end_time": 738.45
     },
     {
       "index": 54,
       "type": "text",
-      "start_time": 742.969131,
+      "start_time": 738.4498789999999,
       "text": "You can do this on a bus. At your desk. Waiting for someone. Anywhere at all.",
-      "duration": 7.71,
+      "duration": 7.24,
       "expected": 5.13,
-      "end_time": 750.68
+      "end_time": 745.69
     },
     {
       "index": 55,
       "type": "silence",
-      "start_time": 750.68,
+      "start_time": 745.69,
       "duration": 25,
-      "end_time": 775.68
+      "end_time": 770.69
     },
     {
       "index": 56,
       "type": "text",
-      "start_time": 775.6751939999999,
+      "start_time": 770.6857539999999,
       "text": "Any moment you choose to notice what is happening around you, that is enough.",
-      "duration": 6.11,
+      "duration": 5.51,
       "expected": 5.13,
-      "end_time": 781.79
+      "end_time": 776.2
     },
     {
       "index": 57,
       "type": "silence",
-      "start_time": 781.79,
+      "start_time": 776.2,
       "duration": 30,
-      "end_time": 811.79
+      "end_time": 806.2
     },
     {
       "index": 58,
       "type": "text",
-      "start_time": 811.7878189999999,
+      "start_time": 806.1975669999998,
       "text": "Now gently begin to widen your awareness and notice the space all around you.",
-      "duration": 5.33,
+      "duration": 4.78,
       "expected": 5.13,
-      "end_time": 817.12
+      "end_time": 810.98
     },
     {
       "index": 59,
       "type": "silence",
-      "start_time": 817.12,
+      "start_time": 810.98,
       "duration": 8,
-      "end_time": 825.12
+      "end_time": 818.98
     },
     {
       "index": 60,
       "type": "text",
-      "start_time": 825.1167569999999,
+      "start_time": 818.9779419999999,
       "text": "Notice the sounds in the room or outside, whatever they may be right now.",
-      "duration": 4.81,
+      "duration": 4.49,
       "expected": 4.87,
-      "end_time": 829.92
+      "end_time": 823.47
     },
     {
       "index": 61,
       "type": "silence",
-      "start_time": 829.92,
+      "start_time": 823.47,
       "duration": 25,
-      "end_time": 854.92
+      "end_time": 848.47
     },
     {
       "index": 62,
       "type": "text",
-      "start_time": 854.9232569999999,
+      "start_time": 848.4710049999999,
       "text": "Notice whatever is beneath you, how it supports you, holding your full weight.",
-      "duration": 5.22,
+      "duration": 4.62,
       "expected": 5.2,
-      "end_time": 860.15
+      "end_time": 853.09
     },
     {
       "index": 63,
       "type": "silence",
-      "start_time": 860.15,
+      "start_time": 853.09,
       "duration": 8,
-      "end_time": 868.15
+      "end_time": 861.09
     },
     {
       "index": 64,
       "type": "text",
-      "start_time": 868.1476949999999,
+      "start_time": 861.0946299999998,
       "text": "The temperature of the air on your skin, and the gentle rise and fall of your breath.",
-      "duration": 6.27,
+      "duration": 5.54,
       "expected": 5.67,
-      "end_time": 874.42
+      "end_time": 866.63
     },
     {
       "index": 65,
       "type": "silence",
-      "start_time": 874.42,
+      "start_time": 866.63,
       "duration": 25,
-      "end_time": 899.42
+      "end_time": 891.63
     },
     {
       "index": 66,
       "type": "text",
-      "start_time": 899.4170699999999,
+      "start_time": 891.6325679999999,
       "text": "Wiggle your fingers gently if you would like, and begin to reconnect with your body.",
-      "duration": 6.27,
+      "duration": 5.3,
       "expected": 5.6,
-      "end_time": 905.69
+      "end_time": 896.94
     },
     {
       "index": 67,
       "type": "silence",
-      "start_time": 905.69,
+      "start_time": 896.94,
       "duration": 25,
-      "end_time": 930.69
+      "end_time": 921.94
     },
     {
       "index": 68,
       "type": "text",
-      "start_time": 930.6864449999998,
+      "start_time": 921.9353809999999,
       "text": "When you are ready, let your eyes open softly and take in the world around you.",
-      "duration": 6.11,
+      "duration": 5.43,
       "expected": 5.27,
-      "end_time": 936.8
+      "end_time": 927.37
     },
     {
       "index": 69,
       "type": "silence",
-      "start_time": 936.8,
+      "start_time": 927.37,
       "duration": 50,
-      "end_time": 986.8
+      "end_time": 977.37
     },
     {
       "index": 70,
       "type": "text",
-      "start_time": 986.7990699999998,
+      "start_time": 977.3688189999999,
       "text": "Thank you for practicing with Salus today. Rest well, and carry this calm with you.",
-      "duration": 6.3,
+      "duration": 5.41,
       "expected": 5.53,
-      "end_time": 993.09
+      "end_time": 982.78
     }
   ],
   "flagged_chunks": [
     {
+      "index": 1,
+      "text": "This is a simple introduction to mindfulness. There is nothing complicated about",
+      "score": {
+        "score": 0.3645,
+        "echo_risk": 0.001111,
+        "hiss_risk": -7.26,
+        "sp_contrast": 19.65,
+        "sp_flatness": 0.04255,
+        "tone_dist": 0.0,
+        "tone_penalty": 0.0,
+        "combined_score": 0.3645
+      }
+    },
+    {
+      "index": 3,
+      "text": "Find somewhere comfortable to sit or lie down, and let your hands rest wherever ",
+      "score": {
+        "score": 0.4306,
+        "echo_risk": 0.001601,
+        "hiss_risk": -10.26,
+        "sp_contrast": 20.496,
+        "sp_flatness": 0.03066,
+        "tone_dist": 0.001634,
+        "tone_penalty": 0.082,
+        "combined_score": 0.3489
+      }
+    },
+    {
+      "index": 5,
+      "text": "Let's start with your breath. Not because it's special, but because it's always ",
+      "score": {
+        "score": 0.4825,
+        "echo_risk": 0.001392,
+        "hiss_risk": -8.54,
+        "sp_contrast": 20.323,
+        "sp_flatness": 0.02645,
+        "tone_dist": 0.001043,
+        "tone_penalty": 0.052,
+        "combined_score": 0.4304
+      }
+    },
+    {
       "index": 12,
       "text": "You don't need to stop your thoughts. You just need to see them for what they ar",
       "score": {
-        "score": 0.4962,
-        "echo_risk": 0.00113,
-        "hiss_risk": -9.92,
-        "sp_contrast": 19.938,
-        "sp_flatness": 0.04318,
-        "tone_dist": 0.001475,
-        "tone_penalty": 0.074,
-        "combined_score": 0.4224
+        "score": 0.4546,
+        "echo_risk": 0.001237,
+        "hiss_risk": -8.35,
+        "sp_contrast": 19.916,
+        "sp_flatness": 0.03405,
+        "tone_dist": 0.004461,
+        "tone_penalty": 0.223,
+        "combined_score": 0.2316
       }
     }
   ]
