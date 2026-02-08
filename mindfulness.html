@@ -834,38 +834,6 @@
   <button class="m-filter-btn" data-filter="course">Courses</button>
 </div>
 
-<div class="course-banner" id="courseBanner" data-category="course">
-  <div class="course-banner__orb course-banner__orb--1"></div>
-  <div class="course-banner__orb course-banner__orb--2"></div>
-  <div class="course-banner__content">
-    <div class="course-banner__left">
-      <div class="course-banner__badge">Structured Course</div>
-      <h3 class="course-banner__title">21-Day Mindfulness Programme</h3>
-      <p class="course-banner__desc">A complete guided journey from first breath to lasting habit. One session per day, building progressively — no experience needed.</p>
-      <div class="course-banner__progress">
-        <div class="course-banner__dots">
-          <span class="course-banner__dot course-banner__dot--active"></span>
-          <span class="course-banner__dot"></span>
-          <span class="course-banner__dot"></span>
-          <span class="course-banner__dot"></span>
-          <span class="course-banner__dot"></span>
-          <span class="course-banner__dot"></span>
-          <span class="course-banner__dot"></span>
-        </div>
-        <span class="course-banner__progress-label">7 days available · 21 total</span>
-      </div>
-    </div>
-    <a href="mindfulness-21-day.html" class="course-banner__cta">Start Day 1</a>
-  </div>
-</div>
-
-<div class="m-section-divider" id="mSessionsDivider">
-  <div class="m-section-divider__line"></div>
-  <div class="m-section-divider__label">Individual Sessions
-    <span class="m-section-divider__sub">Practise at your own pace</span>
-  </div>
-</div>
-
 <div class="m-card-grid" id="mSessionGrid">
 
   <div class="m-card mcat-beginner" data-category="beginner">
@@ -901,17 +869,6 @@
     </div>
   </div>
 
-  <div class="m-card mcat-course" data-category="course">
-    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
-    <span class="m-card__badge m-badge--type">Day 1 of 7</span>
-    <div class="m-card__content">
-      <div class="m-card__meta"><span class="m-card__cat-dot"></span>11 min</div>
-      <h3 class="m-card__title">Seven-Day Mindfulness</h3>
-      <p class="m-card__desc">Day one of a week-long foundation. Today: settling into stillness, finding the breath, and learning to simply notice.</p>
-      <div class="m-player"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 11:36</span></div>
-    </div>
-  </div>
-
   <div class="m-card mcat-compassion" data-category="compassion">
     <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
     <span class="m-card__badge m-badge--premium">Premium</span>
@@ -934,6 +891,63 @@
     </div>
   </div>
 
+</div>
+
+<div class="m-section-divider" id="mCoursesDivider">
+  <div class="m-section-divider__line"></div>
+  <div class="m-section-divider__label">Structured Courses
+    <span class="m-section-divider__sub">Follow a guided path</span>
+  </div>
+</div>
+
+<div class="course-banner" id="courseBanner7" data-category="course">
+  <div class="course-banner__orb course-banner__orb--1"></div>
+  <div class="course-banner__orb course-banner__orb--2"></div>
+  <div class="course-banner__content">
+    <div class="course-banner__left">
+      <div class="course-banner__badge">7-Day Course</div>
+      <h3 class="course-banner__title">7-Day Mindfulness Foundation</h3>
+      <p class="course-banner__desc">A week-long introduction to mindfulness. One session per day — settling into stillness, finding the breath, and learning to simply notice.</p>
+      <div class="course-banner__progress">
+        <div class="course-banner__dots">
+          <span class="course-banner__dot course-banner__dot--active"></span>
+          <span class="course-banner__dot"></span>
+          <span class="course-banner__dot"></span>
+          <span class="course-banner__dot"></span>
+          <span class="course-banner__dot"></span>
+          <span class="course-banner__dot"></span>
+          <span class="course-banner__dot"></span>
+        </div>
+        <span class="course-banner__progress-label">1 day available · 7 total</span>
+      </div>
+    </div>
+    <a href="mindfulness-7-day.html" class="course-banner__cta">Start Day 1</a>
+  </div>
+</div>
+
+<div class="course-banner" id="courseBanner21" data-category="course" style="margin-top:16px">
+  <div class="course-banner__orb course-banner__orb--1"></div>
+  <div class="course-banner__orb course-banner__orb--2"></div>
+  <div class="course-banner__content">
+    <div class="course-banner__left">
+      <div class="course-banner__badge">Structured Course</div>
+      <h3 class="course-banner__title">21-Day Mindfulness Programme</h3>
+      <p class="course-banner__desc">A complete guided journey from first breath to lasting habit. One session per day, building progressively — no experience needed.</p>
+      <div class="course-banner__progress">
+        <div class="course-banner__dots">
+          <span class="course-banner__dot course-banner__dot--active"></span>
+          <span class="course-banner__dot"></span>
+          <span class="course-banner__dot"></span>
+          <span class="course-banner__dot"></span>
+          <span class="course-banner__dot"></span>
+          <span class="course-banner__dot"></span>
+          <span class="course-banner__dot"></span>
+        </div>
+        <span class="course-banner__progress-label">7 days available · 21 total</span>
+      </div>
+    </div>
+    <a href="mindfulness-21-day.html" class="course-banner__cta">Start Day 1</a>
+  </div>
 </div>
 
 <div class="m-sub-hook" id="mSubHook">
@@ -1328,27 +1342,28 @@
   // Mindfulness card filters
   const mFilterBtns=document.querySelectorAll('.m-filter-btn');
   const mSessionCards=document.querySelectorAll('#mSessionGrid .m-card');
-  const mCourseBanner=document.getElementById('courseBanner');
-  const mSessionsDivider=document.getElementById('mSessionsDivider');
+  const mCourseBanner7=document.getElementById('courseBanner7');
+  const mCourseBanner21=document.getElementById('courseBanner21');
+  const mCoursesDivider=document.getElementById('mCoursesDivider');
   mFilterBtns.forEach(btn=>{
     btn.addEventListener('click',()=>{
       mFilterBtns.forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
       const f=btn.dataset.filter;
       if(f==='all'){
-        mCourseBanner.style.display='';
-        mSessionsDivider.style.display='';
+        mCourseBanner7.style.display='';
+        mCourseBanner21.style.display='';
+        mCoursesDivider.style.display='';
         mSessionCards.forEach(c=>c.style.display='');
         return;
       }
-      mCourseBanner.style.display=(f==='course')?'':'none';
-      let anySession=false;
+      const showCourse=f==='course';
+      mCourseBanner7.style.display=showCourse?'':'none';
+      mCourseBanner21.style.display=showCourse?'':'none';
+      mCoursesDivider.style.display=showCourse?'':'none';
       mSessionCards.forEach(c=>{
-        const show=c.dataset.category===f;
-        c.style.display=show?'':'none';
-        if(show)anySession=true;
+        c.style.display=c.dataset.category===f?'':'none';
       });
-      mSessionsDivider.style.display=anySession?'':'none';
     });
   });
 
