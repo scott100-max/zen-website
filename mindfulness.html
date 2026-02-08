@@ -843,7 +843,7 @@
       <div class="m-card__meta"><span class="m-card__cat-dot"></span>8 min</div>
       <h3 class="m-card__title">Introduction to Mindfulness</h3>
       <p class="m-card__desc">Your starting point. A warm, unhurried introduction to the basics — breath, attention, and the art of simply being present.</p>
-      <div class="m-player"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 8:12</span></div>
+      <div class="m-player" data-src="https://media.salus-mind.com/content/audio-free/25-introduction-to-mindfulness.mp3"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 8:12</span></div>
     </div>
   </div>
 
@@ -876,7 +876,7 @@
       <div class="m-card__meta"><span class="m-card__cat-dot"></span>12 min</div>
       <h3 class="m-card__title">Loving-Kindness Introduction</h3>
       <p class="m-card__desc">The traditional metta practice — extending warmth first to yourself, then outward. A gentle entry point into compassion meditation.</p>
-      <div class="m-player"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 12:54</span></div>
+      <div class="m-player" data-src="https://media.salus-mind.com/content/audio-free/36-loving-kindness-intro-v3.mp3"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 10:28</span></div>
     </div>
   </div>
 
@@ -1023,6 +1023,96 @@
   <script src="js/main.js?v=1770564391"></script>
   <script src="js/tracker.js"></script>
   <script>
+  // ═══════════════════════════════════════════
+  // MINDFULNESS CARD PLAYERS
+  // ═══════════════════════════════════════════
+  (function() {
+    const pauseSvg = '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" fill="#fff"/><rect x="14" y="4" width="4" height="16" fill="#fff"/></svg>';
+    const playSvg = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+    let activePlayer = null;
+
+    function fmt(s) {
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60);
+      return m + ':' + (sec < 10 ? '0' : '') + sec;
+    }
+
+    document.querySelectorAll('.m-player[data-src]').forEach(function(player) {
+      const src = player.dataset.src;
+      const btn = player.querySelector('.m-player__btn');
+      const track = player.querySelector('.m-player__track');
+      const progress = player.querySelector('.m-player__progress');
+      const timeEl = player.querySelector('.m-player__time');
+      const audio = new Audio();
+      let loaded = false;
+
+      function update() {
+        if (audio.duration) {
+          progress.style.width = (audio.currentTime / audio.duration * 100) + '%';
+          timeEl.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration);
+        }
+        if (!audio.paused) requestAnimationFrame(update);
+      }
+
+      function stopOthers() {
+        if (activePlayer && activePlayer !== audio) {
+          activePlayer.pause();
+          var prev = activePlayer._btn;
+          if (prev) prev.innerHTML = playSvg;
+        }
+        activePlayer = audio;
+        audio._btn = btn;
+      }
+
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (!loaded) {
+          audio.src = src + '?v=' + Date.now();
+          audio.preload = 'auto';
+          audio.load();
+          loaded = true;
+          btn.innerHTML = '<span style="color:#fff;font-size:10px">...</span>';
+          audio.addEventListener('canplay', function onReady() {
+            audio.removeEventListener('canplay', onReady);
+            stopOthers();
+            audio.play();
+            btn.innerHTML = pauseSvg;
+            update();
+          });
+          audio.addEventListener('error', function() {
+            btn.innerHTML = playSvg;
+            loaded = false;
+          });
+          return;
+        }
+        if (audio.paused) {
+          stopOthers();
+          audio.play();
+          btn.innerHTML = pauseSvg;
+          update();
+        } else {
+          audio.pause();
+          btn.innerHTML = playSvg;
+        }
+      });
+
+      audio.addEventListener('ended', function() {
+        btn.innerHTML = playSvg;
+        progress.style.width = '0%';
+        timeEl.textContent = '0:00 / ' + fmt(audio.duration);
+      });
+
+      track.addEventListener('click', function(e) {
+        if (audio.duration) {
+          var rect = track.getBoundingClientRect();
+          audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+          progress.style.width = (audio.currentTime / audio.duration * 100) + '%';
+          timeEl.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration);
+        }
+      });
+    });
+  })();
+
   // ═══════════════════════════════════════════
   // FLOATING MOTES — gentle awareness particles
   // ═══════════════════════════════════════════
