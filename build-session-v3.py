@@ -1973,7 +1973,7 @@ def qa_speech_rate_check(audio_path, manifest_data, window_sec=2.0, rush_thresho
         window_times = np.array(window_times)
 
         median_rate = float(np.median(window_rates))
-        threshold_rate = max(median_rate * rush_threshold, 6.0)  # absolute floor: 6.0 w/s (360 wpm)
+        threshold_rate = max(median_rate * rush_threshold, 7.0)  # absolute floor: 7.0 w/s (420 wpm)
 
         # Flag windows exceeding threshold
         rushes = []
