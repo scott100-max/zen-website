@@ -443,7 +443,8 @@
     /* ═══ DISTINCTION ═══ */
     .distinction{max-width:1080px;margin:0 auto;padding:0 24px 60px}
     .distinction__inner{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.06);border-radius:14px;overflow:hidden}
-    .distinction__col{background:var(--ink,#0a0d18);padding:28px 24px}
+    .distinction__col{display:block;background:var(--ink,#0a0d18);padding:28px 24px;text-decoration:none;color:inherit;transition:background .3s ease}
+    .distinction__col:hover{background:rgba(255,255,255,0.03)}
     .distinction__tag{display:inline-block;font-weight:400;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:16px;margin-bottom:10px}
     .distinction__tag--ap{color:rgba(244,114,182,0.7);background:rgba(244,114,182,0.06);border:1px solid rgba(244,114,182,0.12)}
     .distinction__tag--learn{color:rgba(96,165,250,0.7);background:rgba(96,165,250,0.06);border:1px solid rgba(96,165,250,0.12)}
@@ -712,12 +713,12 @@
 
     <div class="distinction">
       <div class="distinction__inner">
-        <div class="distinction__col">
+        <a href="#articles" class="distinction__col">
           <span class="distinction__tag distinction__tag--learn">Learn</span>
           <div class="distinction__title">Science Explainers</div>
           <div class="distinction__desc">Lighter reads (3–4 min). What's happening in your brain and body — the neuroscience, biology, and physiology behind the practice. Curiosity-led.</div>
-        </div>
-        <div class="distinction__col">
+        </a>
+        <a href="applied-psychology.html" class="distinction__col">
           <span class="distinction__tag distinction__tag--ap">Applied Psychology</span>
           <div class="distinction__title">Deep Dives</div>
           <div class="distinction__desc">Longer reads (5–8 min). Practical psychology you can apply today — habits, emotions, resilience, relationships, and more. Action-led.</div>
