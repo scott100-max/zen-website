@@ -160,6 +160,7 @@ git push origin main
 - **Custom domain:** `media.salus-mind.com` (proxied through Cloudflare CDN)
 - **Public dev URL:** Disabled — use custom domain only
 - **API token** (Edit zone DNS): `yYNUa2enwfPdNnVrfcUQnWHhgMnebTSFntGWbwGe`
+- **CORS:** Configured for `https://salus-mind.com` and `https://www.salus-mind.com` (GET/HEAD). Required for cross-origin audio playback from `media.salus-mind.com`.
 
 ```bash
 # Upload via wrangler CLI:
@@ -174,10 +175,18 @@ npx wrangler r2 object put salus-mind/content/audio-free/FILENAME.mp3 --file=./F
 - Video: `content/video/`
 - Reference: `reference/` (marco master etc.)
 
-**Media references in HTML:**
+**Media references in HTML — two player types:**
+
+Sessions page (`sessions.html`) and session detail pages use `custom-player` (wired by `main.js`):
 ```html
 <div class="custom-player" data-src="https://media.salus-mind.com/content/audio-free/FILENAME.mp3">
 ```
+
+Mindfulness page (`mindfulness.html`) uses `m-player` (wired by inline JS on that page):
+```html
+<div class="m-player" data-src="https://media.salus-mind.com/content/audio-free/FILENAME.mp3">
+```
+Cards without `data-src` show a visual-only player (no audio loaded). Add `data-src` when audio is produced.
 
 ### Domain & DNS
 - **Registrar:** reg-123 (salus-mind.com), GoDaddy (salus-mind.co.uk)
@@ -1105,10 +1114,24 @@ python3 build-session-v3.py SESSION --no-cleanup
 - [ ] All 14 QA gates run
 - [ ] 0 voice changes in QA results
 
+**Human Review (mandatory before deploy):**
+1. Extract individual chunks from raw narration WAV using manifest timing data
+2. Upload chunks to R2 at `test/chunk-test-{version}/` (e.g. `chunk-test-v3b/`)
+3. Create or update interactive HTML review page (export buttons: Copy Results + Download TXT)
+4. Scott listens to every chunk on AirPods at high volume (exposes artifacts normal listening misses)
+5. Each chunk rated: OK / ECHO / HISS / VOICE / BAD
+6. Export review results as TXT file
+7. If clean rate is acceptable → proceed to deploy
+8. If problem chunks identified → use `--focus-chunks` for targeted rebuild (problem chunks get best-of-10, others best-of-5)
+9. Re-review focused chunks. Repeat if needed, but perfection should not prevent shipping.
+
 **Deployment:**
-- [ ] Final audio uploaded to Cloudflare R2 (NOT committed to git)
-- [ ] Audio plays from `media.salus-mind.com` URL
-- [ ] Website HTML updated with session listing and player
+- [ ] Final audio remixed with ambient at desired level (default -14dB, adjust per session)
+- [ ] Final MP3 uploaded to Cloudflare R2 (NOT committed to git)
+- [ ] Audio plays from `media.salus-mind.com` URL (test on both desktop AND mobile)
+- [ ] CORS verified: `Access-Control-Allow-Origin` header present in response
+- [ ] Website HTML updated — ALL pages referencing the session (listing pages, detail pages, mindfulness cards)
+- [ ] Players wired up with `data-src` attribute pointing to correct R2 URL
 - [ ] HTML changes committed and pushed to main
 - [ ] Email sent to scottripley@icloud.com
 
@@ -1120,7 +1143,7 @@ python3 build-session-v3.py SESSION --no-cleanup
 | **Env var** | `RESEND_API_KEY` in `.env` |
 | **Sender** | `onboarding@resend.dev` (switch to `build@salus-mind.com` after domain verification) |
 | **Recipient** | `scottripley@icloud.com` |
-| **Header** | Must include `User-Agent: SalusBuild/1.0` (Cloudflare blocks Python default) |
+| **Header** | Uses `curl` subprocess (Python `urllib` blocked by Cloudflare bot protection) |
 | **Trigger** | Every completed build — pass or fail |
 
 ### Deployed Sessions
@@ -1131,7 +1154,7 @@ python3 build-session-v3.py SESSION --no-cleanup
 | 03-breathing-for-anxiety | 19.3 min | Fish | Deployed, patched (68 clicks) |
 | 09-rainfall-sleep-journey | — | Fish | Deployed, patched (10 clicks) |
 | 25-introduction-to-mindfulness | 14.4 min | Fish | Deployed, patched (83 stitch points) |
-| 36-loving-kindness-intro | 10.5 min | Fish | Deployed (build 11, per-chunk QA, 14/14 gates) |
+| 36-loving-kindness-intro-v3 | 10.5 min | Fish | Deployed (v3b focused rebuild, best-of-10 on problem chunks, 14/14 gates, 65% human clean rate, ambient -11dB) |
 | 38-seven-day-mindfulness-day1 | 11.6 min | Fish | Deployed, patched (8 clicks) |
 
 ---
@@ -1456,7 +1479,39 @@ Expanded from 10 gates to 14 gates. All gates now pass/fail — no informational
 
 ---
 
-*Last updated: 8 February 2026 — Dark theme completion (all pages), unified footer, login buttons, ASMR Web Audio API, mindfulness cleanup, footer/CTA routing fixes, book covers, hero updates.*
+### 8 February 2026 — Session 36 Shipped & Review Workflow
+
+**Audio production:**
+- Session 36-loving-kindness-intro-v3 shipped to production (v3b focused rebuild)
+- `--focus-chunks` CLI argument added: problem chunks get best-of-10, others best-of-5
+- Ambient level increased from -14dB to -11dB for more present ambient bed
+- Resend email fixed: Python `urllib` blocked by Cloudflare → switched to `curl` subprocess
+
+**Human review workflow established (mandatory for all future sessions):**
+1. Build with `--no-deploy` → 14-gate QA runs automatically
+2. Extract chunks from raw narration WAV using manifest timing data
+3. Upload individual chunks to R2 at `test/chunk-test-{version}/`
+4. Create interactive HTML review page with export facility (Copy Results + Download TXT)
+5. Listen to every chunk on AirPods at high volume (exposes hiss, echo, tonal shifts that speakers miss)
+6. Rate each chunk: OK / ECHO / HISS / VOICE / BAD
+7. If acceptable → remix with ambient, deploy to R2, update all HTML references, commit, push, email
+8. If problem chunks → `--focus-chunks 1,3,6` for targeted rebuild, re-review
+9. Perfection should not prevent shipping — accept reasonable clean rate and move forward
+
+**Testing checklist (learned from session 36):**
+- Test playback on BOTH desktop and mobile (CORS blocked mobile audio before R2 CORS was configured)
+- Check ALL pages that reference the session (detail page, listing pages, mindfulness cards) — missed references = broken players
+- Verify file duration matches expected (stale CDN cache served old file with wrong duration)
+- Players without `data-src` attribute are visual-only — buttons do nothing by design
+- Mindfulness page uses `m-player` class (inline JS), not `custom-player` (main.js) — different wiring
+
+**Infrastructure:**
+- R2 CORS configured: `salus-mind.com` and `www.salus-mind.com` allowed origins (GET/HEAD)
+- Mindfulness page players wired up with real audio for Introduction to Mindfulness and Loving-Kindness Introduction
+
+---
+
+*Last updated: 8 February 2026 — Session 36 shipped, review workflow established, R2 CORS, mindfulness players wired, Resend email fix.*
 
 ---
 
