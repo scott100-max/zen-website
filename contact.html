@@ -216,8 +216,7 @@
     <h1 class="hero-title"><span>Contact</span></h1>
     <p class="hero-subtitle">Questions, feedback, or just want to say hello — we're a small team and we read every message.</p>
     <div class="hero-channels">
-      <div class="hero-channel"><div class="hero-channel__icon">✉️</div><span class="hero-channel__label">Email</span></div>
-      <div class="hero-channel"><div class="hero-channel__icon">💬</div><span class="hero-channel__label">Chat</span></div>
+      <div class="hero-channel"><div class="hero-channel__icon">💬</div><span class="hero-channel__label">Message</span></div>
       <div class="hero-channel"><div class="hero-channel__icon">🐦</div><span class="hero-channel__label">Social</span></div>
     </div>
     <a href="#form" class="hero-cta">Send a Message</a>
@@ -237,14 +236,6 @@
     <p>Salus is a small, family-run project. When you write to us, a real person reads it — not a chatbot, not a support queue. If something's not working, or you just want to say hello, we'd love to hear from you.</p>
 
     <div class="ct-channels">
-      <div class="ct-channel">
-        <div class="ct-channel__icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
-        <div class="ct-channel__text">
-          <span class="ct-channel__title">Email</span>
-          <span class="ct-channel__detail"><a href="mailto:hello@salus-mind.com">hello@salus-mind.com</a></span>
-        </div>
-      </div>
-
       <div class="ct-channel">
         <div class="ct-channel__icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
         <div class="ct-channel__text">
@@ -336,7 +327,7 @@
         }
       }catch(err){
         status.className='ct-form__status ct-form__status--error';
-        status.innerHTML='Something went wrong. Please email us directly at <a href="mailto:hello@salus-mind.com" style="color:inherit;text-decoration:underline">hello@salus-mind.com</a>';
+        status.innerHTML='Something went wrong. Please try again in a moment.';
       }
 
       btn.disabled=false;
