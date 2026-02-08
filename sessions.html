@@ -111,140 +111,104 @@
   @media(max-width:860px){.nav-primary,.nav-row-2,.nav-ctas{display:none}.nav-burger{display:flex}.nav-row-1{height:56px}}
 
     /* ═══════════════ SESSION CARDS ═══════════════ */
-    .session-list { max-width: 800px; margin: 0 auto; }
-    .session-item {
-      border-radius: 24px;
-      padding: 32px;
-      margin-bottom: 20px;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .session-item:hover {
-      transform: translateY(-6px) scale(1.02);
-    }
-    /* Floating orb decorations */
-    .session-item::before {
-      content: '';
-      position: absolute;
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      filter: blur(60px);
-      opacity: 0.4;
-      top: -80px;
-      right: -60px;
-      pointer-events: none;
-    }
-    .session-item::after {
-      content: '';
-      position: absolute;
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      filter: blur(40px);
-      opacity: 0.3;
-      bottom: -40px;
-      left: -20px;
-      pointer-events: none;
-    }
-    /* Beginners - Teal/Cyan theme */
-    .session-item[data-category="beginners"] {
-      background: linear-gradient(135deg, #0d3d4a 0%, #1a5568 50%, #0f4c5c 100%);
-      box-shadow: 0 20px 60px rgba(6,182,212,0.25), 0 8px 24px rgba(0,0,0,0.15);
-    }
-    .session-item[data-category="beginners"]::before { background: #06b6d4; }
-    .session-item[data-category="beginners"]::after { background: #22d3ee; }
-    .session-item[data-category="beginners"]:hover { box-shadow: 0 30px 80px rgba(6,182,212,0.35), 0 12px 32px rgba(0,0,0,0.2); }
-    /* Stress - Green/Emerald theme */
-    .session-item[data-category="stress"] {
-      background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%);
-      box-shadow: 0 20px 60px rgba(16,185,129,0.25), 0 8px 24px rgba(0,0,0,0.15);
-    }
-    .session-item[data-category="stress"]::before { background: #10b981; }
-    .session-item[data-category="stress"]::after { background: #34d399; }
-    .session-item[data-category="stress"]:hover { box-shadow: 0 30px 80px rgba(16,185,129,0.35), 0 12px 32px rgba(0,0,0,0.2); }
-    /* Sleep - Purple/Indigo theme */
-    .session-item[data-category="sleep"] {
-      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #3730a3 100%);
-      box-shadow: 0 20px 60px rgba(99,102,241,0.25), 0 8px 24px rgba(0,0,0,0.15);
-    }
-    .session-item[data-category="sleep"]::before { background: #818cf8; }
-    .session-item[data-category="sleep"]::after { background: #a78bfa; }
-    .session-item[data-category="sleep"]:hover { box-shadow: 0 30px 80px rgba(99,102,241,0.35), 0 12px 32px rgba(0,0,0,0.2); }
-    /* Focus - Amber/Orange theme */
-    .session-item[data-category="focus"] {
-      background: linear-gradient(135deg, #451a03 0%, #78350f 50%, #92400e 100%);
-      box-shadow: 0 20px 60px rgba(245,158,11,0.25), 0 8px 24px rgba(0,0,0,0.15);
-    }
-    .session-item[data-category="focus"]::before { background: #f59e0b; }
-    .session-item[data-category="focus"]::after { background: #fbbf24; }
-    .session-item[data-category="focus"]:hover { box-shadow: 0 30px 80px rgba(245,158,11,0.35), 0 12px 32px rgba(0,0,0,0.2); }
-    /* Text styling for dark backgrounds */
-    .session-item h3 {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 1.5rem;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 600;
-      color: #ffffff;
-      position: relative;
-      z-index: 1;
-    }
-    .session-item h3 .premium-tag {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.55rem;
-      background: rgba(255,255,255,0.2);
-      backdrop-filter: blur(10px);
-      color: rgba(255,255,255,0.9);
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      border: 1px solid rgba(255,255,255,0.15);
-    }
-    .session-meta {
-      font-size: 0.8rem;
-      color: rgba(255,255,255,0.7);
-      margin-bottom: 10px;
-      font-weight: 500;
-      position: relative;
-      z-index: 1;
-    }
-    .session-item p {
-      color: rgba(255,255,255,0.85);
-      font-size: 0.95rem;
-      margin: 0;
-      line-height: 1.7;
-      position: relative;
-      z-index: 1;
-    }
-    .session-item a {
-      text-decoration: none;
-      color: inherit;
-      display: block;
-    }
-    /* Player styling on dark backgrounds */
-    .session-item .custom-player > div,
-    .session-item .premium-player > a {
-      background: rgba(255,255,255,0.1) !important;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-    .session-item .cp-time,
-    .session-item .premium-player span {
-      color: rgba(255,255,255,0.8) !important;
-    }
-    .session-item .cp-play,
-    .session-item .premium-player button {
-      background: rgba(255,255,255,0.25) !important;
-    }
-    .session-item input[type="range"] {
-      opacity: 0.8;
-    }
+  .section-header{text-align:center;margin-bottom:40px}
+  .section-header__label{display:inline-flex;align-items:center;gap:10px;font-weight:300;font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(78,205,196,0.7);margin-bottom:16px}
+  .section-header__label::before,.section-header__label::after{content:'';width:24px;height:1px;background:linear-gradient(90deg,transparent,rgba(78,205,196,0.4),transparent)}
+  .section-header h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.8rem,4vw,2.4rem);margin-bottom:8px}
+  .section-header p{font-weight:200;font-size:.85rem;color:var(--text-muted)}
+
+  .filters{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-bottom:36px}
+  .filter-btn{font-family:'Outfit',sans-serif;font-weight:300;font-size:.72rem;letter-spacing:.04em;padding:7px 16px;border-radius:40px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text-muted);cursor:pointer;transition:all .3s ease;white-space:nowrap}
+  .filter-btn:hover{border-color:rgba(255,255,255,0.12);color:var(--text-mid)}
+  .filter-btn.active{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.14);color:var(--text-bright)}
+  .filter-btn__dot{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:5px;vertical-align:middle}
+
+  .section-divider{text-align:center;padding:44px 0 28px;position:relative}
+  .section-divider:first-of-type{padding-top:0}
+  .section-divider__line{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.06),transparent)}
+  .section-divider__label{position:relative;z-index:1;display:inline-flex;flex-direction:column;align-items:center;gap:0;font-weight:300;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text-muted);background:var(--deep);padding:0 16px}
+  .section-divider__sub{display:block;font-weight:200;font-size:.78rem;letter-spacing:.02em;text-transform:none;color:rgba(255,255,255,0.35);margin-top:6px}
+
+  .sub-hook{max-width:980px;margin:36px auto 0;display:flex;align-items:center;justify-content:space-between;gap:16px;background:linear-gradient(135deg,rgba(78,205,196,0.06) 0%,rgba(167,139,250,0.04) 100%);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:16px 24px}
+  .sub-hook__text{display:flex;flex-direction:column;gap:2px}
+  .sub-hook__title{font-weight:400;font-size:.82rem;color:var(--text-bright);display:flex;align-items:center;gap:8px}
+  .sub-hook__title svg{width:14px;height:14px;fill:rgba(78,205,196,0.8)}
+  .sub-hook__desc{font-weight:200;font-size:.74rem;color:var(--text-muted)}
+  .sub-hook__cta{font-family:'Outfit',sans-serif;font-weight:400;font-size:.74rem;letter-spacing:.04em;padding:8px 20px;border-radius:40px;color:#060810;background:linear-gradient(135deg,#4ecdc4,#6dd5c8);border:none;cursor:pointer;text-decoration:none;white-space:nowrap;transition:all .35s cubic-bezier(.22,1,.36,1)}
+  .sub-hook__cta:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(78,205,196,0.25)}
+
+  .card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;max-width:980px;margin:0 auto}
+
+  .session-card{position:relative;border-radius:18px;padding:30px 30px 24px;overflow:hidden;transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s ease;cursor:default;min-height:260px;display:flex;flex-direction:column}
+  .session-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.35)}
+  .session-card::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:.5;pointer-events:none;border-radius:inherit}
+
+  .cat-sample{background:linear-gradient(145deg,#1a1d2e 0%,#22263a 40%,#2a2f48 100%);border:1px solid rgba(148,163,184,0.1)}
+  .cat-sample:hover{border-color:rgba(148,163,184,0.2)}
+  .cat-sample .session-card__orb{background:#94a3b8;width:140px;height:140px;top:-30px;right:-20px}
+  .cat-sample .session-card__orb--2{background:#64748b;width:100px;height:100px;bottom:-20px;left:-10px;opacity:.2}
+  .cat-sample .player__progress{background:linear-gradient(90deg,#94a3b8,#cbd5e1)}
+  .cat-sample .session-card__cat-dot{background:#94a3b8}
+
+  .cat-sleep{background:linear-gradient(145deg,#1e1b4b 0%,#312e81 35%,#3730a3 100%)}
+  .cat-stress{background:linear-gradient(145deg,#064e3b 0%,#065f46 35%,#047857 100%)}
+  .cat-mindfulness{background:linear-gradient(145deg,#0d3d4a 0%,#1a5568 35%,#0f4c5c 100%)}
+  .cat-beginner{background:linear-gradient(145deg,#0d3d4a 0%,#1a5568 35%,#0f4c5c 100%)}
+  .cat-advanced{background:linear-gradient(145deg,#2d1643 0%,#4a1d6b 35%,#5b2180 100%)}
+
+  .session-card__orb{position:absolute;border-radius:50%;filter:blur(40px);opacity:.35;pointer-events:none;transition:opacity .4s ease}
+  .session-card:hover .session-card__orb{opacity:.5}
+  .cat-sleep .session-card__orb{background:#818cf8;width:140px;height:140px;top:-30px;right:-20px}
+  .cat-sleep .session-card__orb--2{background:#a78bfa;width:100px;height:100px;bottom:-20px;left:-10px;opacity:.2}
+  .cat-stress .session-card__orb{background:#34d399;width:140px;height:140px;top:-30px;right:-20px}
+  .cat-stress .session-card__orb--2{background:#10b981;width:100px;height:100px;bottom:-20px;left:-10px;opacity:.2}
+  .cat-mindfulness .session-card__orb{background:#22d3ee;width:140px;height:140px;top:-30px;right:-20px}
+  .cat-mindfulness .session-card__orb--2{background:#06b6d4;width:100px;height:100px;bottom:-20px;left:-10px;opacity:.2}
+  .cat-beginner .session-card__orb{background:#22d3ee;width:140px;height:140px;top:-30px;right:-20px}
+  .cat-beginner .session-card__orb--2{background:#38bdf8;width:100px;height:100px;bottom:-20px;left:-10px;opacity:.2}
+  .cat-advanced .session-card__orb{background:#c084fc;width:140px;height:140px;top:-30px;right:-20px}
+  .cat-advanced .session-card__orb--2{background:#a855f7;width:100px;height:100px;bottom:-20px;left:-10px;opacity:.2}
+
+  .session-card__badge{position:absolute;top:18px;right:20px;z-index:4;font-weight:400;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  .badge--sample{color:#e2e8f0;background:rgba(148,163,184,0.15);border:1px solid rgba(148,163,184,0.3)}
+  .badge--premium{color:rgba(255,255,255,0.85);background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15)}
+
+  .session-card__content{position:relative;z-index:3;flex:1;display:flex;flex-direction:column}
+  .session-card__meta{display:flex;align-items:center;gap:6px;margin-bottom:10px;font-weight:300;font-size:.78rem;color:rgba(255,255,255,0.55)}
+  .session-card__cat-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+  .cat-sleep .session-card__cat-dot{background:#a78bfa}
+  .cat-stress .session-card__cat-dot{background:#34d399}
+  .cat-mindfulness .session-card__cat-dot{background:#4ecdc4}
+  .cat-beginner .session-card__cat-dot{background:#38bdf8}
+  .cat-advanced .session-card__cat-dot{background:#c084fc}
+  .session-card__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.6rem;line-height:1.2;color:#fff;margin-bottom:10px}
+  .session-card__desc{font-weight:200;font-size:.84rem;line-height:1.65;color:rgba(255,255,255,0.6);margin-bottom:auto;padding-bottom:18px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+  .player{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:10px 18px 10px 10px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);position:relative;z-index:3}
+  .player__btn{width:40px;height:40px;border-radius:50%;flex-shrink:0;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s ease}
+  .player__btn:hover{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.25);transform:scale(1.05)}
+  .player__btn svg{width:14px;height:14px;fill:#fff;margin-left:2px}
+  .player__track{flex:1;height:3px;background:rgba(255,255,255,0.12);border-radius:2px;overflow:hidden;cursor:pointer}
+  .player__progress{height:100%;width:0%;border-radius:2px;transition:width .1s linear}
+  .cat-sleep .player__progress{background:#a78bfa}
+  .cat-stress .player__progress{background:#34d399}
+  .cat-mindfulness .player__progress{background:#4ecdc4}
+  .cat-beginner .player__progress{background:#38bdf8}
+  .cat-advanced .player__progress{background:#c084fc}
+  .player__time{font-weight:300;font-size:.7rem;color:rgba(255,255,255,0.45);white-space:nowrap;min-width:72px;text-align:right;font-variant-numeric:tabular-nums}
+
+  .session-card__ambient{display:flex;align-items:center;gap:5px;font-weight:200;font-size:.64rem;color:rgba(255,255,255,0.35);margin-top:10px;position:relative;z-index:3}
+  .session-card__ambient svg{width:12px;height:12px;fill:rgba(255,255,255,0.3)}
+
+  /* Custom player inside new cards (sample sessions with real audio) */
+  .session-card .custom-player>div{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:10px 18px 10px 10px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;gap:12px}
+  .session-card .cp-play{width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,0.15)!important;background:rgba(255,255,255,0.06)!important;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;color:#fff!important}
+  .session-card .cp-play:hover{background:rgba(255,255,255,0.12)!important}
+  .session-card .cp-seek{flex:1;cursor:pointer;opacity:.6}
+  .session-card .cp-time{font-weight:300;font-size:.7rem;color:rgba(255,255,255,0.45)!important;min-width:72px;text-align:right;font-variant-numeric:tabular-nums}
+
+  @media(max-width:768px){.card-grid{grid-template-columns:1fr}.session-card{padding:24px 24px 20px;min-height:auto}.session-card__title{font-size:1.4rem}.sub-hook{flex-direction:column;text-align:center;gap:12px}}
+  @media(max-width:480px){.session-card{padding:22px 20px 18px}}
   </style>
 </head>
 <body>
@@ -337,186 +301,242 @@
 </section>
 
   <!-- Sessions -->
-  <section id="library" style="padding:60px 0;background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%);">
-    <div class="container">
+  <section id="library" style="padding:60px 0;background:var(--deep);">
 
-      <!-- Sample Sessions -->
-      <div class="section-header fade-in" style="margin-bottom:32px;">
-        <h2>Sample Sessions</h2>
-        <p>Try these now to experience Salus.</p>
-      </div>
+<div class="section-header">
+  <div class="section-header__label"><span></span>48 Sessions · 15+ Hours<span></span></div>
+  <h2>Guided Meditations</h2>
+  <p>Sleep deeper. Focus sharper. Stress less.</p>
+</div>
 
-      <div class="session-list">
-        <div class="session-item fade-in" data-category="beginners">
-          <h3>Morning Meditation</h3>
-          <div class="session-meta">10 min · Beginners</div>
-          <p>Start your day with intention and clarity. A gentle guided practice to ground yourself before the day begins.</p>
-          <div class="custom-player" data-src="https://media.salus-mind.com/content/audio-free/01-morning-meditation.mp3" style="margin-top:14px;">
-            <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
-        </div>
+<div class="filters">
+  <button class="filter-btn active" data-filter="all">All Sessions</button>
+  <button class="filter-btn" data-filter="sample"><span class="filter-btn__dot" style="background:#94a3b8"></span>Sample</button>
+  <button class="filter-btn" data-filter="beginner"><span class="filter-btn__dot" style="background:#38bdf8"></span>Beginner</button>
+  <button class="filter-btn" data-filter="stress"><span class="filter-btn__dot" style="background:#34d399"></span>Stress</button>
+  <button class="filter-btn" data-filter="mindfulness"><span class="filter-btn__dot" style="background:#4ecdc4"></span>Mindfulness</button>
+  <button class="filter-btn" data-filter="sleep"><span class="filter-btn__dot" style="background:#a78bfa"></span>Sleep</button>
+  <button class="filter-btn" data-filter="advanced"><span class="filter-btn__dot" style="background:#c084fc"></span>Advanced</button>
+</div>
 
-        <div class="session-item fade-in" data-category="stress">
-          <h3>Breathing for Anxiety</h3>
-          <div class="session-meta">12 min · Stress</div>
-          <p>Learn box breathing and the 4-7-8 technique to calm your nervous system fast.</p>
-          <div class="custom-player" data-src="https://media.salus-mind.com/content/audio-free/03-breathing-for-anxiety.mp3" style="margin-top:14px;">
-            <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
-        </div>
-      </div>
+<div class="section-divider" id="sampleDivider">
+  <div class="section-divider__line"></div>
+  <div class="section-divider__label">Try Before You Subscribe
+    <span class="section-divider__sub">No account needed — press play</span>
+  </div>
+</div>
 
-      <!-- Premium Sessions -->
-      <div class="section-header fade-in" style="margin-top:60px;margin-bottom:32px;">
-        <h2>Premium Sessions</h2>
-        <p>Subscribe to unlock all sessions.</p>
-      </div>
+<div class="card-grid" id="sampleGrid">
 
-      <div class="session-list">
-        <div class="session-item fade-in" data-category="beginners">
-          <h3>Your First Meditation <span class="premium-tag">Premium</span></h3>
-          <div class="session-meta">5 min · Beginners</div>
-          <p>Never meditated before? Start here. A gentle, no-pressure introduction.</p>
-          <div class="premium-player" style="margin-top:14px;">
-            <a href="sessions/meditation-for-beginners.html" style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;text-decoration:none;color:inherit;">
-              <button style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <div style="flex:1;height:4px;background:#ddd;border-radius:2px;"></div>
-              <span style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 5:00</span>
-            </a>
-          </div>
-        </div>
-
-        <div class="session-item fade-in" data-category="stress">
-          <h3>The Calm Reset</h3>
-          <div class="session-meta">5 min · Stress</div>
-          <p>An emergency calm-down for overwhelming moments. Five minutes to reset.</p>
-          <div class="custom-player" data-src="https://media.salus-mind.com/content/audio-free/23-the-calm-reset.mp3" style="margin-top:14px;">
-            <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="session-item fade-in" data-category="beginners">
-          <h3>Introduction to Mindfulness <span class="premium-tag">Premium</span></h3>
-          <div class="session-meta">10 min · Mindfulness</div>
-          <p>Your first step into mindful awareness. Learn the foundations of present-moment attention.</p>
-          <div class="premium-player" style="margin-top:14px;">
-            <a href="sessions/introduction-to-mindfulness.html" style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;text-decoration:none;color:inherit;">
-              <button style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <div style="flex:1;height:4px;background:#ddd;border-radius:2px;"></div>
-              <span style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 10:00</span>
-            </a>
-          </div>
-        </div>
-
-        <div class="session-item fade-in" data-category="beginners">
-          <h3>Loving-Kindness Intro</h3>
-          <div class="session-meta">9 min · Beginners</div>
-          <p>Learn the practice of sending compassion to yourself and others.</p>
-          <div class="custom-player" data-src="https://media.salus-mind.com/content/audio-free/36-loving-kindness-intro.mp3" style="margin-top:14px;">
-            <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
-              <button class="cp-play" style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="session-item fade-in" data-category="beginners">
-          <h3>7-Day Mindfulness Course <span class="premium-tag">Premium</span></h3>
-          <div class="session-meta">7 sessions · ~70 min total</div>
-          <p>A complete week-long programme. Day 1 free, full course with Premium.</p>
-          <div class="premium-player" style="margin-top:14px;">
-            <a href="mindfulness.html" style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;text-decoration:none;color:inherit;">
-              <button style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <div style="flex:1;height:4px;background:#ddd;border-radius:2px;"></div>
-              <span style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">7 sessions</span>
-            </a>
-          </div>
-        </div>
-
-        <div class="session-item fade-in" data-category="sleep">
-          <h3>Body Scan for Deep Rest <span class="premium-tag">Premium</span></h3>
-          <div class="session-meta">35 min · Sleep</div>
-          <p>Release tension from head to toe as you drift into a deep, restorative sleep.</p>
-          <div class="premium-player" style="margin-top:14px;">
-            <a href="sessions/body-scan-meditation.html" style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;text-decoration:none;color:inherit;">
-              <button style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <div style="flex:1;height:4px;background:#ddd;border-radius:2px;"></div>
-              <span style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 35:00</span>
-            </a>
-          </div>
-        </div>
-
-        <div class="session-item fade-in" data-category="sleep">
-          <h3>Rainfall Sleep Journey <span class="premium-tag">Premium</span></h3>
-          <div class="session-meta">45 min · Sleep</div>
-          <p>Drift off to the sound of gentle rain with a soothing narrative guiding you to rest.</p>
-          <div class="premium-player" style="margin-top:14px;">
-            <a href="sessions/rainfall-sleep-journey.html" style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;text-decoration:none;color:inherit;">
-              <button style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <div style="flex:1;height:4px;background:#ddd;border-radius:2px;"></div>
-              <span style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 45:00</span>
-            </a>
-          </div>
-        </div>
-
-        <div class="session-item fade-in" data-category="sleep">
-          <h3>Moonlight Drift <span class="premium-tag">Premium</span></h3>
-          <div class="session-meta">40 min · Sleep</div>
-          <p>A soothing visualisation journey under starlit skies to ease you into sleep.</p>
-          <div class="premium-player" style="margin-top:14px;">
-            <a href="sessions/moonlight-body-scan.html" style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;text-decoration:none;color:inherit;">
-              <button style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <div style="flex:1;height:4px;background:#ddd;border-radius:2px;"></div>
-              <span style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 40:00</span>
-            </a>
-          </div>
-        </div>
-
-        <div class="session-item fade-in" data-category="sleep">
-          <h3>Yoga Nidra: Deep Rest <span class="premium-tag">Premium</span></h3>
-          <div class="session-meta">45 min · Advanced</div>
-          <p>The ancient practice of yogic sleep — profound rest while remaining fully conscious.</p>
-          <div class="premium-player" style="margin-top:14px;">
-            <a href="sessions/yoga-nidra.html" style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;text-decoration:none;color:inherit;">
-              <button style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <div style="flex:1;height:4px;background:#ddd;border-radius:2px;"></div>
-              <span style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 45:00</span>
-            </a>
-          </div>
-        </div>
-
-        <div class="session-item fade-in" data-category="focus">
-          <h3>Non-Dual Awareness <span class="premium-tag">Premium</span></h3>
-          <div class="session-meta">30 min · Advanced</div>
-          <p>Explore the nature of consciousness itself. A practice for experienced meditators.</p>
-          <div class="premium-player" style="margin-top:14px;">
-            <a href="sessions/non-dual-awareness.html" style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;text-decoration:none;color:inherit;">
-              <button style="background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <div style="flex:1;height:4px;background:#ddd;border-radius:2px;"></div>
-              <span style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 30:00</span>
-            </a>
-          </div>
+  <!-- 01 — Morning Meditation -->
+  <div class="session-card cat-sample" data-category="sample" data-cat-type="beginner">
+    <div class="session-card__orb"></div><div class="session-card__orb session-card__orb--2"></div>
+    <span class="session-card__badge badge--sample">Sample</span>
+    <div class="session-card__content">
+      <div class="session-card__meta"><span class="session-card__cat-dot"></span>10 min · Beginners</div>
+      <h3 class="session-card__title">Morning Meditation</h3>
+      <p class="session-card__desc">Start your day with intention and clarity. A gentle guided practice to ground yourself before the day begins.</p>
+      <div class="custom-player" data-src="https://media.salus-mind.com/content/audio-free/01-morning-meditation.mp3">
+        <div>
+          <button class="cp-play"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+          <input type="range" class="cp-seek" min="0" max="100" value="0">
+          <span class="cp-time">0:00 / 0:00</span>
         </div>
       </div>
-
-      <div style="text-align:center;margin-top:40px;">
-        <a href="apps.html" class="btn btn-primary">View All Premium Sessions</a>
-      </div>
-
     </div>
+  </div>
+
+  <!-- 03 — Breathing for Anxiety -->
+  <div class="session-card cat-sample" data-category="sample" data-cat-type="stress">
+    <div class="session-card__orb"></div><div class="session-card__orb session-card__orb--2"></div>
+    <span class="session-card__badge badge--sample">Sample</span>
+    <div class="session-card__content">
+      <div class="session-card__meta"><span class="session-card__cat-dot"></span>12 min · Stress</div>
+      <h3 class="session-card__title">Breathing for Anxiety</h3>
+      <p class="session-card__desc">Learn box breathing and the 4-7-8 technique to calm your nervous system fast.</p>
+      <div class="custom-player" data-src="https://media.salus-mind.com/content/audio-free/03-breathing-for-anxiety.mp3">
+        <div>
+          <button class="cp-play"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+          <input type="range" class="cp-seek" min="0" max="100" value="0">
+          <span class="cp-time">0:00 / 0:00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="sub-hook" id="subHook">
+  <div class="sub-hook__text">
+    <div class="sub-hook__title">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      New material unlocked each week
+    </div>
+    <div class="sub-hook__desc">48 sessions and growing — plus sleep stories, ASMR, tools, and more with Salus Premium</div>
+  </div>
+  <a href="apps.html" class="sub-hook__cta">Go Premium</a>
+</div>
+
+<div class="section-divider" id="premiumDivider">
+  <div class="section-divider__line"></div>
+  <div class="section-divider__label">Premium Library
+    <span class="section-divider__sub">Unlock everything with a subscription</span>
+  </div>
+</div>
+
+<div class="card-grid" id="premiumGrid">
+
+  <div class="session-card cat-beginner" data-category="beginner">
+    <div class="session-card__orb"></div><div class="session-card__orb session-card__orb--2"></div>
+    <span class="session-card__badge badge--premium">Premium</span>
+    <div class="session-card__content">
+      <div class="session-card__meta"><span class="session-card__cat-dot"></span>8 min · Beginner</div>
+      <h3 class="session-card__title">Introduction to Mindfulness</h3>
+      <p class="session-card__desc">Your starting point. A warm, unhurried introduction to the basics — breath, attention, and the art of simply being present.</p>
+      <div class="player"><button class="player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="player__track"><div class="player__progress"></div></div><span class="player__time">0:00 / 8:12</span></div>
+    </div>
+  </div>
+
+  <div class="session-card cat-stress" data-category="stress">
+    <div class="session-card__orb"></div><div class="session-card__orb session-card__orb--2"></div>
+    <span class="session-card__badge badge--premium">Premium</span>
+    <div class="session-card__content">
+      <div class="session-card__meta"><span class="session-card__cat-dot"></span>5 min · Stress</div>
+      <h3 class="session-card__title">Calm in Three Minutes</h3>
+      <p class="session-card__desc">When you only have a moment. A rapid grounding exercise to reset your nervous system and find your centre.</p>
+      <div class="player"><button class="player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="player__track"><div class="player__progress"></div></div><span class="player__time">0:00 / 5:12</span></div>
+    </div>
+  </div>
+
+  <div class="session-card cat-stress" data-category="stress">
+    <div class="session-card__orb"></div><div class="session-card__orb session-card__orb--2"></div>
+    <span class="session-card__badge badge--premium">Premium</span>
+    <div class="session-card__content">
+      <div class="session-card__meta"><span class="session-card__cat-dot"></span>5 min · Stress</div>
+      <h3 class="session-card__title">The Calm Reset</h3>
+      <p class="session-card__desc">A quick anchor practice. Five minutes to interrupt the stress cycle and return to a state of steady awareness.</p>
+      <div class="player"><button class="player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="player__track"><div class="player__progress"></div></div><span class="player__time">0:00 / 5:48</span></div>
+    </div>
+  </div>
+
+  <div class="session-card cat-stress" data-category="stress">
+    <div class="session-card__orb"></div><div class="session-card__orb session-card__orb--2"></div>
+    <span class="session-card__badge badge--premium">Premium</span>
+    <div class="session-card__content">
+      <div class="session-card__meta"><span class="session-card__cat-dot"></span>13 min · Stress</div>
+      <h3 class="session-card__title">Release and Restore</h3>
+      <p class="session-card__desc">Breathwork meets body awareness. Release accumulated tension from the jaw, shoulders, and chest — then rebuild calm from the ground up.</p>
+      <div class="player"><button class="player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="player__track"><div class="player__progress"></div></div><span class="player__time">0:00 / 13:42</span></div>
+    </div>
+  </div>
+
+  <div class="session-card cat-mindfulness" data-category="mindfulness">
+    <div class="session-card__orb"></div><div class="session-card__orb session-card__orb--2"></div>
+    <span class="session-card__badge badge--premium">Premium</span>
+    <div class="session-card__content">
+      <div class="session-card__meta"><span class="session-card__cat-dot"></span>9 min · Mindfulness</div>
+      <h3 class="session-card__title">Observing Emotions</h3>
+      <p class="session-card__desc">Learn to sit with feelings without being swept away. A practice in noticing, naming, and letting emotions pass through.</p>
+      <div class="player"><button class="player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="player__track"><div class="player__progress"></div></div><span class="player__time">0:00 / 9:24</span></div>
+    </div>
+  </div>
+
+  <div class="session-card cat-mindfulness" data-category="mindfulness">
+    <div class="session-card__orb"></div><div class="session-card__orb session-card__orb--2"></div>
+    <span class="session-card__badge badge--premium">Premium</span>
+    <div class="session-card__content">
+      <div class="session-card__meta"><span class="session-card__cat-dot"></span>11 min · Mindfulness</div>
+      <h3 class="session-card__title">Open Awareness</h3>
+      <p class="session-card__desc">Move beyond the breath. Expand your attention to hold everything — sounds, sensations, thoughts — without grasping.</p>
+      <div class="player"><button class="player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="player__track"><div class="player__progress"></div></div><span class="player__time">0:00 / 11:24</span></div>
+    </div>
+  </div>
+
+  <div class="session-card cat-sleep" data-category="sleep">
+    <div class="session-card__orb"></div><div class="session-card__orb session-card__orb--2"></div>
+    <span class="session-card__badge badge--premium">Premium</span>
+    <div class="session-card__content">
+      <div class="session-card__meta"><span class="session-card__cat-dot"></span>17 min · Sleep</div>
+      <h3 class="session-card__title">Rainfall Sleep Journey</h3>
+      <p class="session-card__desc">Fall asleep to the sound of gentle rain. Our benchmark session — the standard by which all others are measured.</p>
+      <div class="player"><button class="player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="player__track"><div class="player__progress"></div></div><span class="player__time">0:00 / 17:42</span></div>
+      <div class="session-card__ambient"><svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1014 17V7h4V3h-6z"/></svg>Rain</div>
+    </div>
+  </div>
+
+  <div class="session-card cat-sleep" data-category="sleep">
+    <div class="session-card__orb"></div><div class="session-card__orb session-card__orb--2"></div>
+    <span class="session-card__badge badge--premium">Premium</span>
+    <div class="session-card__content">
+      <div class="session-card__meta"><span class="session-card__cat-dot"></span>38 min · Sleep</div>
+      <h3 class="session-card__title">Letting Go of the Day</h3>
+      <p class="session-card__desc">Unwind the threads of your day one by one. A gentle practice for releasing what no longer serves you before rest.</p>
+      <div class="player"><button class="player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="player__track"><div class="player__progress"></div></div><span class="player__time">0:00 / 38:30</span></div>
+      <div class="session-card__ambient"><svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1014 17V7h4V3h-6z"/></svg>Evening ambient</div>
+    </div>
+  </div>
+
+  <div class="session-card cat-sleep" data-category="sleep">
+    <div class="session-card__orb"></div><div class="session-card__orb session-card__orb--2"></div>
+    <span class="session-card__badge badge--premium">Premium</span>
+    <div class="session-card__content">
+      <div class="session-card__meta"><span class="session-card__cat-dot"></span>50 min · Sleep</div>
+      <h3 class="session-card__title">Body Scan for Deep Rest</h3>
+      <p class="session-card__desc">A slow, deliberate journey through every part of your body — releasing tension layer by layer until sleep arrives naturally.</p>
+      <div class="player"><button class="player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="player__track"><div class="player__progress"></div></div><span class="player__time">0:00 / 50:12</span></div>
+      <div class="session-card__ambient"><svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1014 17V7h4V3h-6z"/></svg>Ambient pad</div>
+    </div>
+  </div>
+
+  <div class="session-card cat-sleep" data-category="sleep">
+    <div class="session-card__orb"></div><div class="session-card__orb session-card__orb--2"></div>
+    <span class="session-card__badge badge--premium">Premium</span>
+    <div class="session-card__content">
+      <div class="session-card__meta"><span class="session-card__cat-dot"></span>52 min · Sleep</div>
+      <h3 class="session-card__title">Moonlight Drift</h3>
+      <p class="session-card__desc">Guided imagery under a canopy of stars. Let the quiet of the night carry you into deep, unbroken sleep.</p>
+      <div class="player"><button class="player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="player__track"><div class="player__progress"></div></div><span class="player__time">0:00 / 52:00</span></div>
+      <div class="session-card__ambient"><svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1014 17V7h4V3h-6z"/></svg>Night sounds</div>
+    </div>
+  </div>
+
+  <div class="session-card cat-sleep" data-category="sleep">
+    <div class="session-card__orb"></div><div class="session-card__orb session-card__orb--2"></div>
+    <span class="session-card__badge badge--premium">Premium</span>
+    <div class="session-card__content">
+      <div class="session-card__meta"><span class="session-card__cat-dot"></span>63 min · Sleep</div>
+      <h3 class="session-card__title">The Quiet Shore</h3>
+      <p class="session-card__desc">An extended journey to a calm shoreline. Waves, warmth, and a voice that fades as sleep deepens.</p>
+      <div class="player"><button class="player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="player__track"><div class="player__progress"></div></div><span class="player__time">0:00 / 63:24</span></div>
+      <div class="session-card__ambient"><svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1014 17V7h4V3h-6z"/></svg>Ocean waves</div>
+    </div>
+  </div>
+
+  <div class="session-card cat-advanced" data-category="advanced">
+    <div class="session-card__orb"></div><div class="session-card__orb session-card__orb--2"></div>
+    <span class="session-card__badge badge--premium">Premium</span>
+    <div class="session-card__content">
+      <div class="session-card__meta"><span class="session-card__cat-dot"></span>20 min · Advanced</div>
+      <h3 class="session-card__title">Non-Dual Awareness</h3>
+      <p class="session-card__desc">Rest in the space before thought. An advanced practice in observing consciousness itself — the observer and the observed as one.</p>
+      <div class="player"><button class="player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="player__track"><div class="player__progress"></div></div><span class="player__time">0:00 / 20:06</span></div>
+    </div>
+  </div>
+
+  <div class="session-card cat-advanced" data-category="advanced">
+    <div class="session-card__orb"></div><div class="session-card__orb session-card__orb--2"></div>
+    <span class="session-card__badge badge--premium">Premium</span>
+    <div class="session-card__content">
+      <div class="session-card__meta"><span class="session-card__cat-dot"></span>56 min · Advanced</div>
+      <h3 class="session-card__title">Lucid Dream Preparation</h3>
+      <p class="session-card__desc">A guided practice to strengthen awareness at the threshold of sleep — techniques for recognising and entering lucid states.</p>
+      <div class="player"><button class="player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="player__track"><div class="player__progress"></div></div><span class="player__time">0:00 / 56:12</span></div>
+      <div class="session-card__ambient"><svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1014 17V7h4V3h-6z"/></svg>Ethereal</div>
+    </div>
+  </div>
+
+</div>
+
   </section>
 
   <!-- Footer -->
@@ -594,6 +614,44 @@
   animate();
 })();
 
+
+  // Filters
+  const filterBtns=document.querySelectorAll('.filter-btn');
+  const sampleGrid=document.getElementById('sampleGrid');
+  const premiumGrid=document.getElementById('premiumGrid');
+  const sampleDivider=document.getElementById('sampleDivider');
+  const premiumDivider=document.getElementById('premiumDivider');
+  const subHook=document.getElementById('subHook');
+  const sampleCards=sampleGrid.querySelectorAll('.session-card');
+  const premiumCards=premiumGrid.querySelectorAll('.session-card');
+  filterBtns.forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      filterBtns.forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const f=btn.dataset.filter;
+      if(f==='all'){
+        [sampleDivider,sampleGrid,subHook,premiumDivider,premiumGrid].forEach(el=>el.style.display='');
+        sampleCards.forEach(c=>c.style.display='');
+        premiumCards.forEach(c=>c.style.display='');
+        return;
+      }
+      if(f==='sample'){
+        [sampleDivider,sampleGrid,subHook].forEach(el=>el.style.display='');
+        [premiumDivider,premiumGrid].forEach(el=>el.style.display='none');
+        sampleCards.forEach(c=>c.style.display='');
+        return;
+      }
+      let anySample=false;
+      sampleCards.forEach(c=>{const show=c.dataset.catType===f;c.style.display=show?'':'none';if(show)anySample=true});
+      sampleDivider.style.display=anySample?'':'none';
+      sampleGrid.style.display=anySample?'':'none';
+      subHook.style.display='';
+      let anyPremium=false;
+      premiumCards.forEach(c=>{const show=c.dataset.category===f;c.style.display=show?'':'none';if(show)anyPremium=true});
+      premiumDivider.style.display=anyPremium?'':'none';
+      premiumGrid.style.display=anyPremium?'':'none';
+    });
+  });
 
   // Navigation
   const navWrap=document.getElementById("navWrap");
