@@ -114,6 +114,12 @@ ELEVENLABS_MODELS = {
 # ElevenLabs paragraph merging — only merge very short blocks (<20 chars)
 ELEVENLABS_MIN_BLOCK_CHARS = 20
 
+# LALAL.AI Audio Cleaning API
+LALAL_API_KEY = os.getenv("LALAL_API_KEY")
+LALAL_API_BASE = "https://www.lalal.ai/api/v1"
+LALAL_NOISE_LEVEL = 1  # 0=mild, 1=normal, 2=aggressive
+LALAL_DEREVERB = True   # Enable de-echo/de-reverb
+
 # Resemble AI TTS API
 RESEMBLE_API_KEY = os.getenv("RESEMBLE_API_KEY")
 RESEMBLE_SYNTH_URL = "https://f.cluster.resemble.ai/synthesize"
@@ -540,6 +546,135 @@ def generate_chunk_with_qa(text, output_path, chunk_num, emotion='calm',
     flagged = quality_score < 0.50 if quality_score is not None else True
 
     return output_path, best_details, flagged, best_mfcc
+
+
+# ============================================================================
+# LALAL.AI AUDIO CLEANING
+# ============================================================================
+
+def lalal_clean_chunk(input_path, output_path, noise_level=None, dereverb=None):
+    """Clean a single audio chunk via LALAL.AI voice_clean API.
+
+    Uploads the chunk, processes with de-echo and noise cancellation,
+    downloads the cleaned voice stem. Falls back to original if API fails.
+
+    Returns True if cleaning succeeded, False if fallback to original.
+    """
+    import requests as _requests
+
+    if not LALAL_API_KEY:
+        shutil.copy(input_path, output_path)
+        return False
+
+    if noise_level is None:
+        noise_level = LALAL_NOISE_LEVEL
+    if dereverb is None:
+        dereverb = LALAL_DEREVERB
+
+    headers = {'X-License-Key': LALAL_API_KEY}
+
+    try:
+        # Upload
+        with open(input_path, 'rb') as f:
+            fname = os.path.basename(input_path)
+            resp = _requests.post(
+                f'{LALAL_API_BASE}/upload/',
+                headers={**headers, 'Content-Disposition': f'attachment; filename={fname}'},
+                data=f,
+                timeout=60
+            )
+        resp.raise_for_status()
+        source_id = resp.json()['id']
+
+        # Process
+        resp = _requests.post(
+            f'{LALAL_API_BASE}/split/voice_clean/',
+            headers={**headers, 'Content-Type': 'application/json'},
+            json={
+                'source_id': source_id,
+                'presets': {
+                    'stem': 'voice',
+                    'noise_cancelling_level': noise_level,
+                    'dereverb_enabled': dereverb,
+                    'encoder_format': 'wav'
+                }
+            },
+            timeout=30
+        )
+        resp.raise_for_status()
+        task_id = resp.json()['task_id']
+
+        # Poll for completion (max 120s)
+        for _ in range(60):
+            time.sleep(2)
+            resp = _requests.post(
+                f'{LALAL_API_BASE}/check/',
+                headers={**headers, 'Content-Type': 'application/json'},
+                json={'task_ids': [task_id]},
+                timeout=15
+            )
+            result = resp.json()['result'][task_id]
+            if result['status'] == 'success':
+                voice_url = result['result']['tracks'][0]['url']
+                dl = _requests.get(voice_url, timeout=60)
+                dl.raise_for_status()
+                with open(output_path, 'wb') as f:
+                    f.write(dl.content)
+                return True
+            elif result['status'] == 'error':
+                print(f"      LALAL error: {result.get('error', 'unknown')}")
+                break
+
+        # Timeout or error — fall back to original
+        shutil.copy(input_path, output_path)
+        return False
+
+    except Exception as e:
+        print(f"      LALAL failed ({e}) — using original")
+        shutil.copy(input_path, output_path)
+        return False
+
+
+def lalal_clean_chunks(chunk_paths, temp_dir):
+    """Clean all chunks through LALAL.AI. Returns list of cleaned paths.
+
+    Processes sequentially to respect API rate limits.
+    Skips if LALAL_API_KEY is not set.
+    """
+    if not LALAL_API_KEY:
+        print("  LALAL.AI: No API key — skipping audio cleaning")
+        return chunk_paths
+
+    print(f"\n  LALAL.AI: Cleaning {len(chunk_paths)} chunks (noise={LALAL_NOISE_LEVEL}, dereverb={LALAL_DEREVERB})...")
+    cleaned_paths = []
+    cleaned_count = 0
+
+    for i, path in enumerate(chunk_paths):
+        cleaned_path = os.path.join(temp_dir, f"lalal_cleaned_{i}.wav")
+        # Convert MP3 chunk to WAV for LALAL (lossless pipeline)
+        wav_input = os.path.join(temp_dir, f"lalal_input_{i}.wav")
+        subprocess.run(
+            ['ffmpeg', '-y', '-i', path, '-c:a', 'pcm_s16le', '-ar', '44100', wav_input],
+            capture_output=True, check=True
+        )
+        success = lalal_clean_chunk(wav_input, cleaned_path)
+        if success:
+            cleaned_count += 1
+            cleaned_paths.append(cleaned_path)
+            print(f"    Chunk {i+1}/{len(chunk_paths)}: cleaned")
+        else:
+            cleaned_paths.append(wav_input)
+            print(f"    Chunk {i+1}/{len(chunk_paths)}: fallback (original)")
+
+        # Clean up temp input if we have a cleaned version
+        if success and os.path.exists(wav_input):
+            try:
+                os.remove(wav_input)
+            except OSError:
+                pass
+
+    print(f"  LALAL.AI: {cleaned_count}/{len(chunk_paths)} chunks cleaned successfully")
+    return cleaned_paths
 
 
 # ============================================================================
@@ -3517,6 +3652,12 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
         else:
             if provider == 'fish':
                 print(f"\n  ✓ PER-CHUNK QA: All chunks scored above threshold")
+
+        # ================================================================
+        # PHASE 1.5: LALAL.AI AUDIO CLEANING (optional)
+        # ================================================================
+        if LALAL_API_KEY and provider == 'fish':
+            voice_files = lalal_clean_chunks(voice_files, temp_dir)
 
         # ================================================================
         # PHASE 2: CONCATENATE + MIX (lossless WAV pipeline)
