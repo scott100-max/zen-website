@@ -1411,11 +1411,12 @@ Expanded from 10 gates to 14 gates. All gates now pass/fail — no informational
 - New page: `articles/anxiety-thinking.html` (first article detail page, `articles/` subdirectory)
 - Applied Psychology page: featured article link, "Updated Regularly" approach item
 - Mindfulness page restructured: session cards first, then 7-day + 21-day course banners
-- Home page: fixed white bands caused by old light-theme `style.css` overrides
+- `css/style.css` fixed at source: all light-theme backgrounds neutralised (body, hero, hero-bg::after, daily-quote, section:nth-child(even), filter-btn, sound-category-tag → transparent). Per-page overrides no longer needed.
+- ASMR page (`asmr.html`): "Coming Soon" placeholder replaced with 14-sound card library (rain, ocean, forest, thunder, birds, fire, stream, cafe, garden, library, night, temple, waterfall, white noise). Category filters (All/Nature/Weather/Spaces/Ambient), animated waveform bars, per-card accent colours, staggered entrance animation. Supersedes old `sounds.html`.
 
 ---
 
-*Last updated: 8 February 2026 — Bible v2.2: whole-file loudnorm, highshelf removed, per-chunk QA system, recalibrated Gate 7/9 thresholds, website restructuring.*
+*Last updated: 8 February 2026 — Bible v2.2: whole-file loudnorm, highshelf removed, per-chunk QA system, recalibrated Gate 7/9 thresholds, website restructuring, style.css light-theme fix, ASMR sound library.*
 
 ---
 
