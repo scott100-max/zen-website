@@ -100,6 +100,59 @@
   .nav-drawer__ctas .nav-cta{flex:1;text-align:center;padding:12px 20px;font-size:.88rem}
   @media(max-width:860px){.nav-primary,.nav-row-2,.nav-ctas{display:none}.nav-burger{display:flex}.nav-row-1{height:56px}}
 
+  /* ═══ CONTACT BODY ═══ */
+  .ct-contact{padding:100px 24px 100px;max-width:920px;margin:0 auto;display:grid;grid-template-columns:1fr 1.3fr;gap:60px;align-items:start}
+
+  .ct-contact__info{position:relative}
+  .ct-contact__label{display:inline-flex;align-items:center;gap:10px;font-weight:300;font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(78,205,196,0.6);margin-bottom:20px}
+  .ct-contact__label::before,.ct-contact__label::after{content:'';width:24px;height:1px;background:linear-gradient(90deg,transparent,rgba(78,205,196,0.35),transparent)}
+  .ct-contact__info h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.8rem,4vw,2.4rem);line-height:1.25;margin-bottom:16px}
+  .ct-contact__info>p{font-weight:200;font-size:.88rem;line-height:1.7;color:var(--text-mid);margin-bottom:40px}
+
+  .ct-channels{display:flex;flex-direction:column;gap:20px}
+  .ct-channel{display:flex;align-items:flex-start;gap:14px}
+  .ct-channel__icon{width:40px;height:40px;border-radius:50%;flex-shrink:0;background:rgba(78,205,196,0.06);border:1px solid rgba(78,205,196,0.1);display:flex;align-items:center;justify-content:center}
+  .ct-channel__icon svg{width:16px;height:16px;fill:none;stroke:rgba(78,205,196,0.7);stroke-width:1.5}
+  .ct-channel__text{display:flex;flex-direction:column;gap:2px}
+  .ct-channel__title{font-weight:400;font-size:.82rem;color:var(--text-bright)}
+  .ct-channel__detail{font-weight:200;font-size:.78rem;color:var(--text-muted)}
+  .ct-channel__detail a{color:#4ecdc4;text-decoration:none;transition:opacity .2s}
+  .ct-channel__detail a:hover{opacity:.7}
+
+  .ct-response{margin-top:36px;padding:20px;border-radius:12px;background:rgba(78,205,196,0.04);border:1px solid rgba(78,205,196,0.08)}
+  .ct-response p{font-weight:200;font-size:.76rem;line-height:1.6;color:var(--text-muted)}
+  .ct-response strong{font-weight:400;color:var(--text-mid)}
+
+  .ct-form-wrap{background:#0a0d18;border:1px solid rgba(255,255,255,0.06);border-radius:20px;padding:36px 32px;position:relative;overflow:hidden}
+  .ct-form-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(78,205,196,0.02) 0%,transparent 70%)}
+  .ct-form-wrap::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:.5;pointer-events:none;border-radius:inherit}
+
+  .ct-form{position:relative;z-index:2;display:flex;flex-direction:column;gap:20px}
+  .ct-form__group{display:flex;flex-direction:column;gap:6px}
+  .ct-form__label{font-weight:300;font-size:.74rem;color:var(--text-muted);letter-spacing:.02em}
+  .ct-form__input,.ct-form__textarea{font-family:'Outfit',sans-serif;font-weight:200;font-size:.84rem;color:var(--text-bright);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;outline:none;transition:border-color .3s ease}
+  .ct-form__input:focus,.ct-form__textarea:focus{border-color:rgba(78,205,196,0.3)}
+  .ct-form__input::placeholder,.ct-form__textarea::placeholder{color:rgba(255,255,255,0.2)}
+  .ct-form__textarea{resize:vertical;min-height:120px}
+  .ct-form__row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+  .ct-form__select{font-family:'Outfit',sans-serif;font-weight:200;font-size:.84rem;color:var(--text-bright);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.3)' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:14px;transition:border-color .3s ease}
+  .ct-form__select:focus{border-color:rgba(78,205,196,0.3)}
+  .ct-form__select option{background:#0a0d18;color:var(--text-bright)}
+
+  .ct-form__submit{font-family:'Outfit',sans-serif;font-weight:400;font-size:.84rem;letter-spacing:.04em;padding:14px 28px;border-radius:40px;border:none;cursor:pointer;color:#060810;background:linear-gradient(135deg,#4ecdc4,#6dd5c8);transition:all .35s cubic-bezier(.22,1,.36,1);align-self:flex-start}
+  .ct-form__submit:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(78,205,196,0.25)}
+  .ct-form__submit:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
+
+  .ct-form__status{margin-top:4px;padding:12px 16px;border-radius:10px;font-weight:300;font-size:.8rem;line-height:1.5;display:none}
+  .ct-form__status--success{display:block;background:rgba(78,205,196,0.08);border:1px solid rgba(78,205,196,0.15);color:rgba(78,205,196,0.9)}
+  .ct-form__status--error{display:block;background:rgba(244,114,182,0.08);border:1px solid rgba(244,114,182,0.15);color:rgba(244,114,182,0.9)}
+
+  @media(max-width:768px){
+    .ct-contact{grid-template-columns:1fr;gap:40px}
+    .ct-form__row{grid-template-columns:1fr}
+  }
+
 </style>
 </head>
 <body>
@@ -174,89 +227,123 @@
   <div class="scroll-hint"><span class="scroll-hint__text">Write</span><span class="scroll-hint__line"></span></div>
 </section>
 
-  <section style="background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%);">
-    <div class="container">
-      <form class="contact-form fade-in" id="contact-form">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input type="text" id="name" name="name" placeholder="Your name" required>
+<!-- ═══ CONTACT BODY ═══ -->
+<section class="ct-contact" id="form">
+
+  <!-- LEFT — INFO -->
+  <div class="ct-contact__info">
+    <div class="ct-contact__label"><span></span>Get in Touch<span></span></div>
+    <h2>We read every message ourselves</h2>
+    <p>Salus is a small, family-run project. When you write to us, a real person reads it — not a chatbot, not a support queue. If something's not working, or you just want to say hello, we'd love to hear from you.</p>
+
+    <div class="ct-channels">
+      <div class="ct-channel">
+        <div class="ct-channel__icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+        <div class="ct-channel__text">
+          <span class="ct-channel__title">Email</span>
+          <span class="ct-channel__detail"><a href="mailto:hello@salus-mind.com">hello@salus-mind.com</a></span>
         </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" placeholder="you@example.com" required>
+      </div>
+
+      <div class="ct-channel">
+        <div class="ct-channel__icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+        <div class="ct-channel__text">
+          <span class="ct-channel__title">Response Time</span>
+          <span class="ct-channel__detail">Usually within 24 hours</span>
         </div>
-        <div class="form-group">
-          <label for="subject">Subject</label>
-          <select id="subject" name="subject">
-            <option>General Inquiry</option>
-            <option>Partnership</option>
-            <option>Feedback</option>
-            <option>Support</option>
-            <option>Press / Media</option>
-            <option>Other</option>
-          </select>
+      </div>
+
+      <div class="ct-channel">
+        <div class="ct-channel__icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <div class="ct-channel__text">
+          <span class="ct-channel__title">Based in</span>
+          <span class="ct-channel__detail">United Kingdom</span>
         </div>
-        <div class="form-group">
-          <label for="message">Message</label>
-          <textarea id="message" name="message" placeholder="How can we help?" required></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary" style="width:100%;" id="submit-btn">Send Message</button>
-        <div id="form-status" style="margin-top:16px;padding:12px;border-radius:8px;display:none;"></div>
-      </form>
-      <script>
-        document.getElementById('contact-form').addEventListener('submit', async function(e) {
-          e.preventDefault();
-          const btn = document.getElementById('submit-btn');
-          const status = document.getElementById('form-status');
-          const form = this;
-
-          btn.disabled = true;
-          btn.textContent = 'Sending...';
-
-          const data = new FormData(form);
-
-          try {
-            const response = await fetch('https://formspree.io/f/mwvqdpnn', {
-              method: 'POST',
-              body: data,
-              headers: { 'Accept': 'application/json' }
-            });
-
-            if (response.ok) {
-              status.style.display = 'block';
-              status.style.background = '#d4edda';
-              status.style.color = '#155724';
-              status.innerHTML = '<strong>Message sent!</strong> Thank you for reaching out. We\'ll get back to you soon.';
-              form.reset();
-            } else {
-              throw new Error('Form submission failed');
-            }
-          } catch (error) {
-            status.style.display = 'block';
-            status.style.background = '#f8d7da';
-            status.style.color = '#721c24';
-            status.innerHTML = '<strong>Oops!</strong> Something went wrong. Please email us directly at scottripley@icloud.com';
-          }
-
-          btn.disabled = false;
-          btn.textContent = 'Send Message';
-        });
-      </script>
-    </div>
-  </section>
-
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-bottom">
-        <a href="#" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to Top</a>
-        &copy; 2026 Salus. All rights reserved.
       </div>
     </div>
-  </footer>
+
+    <div class="ct-response">
+      <p><strong>Before you write:</strong> If you're having trouble with your account or subscription, try logging out and back in first. Most issues resolve themselves. If it persists, drop us a line and we'll sort it.</p>
+    </div>
+  </div>
+
+  <!-- RIGHT — FORM -->
+  <div class="ct-form-wrap">
+    <form class="ct-form" id="contactForm">
+      <div class="ct-form__row">
+        <div class="ct-form__group">
+          <label class="ct-form__label" for="ct-name">Name</label>
+          <input class="ct-form__input" type="text" id="ct-name" name="name" placeholder="Your name" required>
+        </div>
+        <div class="ct-form__group">
+          <label class="ct-form__label" for="ct-email">Email</label>
+          <input class="ct-form__input" type="email" id="ct-email" name="email" placeholder="you@example.com" required>
+        </div>
+      </div>
+
+      <div class="ct-form__group">
+        <label class="ct-form__label" for="ct-topic">What's this about?</label>
+        <select class="ct-form__select" id="ct-topic" name="subject">
+          <option value="">Choose a topic</option>
+          <option value="General enquiry">General enquiry</option>
+          <option value="Account or subscription">Account or subscription</option>
+          <option value="Feedback or suggestion">Feedback or suggestion</option>
+          <option value="Something's not working">Something's not working</option>
+          <option value="Something else">Something else</option>
+        </select>
+      </div>
+
+      <div class="ct-form__group">
+        <label class="ct-form__label" for="ct-message">Message</label>
+        <textarea class="ct-form__textarea" id="ct-message" name="message" placeholder="Tell us what's on your mind..." required></textarea>
+      </div>
+
+      <button type="submit" class="ct-form__submit" id="ctSubmitBtn">Send Message</button>
+      <div class="ct-form__status" id="ctFormStatus"></div>
+    </form>
+  </div>
+
+</section>
 
   <script src="js/main.js?v=1770053724"></script>
   <script src="js/tracker.js"></script>
   <script>
+  // Contact Form
+  (function(){
+    const form=document.getElementById('contactForm');
+    const btn=document.getElementById('ctSubmitBtn');
+    const status=document.getElementById('ctFormStatus');
+
+    form.addEventListener('submit',async function(e){
+      e.preventDefault();
+      btn.disabled=true;
+      btn.textContent='Sending...';
+      status.className='ct-form__status';
+      status.style.display='none';
+
+      try{
+        const res=await fetch('https://formspree.io/f/mwvqdpnn',{
+          method:'POST',
+          body:new FormData(form),
+          headers:{'Accept':'application/json'}
+        });
+        if(res.ok){
+          status.className='ct-form__status ct-form__status--success';
+          status.textContent='Message sent! Thank you for reaching out. We\'ll get back to you soon.';
+          form.reset();
+        }else{
+          throw new Error('fail');
+        }
+      }catch(err){
+        status.className='ct-form__status ct-form__status--error';
+        status.innerHTML='Something went wrong. Please email us directly at <a href="mailto:hello@salus-mind.com" style="color:inherit;text-decoration:underline">hello@salus-mind.com</a>';
+      }
+
+      btn.disabled=false;
+      btn.textContent='Send Message';
+    });
+  })();
+
   // Navigation
   const navWrap=document.getElementById("navWrap");
   window.addEventListener("scroll",()=>{navWrap.classList.toggle("scrolled",window.scrollY>30)},{passive:true});
