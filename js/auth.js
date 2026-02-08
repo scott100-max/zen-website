@@ -278,7 +278,8 @@ var SalusAuth = (function() {
 
   // Update navigation UI based on auth state
   function updateNavUI() {
-    var authBtn = document.querySelector('.nav-auth-btn');
+    // Find login button — old nav uses .nav-auth-btn, new 2-row nav uses .nav-cta--login
+    var authBtn = document.querySelector('.nav-auth-btn') || document.querySelector('.nav-cta--login');
 
     // Detect if we're in a subdirectory by checking existing href pattern
     var pathPrefix = '';
@@ -297,6 +298,18 @@ var SalusAuth = (function() {
       } else {
         authBtn.textContent = 'Log In';
         authBtn.href = pathPrefix + 'login.html';
+      }
+    }
+
+    // Also update login button in mobile drawer (new nav)
+    var drawerLogin = document.querySelector('.nav-drawer .nav-cta--login');
+    if (drawerLogin) {
+      if (currentUser) {
+        drawerLogin.textContent = 'Account';
+        drawerLogin.href = pathPrefix + 'dashboard.html';
+      } else {
+        drawerLogin.textContent = 'Log In';
+        drawerLogin.href = pathPrefix + 'login.html';
       }
     }
 
