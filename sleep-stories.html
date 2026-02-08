@@ -546,141 +546,101 @@
   .nav-drawer__ctas .nav-cta{flex:1;text-align:center;padding:12px 20px;font-size:.88rem}
   @media(max-width:860px){.nav-primary,.nav-row-2,.nav-ctas{display:none}.nav-burger{display:flex}.nav-row-1{height:56px}}
 
-    .stories-grid {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 24px;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-    .story-book {
-      aspect-ratio: 0.7;
-      border-radius: 4px 12px 12px 4px;
-      position: relative;
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      overflow: hidden;
-      transform-style: preserve-3d;
-      min-height: 180px;
-      box-shadow: 8px 8px 16px rgba(0,0,0,0.25), 3px 0 0 #e8e4dc, 6px 0 0 #f0ece4, 9px 0 0 #f5f2eb, 12px 0 0 #faf8f5;
-    }
-    .story-book::before {
-      content: '';
-      position: absolute;
-      right: -12px; top: 3px; bottom: 3px; width: 12px;
-      background: linear-gradient(to right, #d0ccc4, #e8e4dc, #f5f2eb);
-      border-radius: 0 3px 3px 0;
-      box-shadow: inset -2px 0 4px rgba(0,0,0,0.15);
-    }
-    .story-book::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 3px 6px 6px 3px;
-      background: linear-gradient(90deg, rgba(0,0,0,0.12) 0%, transparent 15%, transparent 85%, rgba(255,255,255,0.08) 100%);
-      pointer-events: none;
-      z-index: 20;
-    }
-    .story-book:hover {
-      transform: translateY(-6px) rotateY(-5deg);
-      box-shadow: 10px 12px 20px rgba(0,0,0,0.25), 2px 0 0 #e8e4dc, 4px 0 0 #f0ece4, 6px 0 0 #f5f2eb;
-    }
-    .story-book.locked { opacity: 0.7; cursor: default; }
-    .story-book.locked:hover { transform: none; box-shadow: 6px 6px 12px rgba(0,0,0,0.2), 2px 0 0 #e8e4dc, 4px 0 0 #f0ece4, 6px 0 0 #f5f2eb; }
+  /* ═══ SLEEP STORIES CARD SECTION ═══ */
+  .ss-section-header{text-align:center;margin-bottom:20px;padding:48px 24px 0}
+  .ss-section-header__label{display:inline-flex;align-items:center;gap:10px;font-weight:300;font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(167,139,250,0.7);margin-bottom:16px}
+  .ss-section-header__label::before,.ss-section-header__label::after{content:'';width:24px;height:1px;background:linear-gradient(90deg,transparent,rgba(167,139,250,0.4),transparent)}
+  .ss-section-header h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.8rem,4vw,2.4rem);margin-bottom:8px}
+  .ss-section-header p{font-weight:200;font-size:.85rem;color:var(--text-muted);max-width:480px;margin:0 auto;line-height:1.6}
 
-    /* Book cover scene */
-    .book-scene {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-    }
-    .book-sky {
-      position: absolute;
-      inset: 0;
-    }
-    .book-ground {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 35%;
-    }
-    .book-element {
-      position: absolute;
-    }
-    /* Stars */
-    .star { background: #fff; border-radius: 50%; }
-    .star-1 { width: 2px; height: 2px; top: 12%; left: 20%; opacity: 0.9; }
-    .star-2 { width: 1px; height: 1px; top: 8%; left: 70%; opacity: 0.7; }
-    .star-3 { width: 2px; height: 2px; top: 18%; left: 45%; opacity: 0.8; }
-    .star-4 { width: 1px; height: 1px; top: 25%; left: 80%; opacity: 0.6; }
-    .star-5 { width: 2px; height: 2px; top: 15%; left: 30%; opacity: 0.7; }
-    .star-6 { width: 1px; height: 1px; top: 22%; left: 60%; opacity: 0.8; }
-    /* Moon */
-    .book-scene .moon {
-      width: 22px; height: 22px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #fef9c3 0%, #fde68a 100%);
-      box-shadow: 0 0 15px rgba(254,240,138,0.5), inset -3px -2px 0 rgba(253,224,71,0.4);
-      top: 10%; right: 15%;
-      position: absolute;
-      animation: none;
-      opacity: 1;
-    }
-    /* Trees */
-    .tree-group { bottom: 0; width: 100%; height: 45%; }
-    .tree { position: absolute; bottom: 0; }
-    .tree svg { width: 100%; height: 100%; }
-    /* Mountains */
-    .mountains { bottom: 0; width: 100%; height: 50%; }
-    /* Waves */
-    .waves { bottom: 0; width: 100%; height: 30%; }
-    /* Hills */
-    .hills { bottom: 0; width: 100%; height: 35%; }
+  .ss-how-strip{max-width:980px;margin:0 auto 36px;display:flex;justify-content:center;gap:40px;padding:20px 24px;border-top:1px solid rgba(167,139,250,0.06);border-bottom:1px solid rgba(167,139,250,0.06)}
+  .ss-how-strip__item{display:flex;align-items:center;gap:10px}
+  .ss-how-strip__num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:400;font-size:.68rem;color:var(--accent-bright);background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.15);flex-shrink:0}
+  .ss-how-strip__text{font-weight:200;font-size:.78rem;color:var(--text-muted)}
 
-    /* Title styling */
-    .book-title-wrap {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      padding: 20px 8px 12px;
-      background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
-      z-index: 10;
-    }
-    .book-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #fff;
-      text-align: center;
-      line-height: 1.25;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-    }
-    .book-author {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.5rem;
-      color: rgba(255,255,255,0.7);
-      text-align: center;
-      margin-top: 2px;
-      letter-spacing: 0.5px;
-    }
-    .story-book .lock-icon {
-      position: absolute;
-      top: 8px; right: 8px;
-      background: rgba(0,0,0,0.4);
-      border-radius: 4px;
-      padding: 4px;
-      z-index: 15;
-    }
+  .ss-filters{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-bottom:36px;padding:0 24px}
+  .ss-filter-btn{font-family:'Outfit',sans-serif;font-weight:300;font-size:.72rem;letter-spacing:.04em;padding:7px 16px;border-radius:40px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text-muted);cursor:pointer;transition:all .3s ease;white-space:nowrap}
+  .ss-filter-btn:hover{border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.72)}
+  .ss-filter-btn.active{background:rgba(167,139,250,0.08);border-color:rgba(167,139,250,0.2);color:var(--accent-bright)}
 
-    @media (max-width: 900px) {
-      .stories-grid { grid-template-columns: repeat(5, 1fr); gap: 16px; }
-      .story-book { min-height: 150px; }
-      .book-title { font-size: 0.65rem; }
-    }
-    @media (max-width: 600px) {
-      .stories-grid { grid-template-columns: repeat(4, 1fr); gap: 12px; }
-      .story-book { min-height: 130px; }
-      .book-title { font-size: 0.6rem; }
-      .book-title-wrap { padding: 15px 6px 10px; }
-    }
+  .ss-section-divider{text-align:center;padding:44px 24px 28px;position:relative}
+  .ss-section-divider__line{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;height:1px;background:linear-gradient(90deg,transparent,rgba(167,139,250,0.08),transparent)}
+  .ss-section-divider__label{position:relative;z-index:1;display:inline-flex;flex-direction:column;align-items:center;font-weight:300;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text-muted);background:var(--deep);padding:0 16px}
+  .ss-section-divider__sub{display:block;font-weight:200;font-size:.78rem;letter-spacing:.02em;text-transform:none;color:rgba(255,255,255,0.35);margin-top:6px}
+
+  .ss-sub-hook{max-width:980px;margin:36px auto 0;display:flex;align-items:center;justify-content:space-between;gap:16px;background:linear-gradient(135deg,rgba(167,139,250,0.06) 0%,rgba(129,140,248,0.04) 100%);border:1px solid rgba(167,139,250,0.1);border-radius:14px;padding:16px 24px}
+  .ss-sub-hook__text{display:flex;flex-direction:column;gap:2px}
+  .ss-sub-hook__title{font-weight:400;font-size:.82rem;color:var(--text-bright);display:flex;align-items:center;gap:8px}
+  .ss-sub-hook__title svg{width:14px;height:14px;fill:rgba(167,139,250,0.8)}
+  .ss-sub-hook__desc{font-weight:200;font-size:.74rem;color:var(--text-muted)}
+  .ss-sub-hook__cta{font-family:'Outfit',sans-serif;font-weight:400;font-size:.74rem;letter-spacing:.04em;padding:8px 20px;border-radius:40px;color:#060810;background:linear-gradient(135deg,#a78bfa,#c4b5fd);border:none;cursor:pointer;text-decoration:none;white-space:nowrap;transition:all .35s cubic-bezier(.22,1,.36,1)}
+  .ss-sub-hook__cta:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(167,139,250,0.25)}
+
+  .ss-card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;max-width:980px;margin:0 auto;padding:0 24px}
+
+  .ss-card{position:relative;border-radius:18px;padding:30px 30px 24px;overflow:hidden;transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s ease;cursor:default;min-height:280px;display:flex;flex-direction:column;background:linear-gradient(145deg,#1e1b4b 0%,#312e81 35%,#3730a3 100%)}
+  .ss-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.35)}
+  .ss-card::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:.5;pointer-events:none;border-radius:inherit}
+  .ss-card__orb{position:absolute;border-radius:50%;filter:blur(40px);opacity:.35;pointer-events:none;transition:opacity .4s ease;background:#818cf8;width:140px;height:140px;top:-30px;right:-20px}
+  .ss-card__orb--2{position:absolute;border-radius:50%;filter:blur(40px);pointer-events:none;transition:opacity .4s ease;background:#a78bfa;width:100px;height:100px;bottom:-20px;left:-10px;opacity:.2}
+  .ss-card:hover .ss-card__orb{opacity:.5}
+
+  .ss-card__badge{position:absolute;top:18px;right:20px;z-index:4;font-weight:400;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  .ss-badge--week{color:var(--accent-bright);background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2)}
+  .ss-badge--premium{color:rgba(255,255,255,0.85);background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15)}
+
+  .ss-card__content{position:relative;z-index:3;flex:1;display:flex;flex-direction:column}
+  .ss-card__meta{display:flex;align-items:center;gap:6px;margin-bottom:10px;font-weight:300;font-size:.78rem;color:rgba(255,255,255,0.55)}
+  .ss-card__meta-dot{width:5px;height:5px;border-radius:50%;background:var(--accent-bright);flex-shrink:0}
+  .ss-card__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.6rem;line-height:1.2;color:#fff;margin-bottom:10px}
+  .ss-card__desc{font-weight:200;font-size:.84rem;line-height:1.65;color:rgba(255,255,255,0.6);margin-bottom:auto;padding-bottom:18px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+  .ss-player{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:10px 18px 10px 10px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);position:relative;z-index:3}
+  .ss-player__btn{width:40px;height:40px;border-radius:50%;flex-shrink:0;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s ease}
+  .ss-player__btn:hover{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.25);transform:scale(1.05)}
+  .ss-player__btn svg{width:14px;height:14px;fill:#fff;margin-left:2px}
+  .ss-player__track{flex:1;height:3px;background:rgba(255,255,255,0.12);border-radius:2px;overflow:hidden;cursor:pointer}
+  .ss-player__progress{height:100%;width:0%;border-radius:2px;background:var(--accent-bright);transition:width .1s linear}
+  .ss-player__time{font-weight:300;font-size:.7rem;color:rgba(255,255,255,0.45);white-space:nowrap;min-width:72px;text-align:right;font-variant-numeric:tabular-nums}
+
+  .ss-card__ambient{display:flex;align-items:center;gap:5px;font-weight:200;font-size:.64rem;color:rgba(255,255,255,0.35);margin-top:10px;position:relative;z-index:3}
+  .ss-card__ambient svg{width:12px;height:12px;fill:rgba(255,255,255,0.3)}
+
+  /* ═══ BOOK SPINE GRID — 6 columns ═══ */
+  .ss-book-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;max-width:980px;margin:0 auto;padding:0 24px}
+
+  .ss-book-spine{position:relative;border-radius:6px 12px 12px 6px;overflow:hidden;cursor:default;transition:transform .35s cubic-bezier(.22,1,.36,1);aspect-ratio:2/3;min-height:0}
+  .ss-book-spine:hover{transform:translateY(-4px) scale(1.02)}
+  .ss-book-spine__face{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:14px 12px;border-radius:inherit}
+  .ss-book-spine__face::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,transparent 30%,rgba(0,0,0,0.7) 100%)}
+  .ss-book-spine::after{content:'';position:absolute;top:0;left:0;bottom:0;width:6px;background:linear-gradient(90deg,rgba(0,0,0,0.3),rgba(255,255,255,0.05));border-radius:6px 0 0 6px}
+
+  .ss-book-spine__week{position:relative;z-index:2;font-weight:400;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:4px}
+  .ss-book-spine__title{position:relative;z-index:2;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:.82rem;line-height:1.2;color:#fff}
+  .ss-book-spine__mood{position:relative;z-index:2;font-weight:200;font-size:.52rem;color:rgba(255,255,255,0.4);margin-top:4px;text-transform:uppercase;letter-spacing:.08em}
+
+  .ss-book-spine--locked .ss-book-spine__face{filter:brightness(0.4)}
+  .ss-book-spine--locked::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5;width:22px;height:22px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.3)' stroke-width='1.5'%3E%3Crect x='3' y='11' width='18' height='11' rx='2'/%3E%3Cpath d='M7 11V7a5 5 0 0110 0v4'/%3E%3C/svg%3E") center/contain no-repeat}
+
+  .ss-book-cover--1{background:linear-gradient(145deg,#1e1b4b,#312e81)}
+  .ss-book-cover--2{background:linear-gradient(145deg,#1a1d3a,#2e3561)}
+  .ss-book-cover--3{background:linear-gradient(145deg,#1b2440,#293b5f)}
+  .ss-book-cover--4{background:linear-gradient(145deg,#1f1a3e,#3d2a6b)}
+  .ss-book-cover--5{background:linear-gradient(145deg,#1a2838,#2a4258)}
+  .ss-book-cover--6{background:linear-gradient(145deg,#211a3a,#382d5e)}
+
+  @media(max-width:768px){
+    .ss-card-grid{grid-template-columns:1fr}
+    .ss-card{padding:24px 24px 20px;min-height:auto}
+    .ss-card__title{font-size:1.4rem}
+    .ss-book-grid{grid-template-columns:repeat(3,1fr);gap:10px}
+    .ss-how-strip{flex-direction:column;gap:16px;align-items:center}
+    .ss-sub-hook{flex-direction:column;text-align:center;gap:12px}
+  }
+  @media(max-width:480px){
+    .ss-card{padding:22px 20px 18px}
+    .ss-book-grid{grid-template-columns:repeat(2,1fr)}
+  }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
@@ -808,105 +768,162 @@
   </div>
 </section>
 
-  <!-- Coming Soon Message -->
-  <section style="background:#f8f6f3;padding:60px 0;">
-    <div class="container" style="max-width:700px;text-align:center;">
-      <h2 class="fade-in" style="font-family:'Cormorant Garamond',serif;font-size:2rem;margin-bottom:16px;">Coming Soon</h2>
-      <p class="fade-in" style="color:var(--mid-gray);font-size:1.05rem;line-height:1.8;margin-bottom:24px;">
-        We're crafting a collection of 52 original sleep stories — one for every week of the year. Each story is designed to gently guide you into restful sleep with soothing narratives, calming imagery, and our signature voice.
-      </p>
-      <p class="fade-in" style="color:var(--mid-gray);font-size:1.05rem;line-height:1.8;">
-        Premium members unlock new material each week, building a personal library of bedtime tales over the course of a year.
-      </p>
-    </div>
-  </section>
+<!-- ═══ SLEEP STORIES CARD SECTION ═══ -->
+<div id="library" style="background:var(--deep);padding-bottom:80px;">
 
-  <!-- 52 Books Preview -->
-  <section id="library" style="background:linear-gradient(135deg,#f4f1ec 0%,#ece7e0 100%);padding:60px 0;">
-    <div class="container">
-      <div class="section-header fade-in" style="margin-bottom:40px;">
-        <h2>Your Sleep Story Library</h2>
-        <p>52 stories. New material unlocked each week with Premium.</p>
-      </div>
-      <div class="stories-grid fade-in">
-        <div class="story-book available">
-          <div class="book-scene" style="background:url('content/images/sleep-stories/montys-midnight-feast.png') center/cover no-repeat;"></div>
-          <div class="book-title-wrap"><div class="book-title">Monty's Midnight Feast</div><div class="book-author">Marco</div></div>
-        </div>
-        <div class="story-book available">
-          <div class="book-scene" style="background:url('content/images/sleep-stories/the-moonlit-garden.png') center/cover no-repeat;"></div>
-          <div class="book-title-wrap"><div class="book-title">The Moonlit Garden</div><div class="book-author">Marco</div></div>
-        </div>
-        <div class="story-book available">
-          <div class="book-scene" style="background:url('content/images/sleep-stories/the-whispering-woods.png') center/cover no-repeat;"></div>
-          <div class="book-title-wrap"><div class="book-title">The Whispering Woods</div><div class="book-author">Marco</div></div>
-        </div>
-        <!-- 4 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2030 0%, #2a3040 100%);"></div><div class="book-title-wrap"><div class="book-title">The Sleepy Lighthouse Keeper</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 5 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2535 0%, #2a3545 100%);"></div><div class="book-title-wrap"><div class="book-title">Oliver's Rainy Day</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 6 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #2a1a20 0%, #3a2a30 100%);"></div><div class="book-title-wrap"><div class="book-title">The Velvet Fox</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 7 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a1a2e 0%, #2d2a4a 100%);"></div><div class="book-title-wrap"><div class="book-title">The Lavender Fields</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 8 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1c1c2e 0%, #2e2e40 100%);"></div><div class="book-title-wrap"><div class="book-title">The Night Train</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 9 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #2a1f1a 0%, #3a2f2a 100%);"></div><div class="book-title-wrap"><div class="book-title">The Fireside Chair</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 10 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2030 0%, #2a3545 100%);"></div><div class="book-title-wrap"><div class="book-title">Luna the Night Owl</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 11 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2535 0%, #2a3a50 100%);"></div><div class="book-title-wrap"><div class="book-title">The Frozen Lake</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 12 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1f1a2a 0%, #2f2a3a 100%);"></div><div class="book-title-wrap"><div class="book-title">The Bookshop at Midnight</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 13 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2a1a 0%, #2a3a2a 100%);"></div><div class="book-title-wrap"><div class="book-title">The Path Between the Pines</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 14 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #202838 0%, #303848 100%);"></div><div class="book-title-wrap"><div class="book-title">A Blanket of Snow</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 15 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #0d1b2a 0%, #1b2d45 100%);"></div><div class="book-title-wrap"><div class="book-title">The Aurora's Lullaby</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 16 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #2a2018 0%, #3a3028 100%);"></div><div class="book-title-wrap"><div class="book-title">The Baker's Last Loaf</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 17 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2030 0%, #2a3040 100%);"></div><div class="book-title-wrap"><div class="book-title">Mist Over the Mountains</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 18 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2520 0%, #2a3530 100%);"></div><div class="book-title-wrap"><div class="book-title">The Willow by the Stream</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 19 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #2a1f18 0%, #3a2f28 100%);"></div><div class="book-title-wrap"><div class="book-title">Candles in the Cottage</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 20 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #0d1520 0%, #1d2530 100%);"></div><div class="book-title-wrap"><div class="book-title">Counting the Constellations</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 21 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2a25 0%, #2a3a35 100%);"></div><div class="book-title-wrap"><div class="book-title">The Secret Waterfall</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 22 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2520 0%, #2a3530 100%);"></div><div class="book-title-wrap"><div class="book-title">Rowing Through the Reeds</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 23 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #202838 0%, #303848 100%);"></div><div class="book-title-wrap"><div class="book-title">The First Snowfall</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 24 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2030 0%, #2a3545 100%);"></div><div class="book-title-wrap"><div class="book-title">The Cloud Collector</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 25 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #2a2018 0%, #3a3028 100%);"></div><div class="book-title-wrap"><div class="book-title">Autumn in the Orchard</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 26 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2020 0%, #2a3030 100%);"></div><div class="book-title-wrap"><div class="book-title">The Old Stone Bridge</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 27 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2030 0%, #2a3545 100%);"></div><div class="book-title-wrap"><div class="book-title">The Harbour at Twilight</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 28 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2a1a 0%, #2a3a2a 100%);"></div><div class="book-title-wrap"><div class="book-title">The Bamboo Forest</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 29 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #0d1520 0%, #1d2535 100%);"></div><div class="book-title-wrap"><div class="book-title">Between the Stars</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 30 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #2a1f1a 0%, #3a2f2a 100%);"></div><div class="book-title-wrap"><div class="book-title">The Last Cup of Cocoa</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 31 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2535 0%, #2a3a50 100%);"></div><div class="book-title-wrap"><div class="book-title">Captain Whiskers Sets Sail</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 32 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2030 0%, #2a3040 100%);"></div><div class="book-title-wrap"><div class="book-title">The Sleeping Valley</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 33 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2520 0%, #2a3530 100%);"></div><div class="book-title-wrap"><div class="book-title">Spring Beneath the Blossom</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 34 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #2a1a20 0%, #3a2a35 100%);"></div><div class="book-title-wrap"><div class="book-title">The Paper Lantern Festival</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 35 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2535 0%, #2a3545 100%);"></div><div class="book-title-wrap"><div class="book-title">Waves on Distant Shores</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 36 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1f1a2a 0%, #2f2a3a 100%);"></div><div class="book-title-wrap"><div class="book-title">The Attic Window</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 37 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #2a2018 0%, #3a3028 100%);"></div><div class="book-title-wrap"><div class="book-title">The Clockmaker's Dream</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 38 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #2a2518 0%, #3a3528 100%);"></div><div class="book-title-wrap"><div class="book-title">Twilight Over the Dunes</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 39 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2535 0%, #2a3a50 100%);"></div><div class="book-title-wrap"><div class="book-title">A Boat on Glass Water</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 40 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #0d2030 0%, #1d3040 100%);"></div><div class="book-title-wrap"><div class="book-title">The Coral Reef at Dusk</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 41 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #202838 0%, #303848 100%);"></div><div class="book-title-wrap"><div class="book-title">Winter's Gentle Hush</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 42 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2a1a 0%, #2a3a2a 100%);"></div><div class="book-title-wrap"><div class="book-title">The Garden of Forgotten Things</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 43 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2535 0%, #2a3545 100%);"></div><div class="book-title-wrap"><div class="book-title">Drifting on the Current</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 44 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #0d1b2a 0%, #1b2d45 100%);"></div><div class="book-title-wrap"><div class="book-title">The Moon's Reflection</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 45 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2030 0%, #2a3545 100%);"></div><div class="book-title-wrap"><div class="book-title">The Lighthouse on the Hill</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 46 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2520 0%, #2a3530 100%);"></div><div class="book-title-wrap"><div class="book-title">A Midsummer Twilight</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 47 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #2a2018 0%, #3a3028 100%);"></div><div class="book-title-wrap"><div class="book-title">The Harvest Moon</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 48 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2030 0%, #2a3040 100%);"></div><div class="book-title-wrap"><div class="book-title">The Bridge Over Still Water</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 49 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2535 0%, #2a3a50 100%);"></div><div class="book-title-wrap"><div class="book-title">Tides and Lullabies</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 50 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #2a1f1a 0%, #3a2f2a 100%);"></div><div class="book-title-wrap"><div class="book-title">A Letter Never Sent</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 51 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #2a1a18 0%, #3a2a28 100%);"></div><div class="book-title-wrap"><div class="book-title">The Last Ember</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <!-- 52 --> <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #0d1b2a 0%, #1d2d45 100%);"></div><div class="book-title-wrap"><div class="book-title">The Stars Above the Meadow</div><div class="book-author">Marco</div></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2030 0%, #2a3040 100%);display:flex;align-items:center;justify-content:center;"><span style="font-family:'Cormorant Garamond',serif;font-size:0.7rem;color:rgba(255,255,255,0.4);letter-spacing:1px;text-align:center;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">Coming Soon</span></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2030 0%, #2a3040 100%);display:flex;align-items:center;justify-content:center;"><span style="font-family:'Cormorant Garamond',serif;font-size:0.7rem;color:rgba(255,255,255,0.4);letter-spacing:1px;text-align:center;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">Coming Soon</span></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2030 0%, #2a3040 100%);display:flex;align-items:center;justify-content:center;"><span style="font-family:'Cormorant Garamond',serif;font-size:0.7rem;color:rgba(255,255,255,0.4);letter-spacing:1px;text-align:center;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">Coming Soon</span></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="story-book locked"><div class="book-scene" style="background:linear-gradient(180deg, #1a2030 0%, #2a3040 100%);display:flex;align-items:center;justify-content:center;"><span style="font-family:'Cormorant Garamond',serif;font-size:0.7rem;color:rgba(255,255,255,0.4);letter-spacing:1px;text-align:center;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">Coming Soon</span></div><svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-      </div>
-      <p class="fade-in" style="text-align:center;color:var(--mid-gray);font-size:0.9rem;margin-top:32px;">Stories unlock weekly for Premium members. Start your collection today.</p>
-    </div>
-  </section>
+<div class="ss-section-header">
+  <div class="ss-section-header__label"><span></span>Sleep Stories<span></span></div>
+  <h2>Close Your Eyes and Listen</h2>
+  <p>Gentle, meandering narratives designed to bore your brain to sleep. No cliffhangers. No tension. Just a voice fading into the dark.</p>
+</div>
 
-  <!-- CTA -->
-  <section class="cta-banner">
-    <div class="container">
-      <h2 class="fade-in">Be first to experience Sleep Stories</h2>
-      <p class="fade-in">Subscribe to Salus Premium and unlock your first sleep story as soon as we launch.</p>
-      <a href="apps.html" class="btn fade-in">Subscribe</a>
+<div class="ss-how-strip">
+  <div class="ss-how-strip__item"><span class="ss-how-strip__num">1</span><span class="ss-how-strip__text">One new story each week</span></div>
+  <div class="ss-how-strip__item"><span class="ss-how-strip__num">52</span><span class="ss-how-strip__text">A full year of bedtime listening</span></div>
+  <div class="ss-how-strip__item"><span class="ss-how-strip__num">45</span><span class="ss-how-strip__text">Minutes per story, with ambient</span></div>
+</div>
+
+<div class="ss-filters">
+  <button class="ss-filter-btn active" data-filter="all">All Stories</button>
+  <button class="ss-filter-btn" data-filter="nature">Nature</button>
+  <button class="ss-filter-btn" data-filter="journey">Journey</button>
+  <button class="ss-filter-btn" data-filter="comfort">Comfort</button>
+  <button class="ss-filter-btn" data-filter="fantasy">Fantasy</button>
+  <button class="ss-filter-btn" data-filter="history">History</button>
+</div>
+
+<!-- Available — Weeks 1-4 -->
+<div class="ss-section-divider" id="ssAvailableDivider">
+  <div class="ss-section-divider__line"></div>
+  <div class="ss-section-divider__label">Now Available
+    <span class="ss-section-divider__sub">Press play and drift off</span>
+  </div>
+</div>
+
+<div class="ss-card-grid" id="ssAvailableGrid">
+
+  <div class="ss-card" data-mood="nature">
+    <div class="ss-card__orb"></div><div class="ss-card__orb ss-card__orb--2"></div>
+    <span class="ss-card__badge ss-badge--week">Week 1</span>
+    <div class="ss-card__content">
+      <div class="ss-card__meta"><span class="ss-card__meta-dot"></span>42 min &middot; Nature</div>
+      <h3 class="ss-card__title">The Gardener's Almanac</h3>
+      <p class="ss-card__desc">An old gardener tends his allotment through the seasons — seeds, soil, and the slow patience of things that grow in their own time.</p>
+      <div class="ss-player"><button class="ss-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="ss-player__track"><div class="ss-player__progress"></div></div><span class="ss-player__time">0:00 / 42:18</span></div>
+      <div class="ss-card__ambient"><svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1014 17V7h4V3h-6z"/></svg>Garden sounds</div>
     </div>
-  </section>
+  </div>
+
+  <div class="ss-card" data-mood="journey">
+    <div class="ss-card__orb"></div><div class="ss-card__orb ss-card__orb--2"></div>
+    <span class="ss-card__badge ss-badge--week">Week 2</span>
+    <div class="ss-card__content">
+      <div class="ss-card__meta"><span class="ss-card__meta-dot"></span>45 min &middot; Journey</div>
+      <h3 class="ss-card__title">The Slow Train North</h3>
+      <p class="ss-card__desc">A night train winds through empty countryside. Fields blur past the window. The rhythm of the track becomes a lullaby.</p>
+      <div class="ss-player"><button class="ss-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="ss-player__track"><div class="ss-player__progress"></div></div><span class="ss-player__time">0:00 / 45:00</span></div>
+      <div class="ss-card__ambient"><svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1014 17V7h4V3h-6z"/></svg>Train rhythm</div>
+    </div>
+  </div>
+
+  <div class="ss-card" data-mood="comfort">
+    <div class="ss-card__orb"></div><div class="ss-card__orb ss-card__orb--2"></div>
+    <span class="ss-card__badge ss-badge--week">Week 3</span>
+    <div class="ss-card__content">
+      <div class="ss-card__meta"><span class="ss-card__meta-dot"></span>38 min &middot; Comfort</div>
+      <h3 class="ss-card__title">The Bookshop at the End of the Lane</h3>
+      <p class="ss-card__desc">A retired bookseller dusts shelves in a shop that time forgot. Each spine holds a memory, each page a quiet world.</p>
+      <div class="ss-player"><button class="ss-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="ss-player__track"><div class="ss-player__progress"></div></div><span class="ss-player__time">0:00 / 38:24</span></div>
+      <div class="ss-card__ambient"><svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1014 17V7h4V3h-6z"/></svg>Rain on glass</div>
+    </div>
+  </div>
+
+  <div class="ss-card" data-mood="nature">
+    <div class="ss-card__orb"></div><div class="ss-card__orb ss-card__orb--2"></div>
+    <span class="ss-card__badge ss-badge--week">Week 4</span>
+    <div class="ss-card__content">
+      <div class="ss-card__meta"><span class="ss-card__meta-dot"></span>44 min &middot; Nature</div>
+      <h3 class="ss-card__title">The Lighthouse Keeper's Log</h3>
+      <p class="ss-card__desc">A solitary keeper chronicles the tides, the birds, and the steady arc of the beam across dark water. Nothing happens. Everything does.</p>
+      <div class="ss-player"><button class="ss-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="ss-player__track"><div class="ss-player__progress"></div></div><span class="ss-player__time">0:00 / 44:12</span></div>
+      <div class="ss-card__ambient"><svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1014 17V7h4V3h-6z"/></svg>Ocean &amp; fog horn</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Subscription Hook -->
+<div class="ss-sub-hook" id="ssSubHook">
+  <div class="ss-sub-hook__text">
+    <div class="ss-sub-hook__title">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      New material unlocked each week
+    </div>
+    <div class="ss-sub-hook__desc">52 sleep stories over 12 months — plus guided meditations, ASMR, tools, and more with Salus Premium</div>
+  </div>
+  <a href="apps.html" class="ss-sub-hook__cta">Go Premium</a>
+</div>
+
+<!-- Coming Soon — Weeks 5-52 book spines -->
+<div class="ss-section-divider" id="ssComingDivider">
+  <div class="ss-section-divider__line"></div>
+  <div class="ss-section-divider__label">Coming Soon
+    <span class="ss-section-divider__sub">A new story unlocked each week</span>
+  </div>
+</div>
+
+<div class="ss-book-grid" id="ssBookGrid">
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="fantasy"><div class="ss-book-spine__face ss-book-cover--1"><span class="ss-book-spine__week">Week 5</span><span class="ss-book-spine__title">The Cloud Cartographer</span><span class="ss-book-spine__mood">Fantasy</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="journey"><div class="ss-book-spine__face ss-book-cover--2"><span class="ss-book-spine__week">Week 6</span><span class="ss-book-spine__title">Canals of Amsterdam</span><span class="ss-book-spine__mood">Journey</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--3"><span class="ss-book-spine__week">Week 7</span><span class="ss-book-spine__title">The Beekeeper's Summer</span><span class="ss-book-spine__mood">Nature</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="comfort"><div class="ss-book-spine__face ss-book-cover--4"><span class="ss-book-spine__week">Week 8</span><span class="ss-book-spine__title">Letters from a Cottage</span><span class="ss-book-spine__mood">Comfort</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="history"><div class="ss-book-spine__face ss-book-cover--5"><span class="ss-book-spine__week">Week 9</span><span class="ss-book-spine__title">The Map Maker's Table</span><span class="ss-book-spine__mood">History</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--6"><span class="ss-book-spine__week">Week 10</span><span class="ss-book-spine__title">Tides of the Severn</span><span class="ss-book-spine__mood">Nature</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="journey"><div class="ss-book-spine__face ss-book-cover--1"><span class="ss-book-spine__week">Week 11</span><span class="ss-book-spine__title">The Silk Road at Dusk</span><span class="ss-book-spine__mood">Journey</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="comfort"><div class="ss-book-spine__face ss-book-cover--2"><span class="ss-book-spine__week">Week 12</span><span class="ss-book-spine__title">The Tea Room</span><span class="ss-book-spine__mood">Comfort</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="fantasy"><div class="ss-book-spine__face ss-book-cover--3"><span class="ss-book-spine__week">Week 13</span><span class="ss-book-spine__title">The Moth and the Lantern</span><span class="ss-book-spine__mood">Fantasy</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--4"><span class="ss-book-spine__week">Week 14</span><span class="ss-book-spine__title">Snowfall on Dartmoor</span><span class="ss-book-spine__mood">Nature</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="history"><div class="ss-book-spine__face ss-book-cover--5"><span class="ss-book-spine__week">Week 15</span><span class="ss-book-spine__title">The Astronomer's Journal</span><span class="ss-book-spine__mood">History</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="journey"><div class="ss-book-spine__face ss-book-cover--6"><span class="ss-book-spine__week">Week 16</span><span class="ss-book-spine__title">The Harbour at Low Tide</span><span class="ss-book-spine__mood">Journey</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="comfort"><div class="ss-book-spine__face ss-book-cover--1"><span class="ss-book-spine__week">Week 17</span><span class="ss-book-spine__title">Grandma's Kitchen</span><span class="ss-book-spine__mood">Comfort</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--2"><span class="ss-book-spine__week">Week 18</span><span class="ss-book-spine__title">The River Warden</span><span class="ss-book-spine__mood">Nature</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="fantasy"><div class="ss-book-spine__face ss-book-cover--3"><span class="ss-book-spine__week">Week 19</span><span class="ss-book-spine__title">The Forgotten Library</span><span class="ss-book-spine__mood">Fantasy</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="journey"><div class="ss-book-spine__face ss-book-cover--4"><span class="ss-book-spine__week">Week 20</span><span class="ss-book-spine__title">Night Ferry to Bergen</span><span class="ss-book-spine__mood">Journey</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--5"><span class="ss-book-spine__week">Week 21</span><span class="ss-book-spine__title">The Orchard in Autumn</span><span class="ss-book-spine__mood">Nature</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="history"><div class="ss-book-spine__face ss-book-cover--6"><span class="ss-book-spine__week">Week 22</span><span class="ss-book-spine__title">The Watchmaker's Hands</span><span class="ss-book-spine__mood">History</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="comfort"><div class="ss-book-spine__face ss-book-cover--1"><span class="ss-book-spine__week">Week 23</span><span class="ss-book-spine__title">Sunday Morning Rain</span><span class="ss-book-spine__mood">Comfort</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="fantasy"><div class="ss-book-spine__face ss-book-cover--2"><span class="ss-book-spine__week">Week 24</span><span class="ss-book-spine__title">The Sleeping Mountain</span><span class="ss-book-spine__mood">Fantasy</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="journey"><div class="ss-book-spine__face ss-book-cover--3"><span class="ss-book-spine__week">Week 25</span><span class="ss-book-spine__title">A Walk Through Kyoto</span><span class="ss-book-spine__mood">Journey</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--4"><span class="ss-book-spine__week">Week 26</span><span class="ss-book-spine__title">The Meadow at Twilight</span><span class="ss-book-spine__mood">Nature</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="history"><div class="ss-book-spine__face ss-book-cover--5"><span class="ss-book-spine__week">Week 27</span><span class="ss-book-spine__title">The Glassblower's Fire</span><span class="ss-book-spine__mood">History</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="comfort"><div class="ss-book-spine__face ss-book-cover--6"><span class="ss-book-spine__week">Week 28</span><span class="ss-book-spine__title">The Dog-Eared Pages</span><span class="ss-book-spine__mood">Comfort</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--1"><span class="ss-book-spine__week">Week 29</span><span class="ss-book-spine__title">Mist Over the Loch</span><span class="ss-book-spine__mood">Nature</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="journey"><div class="ss-book-spine__face ss-book-cover--2"><span class="ss-book-spine__week">Week 30</span><span class="ss-book-spine__title">The Coastal Path</span><span class="ss-book-spine__mood">Journey</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="fantasy"><div class="ss-book-spine__face ss-book-cover--3"><span class="ss-book-spine__week">Week 31</span><span class="ss-book-spine__title">The Owl and the Hollow</span><span class="ss-book-spine__mood">Fantasy</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="comfort"><div class="ss-book-spine__face ss-book-cover--4"><span class="ss-book-spine__week">Week 32</span><span class="ss-book-spine__title">The Pottery Wheel</span><span class="ss-book-spine__mood">Comfort</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="history"><div class="ss-book-spine__face ss-book-cover--5"><span class="ss-book-spine__week">Week 33</span><span class="ss-book-spine__title">The Lamplighter's Round</span><span class="ss-book-spine__mood">History</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--6"><span class="ss-book-spine__week">Week 34</span><span class="ss-book-spine__title">The Chalk Downs</span><span class="ss-book-spine__mood">Nature</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="journey"><div class="ss-book-spine__face ss-book-cover--1"><span class="ss-book-spine__week">Week 35</span><span class="ss-book-spine__title">Ocean Voyage</span><span class="ss-book-spine__mood">Journey</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="fantasy"><div class="ss-book-spine__face ss-book-cover--2"><span class="ss-book-spine__week">Week 36</span><span class="ss-book-spine__title">The Weaver's Dream</span><span class="ss-book-spine__mood">Fantasy</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="comfort"><div class="ss-book-spine__face ss-book-cover--3"><span class="ss-book-spine__week">Week 37</span><span class="ss-book-spine__title">Fireside Letters</span><span class="ss-book-spine__mood">Comfort</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--4"><span class="ss-book-spine__week">Week 38</span><span class="ss-book-spine__title">The Fallen Leaves</span><span class="ss-book-spine__mood">Nature</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="history"><div class="ss-book-spine__face ss-book-cover--5"><span class="ss-book-spine__week">Week 39</span><span class="ss-book-spine__title">The Calligrapher</span><span class="ss-book-spine__mood">History</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="journey"><div class="ss-book-spine__face ss-book-cover--6"><span class="ss-book-spine__week">Week 40</span><span class="ss-book-spine__title">The Mountain Pass</span><span class="ss-book-spine__mood">Journey</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="comfort"><div class="ss-book-spine__face ss-book-cover--1"><span class="ss-book-spine__week">Week 41</span><span class="ss-book-spine__title">The Patchwork Quilt</span><span class="ss-book-spine__mood">Comfort</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--2"><span class="ss-book-spine__week">Week 42</span><span class="ss-book-spine__title">Birdsong at Dawn</span><span class="ss-book-spine__mood">Nature</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="fantasy"><div class="ss-book-spine__face ss-book-cover--3"><span class="ss-book-spine__week">Week 43</span><span class="ss-book-spine__title">The Stone Circle</span><span class="ss-book-spine__mood">Fantasy</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="history"><div class="ss-book-spine__face ss-book-cover--4"><span class="ss-book-spine__week">Week 44</span><span class="ss-book-spine__title">The Printing Press</span><span class="ss-book-spine__mood">History</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="journey"><div class="ss-book-spine__face ss-book-cover--5"><span class="ss-book-spine__week">Week 45</span><span class="ss-book-spine__title">The Canal Boat</span><span class="ss-book-spine__mood">Journey</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--6"><span class="ss-book-spine__week">Week 46</span><span class="ss-book-spine__title">The Shepherd's Year</span><span class="ss-book-spine__mood">Nature</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="comfort"><div class="ss-book-spine__face ss-book-cover--1"><span class="ss-book-spine__week">Week 47</span><span class="ss-book-spine__title">The Vinyl Collection</span><span class="ss-book-spine__mood">Comfort</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="fantasy"><div class="ss-book-spine__face ss-book-cover--2"><span class="ss-book-spine__week">Week 48</span><span class="ss-book-spine__title">The Tide Pool</span><span class="ss-book-spine__mood">Fantasy</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="history"><div class="ss-book-spine__face ss-book-cover--3"><span class="ss-book-spine__week">Week 49</span><span class="ss-book-spine__title">The Instrument Maker</span><span class="ss-book-spine__mood">History</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="journey"><div class="ss-book-spine__face ss-book-cover--4"><span class="ss-book-spine__week">Week 50</span><span class="ss-book-spine__title">Night Bus to Nowhere</span><span class="ss-book-spine__mood">Journey</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--5"><span class="ss-book-spine__week">Week 51</span><span class="ss-book-spine__title">The First Snow</span><span class="ss-book-spine__mood">Nature</span></div></div>
+  <div class="ss-book-spine ss-book-spine--locked" data-mood="comfort"><div class="ss-book-spine__face ss-book-cover--6"><span class="ss-book-spine__week">Week 52</span><span class="ss-book-spine__title">Home</span><span class="ss-book-spine__mood">Comfort</span></div></div>
+</div>
+
+</div>
 
   <!-- Footer -->
   <footer class="footer">
@@ -1071,6 +1088,45 @@
     }
   })();
 
+
+  // Sleep Stories Filters
+  (function(){
+    const filterBtns=document.querySelectorAll('.ss-filter-btn');
+    const storyCards=document.querySelectorAll('#ssAvailableGrid .ss-card');
+    const bookSpines=document.querySelectorAll('#ssBookGrid .ss-book-spine');
+    const availableDivider=document.getElementById('ssAvailableDivider');
+    const availableGrid=document.getElementById('ssAvailableGrid');
+    const comingDivider=document.getElementById('ssComingDivider');
+    const bookGrid=document.getElementById('ssBookGrid');
+    const subHook=document.getElementById('ssSubHook');
+
+    filterBtns.forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        filterBtns.forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const f=btn.dataset.filter;
+
+        if(f==='all'){
+          [availableDivider,availableGrid,subHook,comingDivider,bookGrid].forEach(el=>el.style.display='');
+          storyCards.forEach(c=>c.style.display='');
+          bookSpines.forEach(b=>b.style.display='');
+          return;
+        }
+
+        let anyAvail=false;
+        storyCards.forEach(c=>{const show=c.dataset.mood===f;c.style.display=show?'':'none';if(show)anyAvail=true});
+        availableDivider.style.display=anyAvail?'':'none';
+        availableGrid.style.display=anyAvail?'':'none';
+
+        let anyBook=false;
+        bookSpines.forEach(b=>{const show=b.dataset.mood===f;b.style.display=show?'':'none';if(show)anyBook=true});
+        comingDivider.style.display=anyBook?'':'none';
+        bookGrid.style.display=anyBook?'':'none';
+
+        subHook.style.display='';
+      });
+    });
+  })();
 
   // Navigation
   const navWrap=document.getElementById("navWrap");
