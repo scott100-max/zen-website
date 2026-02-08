@@ -317,9 +317,10 @@
           weight: 1, opacity: 0.8, fillOpacity: 0.6
         });
         var time = new Date(r.created_at).toLocaleString();
+        var location = (r.city || 'Unknown') + (r.region ? ', ' + r.region : '') + ', ' + (r.country || 'Unknown');
         marker.bindPopup(
           '<div style="font-size:13px;line-height:1.5;">' +
-          '<strong>' + (r.city || 'Unknown') + ', ' + (r.country || 'Unknown') + '</strong><br>' +
+          '<strong>' + escHtml(location) + '</strong><br>' +
           '<span style="color:#888;">Page:</span> ' + escHtml(r.landing_page || '/') + '<br>' +
           '<span style="color:#888;">Time:</span> ' + time +
           '</div>'
@@ -361,7 +362,7 @@
         var t = new Date(r.created_at);
         var timeStr = t.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ' ' + t.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
         return '<tr><td style="white-space:nowrap;">' + timeStr + '</td>' +
-          '<td>' + escHtml((r.city || '?') + ', ' + (r.country || '?')) + '</td>' +
+          '<td>' + escHtml((r.city || '?') + (r.region ? ', ' + r.region : '') + ', ' + (r.country || '?')) + '</td>' +
           '<td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escHtml(r.landing_page || '/') + '</td></tr>';
       }).join('') || '<tr><td colspan="3" style="color:#666;">No visitors yet</td></tr>';
     }
