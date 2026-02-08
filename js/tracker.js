@@ -13,6 +13,13 @@
   // Skip bots
   if (/bot|crawl|spider|slurp|facebook|twitter|whatsapp/i.test(navigator.userAgent)) return;
 
+  // Permanent opt-out: visit any page with ?salus_notrack to disable on this device
+  if (window.location.search.indexOf('salus_notrack') !== -1) {
+    localStorage.setItem('salus_notrack', '1');
+    return;
+  }
+  if (localStorage.getItem('salus_notrack')) return;
+
   // Set flag immediately to prevent race-condition duplicates
   sessionStorage.setItem('salus_tracked', '1');
 
