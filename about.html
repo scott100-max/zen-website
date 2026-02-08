@@ -452,44 +452,72 @@
   @media(max-width:860px){.nav-primary,.nav-row-2,.nav-ctas{display:none}.nav-burger{display:flex}.nav-row-1{height:56px}}
 
     /* ═══════════════════════════════════════════
-       ABOUT PAGE STYLES
+       ABOUT PAGE STYLES (ab- prefix)
     ═══════════════════════════════════════════ */
-    .about-values { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
-    .about-value { background: transparent; border-radius: 12px; padding: 32px; text-align: center; border: none; }
-    .about-value .icon { font-size: 2rem; margin-bottom: 12px; }
-    .about-value h3 { margin-bottom: 8px; font-size: 1.05rem; }
-    .about-value p { color: var(--mid-gray); font-size: 0.9rem; line-height: 1.7; }
-    .consultant-card { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
-    .consultant-bio h3 { font-size: 1.5rem; margin-bottom: 4px; }
-    .consultant-bio .credentials { color: var(--accent); font-weight: 600; font-size: 0.9rem; margin-bottom: 16px; }
-    .consultant-bio p { color: var(--mid-gray); line-height: 1.8; margin-bottom: 12px; font-size: 0.95rem; }
-    .consultant-bio .specialisms { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-    .consultant-bio .specialisms li {
-      background: var(--off-white); border-radius: 50px; padding: 6px 14px;
-      font-size: 0.8rem; color: var(--forest); font-weight: 500;
-    }
-    .team-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; }
-    .team-member { text-align: center; }
-    .team-avatar {
-      width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 2rem; color: #fff;
-    }
-    .team-member h4 { font-size: 0.95rem; margin-bottom: 2px; }
-    .team-member p { color: var(--mid-gray); font-size: 0.8rem; }
-    .timeline { max-width: 600px; margin: 0 auto; }
-    .timeline-item { display: flex; gap: 20px; margin-bottom: 24px; }
-    .timeline-year {
-      flex-shrink: 0; width: 60px; height: 60px; border-radius: 50%;
-      background: var(--accent); color: #fff; display: flex; align-items: center;
-      justify-content: center; font-weight: 700; font-size: 0.85rem;
-    }
-    .timeline-content h4 { margin-bottom: 4px; font-size: 0.95rem; }
-    .timeline-content p { color: var(--mid-gray); font-size: 0.85rem; line-height: 1.6; }
-    @media(max-width:768px) {
-      .about-values { grid-template-columns: 1fr; }
-      .consultant-card { grid-template-columns: 1fr; }
-      .team-grid { grid-template-columns: repeat(2,1fr); }
+
+    /* ═══ STORY ═══ */
+    .ab-story{padding:100px 24px 80px;max-width:720px;margin:0 auto;text-align:center;position:relative}
+    .ab-story::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 40% at 50% 20%,rgba(196,163,110,0.04) 0%,transparent 70%);pointer-events:none}
+    .ab-story__label{display:inline-flex;align-items:center;gap:10px;font-weight:300;font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(196,163,110,0.6);margin-bottom:20px;position:relative;z-index:2}
+    .ab-story__label::before,.ab-story__label::after{content:'';width:24px;height:1px;background:linear-gradient(90deg,transparent,rgba(196,163,110,0.35),transparent)}
+    .ab-story h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,4.5vw,2.6rem);line-height:1.25;margin-bottom:24px;position:relative;z-index:2}
+    .ab-story__text{font-weight:200;font-size:.9rem;line-height:1.8;color:var(--text-mid);text-align:left;position:relative;z-index:2}
+    .ab-story__text p{margin-bottom:20px}
+    .ab-story__text p:last-child{margin-bottom:0}
+
+    /* ═══ VALUES ═══ */
+    .ab-values{padding:0 24px 80px;max-width:1080px;margin:0 auto}
+    .ab-values__header{text-align:center;margin-bottom:40px}
+    .ab-values__header h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.6rem,3.5vw,2.2rem)}
+    .ab-values__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border, rgba(255,255,255,0.06));border-radius:16px;overflow:hidden}
+    .ab-val{background:var(--ink);padding:36px 28px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px}
+    .ab-val__icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.08)}
+    .ab-val__icon svg{width:20px;height:20px;fill:none;stroke-width:1.5}
+    .ab-val__title{font-weight:400;font-size:.86rem;color:var(--text-bright)}
+    .ab-val__desc{font-weight:200;font-size:.76rem;line-height:1.6;color:var(--text-muted);max-width:220px}
+
+    /* ═══ TIMELINE ═══ */
+    .ab-timeline{padding:0 24px 80px;max-width:720px;margin:0 auto;position:relative}
+    .ab-timeline__header{text-align:center;margin-bottom:36px}
+    .ab-timeline__header h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.4rem,3vw,1.8rem)}
+    .ab-timeline__line{position:absolute;left:50%;top:100px;bottom:60px;width:1px;background:linear-gradient(180deg,rgba(196,163,110,0.15),rgba(196,163,110,0.03));transform:translateX(-50%)}
+    .ab-tl-item{display:flex;gap:32px;margin-bottom:40px;position:relative}
+    .ab-tl-item:last-child{margin-bottom:0}
+    .ab-tl-item__dot{position:absolute;left:50%;top:6px;transform:translateX(-50%);width:10px;height:10px;border-radius:50%;background:rgba(196,163,110,0.3);border:1px solid rgba(196,163,110,0.5);z-index:2}
+    .ab-tl-item__date{flex:1;text-align:right;font-weight:300;font-size:.76rem;color:var(--text-muted);padding-top:2px}
+    .ab-tl-item__text{flex:1;text-align:left}
+    .ab-tl-item__title{font-weight:400;font-size:.86rem;color:var(--text-bright);margin-bottom:4px}
+    .ab-tl-item__desc{font-weight:200;font-size:.78rem;line-height:1.6;color:var(--text-muted)}
+
+    /* ═══ TEAM ═══ */
+    .ab-team{padding:0 24px 80px;max-width:720px;margin:0 auto;text-align:center}
+    .ab-team__header{margin-bottom:32px}
+    .ab-team__header h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.4rem,3vw,1.8rem);margin-bottom:8px}
+    .ab-team__header p{font-weight:200;font-size:.82rem;color:var(--text-muted)}
+    .ab-team__members{display:flex;justify-content:center;gap:40px;flex-wrap:wrap}
+    .ab-member{display:flex;flex-direction:column;align-items:center;gap:12px;max-width:200px}
+    .ab-member__avatar{width:72px;height:72px;border-radius:50%;background:rgba(196,163,110,0.06);border:1px solid rgba(196,163,110,0.12);display:flex;align-items:center;justify-content:center}
+    .ab-member__avatar svg{width:28px;height:28px;fill:none;stroke:rgba(196,163,110,0.5);stroke-width:1.2}
+    .ab-member__name{font-weight:400;font-size:.86rem;color:var(--text-bright)}
+    .ab-member__role{font-weight:200;font-size:.72rem;color:var(--text-muted)}
+
+    /* ═══ CTA ═══ */
+    .ab-about-cta{padding:0 24px 100px;text-align:center}
+    .ab-about-cta__card{max-width:720px;margin:0 auto;background:var(--ink);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:40px 36px;position:relative;overflow:hidden}
+    .ab-about-cta__card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 40% 50% at 50% 0%,rgba(196,163,110,0.025) 0%,transparent 70%)}
+    .ab-about-cta h3{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:1.4rem;margin-bottom:10px;position:relative;z-index:2}
+    .ab-about-cta p{font-weight:200;font-size:.84rem;line-height:1.7;color:var(--text-mid);margin-bottom:24px;position:relative;z-index:2}
+    .ab-about-cta__btn{display:inline-flex;align-items:center;gap:8px;font-family:'Outfit',sans-serif;font-weight:400;font-size:.82rem;letter-spacing:.04em;padding:12px 28px;border-radius:40px;color:var(--deep);background:linear-gradient(135deg,var(--sand),var(--warmth));text-decoration:none;transition:all .35s cubic-bezier(.22,1,.36,1);position:relative;z-index:2}
+    .ab-about-cta__btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(196,163,110,0.25)}
+
+    /* ═══ RESPONSIVE ═══ */
+    @media(max-width:700px){
+      .ab-values__grid{grid-template-columns:1fr}
+      .ab-tl-item{flex-direction:column;gap:6px;padding-left:28px}
+      .ab-tl-item__dot{left:0;transform:none}
+      .ab-tl-item__date{text-align:left}
+      .ab-timeline__line{left:4px}
+      .ab-team__members{flex-direction:column;align-items:center}
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -622,215 +650,119 @@
   </div>
 </section>
 
-  <!-- The Story -->
-  <section id="read-more" style="background:#f8f6f3;">
-    <div class="container" style="max-width:760px;">
-      <div class="fade-in" style="color:var(--mid-gray);line-height:1.9;font-size:1.05rem;">
-        <p style="margin-bottom:20px;">Salus didn't start in a boardroom. It started from decades of personal experience — and a genuine desire to help others find the calm we found ourselves.</p>
-        <p style="margin-bottom:20px;">Scott's journey with meditation, stress management, and therapy spans over 40 years — long before mindfulness apps existed, before the iPhone, before "wellness" was an industry. His path has taken him from the temples of Japan to the rice terraces of Bali to the mountains of China, studying with practitioners and teachers along the way. Through decades of personal experience with meditation, ASMR, CBT, counselling, and every relaxation technique imaginable, one thing became clear: these tools genuinely work. But finding them shouldn't require a subscription to a faceless corporation backed by expensive celebrity endorsements.</p>
-        <p style="margin-bottom:20px;">When our daughter Ella completed her BSc (Hons) and MSc in Psychology, something clicked. We had the lived experience <em>and</em> the psychological expertise under one roof. We could build something different — something that combined decades of personal understanding with rigorous academic knowledge.</p>
-        <p style="margin-bottom:20px;">That's Salus. A family project built with love, lived experience, and proper psychology. Every session is reviewed by our psychologist. Every technique is evidence-based. And every message you send us is read and answered by a real person.</p>
-        <p style="margin-bottom:20px;">We're here because we know what it's like to struggle with anxiety, sleeplessness, and stress — and we know these tools can help, because they helped us first.</p>
-      </div>
-    </div>
-  </section>
+<!-- ═══ OUR STORY ═══ -->
+<section id="read-more" class="ab-story">
+  <div class="ab-story__label"><span></span>Our Story<span></span></div>
+  <h2>Built by a Family, Not a Boardroom</h2>
+  <div class="ab-story__text">
+    <p>Salus started with a simple frustration. Every meditation app on the market seemed designed to maximise screen time rather than minimise suffering. Streaks, badges, gamification — all the things that keep you coming back, but none of the things that actually help you feel better.</p>
+    <p>We're a family with over 40 years of combined experience in psychology, mental health, and mindfulness practice. We built the thing we wished existed: a quiet, carefully crafted platform where the content speaks for itself and nobody's trying to sell you anything beyond what you've already paid for.</p>
+    <p>Every session is reviewed for accuracy, pacing, and therapeutic integrity. Every design decision is made with intention. And we publish new material every single week — not because an algorithm told us to, but because we believe consistency is the foundation of a good practice.</p>
+  </div>
+</section>
 
-  <!-- Far East Connection -->
-  <section style="background:linear-gradient(160deg,#1b2838 0%,#0d1b2a 100%);color:#fff;padding:80px 0;">
-    <div class="container">
-      <div class="section-header fade-in" style="margin-bottom:40px;">
-        <h2 style="color:#fff;">A Deep Connection with the Far East</h2>
-        <p style="color:rgba(255,255,255,0.7);">Scott has always felt drawn to the wisdom traditions of Asia — their emphasis on stillness, presence, and inner peace.</p>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:800px;margin:0 auto;">
-        <div class="fade-in" style="text-align:center;">
-          <img src="content/images/japan/kinkakuji.jpg" alt="Kinkaku-ji Golden Pavilion, Kyoto" style="width:100%;height:180px;object-fit:cover;border-radius:12px;margin-bottom:12px;">
-          <p style="font-size:0.85rem;color:rgba(255,255,255,0.6);font-style:italic;">Kinkaku-ji, Kyoto</p>
-        </div>
-        <div class="fade-in" style="text-align:center;">
-          <img src="content/images/japan/scott-temple.jpg" alt="Scott at temple in Japan" style="width:100%;height:180px;object-fit:cover;border-radius:12px;margin-bottom:12px;">
-          <p style="font-size:0.85rem;color:rgba(255,255,255,0.6);font-style:italic;">Tōdai-ji, Nara</p>
-        </div>
-        <div class="fade-in" style="text-align:center;">
-          <img src="content/images/japan/tsukubai.jpg" alt="Tsukubai water basin" style="width:100%;height:180px;object-fit:cover;border-radius:12px;margin-bottom:12px;">
-          <p style="font-size:0.85rem;color:rgba(255,255,255,0.6);font-style:italic;">Tsukubai, Kyoto</p>
-        </div>
-      </div>
-
-      <div class="fade-in" style="max-width:800px;margin:40px auto 0;">
-        <p style="color:rgba(255,255,255,0.85);line-height:1.8;font-size:0.95rem;text-align:center;">
-          These journeys shaped the philosophy behind Salus — the understanding that true calm comes not from doing more, but from learning to be present with what is. The Japanese concept of <em>wa</em> (harmony), the Balinese practice of <em>Tri Hita Karana</em> (balance with self, others, and nature), and the Chinese wisdom of <em>wu wei</em> (effortless action) all find their way into our approach.
-        </p>
-        <p style="font-size:0.85rem;opacity:0.7;font-style:italic;color:rgba(255,255,255,0.7);text-align:center;margin-top:16px;">The tsukubai (water basin) bears an inscription that reads "I learn only to be contented." A reminder that peace comes from within.</p>
-      </div>
+<!-- ═══ VALUES ═══ -->
+<section class="ab-values">
+  <div class="ab-values__header"><h2>What We Stand For</h2></div>
+  <div class="ab-values__grid">
+    <div class="ab-val">
+      <div class="ab-val__icon" style="background:rgba(196,163,110,0.06);border-color:rgba(196,163,110,0.12)"><svg viewBox="0 0 24 24" stroke="#c4a36e"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <span class="ab-val__title">Evidence-Based</span>
+      <span class="ab-val__desc">Every session grounded in psychology and research — not trends, not guesswork.</span>
     </div>
-  </section>
-
-  <!-- Values -->
-  <section style="background:linear-gradient(135deg,#f4f1ec 0%,#ece7e0 100%);">
-    <div class="container">
-      <div class="section-header fade-in">
-        <h2>What We Stand For</h2>
-      </div>
-      <div class="about-values">
-        <div class="about-value fade-in">
-          <h3>Evidence-Based</h3>
-          <p>Every session is grounded in peer-reviewed research. We work with our psychologist to ensure accuracy and safety.</p>
-        </div>
-        <div class="about-value fade-in">
-          <h3>Accessible</h3>
-          <p>Meditation shouldn't be gatekept. We offer free sessions alongside premium content so everyone can start their journey.</p>
-        </div>
-        <div class="about-value fade-in">
-          <h3>Human-First</h3>
-          <p>No gamification, no streaks, no guilt. Salus is designed to support you — not exploit your attention.</p>
-        </div>
-      </div>
+    <div class="ab-val">
+      <div class="ab-val__icon" style="background:rgba(167,139,250,0.06);border-color:rgba(167,139,250,0.12)"><svg viewBox="0 0 24 24" stroke="#a78bfa"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+      <span class="ab-val__title">Accessible</span>
+      <span class="ab-val__desc">From five-minute resets to hour-long journeys — something for wherever you are.</span>
     </div>
-  </section>
-
-  <!-- Consultant -->
-  <section style="padding:80px 0;background:linear-gradient(135deg,var(--forest-mid) 0%,var(--forest) 100%);">
-    <div class="container" style="max-width:800px;text-align:center;">
-      <div class="section-header fade-in">
-        <h2 style="color:#fff;">Consultant</h2>
-        <p style="color:rgba(255,255,255,0.7);">Every Salus session is reviewed for psychological safety and accuracy.</p>
-      </div>
-      <blockquote class="fade-in" style="font-size:1.2rem;font-style:italic;color:rgba(255,255,255,0.9);line-height:1.8;max-width:680px;margin:0 auto 24px;">
-        "My father spent over 40 years searching for ways to manage stress, anxiety, and sleeplessness — through mindfulness, meditation, cognitive behavioural therapy, breathwork, acupuncture, and every technique he could find. When I completed my psychology degrees, we realised we could combine his lived experience with psychological knowledge to help others. Salus is that vision: evidence-based mindfulness, built by a family who truly understands what it means to struggle — and to heal."
-      </blockquote>
-      <div class="fade-in">
-        <p style="color:#fff;font-weight:600;font-size:1.05rem;">Ella</p>
-        <p style="color:var(--accent-light);font-size:0.9rem;">BSc (Hons) Psychology &middot; MSc Psychology</p>
-      </div>
+    <div class="ab-val">
+      <div class="ab-val__icon" style="background:rgba(52,211,153,0.06);border-color:rgba(52,211,153,0.12)"><svg viewBox="0 0 24 24" stroke="#34d399"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+      <span class="ab-val__title">Human-First</span>
+      <span class="ab-val__desc">No ads, no tracking, no data selling. Your calm is not a product.</span>
     </div>
-  </section>
-
-  <!-- Meet the Founder -->
-  <section style="background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%);">
-    <div class="container" style="max-width:760px;">
-      <div class="section-header fade-in">
-        <h2>Meet Our Founder</h2>
-        <p>The person behind Salus.</p>
-      </div>
-      <div class="fade-in" style="display:flex;gap:40px;align-items:center;flex-wrap:wrap;">
-        <div style="flex-shrink:0;">
-          <img src="content/images/japan/scott-ryokan.jpg" alt="Scott in a traditional Japanese ryokan" style="width:180px;height:180px;border-radius:50%;object-fit:cover;">
-        </div>
-        <div style="flex:1;min-width:280px;">
-          <h3 style="font-size:1.3rem;margin-bottom:4px;">Scott</h3>
-          <p style="color:var(--accent);font-weight:500;font-size:0.9rem;margin-bottom:16px;">Founder</p>
-          <p style="color:var(--mid-gray);line-height:1.8;font-size:0.95rem;margin-bottom:12px;">With over 40 years of personal experience with mindfulness, meditation, cognitive behavioural therapy, counselling, breathwork, visualisation, progressive relaxation, acupuncture, and ASMR — including time spent studying in Japan, Bali, and China — Scott built Salus from lived experience, not a business plan.</p>
-          <p style="color:var(--mid-gray);line-height:1.8;font-size:0.95rem;margin-bottom:12px;">Long before mindfulness apps existed, before the iPhone, before "wellness" became an industry — the journey had already begun. Decades of searching, practising, and learning what actually works.</p>
-          <p style="color:var(--mid-gray);line-height:1.8;font-size:0.95rem;">Salus is the result of all that experience, combined with psychological expertise from daughter Ella. A family project, built with love. No expensive celebrities. No venture capital. Just real tools that work, because they worked for us first.</p>
-        </div>
-      </div>
-      <div class="section-header fade-in" style="margin-top:60px;text-align:center;">
-        <h2>Meet Our Psychologist</h2>
-        <p>The mind behind every session.</p>
-      </div>
-      <div class="fade-in" style="display:flex;gap:40px;align-items:center;flex-wrap:wrap;">
-        <div style="flex-shrink:0;">
-          <img src="content/images/team/ella-web.jpg?v=20260205c" alt="Ella, Salus psychologist" style="width:180px;height:180px;border-radius:50%;object-fit:cover;object-position:center top;">
-        </div>
-        <div style="flex:1;min-width:280px;">
-          <h3 style="font-size:1.3rem;margin-bottom:4px;">Ella</h3>
-          <p style="color:var(--accent);font-weight:500;font-size:0.9rem;margin-bottom:16px;">Consultant &middot; BSc (Hons) &middot; MSc Psychology</p>
-          <p style="color:var(--mid-gray);line-height:1.8;font-size:0.95rem;margin-bottom:12px;">Ella is the mind behind Salus. With a BSc (Hons) and MSc in Psychology, she reviews every session for psychological safety, accuracy, and therapeutic integrity.</p>
-          <p style="color:var(--mid-gray);line-height:1.8;font-size:0.95rem;margin-bottom:12px;">Growing up watching her father's decades-long journey with meditation and therapy, Ella saw first-hand how these tools could transform someone's life. Her academic training gave her the framework to understand why — and the expertise to ensure Salus does it properly.</p>
-          <p style="color:var(--mid-gray);line-height:1.8;font-size:0.95rem;">She's not just a consultant. She's family. And that's exactly why the science behind Salus is something you can trust.</p>
-        </div>
-      </div>
+    <div class="ab-val">
+      <div class="ab-val__icon" style="background:rgba(56,189,248,0.06);border-color:rgba(56,189,248,0.12)"><svg viewBox="0 0 24 24" stroke="#38bdf8"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div>
+      <span class="ab-val__title">Transparent</span>
+      <span class="ab-val__desc">One price, full access. No hidden tiers, no upsells, no content gates within gates.</span>
     </div>
-  </section>
-
-  <!-- Our Voice -->
-  <section style="background:linear-gradient(135deg,#f4f1ec 0%,#ece7e0 100%);padding-top:50px;">
-    <div class="container" style="max-width:760px;">
-      <div class="section-header fade-in" style="text-align:center;">
-        <h2>Meet Our Voice</h2>
-        <p>The person behind every Salus session.</p>
-      </div>
-      <div class="fade-in" style="display:flex;gap:40px;align-items:center;flex-wrap:wrap;">
-        <div style="flex-shrink:0;">
-          <img src="content/images/narrator-marco.jpg" alt="Marco, Salus narrator" style="width:180px;height:180px;border-radius:50%;object-fit:cover;">
-        </div>
-        <div style="flex:1;min-width:280px;">
-          <h3 style="font-size:1.3rem;margin-bottom:4px;">Marco</h3>
-          <p style="color:var(--accent);font-weight:500;font-size:0.9rem;margin-bottom:16px;">Narrator &amp; Voice Artist</p>
-          <p style="color:var(--mid-gray);line-height:1.8;font-size:0.95rem;margin-bottom:12px;">Marco is the voice you'll hear across every Salus session — from guided meditations and sleep stories to breathing exercises and educational content. His warm, grounded tone has a way of making you feel like you're being guided by someone who genuinely cares.</p>
-          <p style="color:var(--mid-gray);line-height:1.8;font-size:0.95rem;margin-bottom:12px;">With a background in vocal performance and a lifelong interest in mindfulness, Marco brings a calm presence that listeners describe as both reassuring and deeply personal. He's not reading scripts — he's sharing something he believes in.</p>
-          <p style="color:var(--mid-gray);line-height:1.8;font-size:0.95rem;">Over time, we hope you'll come to feel like you know him. That's the point. Salus isn't faceless. It's personal — and Marco is a big part of that.</p>
-        </div>
-      </div>
+    <div class="ab-val">
+      <div class="ab-val__icon" style="background:rgba(251,191,36,0.06);border-color:rgba(251,191,36,0.12)"><svg viewBox="0 0 24 24" stroke="#fbbf24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg></div>
+      <span class="ab-val__title">Consistent</span>
+      <span class="ab-val__desc">New content published every week. The library grows with you.</span>
     </div>
-  </section>
-
-  <!-- Contact Directly -->
-  <section style="background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%);">
-    <div class="container" style="text-align:center;max-width:600px;">
-      <div class="section-header fade-in">
-        <h2>Talk to Us</h2>
-        <p>We're not a helpdesk. We're a family. If you need support, have a question, or just want to say hello — we'd love to hear from you. We're also open to ideas. If there's something you'd like to see in Salus, let us know. This is a personal project, not a corporation — your voice genuinely shapes what we build next.</p>
-      </div>
-      <a href="contact.html" class="btn fade-in">Contact Us Directly</a>
+    <div class="ab-val">
+      <div class="ab-val__icon" style="background:rgba(244,114,182,0.06);border-color:rgba(244,114,182,0.12)"><svg viewBox="0 0 24 24" stroke="#f472b6"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+      <span class="ab-val__title">Independent</span>
+      <span class="ab-val__desc">Family-owned, self-funded, answerable only to the people who use it.</span>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- CTA -->
-  <section class="cta-banner">
-    <div class="container">
-      <h2 class="fade-in">Join our family</h2>
-      <p class="fade-in">We're not a corporation. We're a family who built something we believe in. Come be part of it.</p>
-      <a href="apps.html" class="btn fade-in">Subscribe</a>
-    </div>
-  </section>
+<!-- ═══ TIMELINE ═══ -->
+<section class="ab-timeline">
+  <div class="ab-timeline__header"><h2>How We Got Here</h2></div>
+  <div class="ab-timeline__line"></div>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div>
-          <h4 style="letter-spacing:2px;">SALUS</h4>
-          <p style="margin-top:4px;">SLEEP &middot; RELAX &middot; RESTORE</p>
-          <p style="margin-top:8px;">A family-run meditation &amp; mindfulness platform.</p>
-        </div>
-        <div>
-          <h4>Pages</h4>
-          <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="sessions.html">Guided Meditations</a></li>
-            <li><a href="asmr.html">ASMR</a></li>
-        <li><a href="sleep-stories.html">Sleep Stories</a></li>
-            <li><a href="education.html">Learn</a></li>
-            <li><a href="mindfulness.html">Mindfulness</a></li>
-            <li><a href="about.html">About</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4>Support</h4>
-          <ul>
-            <li><a href="contact.html">Contact</a></li>
-            <li><a href="faq.html">FAQ</a></li>
-            <li><a href="privacy.html">Privacy</a></li>
-            <li><a href="terms.html">Terms</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4>Tools</h4>
-          <ul>
-            <li><a href="breathe.html">Breathing Timer</a></li>
-            <li><a href="timer.html">Meditation Timer</a></li>
-            <li><a href="sounds.html">ASMR</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <a href="#" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to Top</a>
-        &copy; 2026 Salus. All rights reserved.
-      </div>
+  <div class="ab-tl-item">
+    <span class="ab-tl-item__date">1980s–2000s</span>
+    <div class="ab-tl-item__dot"></div>
+    <div class="ab-tl-item__text">
+      <span class="ab-tl-item__title">Decades of Practice</span>
+      <span class="ab-tl-item__desc">A family background in psychology, mental health, and mindfulness — long before meditation went mainstream.</span>
     </div>
-  </footer>
+  </div>
+
+  <div class="ab-tl-item">
+    <span class="ab-tl-item__date">2024</span>
+    <div class="ab-tl-item__dot"></div>
+    <div class="ab-tl-item__text">
+      <span class="ab-tl-item__title">The Idea</span>
+      <span class="ab-tl-item__desc">Frustrated with every meditation app on the market. Decided to build the one we wished existed.</span>
+    </div>
+  </div>
+
+  <div class="ab-tl-item">
+    <span class="ab-tl-item__date">2025</span>
+    <div class="ab-tl-item__dot"></div>
+    <div class="ab-tl-item__text">
+      <span class="ab-tl-item__title">Building in Public</span>
+      <span class="ab-tl-item__desc">Script writing, audio production, quality systems. Over 15 hours of guided content created.</span>
+    </div>
+  </div>
+
+  <div class="ab-tl-item">
+    <span class="ab-tl-item__date">2026</span>
+    <div class="ab-tl-item__dot"></div>
+    <div class="ab-tl-item__text">
+      <span class="ab-tl-item__title">Launch</span>
+      <span class="ab-tl-item__desc">48 guided meditations, 52 sleep stories, ASMR, mindfulness courses, and tools — live and growing weekly.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TEAM ═══ -->
+<section class="ab-team">
+  <div class="ab-team__header">
+    <h2>The People Behind Salus</h2>
+    <p>Small team, deep commitment. Every voice, every word, every pixel — handled with care.</p>
+  </div>
+  <div class="ab-team__members">
+    <div class="ab-member">
+      <div class="ab-member__avatar"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+      <span class="ab-member__name">Scott Ripley</span>
+      <span class="ab-member__role">Founder &amp; Creative Director</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section class="ab-about-cta">
+  <div class="ab-about-cta__card">
+    <h3>Ready to Start?</h3>
+    <p>Explore the library, listen to a sample session, and see if Salus feels right for you.</p>
+    <a href="sessions.html" class="ab-about-cta__btn">Browse Sessions</a>
+  </div>
+</section>
 
   <!-- New Hero: Embers + Ring Breathing + Navigation -->
   <script>

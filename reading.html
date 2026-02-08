@@ -85,50 +85,41 @@
   .nav-drawer__ctas .nav-cta{flex:1;text-align:center;padding:12px 20px;font-size:.88rem}
   @media(max-width:860px){.nav-primary,.nav-row-2,.nav-ctas{display:none}.nav-burger{display:flex}.nav-row-1{height:56px}}
 
-    .books-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 32px;
-    }
-    .book-card {
-      text-align: center;
-      transition: transform 0.3s ease;
-    }
-    .book-card:hover {
-      transform: translateY(-8px);
-    }
-    .book-cover {
-      width: 140px;
-      height: 210px;
-      margin: 0 auto 16px;
-      border-radius: 4px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.1);
-      object-fit: cover;
-      background: linear-gradient(135deg, #1b2838 0%, #2a9d8f 100%);
-    }
-    .book-card h3 {
-      font-size: 0.95rem;
-      margin-bottom: 4px;
-      line-height: 1.3;
-    }
-    .book-card .author {
-      font-size: 0.8rem;
-      color: var(--accent);
-      font-weight: 500;
-      margin-bottom: 8px;
-    }
-    .book-card p {
-      font-size: 0.82rem;
-      color: var(--mid-gray);
-      line-height: 1.5;
-    }
-    @media (max-width: 1024px) {
-      .books-grid { grid-template-columns: repeat(3, 1fr); }
-    }
-    @media (max-width: 640px) {
-      .books-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
-      .book-cover { width: 120px; height: 180px; }
-    }
+  /* ═══════════════ READING LIST ═══════════════ */
+  .rd-reading{padding:100px 24px 100px;max-width:980px;margin:0 auto}
+
+  .rd-reading__header{text-align:center;margin-bottom:20px}
+  .rd-reading__label{display:inline-flex;align-items:center;gap:10px;font-weight:300;font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(78,205,196,0.6);margin-bottom:20px}
+  .rd-reading__label::before,.rd-reading__label::after{content:'';width:24px;height:1px;background:linear-gradient(90deg,transparent,rgba(78,205,196,0.35),transparent)}
+  .rd-reading__header h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.8rem,4vw,2.4rem);margin-bottom:10px}
+  .rd-reading__header p{font-weight:200;font-size:.85rem;color:var(--text-muted);max-width:500px;margin:0 auto;line-height:1.6}
+
+  /* ═══ FILTERS ═══ */
+  .rd-filters{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-bottom:36px}
+  .rd-filter-btn{font-family:'Outfit',sans-serif;font-weight:300;font-size:.72rem;letter-spacing:.04em;padding:7px 16px;border-radius:40px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text-muted);cursor:pointer;transition:all .3s ease;white-space:nowrap}
+  .rd-filter-btn:hover{border-color:rgba(255,255,255,0.12);color:var(--text-mid)}
+  .rd-filter-btn.active{background:rgba(78,205,196,0.08);border-color:rgba(78,205,196,0.2);color:#4ecdc4}
+
+  /* ═══ BOOK LIST ═══ */
+  .rd-book-list{display:flex;flex-direction:column;gap:1px;background:rgba(255,255,255,0.06);border-radius:16px;overflow:hidden}
+
+  .rd-book{background:#0a0d18;padding:24px 28px;display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:center;transition:background .3s ease}
+  .rd-book:hover{background:rgba(14,18,30,1)}
+
+  .rd-book__num{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:1.6rem;color:rgba(78,205,196,0.25);min-width:36px;text-align:right}
+
+  .rd-book__info{display:flex;flex-direction:column;gap:4px}
+  .rd-book__title{font-weight:400;font-size:.9rem;color:var(--text-bright)}
+  .rd-book__author{font-weight:200;font-size:.78rem;color:var(--text-muted)}
+  .rd-book__why{font-weight:200;font-size:.76rem;line-height:1.5;color:rgba(255,255,255,0.4);margin-top:2px}
+
+  .rd-book__genre{font-weight:300;font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,0.06);color:var(--text-muted);white-space:nowrap;align-self:center}
+
+  @media(max-width:700px){
+    .rd-book{grid-template-columns:1fr;gap:8px}
+    .rd-book__num{display:none}
+    .rd-book__genre{justify-self:start}
+  }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
@@ -203,184 +194,165 @@
   <div class="scroll-hint"><span class="scroll-hint__text">Discover</span><span class="scroll-hint__line"></span></div>
 </section>
 
-  <!-- Books Grid -->
-  <section id="reading" style="background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%);">
-    <div class="container">
-      <div class="books-grid">
+<!-- Reading List -->
+<section class="rd-reading" id="reading">
+  <div class="rd-reading__header">
+    <div class="rd-reading__label"><span></span>Reading<span></span></div>
+    <h2>Books We Come Back To</h2>
+    <p>A short, honest list of books that shaped how we think about mindfulness, psychology, and living well. No affiliate links.</p>
+  </div>
 
-        <!-- Book 1 -->
-        <div class="book-card fade-in">
-          <img src="https://covers.openlibrary.org/b/isbn/9780062515674-M.jpg" alt="The Monk Who Sold His Ferrari" class="book-cover">
-          <h3>The Monk Who Sold His Ferrari</h3>
-          <div class="author">Robin Sharma</div>
-          <p>A fable about a high-powered lawyer who trades his fast life for ancient wisdom. Simple, profound, life-changing.</p>
-        </div>
+  <div class="rd-filters">
+    <button class="rd-filter-btn active" data-filter="all">All</button>
+    <button class="rd-filter-btn" data-filter="mindfulness">Mindfulness</button>
+    <button class="rd-filter-btn" data-filter="psychology">Psychology</button>
+    <button class="rd-filter-btn" data-filter="neuroscience">Neuroscience</button>
+    <button class="rd-filter-btn" data-filter="philosophy">Philosophy</button>
+    <button class="rd-filter-btn" data-filter="sleep">Sleep</button>
+  </div>
 
-        <!-- Book 2 -->
-        <div class="book-card fade-in">
-          <img src="https://covers.openlibrary.org/b/isbn/9781577314806-M.jpg" alt="The Power of Now" class="book-cover">
-          <h3>The Power of Now</h3>
-          <div class="author">Eckhart Tolle</div>
-          <p>The book that introduced millions to presence. Dense but transformative — read slowly, one chapter at a time.</p>
-        </div>
+  <div class="rd-book-list" id="bookList">
 
-        <!-- Book 3 -->
-        <div class="book-card fade-in">
-          <img src="https://covers.openlibrary.org/b/isbn/9781401307783-M.jpg" alt="The Untethered Soul" class="book-cover">
-          <h3>The Untethered Soul</h3>
-          <div class="author">Michael A. Singer</div>
-          <p>What would it mean to be free from the voice in your head? This book shows you, step by step.</p>
-        </div>
-
-        <!-- Book 4 -->
-        <div class="book-card fade-in">
-          <img src="https://covers.openlibrary.org/b/isbn/9781401308469-M.jpg" alt="Wherever You Go, There You Are" class="book-cover">
-          <h3>Wherever You Go, There You Are</h3>
-          <div class="author">Jon Kabat-Zinn</div>
-          <p>The father of modern mindfulness distils decades of practice into accessible, everyday wisdom.</p>
-        </div>
-
-        <!-- Book 5 -->
-        <div class="book-card fade-in">
-          <img src="https://covers.openlibrary.org/b/isbn/9780062265425-M.jpg" alt="10% Happier" class="book-cover">
-          <h3>10% Happier</h3>
-          <div class="author">Dan Harris</div>
-          <p>A sceptical news anchor's journey into meditation. Funny, honest, and perfect for anyone who thinks mindfulness isn't for them.</p>
-        </div>
-
-        <!-- Book 6 -->
-        <div class="book-card fade-in">
-          <img src="https://covers.openlibrary.org/b/isbn/9781501111679-M.jpg" alt="Why We Sleep" class="book-cover">
-          <h3>Why We Sleep</h3>
-          <div class="author">Matthew Walker</div>
-          <p>The science of sleep explained brilliantly. After reading this, you'll never sacrifice sleep again.</p>
-        </div>
-
-        <!-- Book 7 -->
-        <div class="book-card fade-in">
-          <img src="https://covers.openlibrary.org/b/isbn/9780735211292-M.jpg" alt="Atomic Habits" class="book-cover">
-          <h3>Atomic Habits</h3>
-          <div class="author">James Clear</div>
-          <p>The definitive guide to building good habits and breaking bad ones. Practical, actionable, essential.</p>
-        </div>
-
-        <!-- Book 8 -->
-        <div class="book-card fade-in">
-          <img src="https://covers.openlibrary.org/b/isbn/9780735213616-M.jpg" alt="Breath" class="book-cover">
-          <h3>Breath</h3>
-          <div class="author">James Nestor</div>
-          <p>How we breathe affects everything. This fascinating deep-dive will change how you think about something you do 20,000 times a day.</p>
-        </div>
-
-        <!-- Book 9 -->
-        <div class="book-card fade-in">
-          <img src="https://covers.openlibrary.org/b/isbn/9780861719068-M.jpg" alt="Mindfulness in Plain English" class="book-cover">
-          <h3>Mindfulness in Plain English</h3>
-          <div class="author">Bhante Gunaratana</div>
-          <p>A Buddhist monk explains meditation without the mysticism. Clear, practical, and genuinely helpful.</p>
-        </div>
-
-        <!-- Book 10 -->
-        <div class="book-card fade-in">
-          <img src="https://covers.openlibrary.org/b/isbn/9780143127741-M.jpg" alt="The Body Keeps the Score" class="book-cover">
-          <h3>The Body Keeps the Score</h3>
-          <div class="author">Bessel van der Kolk</div>
-          <p>How trauma lives in the body — and how practices like meditation and yoga can help heal it. Eye-opening and deeply compassionate.</p>
-        </div>
-
-        <!-- Book 11 -->
-        <div class="book-card fade-in">
-          <img src="https://covers.openlibrary.org/b/isbn/9780671791544-M.jpg" alt="Awaken the Giant Within" class="book-cover">
-          <h3>Awaken the Giant Within</h3>
-          <div class="author">Tony Robbins</div>
-          <p>Take control of your mental, emotional, physical, and financial destiny. A powerful guide to mastering your life.</p>
-        </div>
-
-        <!-- Book 12 -->
-        <div class="book-card fade-in">
-          <img src="https://covers.openlibrary.org/b/isbn/9781401971366-M.jpg" alt="The Let Them Theory" class="book-cover">
-          <h3>The Let Them Theory</h3>
-          <div class="author">Mel Robbins</div>
-          <p>A life-changing philosophy for letting go of what you can't control and focusing on what you can. Freedom in two words.</p>
-        </div>
-
-        <!-- Book 13 -->
-        <div class="book-card fade-in">
-          <img src="https://covers.openlibrary.org/b/isbn/9780767905923-M.jpg" alt="Tuesdays with Morrie" class="book-cover">
-          <h3>Tuesdays with Morrie</h3>
-          <div class="author">Mitch Albom</div>
-          <p>A dying professor's final lessons on how to live. Simple, profound wisdom about love, work, family, and what really matters.</p>
-        </div>
-
-        <!-- Book 14 -->
-        <div class="book-card fade-in">
-          <img src="https://covers.openlibrary.org/b/isbn/9781401900120-M.jpg" alt="Who Will Cry When You Die" class="book-cover">
-          <h3>Who Will Cry When You Die?</h3>
-          <div class="author">Robin Sharma</div>
-          <p>101 life lessons to help you live with greater purpose, meaning, and fulfilment. Short chapters, lasting impact.</p>
-        </div>
-
+    <div class="rd-book" data-genre="mindfulness">
+      <span class="rd-book__num">01</span>
+      <div class="rd-book__info">
+        <span class="rd-book__title">Wherever You Go, There You Are</span>
+        <span class="rd-book__author">Jon Kabat-Zinn</span>
+        <span class="rd-book__why">The book that brought mindfulness to the West. Practical, warm, and entirely without pretension.</span>
       </div>
+      <span class="rd-book__genre">Mindfulness</span>
     </div>
-  </section>
 
-  <!-- CTA -->
-  <section class="cta-banner">
-    <div class="container">
-      <h2 class="fade-in">Ready to practise?</h2>
-      <p class="fade-in">Reading is just the beginning. Put the wisdom into action with guided meditations.</p>
-      <a href="sessions.html" class="btn fade-in">Explore Guided Meditations</a>
+    <div class="rd-book" data-genre="neuroscience">
+      <span class="rd-book__num">02</span>
+      <div class="rd-book__info">
+        <span class="rd-book__title">The Body Keeps the Score</span>
+        <span class="rd-book__author">Bessel van der Kolk</span>
+        <span class="rd-book__why">How trauma lives in the body and how practices like meditation, yoga, and breathwork can help release it.</span>
+      </div>
+      <span class="rd-book__genre">Neuroscience</span>
     </div>
-  </section>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div>
-          <h4 style="letter-spacing:2px;">SALUS</h4>
-          <p>SLEEP · RELAX · RESTORE</p>
-          <p style="margin-top:8px;">Meditation and mindfulness for everyday life.</p>
-        </div>
-        <div>
-          <h4>Pages</h4>
-          <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="sessions.html">Guided Meditations</a></li>
-            <li><a href="asmr.html">ASMR</a></li>
-        <li><a href="sleep-stories.html">Sleep Stories</a></li>
-            <li><a href="education.html">Learn</a></li>
-            <li><a href="mindfulness.html">Mindfulness</a></li>
-            <li><a href="about.html">About</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4>Support</h4>
-          <ul>
-            <li><a href="contact.html">Contact</a></li>
-            <li><a href="faq.html">FAQ</a></li>
-            <li><a href="privacy.html">Privacy</a></li>
-            <li><a href="terms.html">Terms</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4>Tools</h4>
-          <ul>
-            <li><a href="breathe.html">Breathing Timer</a></li>
-            <li><a href="timer.html">Meditation Timer</a></li>
-            <li><a href="sounds.html">ASMR</a></li>
-          </ul>
-        </div>
+    <div class="rd-book" data-genre="philosophy">
+      <span class="rd-book__num">03</span>
+      <div class="rd-book__info">
+        <span class="rd-book__title">Meditations</span>
+        <span class="rd-book__author">Marcus Aurelius</span>
+        <span class="rd-book__why">Two thousand years old and still the most practical guide to keeping your head when everything's falling apart.</span>
       </div>
-      <div class="footer-bottom">
-        <a href="#" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to Top</a>
-        &copy; 2026 Salus. All rights reserved.
-      </div>
+      <span class="rd-book__genre">Philosophy</span>
     </div>
-  </footer>
+
+    <div class="rd-book" data-genre="sleep">
+      <span class="rd-book__num">04</span>
+      <div class="rd-book__info">
+        <span class="rd-book__title">Why We Sleep</span>
+        <span class="rd-book__author">Matthew Walker</span>
+        <span class="rd-book__why">The book that changed how an entire generation thinks about sleep. Alarming, motivating, essential.</span>
+      </div>
+      <span class="rd-book__genre">Sleep</span>
+    </div>
+
+    <div class="rd-book" data-genre="psychology">
+      <span class="rd-book__num">05</span>
+      <div class="rd-book__info">
+        <span class="rd-book__title">Man's Search for Meaning</span>
+        <span class="rd-book__author">Viktor Frankl</span>
+        <span class="rd-book__why">Finding purpose in suffering. A short, devastating, ultimately hopeful book that reframes everything.</span>
+      </div>
+      <span class="rd-book__genre">Psychology</span>
+    </div>
+
+    <div class="rd-book" data-genre="mindfulness">
+      <span class="rd-book__num">06</span>
+      <div class="rd-book__info">
+        <span class="rd-book__title">The Miracle of Mindfulness</span>
+        <span class="rd-book__author">Thich Nhat Hanh</span>
+        <span class="rd-book__why">Washing the dishes to wash the dishes. Simple, gentle instruction from one of the great teachers.</span>
+      </div>
+      <span class="rd-book__genre">Mindfulness</span>
+    </div>
+
+    <div class="rd-book" data-genre="neuroscience">
+      <span class="rd-book__num">07</span>
+      <div class="rd-book__info">
+        <span class="rd-book__title">Breath</span>
+        <span class="rd-book__author">James Nestor</span>
+        <span class="rd-book__why">A journalist's deep dive into the lost science of breathing. Changed how we designed our breathwork sessions.</span>
+      </div>
+      <span class="rd-book__genre">Neuroscience</span>
+    </div>
+
+    <div class="rd-book" data-genre="psychology">
+      <span class="rd-book__num">08</span>
+      <div class="rd-book__info">
+        <span class="rd-book__title">Thinking, Fast and Slow</span>
+        <span class="rd-book__author">Daniel Kahneman</span>
+        <span class="rd-book__why">The two systems that govern how you think — and why meditation helps the slower, wiser one get a word in.</span>
+      </div>
+      <span class="rd-book__genre">Psychology</span>
+    </div>
+
+    <div class="rd-book" data-genre="mindfulness">
+      <span class="rd-book__num">09</span>
+      <div class="rd-book__info">
+        <span class="rd-book__title">Waking Up</span>
+        <span class="rd-book__author">Sam Harris</span>
+        <span class="rd-book__why">Spirituality without religion. A neuroscientist's case for meditation that doesn't ask you to believe anything.</span>
+      </div>
+      <span class="rd-book__genre">Mindfulness</span>
+    </div>
+
+    <div class="rd-book" data-genre="philosophy">
+      <span class="rd-book__num">10</span>
+      <div class="rd-book__info">
+        <span class="rd-book__title">The Tao Te Ching</span>
+        <span class="rd-book__author">Lao Tzu (Stephen Mitchell translation)</span>
+        <span class="rd-book__why">Eighty-one short chapters on doing less, wanting less, and understanding that you already have enough.</span>
+      </div>
+      <span class="rd-book__genre">Philosophy</span>
+    </div>
+
+    <div class="rd-book" data-genre="psychology">
+      <span class="rd-book__num">11</span>
+      <div class="rd-book__info">
+        <span class="rd-book__title">Self-Compassion</span>
+        <span class="rd-book__author">Kristin Neff</span>
+        <span class="rd-book__why">The research behind being kinder to yourself — and why it's not the same as letting yourself off the hook.</span>
+      </div>
+      <span class="rd-book__genre">Psychology</span>
+    </div>
+
+    <div class="rd-book" data-genre="neuroscience">
+      <span class="rd-book__num">12</span>
+      <div class="rd-book__info">
+        <span class="rd-book__title">Altered Traits</span>
+        <span class="rd-book__author">Daniel Goleman &amp; Richard Davidson</span>
+        <span class="rd-book__why">What the science actually says about meditation — cutting through hype with rigour and honesty.</span>
+      </div>
+      <span class="rd-book__genre">Neuroscience</span>
+    </div>
+
+  </div>
+</section>
 
   <script src="js/main.js?v=1770053724"></script>
   <script src="js/tracker.js"></script>
+  <script>
+  // Reading list filter
+  (function(){
+    const filters=document.querySelectorAll('.rd-filter-btn');
+    const books=document.querySelectorAll('.rd-book');
+    filters.forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        filters.forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const f=btn.dataset.filter;
+        books.forEach(b=>{b.style.display=(f==='all'||b.dataset.genre===f)?'':'none'});
+      });
+    });
+  })();
+  </script>
   <script>
 (function(){
   const canvas=document.getElementById('pageCanvas');const ctx=canvas.getContext('2d');let w,h,time=0;const lines=[];
