@@ -28,6 +28,19 @@ Calm/
 __pycache__/
 *.pyc
 
+# Dependencies
+node_modules/
+
+# Wrangler
+.wrangler/
+
+# Test/dev files
+test/
+
+# Archives
+scripts-archive/
+reference/
+
 # Other
 transcripts by others/
 audio-analysis/
