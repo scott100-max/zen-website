@@ -279,13 +279,16 @@ var SalusAuth = (function() {
   // Update navigation UI based on auth state
   function updateNavUI() {
     var authBtn = document.querySelector('.nav-auth-btn');
-    var subscribeBtn = document.querySelector('.nav a[href="apps.html"], .nav a[href="../apps.html"]');
 
     // Detect if we're in a subdirectory by checking existing href pattern
     var pathPrefix = '';
     if (authBtn && (authBtn.getAttribute('href') || '').includes('../')) {
       pathPrefix = '../';
     }
+
+    // Update body classes for CSS-driven visibility
+    document.body.classList.toggle('is-logged-in', !!currentUser);
+    document.body.classList.toggle('is-premium', isPremium());
 
     if (authBtn) {
       if (currentUser) {
@@ -297,16 +300,37 @@ var SalusAuth = (function() {
       }
     }
 
-    // Update ALL subscribe buttons/links for premium users
+    // Update premium CTAs for premium users
     if (isPremium()) {
       document.querySelectorAll('a[href="apps.html"], a[href="../apps.html"]').forEach(function(link) {
         var text = link.textContent.trim();
-        if (text === 'Subscribe' || text === 'Upgrade to Premium' || text === 'Get Salus Premium') {
-          link.textContent = 'Premium';
+        // Nav/footer subscribe buttons → redirect to dashboard
+        if (text === 'Subscribe' || text === 'Upgrade to Premium' || text === 'Get Salus Premium' || text === 'Go Premium') {
+          link.textContent = 'My Account';
           link.href = pathPrefix + 'dashboard.html';
-          link.style.background = 'linear-gradient(135deg, var(--accent), var(--accent-dark))';
-          link.style.color = '#fff';
         }
+        // Course unlock buttons → show "You have access"
+        if (text === 'Unlock Full Course') {
+          link.textContent = 'You Have Access';
+          link.href = pathPrefix + 'dashboard.html';
+          link.style.background = 'rgba(78,205,196,0.15)';
+          link.style.borderColor = 'rgba(78,205,196,0.3)';
+        }
+      });
+
+      // Hide full-page CTA banner sections for premium users
+      document.querySelectorAll('.cta-banner').forEach(function(banner) {
+        var hasAppsLink = banner.querySelector('a[href="apps.html"], a[href="../apps.html"]');
+        if (hasAppsLink) {
+          banner.style.display = 'none';
+        }
+      });
+
+      // Unlock locked day cards on course pages
+      document.querySelectorAll('.day-card.locked').forEach(function(card) {
+        card.classList.remove('locked');
+        var lockIcon = card.querySelector('svg');
+        if (lockIcon) lockIcon.remove();
       });
     }
 
@@ -324,12 +348,12 @@ var SalusAuth = (function() {
     var unlockCta = document.querySelector('.unlock-cta');
     if (unlockCta && isPremium()) {
       unlockCta.innerHTML = '<div style="text-align:center;padding:24px;">' +
-        '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" style="margin-bottom:12px;"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>' +
-        '<h3 style="margin-bottom:8px;color:var(--forest);">Premium Unlocked</h3>' +
-        '<p style="color:var(--mid-gray);margin-bottom:16px;">Audio player coming soon. Thank you for subscribing!</p>' +
+        '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#4ecdc4" stroke-width="2" style="margin-bottom:12px;"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>' +
+        '<h3 style="margin-bottom:8px;color:#f0eefc;">Premium Unlocked</h3>' +
+        '<p style="color:rgba(240,238,252,0.55);margin-bottom:16px;">Audio player coming soon. Thank you for subscribing!</p>' +
         '</div>';
-      unlockCta.style.background = 'linear-gradient(135deg, #f0f7f4 0%, #e8f4ec 100%)';
-      unlockCta.style.border = '2px solid var(--accent)';
+      unlockCta.style.background = 'rgba(78,205,196,0.06)';
+      unlockCta.style.border = '1px solid rgba(78,205,196,0.2)';
     }
   }
 
