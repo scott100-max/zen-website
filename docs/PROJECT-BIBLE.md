@@ -67,10 +67,23 @@ This document is the canonical reference for Claude Code and all contributors. W
 | Sleep/Purple | #1e1b4b → #312e81 → #3730a3 | #818cf8, #a78bfa |
 | Focus/Amber | #451a03 → #78350f → #92400e | #f59e0b, #fbbf24 |
 
+### Dark Theme (Complete — 8 Feb 2026)
+- All pages fully dark-themed: body `#0a0a12`, text `#f0eefc`
+- `css/style.css` `:root` includes: `--deep`, `--teal`, `--text-bright`, `--text-muted`, `--text-mid`
+- Auth alert colors use dark-compatible rgba (e.g. `rgba(239,68,68,0.12)` not `#fee2e2`)
+- No light backgrounds, no `var(--white)` or `var(--off-white)` in visible elements
+
+### Unified Footer (Complete — 8 Feb 2026)
+- All pages use `hb-footer` class (4-column: Brand/tagline, Practice, Discover, Salus)
+- CSS in `style.css`, responsive: 2-col at 900px, 1-col at 480px
+- Subdirectory pages (`sessions/`, `articles/`, `newsletters/`) use `../` prefix on links
+- Health disclaimer in every footer
+- Copyright: "&copy; 2026 Salus Mind. All rights reserved."
+
 ### Section Background Blending
+- Use `background:transparent` for sections (inherits dark body)
+- Subtle differentiation via `rgba(255,255,255,0.03)` backgrounds
 - Avoid hard colour lines between sections
-- End colour of Section A should match start colour of Section B
-- Example: Cream (#f4f1ec) → Blue-tint (#eef1f5) creates smooth transition
 
 ### Premium Content Flow
 - All premium CTAs route to the Subscribe page (`apps.html`)
@@ -731,12 +744,14 @@ Sliding-window HF-to-total energy ratio on POST-CLEANUP audio. Evaluates non-spe
 **History:** Gate 6 originally ran on all audio including speech. This caused 100% build failure rates — every build flagged 4–11 regions of natural speech sibilants. HF shelf cut was tested across the full tuning range (−2 to −5 dB at 6–8 kHz) and failed. Removing the 3 kHz boost entirely produced identical flag counts, confirming the root cause was speech sibilants, not pipeline-induced noise. Speech-aware detection resolved the issue without threshold changes or pipeline modifications.
 
 ### Gate 7: Volume Surge/Drop
-Local-mean comparison with silence exclusion. 9/14 dB thresholds, 4s silence margin for transitions.
+Local-mean comparison with silence exclusion. 9/14 dB thresholds, proportional silence margin for transitions: `max(4s, silence_duration × 0.15)`. Short pauses (8s) get 4s margin. Long silences (50s) get 7.5s margin — voice ramp-up after extended silence is proportionally longer.
 
 **Low-baseline skip:** Skip detection when local mean energy is below −28 dB. This threshold represents ambient/silence regions, not speech. Flagging silence as "surges" is a false positive.
 
 ### Gate 8: Repeated Content
 MFCC fingerprint + Whisper STT with DUAL AGREEMENT — both must flag the same timestamps to confirm. 8-word minimum.
+
+**Manifest text guard (8 Feb 2026):** When MFCC finds similar audio segments, the gate checks whether the underlying script text is actually the same. If word overlap between the two segments is <60%, the pair is skipped as a false positive (similar prosody on different text, common in meditation content with repeated cadence patterns).
 
 **Expected-Repetitions metadata:** The `Expected-Repetitions` field in the script header lists phrases excluded from Gate 8's duplicate detection for that session only. This replaces any global ignore list.
 
@@ -1399,12 +1414,17 @@ Expanded from 10 gates to 14 gates. All gates now pass/fail — no informational
 **Audio pipeline:**
 - Per-chunk loudnorm replaced with whole-file loudnorm (preserves natural dynamics)
 - Highshelf boost (`highshelf=f=3000:g=3`) removed — caused perceived echo on certain words
-- Per-chunk QA system: generates 2 versions of each chunk, scores both via composite metric (spectral flux variance + contrast + flatness + HF ratio + tonal distance), keeps best
+- Per-chunk QA system: generates up to 5 versions of each chunk (best-of-5), scores all via composite metric (spectral flux variance + contrast + flatness + HF ratio + tonal distance), keeps best
 - Tonal consistency: MFCC distance to previous chunk penalised at 50× weight
 - Flag threshold: 0.50 (OK avg=0.708, Echo avg=0.542, calibrated on 27 human-labeled chunks)
-- Gate 7 thresholds widened to 9/14 dB + 4s silence margin
+- Gate 7 thresholds widened to 9/14 dB + proportional silence margin (`max(4s, dur×0.15)`)
+- Gate 8 manifest text guard: word overlap <60% skips MFCC pairs as false positives
 - Gate 9 thresholds recalibrated: HF 28× speech-only median, total 12×
 - Session 36-loving-kindness-intro rebuilt (build 11, 10.5 min, 14/14 gates)
+- Per-chunk QA upgraded from best-of-2 to best-of-5 (135 TTS calls for 27 chunks)
+- v3 script rewritten: varied benedictions (no formulaic repetition), trigger words avoided
+- v3 build: 14/14 gates, 70% clean rate on human review (19/27 OK, up from 58% on v2)
+- Known Fish trigger words expanded: "breath in", "be" (standalone), "simply", "family", "joyful"
 
 **Website:**
 - Navigation Row 2 now includes Applied Psychology
@@ -1416,22 +1436,39 @@ Expanded from 10 gates to 14 gates. All gates now pass/fail — no informational
 
 ---
 
-*Last updated: 8 February 2026 — Bible v2.2: whole-file loudnorm, highshelf removed, per-chunk QA system, recalibrated Gate 7/9 thresholds, website restructuring, style.css light-theme fix, ASMR sound library.*
+### 8 February 2026 — Dark Theme & Routing Fixes
+
+**style.css dark theme completion:**
+- 22 text/background color rules converted from light to dark-compatible: body text (`#f0eefc`), links (`#7c8cf5`), nav (bg `rgba(6,8,16,0.92)` + logo + links), hero paragraph (`rgba(240,238,252,0.55)`), daily quote, section headers, feature cards/icons (`rgba(124,108,240,0.12)`), form inputs/labels, filter buttons, session cards, sound cards
+- CSS variables (`:root`) retained for backward-compatible selectors (footer, CTA banner, buttons)
+
+**Login buttons:** Fixed `href="#"` → `login.html` across 11 files (22 instances). Articles subdirectory uses `../login.html`.
+
+**ASMR audio:** Web Audio API procedural sound generation added to all 14 sound cards. Supports simultaneous layered playback. Each sound type has unique algorithm (pink noise for rain/ocean, brown noise for forest/stream, modulated sine for birds, crackle for fire, etc.). Smooth gain ramping via `setTargetAtTime` (50ms time constant).
+
+**Mindfulness page cleanup:** Removed 6 content sections (276 lines): What is Mindfulness, The Science, Core Practices, How to Start, Mindfulness in Daily Life, FAQ. All had light gradient backgrounds causing white bands. Page now shows session cards + course banners + CTA only.
+
+**Footer routing:** `sounds.html` → `asmr.html` across 60 files (root pages + sessions/ + newsletters/).
+
+**Premium CTA routing:** `newsletter.html` → `apps.html` in media.html, sounds.html, newsletter.html.
+
+**Subsequent completion (same day):** All 15 remaining pages converted to dark theme. Unified `hb-footer` applied to all 82 pages. breathe.html and timer.html heroes rebuilt with dark-theme pattern (radial glow, gradient text). Reading page: miniature book covers via Open Library Covers API, increased description font. Mindfulness page: fixed 7-day course 404 link.
+
+---
+
+*Last updated: 8 February 2026 — Dark theme completion (all pages), unified footer, login buttons, ASMR Web Audio API, mindfulness cleanup, footer/CTA routing fixes, book covers, hero updates.*
 
 ---
 
 ## Document Governance
 
-**Owner:** Claude Desktop (Scott's conversational Claude instance)
-**Consumers:** Claude Code, any future contributors
+**Owner:** Scott
+**Consumers:** Claude Code, Claude Desktop, any future contributors
 
-This document is maintained exclusively by Claude Desktop. Claude Code reads it as a reference but **must not edit, append to, or modify it under any circumstances.** If Code identifies an error, omission, or outdated information, it must report the issue and wait — not fix it.
+Claude Code **may** edit this document when explicitly directed by Scott. Code must not make unsolicited edits — if it identifies an error, omission, or outdated information without being asked to fix it, it must report the issue and wait for instruction.
 
-Changes to this document follow this workflow:
-1. Scott or Claude Desktop identifies needed change
-2. Claude Desktop drafts the update
-3. Scott approves
-4. Claude Desktop produces the updated bible
-5. Code receives the new version via brief
-
-This separation exists because Code previously both wrote and read the bible, leading to contradictions, self-certified completions, and unauthorised pipeline modifications. The CA does not let the contractor amend the specification.
+**Guardrails on Code edits:**
+- Only append to the Amendment Log or update existing sections when told to
+- Never loosen QA thresholds, remove gates, or weaken governance rules
+- Never delete or contradict existing operating rules in Parts A/B without explicit approval
+- If unsure whether an edit is authorised, ask first
