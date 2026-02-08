@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>7-Day Mindfulness Course — Salus</title>
-  <meta name="description" content="A structured week-long programme to build your mindfulness habit from scratch. Each day introduces a new concept and practice, gradually building your skil">
+  <meta name="description" content="A structured week-long programme to build your mindfulness habit from scratch. Each day introduces a new concept and practice, gradually building your skills.">
   <link rel="canonical" href="https://salus-mind.com/sessions/seven-day-mindfulness-course.html">
   <meta property="og:title" content="7-Day Mindfulness Course — Salus">
-  <meta property="og:description" content="A structured week-long programme to build your mindfulness habit from scratch. Each day introduces a new concept and practice, gradually building your skil">
+  <meta property="og:description" content="A structured week-long programme to build your mindfulness habit from scratch.">
   <meta property="og:url" content="https://salus-mind.com/sessions/seven-day-mindfulness-course.html">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://salus-mind.com/images/meditation-woman-outdoor.jpg">
@@ -16,88 +16,39 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css?v=1770053724">
   <style>
-    .session-detail-hero {
-      position: relative;
-      min-height: 420px;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      text-align: center;
-      color: #fff;
-      overflow: hidden;
+    .day-grid {
+      display:grid; grid-template-columns:repeat(7,1fr); gap:12px;
     }
-    .session-detail-hero::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(160deg,#264653 0%,#2a9d8f 40%,#e9c46a 100%),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 400'%3E%3Cpath d='M100 350 Q200 200 400 250 Q600 300 700 150' fill='none' stroke='%23ffffff06' stroke-width='1.5'/%3E%3C/svg%3E");
-      background-size: 100% 100%, 100% 100%;
-      opacity: 0.7;
-      z-index: 1;
+    .day-card {
+      background:rgba(255,255,255,0.05); border-radius:12px; padding:20px 16px;
+      text-align:center; transition:all 0.3s ease; cursor:pointer;
+      border:2px solid transparent;
     }
-    .hero-fade {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 120px;
-      background: linear-gradient(to bottom, transparent, #0a0a12);
-      z-index: 2;
+    .day-card:hover { background:rgba(255,255,255,0.1); transform:translateY(-2px); }
+    .day-card.active { border-color:var(--accent); background:rgba(79,109,245,0.1); }
+    .day-card.locked { opacity:0.6; }
+    .day-card .day-num { font-size:1.5rem; font-weight:700; color:#fff; margin-bottom:4px; }
+    .day-card .day-title { font-size:0.75rem; color:rgba(255,255,255,0.7); }
+    .day-card.locked .day-num { color:rgba(255,255,255,0.5); }
+    .day-card svg { margin-top:8px; opacity:0.5; }
+
+    .day-content {
+      background:rgba(255,255,255,0.05); border-radius:16px; padding:32px;
+      margin-top:24px; display:none;
     }
-    .session-detail-hero .container {
-      position: relative;
-      z-index: 3;
-      padding: 100px 24px 60px;
+    .day-content.active { display:block; }
+    .day-content h4 { color:#fff; font-size:1.2rem; margin-bottom:8px; }
+    .day-content .meta { color:rgba(255,255,255,0.6); font-size:0.85rem; margin-bottom:16px; }
+    .day-content p { color:rgba(255,255,255,0.85); line-height:1.7; margin-bottom:20px; }
+
+    @media (max-width:768px) {
+      .day-grid { grid-template-columns:repeat(4,1fr); }
     }
-    .session-detail-hero h1 {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 2.8rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-      letter-spacing: -0.5px;
-      line-height: 1.15;
-      text-shadow: 0 2px 20px rgba(0,0,0,0.4);
+    @media (max-width:480px) {
+      .day-grid { grid-template-columns:repeat(3,1fr); }
+      .day-card { padding:16px 12px; }
+      .day-card .day-num { font-size:1.2rem; }
     }
-    .session-detail-hero .meta {
-      opacity: 0.85;
-      font-size: 0.9rem;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      font-weight: 500;
-    }
-    .session-detail-hero .meta span { margin: 0 8px; }
-    .narrator-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255,255,255,0.12);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 50px;
-      padding: 8px 18px;
-      margin-top: 20px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      letter-spacing: 0.3px;
-    }
-    .session-body { max-width: 720px; margin: 0 auto; padding: 48px 24px; }
-    .session-body h2 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.6rem; margin: 36px 0 16px; color: #f0eefc; font-weight: 700; }
-    .session-body p { color: var(--mid-gray); line-height: 1.85; margin-bottom: 16px; font-size: 1rem; }
-    .session-body ul { color: rgba(240,238,252,0.55); line-height: 2; padding-left: 24px; margin-bottom: 24px; }
-    .session-body li { margin-bottom: 4px; }
-    .best-for { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px 24px; margin: 24px 0; }
-    .best-for strong { color: #f0eefc; }
-    .unlock-cta {
-      text-align: center; padding: 48px 24px; margin: 32px 0;
-      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px;
-    }
-    .unlock-cta h2 { margin-bottom: 12px; color: #f0eefc; font-family: 'Cormorant Garamond', Georgia, serif; }
-    .unlock-cta p { color: var(--mid-gray); margin-bottom: 20px; }
-    .back-link { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 24px; color: var(--accent); text-decoration: none; font-weight: 600; }
-    .back-link:hover { text-decoration: underline; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
@@ -105,61 +56,152 @@
 </head>
 <body>
 
-
-  <nav class="nav" style="position:relative;">
-    <div class="container">
-      <a href="../index.html" class="nav-logo" style="display:flex;flex-direction:column;align-items:flex-start;line-height:1;"><span style="font-family:'Cormorant Garamond',serif;font-size:2rem;">SALUS</span><span style="font-size:0.6rem;letter-spacing:1.5px;opacity:0.6;margin-top:2px;">LATIN: HEALTH</span></a>
-      <ul class="nav-links">
-        <li><a href="../index.html">Home</a></li>
-        <li><a href="../sessions.html">Guided Meditations</a></li>
-        <li><a href="../mindfulness.html">Mindfulness</a></li>
-        <li><a href="../soundscapes.html">Soundscapes</a></li>
-        <li><a href="../tools.html">Tools</a></li>
-        <li><a href="../education.html">Learn</a></li>
-        <li><a href="../about.html">About</a></li>
-        <li><a href="../newsletter.html">Newsletter</a></li>
-        <li><a href="../contact.html">Contact</a></li>
-      </ul>
+      <nav class="nav" style="position:relative;">
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;">
+      <a href="../index.html" class="nav-logo" style="display:flex;flex-direction:column;align-items:flex-start;line-height:1;"><span style="font-family:'Cormorant Garamond',serif;font-size:2rem;">SALUS</span></a>
+      <div style="display:flex;gap:8px;">
+        <a href="../apps.html" class="btn btn-primary" style="padding:8px 18px;font-size:0.85rem;">Subscribe</a>
+        <a href="../login.html" class="btn btn-outline nav-auth-btn" style="padding:8px 18px;font-size:0.85rem;">Log In</a>
+      </div>
       <button class="nav-toggle" aria-label="Toggle menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    </div>
+    <div style="border-bottom:1px solid rgba(255,255,255,0.06);">
+      <div style="display:flex;justify-content:center;padding:12px 0;">
+        <ul style="display:flex;gap:28px;list-style:none;margin:0;padding:0;">
+          <li><a href="../index.html" style="font-size:0.9rem;color:rgba(240,238,252,0.6);text-decoration:none;font-weight:500;">Home</a></li>
+          <li><a href="../sessions.html" style="font-size:0.9rem;color:rgba(240,238,252,0.6);text-decoration:none;font-weight:500;">Meditations</a></li>
+          <li><a href="../mindfulness.html" style="font-size:0.9rem;color:rgba(240,238,252,0.6);text-decoration:none;font-weight:500;">Mindfulness</a></li>
+          <li><a href="../asmr.html" style="font-size:0.9rem;color:rgba(240,238,252,0.6);text-decoration:none;font-weight:500;">ASMR</a></li>
+          <li><a href="../sleep-stories.html" style="font-size:0.9rem;color:rgba(240,238,252,0.6);text-decoration:none;font-weight:500;">Sleep Stories</a></li>
+          <li><a href="../education.html" style="font-size:0.9rem;color:rgba(240,238,252,0.6);text-decoration:none;font-weight:500;">Learn</a></li>
+          <li><a href="../about.html" style="font-size:0.9rem;color:rgba(240,238,252,0.6);text-decoration:none;font-weight:500;">About</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06);">
+      <div style="display:flex;justify-content:center;padding:8px 0;">
+        <ul style="display:flex;gap:32px;list-style:none;margin:0;padding:0;">
+          <li><a href="../tools.html" style="font-size:0.85rem;color:var(--mid-gray);text-decoration:none;font-weight:500;">Tools</a></li>
+          <li><a href="../reading.html" style="font-size:0.85rem;color:var(--mid-gray);text-decoration:none;font-weight:500;">Reading</a></li>
+          <li><a href="../applied-psychology.html" style="font-size:0.85rem;color:var(--mid-gray);text-decoration:none;font-weight:500;">Applied Psychology</a></li>
+          <li><a href="../newsletter.html" style="font-size:0.85rem;color:var(--mid-gray);text-decoration:none;font-weight:500;">Newsletter</a></li>
+          <li><a href="../contact.html" style="font-size:0.85rem;color:var(--mid-gray);text-decoration:none;font-weight:500;">Contact</a></li>
+        </ul>
+      </div>
     </div>
   </nav>
 
-  <section class="session-detail-hero">
-    <div class="container">
-      <h1>7-Day Mindfulness Course</h1>
-      <div class="meta">
-        <span>Day 1 of 7</span> &middot;
-        <span>Beginners</span>
-      </div>
-      <div class="narrator-badge">Narrated by Marco</div>
+  <!-- Hero -->
+  <section style="position:relative;min-height:420px;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;">
+    <div style="position:absolute;inset:0;background:url('../content/images/heroes/huangshan-cliff.jpg') center/cover no-repeat;"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(to bottom, rgba(10,20,30,0.35) 0%, rgba(10,15,25,0.4) 50%, rgba(10,10,18,0.7) 80%, #0a0a12 100%);"></div>
+    <div class="container" style="position:relative;z-index:2;padding:100px 24px 60px;">
+      <span class="fade-in" style="display:inline-block;background:var(--accent);color:#fff;padding:6px 16px;border-radius:20px;font-size:0.8rem;font-weight:700;margin-bottom:16px;">7-DAY PROGRAMME</span>
+      <h1 class="fade-in" style="font-family:'Cormorant Garamond',Georgia,serif;font-size:3rem;font-weight:700;color:#fff;margin-bottom:12px;text-shadow:0 2px 20px rgba(0,0,0,0.5);">Build Your <span style="color:#90cdf4;">Foundation</span></h1>
+      <p class="fade-in" style="font-size:1.1rem;color:rgba(255,255,255,0.95);max-width:600px;margin:0 auto;text-shadow:0 1px 10px rgba(0,0,0,0.4);">One week to build a lasting mindfulness habit from scratch. A new concept and practice each day.</p>
     </div>
-      <div class="hero-fade"></div>
   </section>
 
-  <div class="session-body">
-    <a href="../sessions.html" class="back-link">&larr; All Meditations</a>
-
-    <h2>About This Session</h2>
-    <p>A structured week-long programme to build your mindfulness habit from scratch. Each day introduces a new concept and practice, gradually building your skills and confidence over seven days.</p>
-
-    <h2>What You'll Learn</h2>
-    <ul>
-            <li>Day 1: Breath awareness</li>
-            <li>Day 2: Body scan basics</li>
-            <li>Day 3: Noting thoughts</li>
-            <li>Day 4: Emotional awareness</li>
-            <li>Day 5: Mindful movement</li>
-            <li>Day 6: Loving-kindness</li>
-            <li>Day 7: Integration and daily life</li>
-    </ul>
-
-    <div class="best-for">
-      <strong>Best for:</strong> Structured learners, complete beginners, building a 7-day streak
+  <!-- Course Overview -->
+  <section style="background:transparent;padding:60px 0;">
+    <div class="container" style="max-width:800px;text-align:center;">
+      <h2 class="fade-in" style="margin-bottom:16px;">What You'll Learn</h2>
+      <p class="fade-in" style="color:var(--mid-gray);line-height:1.8;margin-bottom:32px;">Seven days, seven practices. Each session introduces a new concept and builds on the last — from breath awareness to loving-kindness, finishing with integration into daily life.</p>
     </div>
+  </section>
 
-    <div class="unlock-cta" style="text-align:center;padding:32px 24px;margin:24px 0;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.06);border-radius:16px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" style="margin-bottom:12px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><h3 style="margin-bottom:8px;color:#f0eefc;">Premium Session</h3><p style="color:var(--mid-gray);margin-bottom:16px;">Subscribe to unlock this guided meditation and hundreds more.</p><a href="../apps.html" class="btn btn-primary" style="padding:8px 18px;font-size:0.85rem;">Subscribe</a>
-      <a href="../login.html" class="btn btn-outline nav-auth-btn" style="padding:8px 18px;font-size:0.85rem;margin-left:8px;">Log In</a></div></div>
+  <!-- 7-Day Course -->
+  <section style="background:linear-gradient(160deg,#1b2838 0%,#0d1b2a 100%);color:#fff;padding:80px 0;">
+    <div class="container">
+      <div class="section-header fade-in" style="margin-bottom:48px;">
+        <h2 style="color:#fff;">Your 7-Day Journey</h2>
+        <p style="color:rgba(255,255,255,0.7);">Click any day to preview the session. Day 1 is free — unlock the full course with Salus Premium.</p>
+      </div>
 
+      <div class="day-grid">
+        <div class="day-card active" data-day="1"><div class="day-num">1</div><div class="day-title">Breath</div></div>
+        <div class="day-card locked" data-day="2"><div class="day-num">2</div><div class="day-title">Body</div><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="day-card locked" data-day="3"><div class="day-num">3</div><div class="day-title">Thoughts</div><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="day-card locked" data-day="4"><div class="day-num">4</div><div class="day-title">Emotions</div><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="day-card locked" data-day="5"><div class="day-num">5</div><div class="day-title">Movement</div><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="day-card locked" data-day="6"><div class="day-num">6</div><div class="day-title">Kindness</div><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="day-card locked" data-day="7"><div class="day-num">7</div><div class="day-title">Integration</div><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      </div>
+
+      <!-- Day 1 Content (Free) -->
+      <div class="day-content active" data-day="1">
+        <h4>Day 1: Breath Awareness</h4>
+        <div class="meta">12 minutes · Breath awareness · Your foundation</div>
+        <p>Everything begins with the breath. Today you'll learn to use your breath as an anchor — a place to return to whenever your mind wanders. This single skill is the foundation of every mindfulness practice that follows.</p>
+        <div class="custom-player" data-src="https://media.salus-mind.com/content/audio-free/38-seven-day-mindfulness-day1.mp3">
+          <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.1);border-radius:8px;padding:12px 16px;">
+            <button class="cp-play" style="flex-shrink:0;background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+            <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
+            <span class="cp-time" style="font-size:0.8rem;color:rgba(255,255,255,0.6);min-width:70px;text-align:right;">0:00 / 0:00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Locked Content Template -->
+      <div class="day-content" data-day="2">
+        <h4>Day 2: Body Scan</h4>
+        <div class="meta">12 minutes · Body scan · Connecting mind and body</div>
+        <p>Learn to scan your body from head to toe, noticing sensations without trying to change them. This practice builds the interoceptive awareness that helps you recognise stress before it overwhelms you.</p>
+        <a href="../apps.html" class="btn" style="background:var(--accent);">Unlock Full Course</a>
+      </div>
+
+      <div class="day-content" data-day="3">
+        <h4>Day 3: Noting Thoughts</h4>
+        <div class="meta">12 minutes · Thought observation · Seeing the mind clearly</div>
+        <p>Thoughts are not facts. Today you'll practise labelling thoughts as they arise — "thinking", "planning", "worrying" — without getting caught up in their content. This gentle noting technique creates space between you and your mental chatter.</p>
+        <a href="../apps.html" class="btn" style="background:var(--accent);">Unlock Full Course</a>
+      </div>
+
+      <div class="day-content" data-day="4">
+        <h4>Day 4: Emotional Awareness</h4>
+        <div class="meta">12 minutes · Emotions · Feeling without reacting</div>
+        <p>Emotions live in the body. Today you'll learn to notice where emotions show up physically — the tightness, the warmth, the flutter — and simply observe them without needing to fix or flee.</p>
+        <a href="../apps.html" class="btn" style="background:var(--accent);">Unlock Full Course</a>
+      </div>
+
+      <div class="day-content" data-day="5">
+        <h4>Day 5: Mindful Movement</h4>
+        <div class="meta">12 minutes · Movement · Awareness in action</div>
+        <p>Mindfulness doesn't require sitting still. Today you'll bring awareness to gentle movement — feeling each motion, each shift in weight. This bridges formal practice and everyday life.</p>
+        <a href="../apps.html" class="btn" style="background:var(--accent);">Unlock Full Course</a>
+      </div>
+
+      <div class="day-content" data-day="6">
+        <h4>Day 6: Loving-Kindness</h4>
+        <div class="meta">12 minutes · Compassion · Opening the heart</div>
+        <p>Direct warmth and goodwill toward yourself and others. Loving-kindness practice has been shown to increase positive emotions, reduce self-criticism, and strengthen social connection.</p>
+        <a href="../apps.html" class="btn" style="background:var(--accent);">Unlock Full Course</a>
+      </div>
+
+      <div class="day-content" data-day="7">
+        <h4>Day 7: Integration</h4>
+        <div class="meta">12 minutes · Daily life · Making it last</div>
+        <p>Everything comes together. Today you'll weave all six practices into a single sitting, then explore how to carry mindfulness into your daily routine — walking, eating, working, and resting.</p>
+        <a href="../apps.html" class="btn" style="background:var(--accent);">Unlock Full Course</a>
+      </div>
+
+      <p class="fade-in" style="text-align:center;color:rgba(255,255,255,0.5);font-size:0.85rem;margin-top:32px;">Day 1 is free. Unlock all 7 days with Salus Premium.</p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-banner">
+    <div class="container">
+      <h2 class="fade-in">Ready to build your practice?</h2>
+      <p class="fade-in">7 days. 7 sessions. One new habit for life.</p>
+      <div class="fade-in" style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <a href="../apps.html" class="btn">Unlock Full Course</a>
+        <a href="../mindfulness.html" class="btn" style="background:transparent;border:2px solid #f0eefc;color:#f0eefc;">Back to Mindfulness</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
   <footer class="hb-footer">
   <div class="hb-footer__inner">
     <div class="hb-footer__brand">
@@ -206,5 +248,28 @@
 
   <script src="../js/main.js?v=1770053724"></script>
   <script src="../js/tracker.js"></script>
+  <script>
+    // Day card click handling
+    document.querySelectorAll('.day-card').forEach(function(card) {
+      card.addEventListener('click', function() {
+        var day = this.getAttribute('data-day');
+
+        // Update active card styling
+        document.querySelectorAll('.day-card').forEach(function(c) {
+          c.classList.remove('active');
+        });
+        this.classList.add('active');
+
+        // Show corresponding content
+        document.querySelectorAll('.day-content').forEach(function(content) {
+          content.classList.remove('active');
+        });
+        var targetContent = document.querySelector('.day-content[data-day="' + day + '"]');
+        if (targetContent) {
+          targetContent.classList.add('active');
+        }
+      });
+    });
+  </script>
 </body>
 </html>
