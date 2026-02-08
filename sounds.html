@@ -14,8 +14,8 @@
       padding: 40px 0;
     }
     .sound-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
-      width: 100%; max-width: 640px;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+      width: 100%; max-width: 860px;
     }
     .sound-card {
       background: transparent; border: none;
@@ -35,7 +35,10 @@
     .master-controls {
       margin-top: 32px; display: flex; gap: 16px; align-items: center;
     }
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
+      .sound-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 600px) {
       .sound-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
@@ -72,39 +75,129 @@
     <div class="container">
       <div class="sounds-container">
         <div class="sound-grid" id="soundGrid">
-          <div class="sound-card" data-sound="rain" style="overflow:hidden;">
-            <div style="height:80px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(26,42,58,0.8),rgba(74,98,116,0.7)),url('content/images/heroes/soundscapes-hero.jpg');background-size:cover;background-position:center;"></div>
+          <div class="sound-card" data-sound="rain" data-src="content/sounds/rain.mp3" style="overflow:hidden;">
+            <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(26,42,58,0.85),rgba(74,98,116,0.75));"></div>
             <div class="sound-name">Rain</div>
             <input type="range" min="0" max="100" value="0">
             <div class="vol-label">Off</div>
           </div>
-          <div class="sound-card" data-sound="forest" style="overflow:hidden;">
-            <div style="height:80px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(27,67,50,0.8),rgba(42,100,80,0.7)),url('content/images/heroes/mindfulness-hero.jpg');background-size:cover;background-position:center;"></div>
+          <div class="sound-card" data-sound="thunder" data-src="content/sounds/thunder.mp3" style="overflow:hidden;">
+            <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(40,40,60,0.85),rgba(80,70,100,0.75));"></div>
+            <div class="sound-name">Thunder</div>
+            <input type="range" min="0" max="100" value="0">
+            <div class="vol-label">Off</div>
+          </div>
+          <div class="sound-card" data-sound="forest" data-src="content/sounds/forest.mp3" style="overflow:hidden;">
+            <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(27,67,50,0.85),rgba(42,100,80,0.75));"></div>
             <div class="sound-name">Forest</div>
             <input type="range" min="0" max="100" value="0">
             <div class="vol-label">Off</div>
           </div>
-          <div class="sound-card" data-sound="ocean" style="overflow:hidden;">
-            <div style="height:80px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(3,4,94,0.7),rgba(0,119,182,0.6)),url('content/images/heroes/media-hero.jpg');background-size:cover;background-position:center;"></div>
+          <div class="sound-card" data-sound="ocean" data-src="content/sounds/ocean.mp3" style="overflow:hidden;">
+            <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(3,4,94,0.8),rgba(0,119,182,0.7));"></div>
             <div class="sound-name">Ocean</div>
             <input type="range" min="0" max="100" value="0">
             <div class="vol-label">Off</div>
           </div>
-          <div class="sound-card" data-sound="birds" style="overflow:hidden;">
-            <div style="height:80px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(42,157,143,0.7),rgba(27,67,50,0.6)),url('content/images/heroes/about-hero.jpg');background-size:cover;background-position:center;"></div>
+          <div class="sound-card" data-sound="birds" data-src="content/sounds/birds.mp3" style="overflow:hidden;">
+            <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(42,157,143,0.8),rgba(27,67,50,0.7));"></div>
             <div class="sound-name">Birds</div>
             <input type="range" min="0" max="100" value="0">
             <div class="vol-label">Off</div>
           </div>
-          <div class="sound-card" data-sound="wind" style="overflow:hidden;">
-            <div style="height:80px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(100,120,140,0.7),rgba(60,80,100,0.6)),url('content/images/heroes/faq-hero.jpg');background-size:cover;background-position:center;"></div>
+          <div class="sound-card" data-sound="wind" data-src="content/sounds/wind.mp3" style="overflow:hidden;">
+            <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(100,120,140,0.8),rgba(60,80,100,0.7));"></div>
             <div class="sound-name">Wind</div>
             <input type="range" min="0" max="100" value="0">
             <div class="vol-label">Off</div>
           </div>
-          <div class="sound-card" data-sound="fire" style="overflow:hidden;">
-            <div style="height:80px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(120,50,20,0.7),rgba(180,80,30,0.6)),url('content/images/heroes/contact-hero.jpg');background-size:cover;background-position:center;"></div>
+          <div class="sound-card" data-sound="fire" data-src="content/sounds/fire.mp3" style="overflow:hidden;">
+            <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(120,50,20,0.8),rgba(180,80,30,0.7));"></div>
             <div class="sound-name">Fireplace</div>
+            <input type="range" min="0" max="100" value="0">
+            <div class="vol-label">Off</div>
+          </div>
+          <div class="sound-card" data-sound="waves" data-src="content/sounds/waves.mp3" style="overflow:hidden;">
+            <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(0,58,90,0.85),rgba(58,170,200,0.7));"></div>
+            <div class="sound-name">Waves</div>
+            <input type="range" min="0" max="100" value="0">
+            <div class="vol-label">Off</div>
+          </div>
+          <div class="sound-card" data-sound="night" data-src="content/sounds/night.mp3" style="overflow:hidden;">
+            <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(5,5,26,0.85),rgba(26,26,80,0.75));"></div>
+            <div class="sound-name">Night</div>
+            <input type="range" min="0" max="100" value="0">
+            <div class="vol-label">Off</div>
+          </div>
+          <div class="sound-card" data-sound="stream" data-src="content/sounds/stream.mp3" style="overflow:hidden;">
+            <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(26,42,58,0.85),rgba(90,154,170,0.7));"></div>
+            <div class="sound-name">Stream</div>
+            <input type="range" min="0" max="100" value="0">
+            <div class="vol-label">Off</div>
+          </div>
+          <div class="sound-card" data-sound="waterfall" data-src="content/sounds/waterfall.mp3" style="overflow:hidden;">
+            <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(26,58,74,0.85),rgba(90,170,186,0.7));"></div>
+            <div class="sound-name">Waterfall</div>
+            <input type="range" min="0" max="100" value="0">
+            <div class="vol-label">Off</div>
+          </div>
+          <div class="sound-card" data-sound="garden" data-src="content/sounds/garden.mp3" style="overflow:hidden;">
+            <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(26,42,26,0.85),rgba(106,170,106,0.7));"></div>
+            <div class="sound-name">Garden</div>
+            <input type="range" min="0" max="100" value="0">
+            <div class="vol-label">Off</div>
+          </div>
+          <div class="sound-card" data-sound="snow" data-src="content/sounds/snow.mp3" style="overflow:hidden;">
+            <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(140,160,180,0.8),rgba(200,210,220,0.7));"></div>
+            <div class="sound-name">Snowfall</div>
+            <input type="range" min="0" max="100" value="0">
+            <div class="vol-label">Off</div>
+          </div>
+          <div class="sound-card" data-sound="cafe" data-src="content/sounds/cafe.mp3" style="overflow:hidden;">
+            <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(42,26,10,0.85),rgba(138,106,74,0.7));"></div>
+            <div class="sound-name">Cafe</div>
+            <input type="range" min="0" max="100" value="0">
+            <div class="vol-label">Off</div>
+          </div>
+          <div class="sound-card" data-sound="train" data-src="content/sounds/train.mp3" style="overflow:hidden;">
+            <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(26,26,46,0.85),rgba(74,90,110,0.7));"></div>
+            <div class="sound-name">Train</div>
+            <input type="range" min="0" max="100" value="0">
+            <div class="vol-label">Off</div>
+          </div>
+          <div class="sound-card" data-sound="keyboard" data-src="content/sounds/keyboard.mp3" style="overflow:hidden;">
+            <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(26,26,26,0.85),rgba(90,90,106,0.7));"></div>
+            <div class="sound-name">Keyboard</div>
+            <input type="range" min="0" max="100" value="0">
+            <div class="vol-label">Off</div>
+          </div>
+          <div class="sound-card" data-sound="library" data-src="content/sounds/library.mp3" style="overflow:hidden;">
+            <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(42,26,10,0.85),rgba(122,106,90,0.7));"></div>
+            <div class="sound-name">Library</div>
+            <input type="range" min="0" max="100" value="0">
+            <div class="vol-label">Off</div>
+          </div>
+          <div class="sound-card" data-sound="piano" data-src="content/sounds/piano.mp3" style="overflow:hidden;">
+            <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(26,20,42,0.85),rgba(90,80,110,0.7));"></div>
+            <div class="sound-name">Piano</div>
+            <input type="range" min="0" max="100" value="0">
+            <div class="vol-label">Off</div>
+          </div>
+          <div class="sound-card" data-sound="chimes" data-src="content/sounds/chimes.mp3" style="overflow:hidden;">
+            <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(58,74,90,0.85),rgba(154,186,200,0.7));"></div>
+            <div class="sound-name">Wind Chimes</div>
+            <input type="range" min="0" max="100" value="0">
+            <div class="vol-label">Off</div>
+          </div>
+          <div class="sound-card" data-sound="potions" data-src="content/sounds/potions.mp3" style="overflow:hidden;">
+            <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(26,10,46,0.85),rgba(106,74,142,0.7));"></div>
+            <div class="sound-name">Potions</div>
+            <input type="range" min="0" max="100" value="0">
+            <div class="vol-label">Off</div>
+          </div>
+          <div class="sound-card" data-sound="temple" data-src="content/sounds/temple.mp3" style="overflow:hidden;">
+            <div style="height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(26,10,46,0.85),rgba(138,106,158,0.7));"></div>
+            <div class="sound-name">Singing Bowls</div>
             <input type="range" min="0" max="100" value="0">
             <div class="vol-label">Off</div>
           </div>
@@ -152,86 +245,72 @@
       var audioCtx = null;
       var sounds = {};
 
-      // Generate ambient noise using Web Audio API
-      function createNoise(type) {
+      function ensureCtx() {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        return audioCtx;
+      }
 
-        var bufferSize = audioCtx.sampleRate * 4;
-        var buffer = audioCtx.createBuffer(2, bufferSize, audioCtx.sampleRate);
-
-        for (var ch = 0; ch < 2; ch++) {
-          var data = buffer.getChannelData(ch);
-          var b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
-          for (var i = 0; i < bufferSize; i++) {
-            var white = Math.random() * 2 - 1;
-            if (type === 'rain' || type === 'ocean') {
-              // Pink-ish noise
-              b0 = 0.99886 * b0 + white * 0.0555179;
-              b1 = 0.99332 * b1 + white * 0.0750759;
-              b2 = 0.96900 * b2 + white * 0.1538520;
-              b3 = 0.86650 * b3 + white * 0.3104856;
-              b4 = 0.55000 * b4 + white * 0.5329522;
-              b5 = -0.7616 * b5 - white * 0.0168980;
-              data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.08;
-              b6 = white * 0.115926;
-            } else if (type === 'wind' || type === 'forest') {
-              // Brown noise
-              data[i] = (b0 + white * 0.02) * 0.5;
-              b0 = (data[i] / 0.5);
-              data[i] *= 3.5;
-            } else if (type === 'birds') {
-              // Chirpy: modulated high-frequency
-              data[i] = Math.sin(i * 0.05 * (1 + Math.sin(i * 0.0003))) * white * 0.15;
-            } else if (type === 'fire') {
-              // Crackle: filtered white noise with pops
-              b0 = 0.97 * b0 + white * 0.03;
-              data[i] = b0 * 2 + (Math.random() < 0.002 ? white * 0.8 : 0);
-            }
-          }
-        }
-
-        var source = audioCtx.createBufferSource();
-        source.buffer = buffer;
-        source.loop = true;
-        var gain = audioCtx.createGain();
+      function createSound(src) {
+        var ctx = ensureCtx();
+        var audio = new Audio();
+        audio.crossOrigin = 'anonymous';
+        audio.loop = true;
+        audio.preload = 'auto';
+        audio.src = src;
+        var source = ctx.createMediaElementSource(audio);
+        var gain = ctx.createGain();
         gain.gain.value = 0;
         source.connect(gain);
-        gain.connect(audioCtx.destination);
-        return { source: source, gain: gain, started: false };
+        gain.connect(ctx.destination);
+        return { audio: audio, gain: gain, playing: false };
       }
 
       var cards = document.querySelectorAll('.sound-card');
       cards.forEach(function (card) {
         var slider = card.querySelector('input[type="range"]');
         var label = card.querySelector('.vol-label');
-        var type = card.getAttribute('data-sound');
+        var key = card.getAttribute('data-sound');
+        var src = card.getAttribute('data-src');
 
         slider.addEventListener('input', function () {
           var val = parseInt(slider.value);
           label.textContent = val === 0 ? 'Off' : val + '%';
           card.classList.toggle('active', val > 0);
 
-          if (val > 0 && !sounds[type]) {
-            sounds[type] = createNoise(type);
+          if (val > 0 && !sounds[key]) {
+            sounds[key] = createSound(src);
           }
-          if (sounds[type]) {
-            if (!sounds[type].started) {
-              sounds[type].source.start();
-              sounds[type].started = true;
+          if (sounds[key]) {
+            sounds[key].gain.gain.value = val / 100;
+            if (val > 0 && !sounds[key].playing) {
+              sounds[key].audio.play().catch(function() {});
+              sounds[key].playing = true;
+            } else if (val === 0 && sounds[key].playing) {
+              sounds[key].audio.pause();
+              sounds[key].playing = false;
             }
-            sounds[type].gain.gain.value = val / 100;
           }
         });
       });
 
       document.getElementById('soundToggle').addEventListener('click', function () {
+        ensureCtx();
+        var anyPlaying = false;
         cards.forEach(function (card) {
           var slider = card.querySelector('input[type="range"]');
-          if (parseInt(slider.value) === 0) {
-            slider.value = 50;
-            slider.dispatchEvent(new Event('input'));
-          }
+          if (parseInt(slider.value) > 0) anyPlaying = true;
         });
+        cards.forEach(function (card) {
+          var slider = card.querySelector('input[type="range"]');
+          if (anyPlaying) {
+            slider.value = 0;
+          } else {
+            slider.value = 50;
+          }
+          slider.dispatchEvent(new Event('input'));
+        });
+        this.textContent = anyPlaying ? 'Play All' : 'Stop All';
       });
 
       document.getElementById('soundReset').addEventListener('click', function () {
@@ -240,6 +319,7 @@
           slider.value = 0;
           slider.dispatchEvent(new Event('input'));
         });
+        document.getElementById('soundToggle').textContent = 'Play All';
       });
 
       // Sleep timer
@@ -258,12 +338,12 @@
           if (left <= 0) {
             timerDisplay.textContent = '';
             clearInterval(sleepInterval);
-            // Fade out all sounds
             cards.forEach(function(card) {
               var slider = card.querySelector('input[type="range"]');
               slider.value = 0;
               slider.dispatchEvent(new Event('input'));
             });
+            document.getElementById('soundToggle').textContent = 'Play All';
             return;
           }
           var m = Math.floor(left/60000);
@@ -279,6 +359,7 @@
             slider.dispatchEvent(new Event('input'));
           });
           timerDisplay.textContent = '';
+          document.getElementById('soundToggle').textContent = 'Play All';
         }, mins * 60000);
       });
     })();
