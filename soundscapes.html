@@ -16,6 +16,178 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=1770053724">
   <style>
+    /* ═══ ASMR HERO ═══ */
+    .asmr-hero {
+      --deep: #0a0a12;
+      --ink: #0d0d1a;
+      --glow-primary: #7c6cf0;
+      --glow-secondary: #4ecdc4;
+      --glow-warm: #f7a072;
+      --text-bright: #f0eefc;
+      --text-muted: rgba(240, 238, 252, 0.55);
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: var(--deep);
+    }
+    .asmr-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 40%, rgba(124, 108, 240, 0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 80% at 80% 30%, rgba(78, 205, 196, 0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 50% 80%, rgba(247, 160, 114, 0.08) 0%, transparent 50%),
+        linear-gradient(180deg, var(--ink) 0%, #0f0f20 40%, #0a0e1a 100%);
+      z-index: 0;
+    }
+    .asmr-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.5;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .asmr-hero .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0;
+      z-index: 1;
+      animation: orbFloat 12s ease-in-out infinite, orbFadeIn 2s ease-out forwards;
+    }
+    .asmr-hero .orb--1 { width: 400px; height: 400px; background: var(--glow-primary); top: 10%; left: -5%; animation-delay: 0s; --orb-opacity: 0.15; }
+    .asmr-hero .orb--2 { width: 300px; height: 300px; background: var(--glow-secondary); top: 50%; right: -8%; animation-delay: -4s; --orb-opacity: 0.12; }
+    .asmr-hero .orb--3 { width: 250px; height: 250px; background: var(--glow-warm); bottom: 5%; left: 30%; animation-delay: -8s; --orb-opacity: 0.08; }
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -20px) scale(1.05); }
+      66% { transform: translate(-20px, 15px) scale(0.95); }
+    }
+    @keyframes orbFadeIn { from { opacity: 0; } to { opacity: var(--orb-opacity, 0.12); } }
+    .asmr-hero .wave-container {
+      position: absolute; bottom: 0; left: 0; width: 100%; height: 260px; z-index: 2; pointer-events: none;
+      mask-image: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+    }
+    .asmr-hero .wave-canvas { width: 100%; height: 100%; display: block; }
+    .asmr-hero .particles { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+    .asmr-hero .particle {
+      position: absolute; width: 3px; height: 3px; border-radius: 50%; background: var(--glow-primary); opacity: 0;
+      animation: particleDrift linear infinite;
+    }
+    @keyframes particleDrift {
+      0% { opacity: 0; transform: translateY(0) scale(0.5); }
+      15% { opacity: 0.8; }
+      85% { opacity: 0.6; }
+      100% { opacity: 0; transform: translateY(-120px) scale(0); }
+    }
+    .asmr-hero .hero-content {
+      position: relative; z-index: 10; text-align: center; padding: 0 24px; max-width: 800px;
+      animation: asmrContentReveal 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      opacity: 0; transform: translateY(30px);
+    }
+    @keyframes asmrContentReveal { to { opacity: 1; transform: translateY(0); } }
+    .asmr-hero .hero-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'Outfit', sans-serif; font-weight: 300; font-size: 0.8rem;
+      letter-spacing: 0.25em; text-transform: uppercase; color: var(--glow-secondary);
+      margin-bottom: 28px; opacity: 0; animation: asmrFadeIn 1s 0.4s ease-out forwards;
+    }
+    @keyframes asmrFadeIn { to { opacity: 1; } }
+    .asmr-hero .hero-label::before, .asmr-hero .hero-label::after {
+      content: ''; width: 32px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--glow-secondary), transparent);
+    }
+    .asmr-hero .hero-title {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(3.8rem, 10vw, 8rem); line-height: 0.95; letter-spacing: -0.02em;
+      color: var(--text-bright); margin-bottom: 24px;
+      text-shadow: 0 0 80px rgba(124, 108, 240, 0.25);
+    }
+    .asmr-hero .hero-title span {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--text-bright) 30%, var(--glow-secondary) 70%, var(--glow-primary) 100%);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .asmr-hero .hero-subtitle {
+      font-family: 'Outfit', sans-serif; font-weight: 200;
+      font-size: clamp(1rem, 2.2vw, 1.3rem); line-height: 1.7;
+      color: var(--text-muted); max-width: 520px; margin: 0 auto 36px;
+      opacity: 0; animation: asmrFadeIn 1.2s 0.6s ease-out forwards;
+    }
+    .asmr-hero .tingle-bar {
+      display: flex; align-items: center; justify-content: center; gap: 4px;
+      margin-bottom: 40px; opacity: 0; animation: asmrFadeIn 1s 0.8s ease-out forwards;
+    }
+    .asmr-hero .tingle-bar__dot {
+      width: 4px; height: 4px; border-radius: 50%; background: var(--glow-primary);
+      animation: tinglePulse 2.4s ease-in-out infinite;
+    }
+    .asmr-hero .tingle-bar__dot:nth-child(2) { animation-delay: 0.15s; background: var(--glow-secondary); }
+    .asmr-hero .tingle-bar__dot:nth-child(3) { animation-delay: 0.3s; }
+    .asmr-hero .tingle-bar__dot:nth-child(4) { animation-delay: 0.45s; background: var(--glow-secondary); }
+    .asmr-hero .tingle-bar__dot:nth-child(5) { animation-delay: 0.6s; }
+    @keyframes tinglePulse {
+      0%, 100% { transform: scale(1); opacity: 0.4; }
+      50% { transform: scale(2.2); opacity: 1; }
+    }
+    .asmr-hero .hero-cta {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: 'Outfit', sans-serif; font-weight: 400; font-size: 0.95rem;
+      letter-spacing: 0.08em; color: var(--text-bright);
+      background: rgba(124, 108, 240, 0.12); border: 1px solid rgba(124, 108, 240, 0.3);
+      padding: 14px 36px; border-radius: 60px; cursor: pointer; text-decoration: none;
+      transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      opacity: 0; animation: asmrFadeIn 1s 1s ease-out forwards;
+    }
+    .asmr-hero .hero-cta:hover {
+      background: rgba(124, 108, 240, 0.25); border-color: rgba(124, 108, 240, 0.6);
+      transform: translateY(-2px); box-shadow: 0 8px 40px rgba(124, 108, 240, 0.2);
+    }
+    .asmr-hero .hero-cta svg { width: 18px; height: 18px; fill: var(--glow-secondary); transition: transform 0.3s ease; }
+    .asmr-hero .hero-cta:hover svg { transform: scale(1.15); }
+    .asmr-hero .latin-phrase {
+      font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300;
+      font-size: 0.9rem; color: rgba(255, 255, 255, 0.35); margin-top: 48px;
+      letter-spacing: 0.05em; opacity: 0; animation: asmrFadeIn 1s 1.2s ease-out forwards;
+    }
+    .asmr-hero .scroll-hint {
+      position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); z-index: 10;
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      opacity: 0; animation: asmrFadeIn 1s 1.8s ease-out forwards;
+    }
+    .asmr-hero .scroll-hint__text {
+      font-family: 'Outfit', sans-serif; font-size: 0.65rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--text-muted);
+    }
+    .asmr-hero .scroll-hint__line {
+      width: 1px; height: 32px;
+      background: linear-gradient(to bottom, var(--glow-primary), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(0.6); transform-origin: top; }
+      50% { opacity: 0.8; transform: scaleY(1); }
+    }
+    @media (max-width: 768px) {
+      .asmr-hero { min-height: 100svh; }
+      .asmr-hero .orb { filter: blur(60px); }
+      .asmr-hero .orb--1 { width: 250px; height: 250px; }
+      .asmr-hero .orb--2 { width: 200px; height: 200px; }
+      .asmr-hero .orb--3 { width: 180px; height: 180px; }
+      .asmr-hero .wave-container { height: 160px; }
+      .asmr-hero .hero-subtitle { max-width: 90%; }
+    }
+
     @media (max-width: 600px) {
       #soundGrid, #moreSoundsGrid { grid-template-columns: 1fr !important; }
     }
@@ -183,13 +355,34 @@
   </nav>
 
   <!-- Hero -->
-  <section style="position:relative;min-height:420px;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;">
-    <div style="position:absolute;inset:0;background:url('content/images/heroes/soundscapes-hero.jpg') center/cover no-repeat;"></div>
-    <div style="position:absolute;inset:0;background:linear-gradient(to bottom, rgba(3,4,94,0.5) 0%, rgba(0,119,182,0.4) 50%, rgba(248,246,243,0.7) 85%, #f8f6f3 100%);"></div>
-    <div class="container" style="position:relative;z-index:2;padding:100px 24px 60px;">
-      <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:3.2rem;font-weight:700;color:#fff;margin-bottom:16px;text-shadow:0 2px 20px rgba(0,0,0,0.5);">ASMR</h1>
-      <p style="font-size:1.15rem;color:rgba(255,255,255,0.95);max-width:560px;margin:0 auto;text-shadow:0 1px 10px rgba(0,0,0,0.4);">Immersive audio environments to help you relax, focus, or drift off to sleep.</p>
-      <p class="fade-in" style="font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(255,255,255,0.6);font-size:0.9rem;margin-top:20px;letter-spacing:1px;">Salūs — Latin: health, safety, well-being</p>
+  <section class="asmr-hero">
+    <div class="orb orb--1"></div>
+    <div class="orb orb--2"></div>
+    <div class="orb orb--3"></div>
+    <div class="particles" id="particles"></div>
+    <div class="wave-container">
+      <canvas class="wave-canvas" id="waveCanvas"></canvas>
+    </div>
+    <div class="hero-content">
+      <div class="hero-label">Immersive Audio</div>
+      <h1 class="hero-title"><span>ASMR</span></h1>
+      <p class="hero-subtitle">Feel the tingles. Layered soundscapes that wrap around you — designed to calm your mind, sharpen your focus, or carry you into sleep.</p>
+      <div class="tingle-bar">
+        <span class="tingle-bar__dot"></span>
+        <span class="tingle-bar__dot"></span>
+        <span class="tingle-bar__dot"></span>
+        <span class="tingle-bar__dot"></span>
+        <span class="tingle-bar__dot"></span>
+      </div>
+      <a href="#soundGrid" class="hero-cta">
+        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        Start Listening
+      </a>
+      <p class="latin-phrase">Salūs — Latin: health, safety, well-being</p>
+    </div>
+    <div class="scroll-hint">
+      <span class="scroll-hint__text">Explore</span>
+      <span class="scroll-hint__line"></span>
     </div>
   </section>
 
@@ -490,6 +683,75 @@
 
   <script src="js/main.js?v=1770053724"></script>
   <script src="js/tracker.js"></script>
+  <script>
+    // ASMR Hero — Particle system
+    (function() {
+      var container = document.getElementById('particles');
+      if (!container) return;
+      var colours = ['#7c6cf0', '#4ecdc4', '#f7a072', '#a78bfa', '#34d399'];
+      for (var i = 0; i < 35; i++) {
+        var p = document.createElement('div');
+        p.classList.add('particle');
+        p.style.left = Math.random() * 100 + '%';
+        p.style.top = (40 + Math.random() * 55) + '%';
+        p.style.background = colours[Math.floor(Math.random() * colours.length)];
+        p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
+        p.style.animationDuration = (4 + Math.random() * 6) + 's';
+        p.style.animationDelay = (Math.random() * 8) + 's';
+        container.appendChild(p);
+      }
+    })();
+
+    // ASMR Hero — Wave visualiser
+    (function() {
+      var canvas = document.getElementById('waveCanvas');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var w, h, time = 0;
+      function resize() {
+        var dpr = window.devicePixelRatio || 1;
+        var rect = canvas.getBoundingClientRect();
+        w = canvas.width = rect.width * dpr;
+        h = canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
+      }
+      window.addEventListener('resize', resize);
+      resize();
+      var waves = [
+        { amp: 18, freq: 0.008, speed: 0.015, colour: 'rgba(124, 108, 240, 0.25)', phase: 0 },
+        { amp: 14, freq: 0.012, speed: 0.02,  colour: 'rgba(78, 205, 196, 0.18)',  phase: 2 },
+        { amp: 10, freq: 0.006, speed: 0.01,  colour: 'rgba(247, 160, 114, 0.12)', phase: 4 },
+        { amp: 22, freq: 0.01,  speed: 0.018, colour: 'rgba(167, 139, 250, 0.15)', phase: 1 },
+        { amp: 8,  freq: 0.015, speed: 0.025, colour: 'rgba(52, 211, 153, 0.10)',  phase: 3 },
+      ];
+      function drawWave(wave) {
+        var rw = w / (window.devicePixelRatio || 1);
+        var rh = h / (window.devicePixelRatio || 1);
+        var baseY = rh * 0.5;
+        ctx.beginPath();
+        ctx.moveTo(0, rh);
+        for (var x = 0; x <= rw; x += 2) {
+          var y = baseY +
+            Math.sin(x * wave.freq + time * wave.speed + wave.phase) * wave.amp +
+            Math.sin(x * wave.freq * 0.5 + time * wave.speed * 1.3 + wave.phase * 0.7) * (wave.amp * 0.5);
+          ctx.lineTo(x, y);
+        }
+        ctx.lineTo(rw, rh);
+        ctx.closePath();
+        ctx.fillStyle = wave.colour;
+        ctx.fill();
+      }
+      function animate() {
+        var rw = w / (window.devicePixelRatio || 1);
+        var rh = h / (window.devicePixelRatio || 1);
+        ctx.clearRect(0, 0, rw, rh);
+        waves.forEach(drawWave);
+        time++;
+        requestAnimationFrame(animate);
+      }
+      animate();
+    })();
+  </script>
   <script>
     // Category filtering
     document.getElementById('filterBar').addEventListener('click', function(e) {
