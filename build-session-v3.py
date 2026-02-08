@@ -727,17 +727,18 @@ def cleanup_audio_medium(input_path, output_path):
 
 
 def cleanup_audio(input_path, output_path):
-    """Fish cleanup — loudnorm + presence boost only.
+    """Fish cleanup — loudnorm only.
     Output is WAV for lossless pipeline.
 
     Fish TTS is broadcast-quality clean (45 dB SNR). No broadband noise reduction
-    needed (afftdn, lowpass, highpass all prohibited). Loudnorm levels chunks.
-    High shelf boost at 3kHz restores presence lost by loudnorm.
+    needed (afftdn, lowpass, highpass all prohibited). Loudnorm levels the
+    whole-file narration after concatenation.
+
+    highshelf=f=3000:g=3 REMOVED (8 Feb 2026) — A/B testing confirmed the +3dB
+    HF boost causes perceived echo on certain words. Loudnorm-only produces
+    cleaner output with less hiss and no echo.
     """
-    filter_chain = ','.join([
-        'loudnorm=I=-26:TP=-2:LRA=11',
-        'highshelf=f=3000:g=3',                # Presence boost: restores sharpness lost by loudnorm
-    ])
+    filter_chain = 'loudnorm=I=-26:TP=-2:LRA=11'
     cmd = [
         'ffmpeg', '-y', '-i', input_path,
         '-af', filter_chain,
