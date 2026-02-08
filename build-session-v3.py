@@ -1265,10 +1265,15 @@ def mix_ambient(voice_path, ambient_name, output_path):
 
     fade_out_start = max(0, voice_duration - AMBIENT_FADE_OUT_DURATION)
 
+    # Garden ambient has 9.5s dead silence at start — skip with -ss 10
+    ambient_input = ['-i', str(ambient_path)]
+    if ambient_name == 'garden':
+        ambient_input = ['-ss', '10', '-i', str(ambient_path)]
+
     cmd = [
         'ffmpeg', '-y',
         '-i', voice_path,
-        '-i', str(ambient_path),
+        *ambient_input,
         '-filter_complex', (
             f"[1:a]volume={AMBIENT_VOLUME_DB}dB,"
             f"afade=t=in:st={AMBIENT_FADE_IN_START}:d={AMBIENT_FADE_IN_DURATION},"
@@ -3163,9 +3168,13 @@ def patch_stitch_clicks(raw_mp3, manifest_data, output_mp3, ambient_name=None, f
         if ambient_path and ambient_path.exists():
             voice_duration = get_audio_duration(normed_wav)
             fade_out_start = max(0, voice_duration - AMBIENT_FADE_OUT_DURATION)
+            # Garden ambient has 9.5s dead silence at start — skip with -ss 10
+            ambient_input = ['-i', str(ambient_path)]
+            if ambient_name == 'garden':
+                ambient_input = ['-ss', '10', '-i', str(ambient_path)]
             subprocess.run([
                 'ffmpeg', '-y',
-                '-i', normed_wav, '-i', str(ambient_path),
+                '-i', normed_wav, *ambient_input,
                 '-filter_complex', (
                     f"[1:a]volume={AMBIENT_VOLUME_DB}dB,"
                     f"afade=t=in:st={AMBIENT_FADE_IN_START}:d={AMBIENT_FADE_IN_DURATION},"
