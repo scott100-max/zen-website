@@ -511,6 +511,115 @@
   .nav-drawer__ctas .nav-cta{flex:1;text-align:center;padding:12px 20px;font-size:.88rem}
   @media(max-width:860px){.nav-primary,.nav-row-2,.nav-ctas{display:none}.nav-burger{display:flex}.nav-row-1{height:56px}}
 
+  /* ═══ HOME BODY ═══ */
+  .hb-container{max-width:1080px;margin:0 auto;padding:0 24px}
+
+  /* 1. Welcome */
+  .hb-welcome{padding:100px 24px 80px;text-align:center;position:relative;overflow:hidden}
+  .hb-welcome::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(78,205,196,0.04) 0%,transparent 70%)}
+  .hb-welcome__label{display:inline-flex;align-items:center;gap:10px;font-weight:300;font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(78,205,196,0.6);margin-bottom:20px}
+  .hb-welcome__label::before,.hb-welcome__label::after{content:'';width:24px;height:1px;background:linear-gradient(90deg,transparent,rgba(78,205,196,0.35),transparent)}
+  .hb-welcome h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,4.5vw,2.8rem);line-height:1.25;margin-bottom:20px;max-width:680px;margin-left:auto;margin-right:auto}
+  .hb-welcome p{font-weight:200;font-size:.92rem;line-height:1.75;color:var(--text-mid);max-width:560px;margin:0 auto 32px}
+  .hb-welcome__cta{display:inline-flex;align-items:center;gap:8px;font-family:'Outfit',sans-serif;font-weight:400;font-size:.82rem;letter-spacing:.04em;padding:12px 28px;border-radius:40px;color:var(--deep);background:linear-gradient(135deg,var(--teal),#6dd5c8);border:none;cursor:pointer;text-decoration:none;transition:all .35s cubic-bezier(.22,1,.36,1)}
+  .hb-welcome__cta:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(78,205,196,0.25)}
+  .hb-welcome__cta svg{width:14px;height:14px;fill:var(--deep)}
+
+  /* 2. What's Inside */
+  .hb-inside{padding:60px 24px 80px;position:relative}
+  .hb-inside::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 0%,rgba(10,13,24,0.6) 100%)}
+  .hb-inside__header{text-align:center;margin-bottom:44px;position:relative;z-index:2}
+  .hb-inside__header h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.6rem,3.5vw,2.2rem);margin-bottom:8px}
+  .hb-inside__header p{font-weight:200;font-size:.82rem;color:var(--text-muted);max-width:440px;margin:0 auto}
+
+  .hb-inside__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1080px;margin:0 auto;position:relative;z-index:2}
+
+  .hb-cat-card{position:relative;border-radius:18px;overflow:hidden;min-height:280px;display:flex;flex-direction:column;justify-content:flex-end;padding:28px;text-decoration:none;color:#fff;transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s ease;cursor:pointer}
+  .hb-cat-card:hover{transform:translateY(-5px);box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+  .hb-cat-card::before{content:'';position:absolute;inset:0;z-index:1}
+  .hb-cat-card::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:.5;z-index:2;pointer-events:none}
+
+  .hb-cat-card--meditations{background:linear-gradient(145deg,#0d3d4a 0%,#1a5568 50%,#0f4c5c 100%)}
+  .hb-cat-card--meditations::before{background:linear-gradient(180deg,transparent 40%,rgba(13,61,74,0.9) 100%)}
+  .hb-cat-card--sleep{background:linear-gradient(145deg,#1e1b4b 0%,#312e81 50%,#3730a3 100%)}
+  .hb-cat-card--sleep::before{background:linear-gradient(180deg,transparent 40%,rgba(30,27,75,0.9) 100%)}
+  .hb-cat-card--asmr{background:linear-gradient(145deg,#1a1c2e 0%,#252840 50%,#2d3154 100%)}
+  .hb-cat-card--asmr::before{background:linear-gradient(180deg,transparent 40%,rgba(26,28,46,0.9) 100%)}
+  .hb-cat-card--mindfulness{background:linear-gradient(145deg,#0a3a40 0%,#0d4a52 50%,#0f5c66 100%)}
+  .hb-cat-card--mindfulness::before{background:linear-gradient(180deg,transparent 40%,rgba(10,58,64,0.9) 100%)}
+  .hb-cat-card--learn{background:linear-gradient(145deg,#1a2332 0%,#243044 50%,#2d3c56 100%)}
+  .hb-cat-card--learn::before{background:linear-gradient(180deg,transparent 40%,rgba(26,35,50,0.9) 100%)}
+  .hb-cat-card--tools{background:linear-gradient(145deg,#064e3b 0%,#065f46 50%,#047857 100%)}
+  .hb-cat-card--tools::before{background:linear-gradient(180deg,transparent 40%,rgba(6,78,59,0.9) 100%)}
+
+  .hb-cat-card__orb{position:absolute;border-radius:50%;filter:blur(40px);opacity:.3;pointer-events:none;z-index:0;transition:opacity .4s ease}
+  .hb-cat-card:hover .hb-cat-card__orb{opacity:.5}
+
+  .hb-cat-card__content{position:relative;z-index:3}
+  .hb-cat-card__count{font-weight:300;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:6px}
+  .hb-cat-card__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.5rem;line-height:1.2;margin-bottom:6px}
+  .hb-cat-card__desc{font-weight:200;font-size:.78rem;line-height:1.55;color:rgba(255,255,255,0.55)}
+  .hb-cat-card__arrow{position:absolute;top:20px;right:20px;z-index:4;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;transition:all .3s ease}
+  .hb-cat-card:hover .hb-cat-card__arrow{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.2)}
+  .hb-cat-card__arrow svg{width:12px;height:12px;fill:rgba(255,255,255,0.6)}
+
+  /* 3. Trust */
+  .hb-trust{padding:60px 24px 80px;position:relative}
+  .hb-trust__strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;max-width:1080px;margin:0 auto;background:rgba(255,255,255,0.06);border-radius:16px;overflow:hidden}
+  .hb-trust__item{background:var(--ink);padding:36px 28px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
+  .hb-trust__icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(78,205,196,0.06);border:1px solid rgba(78,205,196,0.1)}
+  .hb-trust__icon svg{width:18px;height:18px;fill:rgba(78,205,196,0.7)}
+  .hb-trust__title{font-weight:400;font-size:.82rem;color:var(--text-bright)}
+  .hb-trust__desc{font-weight:200;font-size:.72rem;line-height:1.5;color:var(--text-muted);max-width:180px}
+
+  /* 4. Stats */
+  .hb-stats{padding:0 24px 80px}
+  .hb-stats__inner{max-width:1080px;margin:0 auto;display:flex;justify-content:center;gap:60px}
+  .hb-stats__item{text-align:center}
+  .hb-stats__num{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2.2rem,4vw,3rem);color:var(--teal);line-height:1}
+  .hb-stats__label{font-weight:200;font-size:.72rem;color:var(--text-muted);margin-top:4px;letter-spacing:.04em}
+
+  /* 5. Founder */
+  .hb-founder{padding:60px 24px 100px;position:relative;overflow:hidden}
+  .hb-founder::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 50% at 50% 50%,rgba(167,139,250,0.03) 0%,transparent 70%)}
+  .hb-founder__inner{max-width:720px;margin:0 auto;text-align:center;position:relative;z-index:2}
+  .hb-founder__label{display:inline-flex;align-items:center;gap:10px;font-weight:300;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text-muted);margin-bottom:28px}
+  .hb-founder__label::before,.hb-founder__label::after{content:'';width:24px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent)}
+  .hb-founder__quote{font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:clamp(1.1rem,2.5vw,1.4rem);line-height:1.7;color:var(--text-mid);margin-bottom:32px}
+  .hb-founder__sig{display:flex;flex-direction:column;align-items:center;gap:4px}
+  .hb-founder__name{font-weight:400;font-size:.86rem;color:var(--text-bright)}
+  .hb-founder__role{font-weight:200;font-size:.72rem;color:var(--text-muted)}
+
+  /* 6. Footer */
+  .hb-footer{border-top:1px solid rgba(255,255,255,0.06);padding:60px 24px 40px;position:relative}
+  .hb-footer__inner{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:40px}
+  .hb-footer__brand{display:flex;flex-direction:column;gap:12px}
+  .hb-footer__logo{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:1.4rem;color:var(--text-bright);letter-spacing:.02em}
+  .hb-footer__tagline{font-weight:200;font-size:.76rem;line-height:1.6;color:var(--text-muted);max-width:260px}
+  .hb-footer__col-title{font-weight:400;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px}
+  .hb-footer__links{list-style:none;display:flex;flex-direction:column;gap:9px}
+  .hb-footer__links a{font-weight:200;font-size:.8rem;color:var(--text-mid);text-decoration:none;transition:color .2s ease}
+  .hb-footer__links a:hover{color:var(--teal)}
+  .hb-footer__bottom{max-width:1080px;margin:32px auto 0;padding-top:24px;border-top:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-between;align-items:center}
+  .hb-footer__copy{font-weight:200;font-size:.68rem;color:rgba(255,255,255,0.3)}
+  .hb-footer__back-top{font-weight:300;font-size:.7rem;color:var(--text-muted);text-decoration:none;display:flex;align-items:center;gap:6px;transition:color .2s ease}
+  .hb-footer__back-top:hover{color:var(--teal)}
+  .hb-footer__back-top svg{width:12px;height:12px;fill:currentColor}
+
+  @media(max-width:900px){
+    .hb-inside__grid{grid-template-columns:repeat(2,1fr)}
+    .hb-trust__strip{grid-template-columns:repeat(2,1fr)}
+    .hb-footer__inner{grid-template-columns:repeat(2,1fr)}
+  }
+  @media(max-width:600px){
+    .hb-inside__grid{grid-template-columns:1fr}
+    .hb-cat-card{min-height:200px}
+    .hb-trust__strip{grid-template-columns:1fr}
+    .hb-stats__inner{flex-wrap:wrap;gap:32px 48px}
+    .hb-footer__inner{grid-template-columns:1fr}
+    .hb-footer__bottom{flex-direction:column;gap:12px;text-align:center}
+  }
+
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
@@ -660,207 +769,180 @@
   </div>
 </section>
 
-  <!-- Welcome -->
-  <section id="explore" style="background:linear-gradient(180deg, #f8f6f3 0%, #ffffff 50%, #ffffff 100%);text-align:center;padding:100px 0 60px;">
-    <div class="container" style="max-width:720px;">
-      <h2 class="fade-in" style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;margin-bottom:8px;">Welcome to Salus</h2>
-      <p class="fade-in" style="font-style:italic;color:var(--mid-gray);font-size:0.9rem;margin-bottom:24px;letter-spacing:0.5px;opacity:0.7;">Sleep. Relax. Restore.</p>
-      <p class="fade-in" style="font-size:1.15rem;color:var(--mid-gray);line-height:1.9;margin-bottom:20px;">
-        Life moves fast. Your mind doesn't have to. Salus is a meditation and mindfulness platform built to help you slow down, breathe, and reconnect with what matters most.
-      </p>
-      <p class="fade-in" style="font-size:1.15rem;color:var(--mid-gray);line-height:1.9;margin-bottom:20px;">
-        We're a family. Not a corporation. Scott has over 40 years of personal experience with mindfulness, meditation, cognitive behavioural therapy, counselling, breathwork, acupuncture, and ASMR. Our consultant holds a BSc (Hons) and MSc in Psychology. No expensive celebrities. No venture capital. No boardroom. We built Salus because these tools changed our lives, and we believe they can change yours too.
-      </p>
-      <p class="fade-in" style="font-size:1.15rem;color:var(--mid-gray);line-height:1.9;">
-        We are genuinely here to help. You can reach out to us directly, anytime. This is Salus — your space to sleep, relax, and restore.
-      </p>
-    </div>
-  </section>
+<!-- ═══ 1. WELCOME TO SALUS ═══ -->
+<section class="hb-welcome" id="explore">
+  <div class="hb-welcome__label"><span></span>Welcome to Salus<span></span></div>
+  <h2>A quieter kind of self-care, built for people who think too much</h2>
+  <p>Salus is a meditation platform created by a family with over 40 years of combined experience in psychology, mindfulness, and mental health. No gimmicks, no gamification — just well-crafted audio designed to help you feel calmer, think clearer, and rest deeper.</p>
+  <a href="sessions.html" class="hb-welcome__cta">
+    Explore the Library
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+</section>
 
-  <!-- From Our Founder -->
-  <section style="padding:100px 0 80px;background:linear-gradient(180deg,var(--forest-mid) 0%,var(--forest) 30%,var(--forest) 100%);">
-    <div class="container" style="max-width:760px;text-align:center;">
-      <h2 class="fade-in" style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:2rem;margin-bottom:24px;">From Our Founder</h2>
-      <blockquote class="fade-in" style="font-size:1.1rem;font-style:italic;color:rgba(255,255,255,0.9);line-height:1.9;margin:0 auto 20px;max-width:680px;">
-        "Hello and welcome to Salus. I'm so pleased you have found us. I've spent over 40 years on this journey to inner peace. Some methods worked, some didn't. But the ones that did genuinely changed my life. When my daughter Ella completed her psychology degrees, we knew we could build something different — something that combined decades of lived experience with proper psychological knowledge."
-      </blockquote>
-      <blockquote class="fade-in" style="font-size:1.1rem;font-style:italic;color:rgba(255,255,255,0.9);line-height:1.9;margin:0 auto 20px;max-width:680px;">
-        "Salus isn't a corporation. It's personal. Every session is reviewed by Ella. Every message you send is read by a real person. And we're always open to ideas — if there's something you'd like to see, tell us. You're not a user to us. You're part of this."
-      </blockquote>
-      <blockquote class="fade-in" style="font-size:1.1rem;font-style:italic;color:rgba(255,255,255,0.9);line-height:1.9;margin:0 auto 20px;max-width:680px;">
-        "Welcome to Salus. Thank you for being here — I genuinely mean that. Wishing you all the very best on your own journey. Sleep. Relax. Restore."
-      </blockquote>
-      <div class="fade-in" style="margin-top:24px;">
-        <p style="color:#fff;font-weight:600;font-size:1rem;">Scott</p>
-        <p style="color:rgba(255,255,255,0.6);font-size:0.85rem;">Founder, Salus</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- What Makes Us Different -->
-  <section style="background:linear-gradient(180deg, #f0ece4 0%, #f4f1ec 50%, #eef1f5 100%);">
-    <div class="container">
-      <div class="section-header fade-in">
-        <h2>Why We're Different</h2>
-        <p>We're not another faceless app. We're a family who've lived this.</p>
-      </div>
-      <div class="feature-grid" style="grid-template-columns:repeat(2,1fr);max-width:720px;margin:0 auto;">
-        <div class="feature-card fade-in" style="text-align:center;">
-          <h3>Family-Run</h3>
-          <p>Founded by a family with decades of personal experience in meditation, therapy, and mental health.</p>
-        </div>
-        <div class="feature-card fade-in" style="text-align:center;">
-          <h3>Psychologist Reviewed</h3>
-          <p>Every session reviewed by our consultant psychologist, Ella BSc (Hons), MSc Psychology.</p>
-        </div>
-        <div class="feature-card fade-in" style="text-align:center;">
-          <h3>Reach Us Directly</h3>
-          <p>We're real people. Contact us anytime — we read and respond to every message personally.</p>
-        </div>
-        <div class="feature-card fade-in" style="text-align:center;">
-          <h3>40+ Years Experience</h3>
-          <p>Scott's journey started before the iPhone era — through every meditation method, therapy, and technique.</p>
-        </div>
-      </div>
-      <div style="text-align:center;margin-top:24px;">
-        <div class="feature-card fade-in" style="max-width:400px;margin:0 auto;text-align:center;">
-          <h3>Everything Included</h3>
-          <p>One subscription. Sleep, meditation, soundscapes, breathwork — all of it. No hidden extras, no separate apps.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Features -->
-  <section style="background:linear-gradient(180deg, #eef1f5 0%, #f0f3f8 50%, #f8f9fb 100%);">
-    <div class="container">
-      <div class="section-header fade-in">
-        <h2>What's Inside</h2>
-        <p>New content added regularly. Something for everyone.</p>
-      </div>
-      <div class="feature-grid" style="grid-template-columns:repeat(2,1fr);max-width:720px;margin:0 auto;">
-        <a href="sessions.html" class="feature-card fade-in" style="text-decoration:none;color:inherit;">
-          <h3>Guided Meditations</h3>
-          <p>Hundreds of guided meditations for sleep, focus, stress relief, and personal growth — from 3 to 60 minutes.</p>
-        </a>
-        <a href="asmr.html" class="feature-card fade-in" style="text-decoration:none;color:inherit;">
-          <h3>ASMR</h3>
-          <p>Immersive audio environments — rain, forest, ocean, and ASMR to help you relax or concentrate.</p>
-        </a>
-        <a href="education.html" class="feature-card fade-in" style="text-decoration:none;color:inherit;">
-          <h3>Learn</h3>
-          <p>Articles, science, and practical tips to understand mindfulness and build a lasting practice.</p>
-        </a>
-        <a href="sleep-stories.html" class="feature-card fade-in" style="text-decoration:none;color:inherit;">
-          <h3>Sleep Stories</h3>
-          <p>Calming bedtime stories to help you drift off. A new story unlocks every week for Premium members.</p>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Research Backed -->
-  <section style="background:linear-gradient(180deg, #f0e6d8 0%, #e8ddd0 100%);padding:80px 0;">
-    <div class="container" style="max-width:900px;">
-      <div class="section-header fade-in">
-        <h2>The Science Behind It</h2>
-        <p>Mindfulness isn't alternative medicine. It's mainstream, evidence-based, and recommended by health professionals.</p>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;" class="research-grid">
-        <div class="fade-in" style="background:transparent;border-radius:12px;padding:28px;text-align:center;">
-          <div style="font-size:2rem;font-weight:700;color:var(--forest);margin-bottom:8px;">47%</div>
-          <div style="color:var(--mid-gray);font-size:0.9rem;line-height:1.6;">Reduction in anxiety symptoms after 8 weeks of regular mindfulness practice</div>
-          <div style="color:var(--accent);font-size:0.75rem;margin-top:8px;">Dr Elizabeth Hoge, Georgetown University Medical Center</div>
-        </div>
-        <div class="fade-in" style="background:transparent;border-radius:12px;padding:28px;text-align:center;">
-          <div style="font-size:2rem;font-weight:700;color:var(--forest);margin-bottom:8px;">8 weeks</div>
-          <div style="color:var(--mid-gray);font-size:0.9rem;line-height:1.6;">To measurably change brain structure — the amygdala adapts, the prefrontal cortex thickens</div>
-          <div style="color:var(--accent);font-size:0.75rem;margin-top:8px;">Dr Sara Lazar, Harvard Medical School</div>
-        </div>
-        <div class="fade-in" style="background:transparent;border-radius:12px;padding:28px;text-align:center;">
-          <div style="font-size:2rem;font-weight:700;color:var(--forest);margin-bottom:8px;">NHS</div>
-          <div style="color:var(--mid-gray);font-size:0.9rem;line-height:1.6;">Recommends mindfulness-based cognitive therapy for preventing depression relapse</div>
-          <div style="color:var(--accent);font-size:0.75rem;margin-top:8px;">NICE Guidelines, Prof Mark Williams, Oxford</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Daily Quote -->
-  <div class="daily-quote fade-in">
-    <blockquote id="dailyQuote">"The mind is everything. What you think you become."</blockquote>
-    <cite id="dailyAuthor">— Buddha</cite>
+<!-- ═══ 2. WHAT'S INSIDE ═══ -->
+<section class="hb-inside">
+  <div class="hb-inside__header">
+    <h2>What's Inside</h2>
+    <p>Everything you need under one roof — and growing every week.</p>
   </div>
 
-  <!-- CTA -->
-  <section class="cta-banner">
-    <div class="container">
-      <h2 class="fade-in">Let's build something together</h2>
-      <p class="fade-in">We're not a corporation. We're a family who built something we believe in. Come be part of it.</p>
-      <div class="cta-buttons fade-in" style="display:flex;gap:16px;justify-content:center;align-items:center;flex-wrap:wrap;">
-        <a href="apps.html" class="btn" style="min-width:180px;text-align:center;">Subscribe</a>
-        <a href="newsletter.html" class="btn" style="min-width:180px;text-align:center;">Join Newsletter</a>
-      </div>
-    </div>
-  </section>
+  <div class="hb-inside__grid">
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div>
-          <h4 style="letter-spacing:2px;">SALUS</h4>
-          <p style="margin-top:4px;">SLEEP &middot; RELAX &middot; RESTORE</p>
-          <p style="margin-top:8px;">A family-run meditation &amp; mindfulness platform.</p>
-        </div>
-        <div>
-          <h4>Pages</h4>
-          <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="sessions.html">Guided Meditations</a></li>
-            <li><a href="asmr.html">ASMR</a></li>
-            <li><a href="education.html">Learn</a></li>
-            <li><a href="mindfulness.html">Mindfulness</a></li>
-            <li><a href="about.html">About</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4>Support</h4>
-          <ul>
-            <li><a href="contact.html">Contact Us Directly</a></li>
-            <li><a href="faq.html">FAQ</a></li>
-            <li><a href="privacy.html">Privacy</a></li>
-            <li><a href="terms.html">Terms</a></li>
-            <li><a href="disclaimer.html">Health Disclaimer</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4>Tools</h4>
-          <ul>
-            <li><a href="breathe.html">Breathing Timer</a></li>
-            <li><a href="timer.html">Meditation Timer</a></li>
-            <li><a href="sounds.html">ASMR</a></li>
-          </ul>
-        </div>
+    <a href="sessions.html" class="hb-cat-card hb-cat-card--meditations">
+      <div class="hb-cat-card__orb" style="background:#22d3ee;width:120px;height:120px;top:-20px;right:-10px"></div>
+      <span class="hb-cat-card__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      <div class="hb-cat-card__content">
+        <span class="hb-cat-card__count">48 sessions &middot; 15+ hours</span>
+        <h3 class="hb-cat-card__title">Guided Meditations</h3>
+        <p class="hb-cat-card__desc">Sleep, stress, focus, mindfulness, and more — from five-minute resets to hour-long journeys.</p>
       </div>
-      <div class="footer-bottom">
-        <a href="#" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to Top</a>
-        <p>&copy; 2026 Salus. All rights reserved.</p>
-        <p style="font-size:0.75rem;opacity:0.5;margin-top:4px;">Salus is not a replacement for professional medical advice, diagnosis, or treatment. <a href="disclaimer.html" style="color:inherit;">Health Disclaimer</a></p>
-      </div>
-    </div>
-  </footer>
+    </a>
 
-  <!-- Cookie Consent -->
-  <div id="cookieConsent" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:10000;background:var(--forest);color:#fff;padding:16px 24px;box-shadow:0 -2px 20px rgba(0,0,0,.2);">
-    <div style="max-width:1140px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
-      <p style="margin:0;font-size:0.85rem;flex:1;min-width:200px;">We use cookies to improve your experience. By continuing to use Salus, you agree to our <a href="privacy.html" style="color:var(--accent-light);text-decoration:underline;">Privacy Policy</a>.</p>
-      <div style="display:flex;gap:8px;">
-        <button onclick="document.getElementById('cookieConsent').style.display='none';localStorage.setItem('salus_cookies','accepted')" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:8px 20px;cursor:pointer;font-size:0.85rem;font-weight:600;">Accept</button>
-        <button onclick="document.getElementById('cookieConsent').style.display='none';localStorage.setItem('salus_cookies','declined')" style="background:transparent;color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.3);border-radius:6px;padding:8px 20px;cursor:pointer;font-size:0.85rem;">Decline</button>
+    <a href="sleep-stories.html" class="hb-cat-card hb-cat-card--sleep">
+      <div class="hb-cat-card__orb" style="background:#818cf8;width:120px;height:120px;top:-20px;right:-10px"></div>
+      <span class="hb-cat-card__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      <div class="hb-cat-card__content">
+        <span class="hb-cat-card__count">52 stories &middot; 1 per week</span>
+        <h3 class="hb-cat-card__title">Sleep Stories</h3>
+        <p class="hb-cat-card__desc">Gentle, meandering narratives designed to bore your brain to sleep. No cliffhangers.</p>
       </div>
+    </a>
+
+    <a href="asmr.html" class="hb-cat-card hb-cat-card--asmr">
+      <div class="hb-cat-card__orb" style="background:#94a3b8;width:120px;height:120px;top:-20px;right:-10px"></div>
+      <span class="hb-cat-card__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      <div class="hb-cat-card__content">
+        <span class="hb-cat-card__count">14 ambient sounds</span>
+        <h3 class="hb-cat-card__title">ASMR &amp; Sound Mixer</h3>
+        <p class="hb-cat-card__desc">Layer rain, fire, birdsong, and more — build your own ambient environment.</p>
+      </div>
+    </a>
+
+    <a href="mindfulness.html" class="hb-cat-card hb-cat-card--mindfulness">
+      <div class="hb-cat-card__orb" style="background:#2dd4bf;width:120px;height:120px;top:-20px;right:-10px"></div>
+      <span class="hb-cat-card__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      <div class="hb-cat-card__content">
+        <span class="hb-cat-card__count">21-day course + sessions</span>
+        <h3 class="hb-cat-card__title">Mindfulness</h3>
+        <p class="hb-cat-card__desc">Structured courses and standalone practices — from first breath to lasting habit.</p>
+      </div>
+    </a>
+
+    <a href="education.html" class="hb-cat-card hb-cat-card--learn">
+      <div class="hb-cat-card__orb" style="background:#60a5fa;width:120px;height:120px;top:-20px;right:-10px"></div>
+      <span class="hb-cat-card__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      <div class="hb-cat-card__content">
+        <span class="hb-cat-card__count">Articles &amp; guides</span>
+        <h3 class="hb-cat-card__title">Learn</h3>
+        <p class="hb-cat-card__desc">The science behind the practice — neuroscience, breathwork, sleep architecture, and more.</p>
+      </div>
+    </a>
+
+    <a href="tools.html" class="hb-cat-card hb-cat-card--tools">
+      <div class="hb-cat-card__orb" style="background:#34d399;width:120px;height:120px;top:-20px;right:-10px"></div>
+      <span class="hb-cat-card__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      <div class="hb-cat-card__content">
+        <span class="hb-cat-card__count">Breathing &middot; Timers &middot; Bells</span>
+        <h3 class="hb-cat-card__title">Tools</h3>
+        <p class="hb-cat-card__desc">Interactive breathing exercises, interval timers, and meditation bells for self-guided practice.</p>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ═══ 3. TRUST SIGNALS ═══ -->
+<section class="hb-trust">
+  <div class="hb-trust__strip">
+    <div class="hb-trust__item">
+      <div class="hb-trust__icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+      <span class="hb-trust__title">Family-Run</span>
+      <span class="hb-trust__desc">Built by a family, not a boardroom. Every decision made with care.</span>
+    </div>
+    <div class="hb-trust__item">
+      <div class="hb-trust__icon"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg></div>
+      <span class="hb-trust__title">Psychologist Reviewed</span>
+      <span class="hb-trust__desc">Content informed by 40+ years of combined experience in psychology and mental health.</span>
+    </div>
+    <div class="hb-trust__item">
+      <div class="hb-trust__icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <span class="hb-trust__title">No Ads. No Tracking.</span>
+      <span class="hb-trust__desc">Your calm is not a product. We will never sell your data or show you adverts.</span>
+    </div>
+    <div class="hb-trust__item">
+      <div class="hb-trust__icon"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+      <span class="hb-trust__title">Everything Included</span>
+      <span class="hb-trust__desc">One subscription, full access. Meditations, stories, ASMR, tools — no hidden tiers.</span>
     </div>
   </div>
+</section>
+
+<!-- ═══ 4. STATS ═══ -->
+<section class="hb-stats">
+  <div class="hb-stats__inner">
+    <div class="hb-stats__item"><span class="hb-stats__num">48</span><span class="hb-stats__label">Guided Sessions</span></div>
+    <div class="hb-stats__item"><span class="hb-stats__num">52</span><span class="hb-stats__label">Sleep Stories</span></div>
+    <div class="hb-stats__item"><span class="hb-stats__num">14</span><span class="hb-stats__label">Ambient Sounds</span></div>
+    <div class="hb-stats__item"><span class="hb-stats__num">15+</span><span class="hb-stats__label">Hours of Audio</span></div>
+  </div>
+</section>
+
+<!-- ═══ 5. FROM OUR FOUNDER ═══ -->
+<section class="hb-founder">
+  <div class="hb-founder__inner">
+    <div class="hb-founder__label"><span></span>From Our Founder<span></span></div>
+    <p class="hb-founder__quote">"I started Salus because I couldn't find what I was looking for. Every meditation app felt like it was designed to keep me subscribed, not to actually help me feel better. I wanted something quieter — something built with care, reviewed by people who understand the mind, and delivered without the noise. This is that thing. It's small, it's personal, and it's made by people who genuinely give a damn."</p>
+    <div class="hb-founder__sig">
+      <span class="hb-founder__name">Scott Ripley</span>
+      <span class="hb-founder__role">Founder, Salus Mind</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 6. FOOTER ═══ -->
+<footer class="hb-footer">
+  <div class="hb-footer__inner">
+    <div class="hb-footer__brand">
+      <span class="hb-footer__logo">Salus</span>
+      <p class="hb-footer__tagline">A quieter kind of self-care. Guided meditations, sleep stories, ASMR, and mindfulness tools — built by a family, reviewed by psychologists.</p>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Practice</h4>
+      <ul class="hb-footer__links">
+        <li><a href="sessions.html">Guided Meditations</a></li>
+        <li><a href="mindfulness.html">Mindfulness</a></li>
+        <li><a href="asmr.html">ASMR &amp; Sounds</a></li>
+        <li><a href="sleep-stories.html">Sleep Stories</a></li>
+        <li><a href="tools.html">Tools</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Discover</h4>
+      <ul class="hb-footer__links">
+        <li><a href="education.html">Learn</a></li>
+        <li><a href="reading.html">Reading</a></li>
+        <li><a href="applied-psychology.html">Applied Psychology</a></li>
+        <li><a href="newsletter.html">Newsletter</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Salus</h4>
+      <ul class="hb-footer__links">
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="apps.html">Go Premium</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="hb-footer__bottom">
+    <span class="hb-footer__copy">&copy; 2026 Salus Mind. All rights reserved.</span>
+    <a href="#" class="hb-footer__back-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">
+      Back to top
+      <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+    </a>
+  </div>
+</footer>
 
   <!-- Hero: Aurora + Particles + Navigation -->
   <script>
@@ -990,30 +1072,5 @@
 
   <script src="js/main.js?v=1770053724"></script>
   <script src="js/tracker.js"></script>
-  <script>
-    // Cookie consent
-    if (!localStorage.getItem('salus_cookies')) {
-      document.getElementById('cookieConsent').style.display = 'block';
-    }
-  </script>
-  <script>
-    (function() {
-      var quotes = [
-        ['"Mindfulness is a way of befriending ourselves and our experience."', '— Prof Jon Kabat-Zinn, University of Massachusetts'],
-        ['"The mind is everything. What you think you become."', '— Buddha'],
-        ['"Feelings come and go like clouds in a windy sky. Conscious breathing is my anchor."', '— Thich Nhat Hanh'],
-        ['"Mindfulness practice means that we commit fully in each moment to be present."', '— Prof Jon Kabat-Zinn'],
-        ['"The faculty of voluntarily bringing back a wandering attention is the very root of judgement, character, and will."', '— William James'],
-        ['"Almost everything will work again if you unplug it for a few minutes, including you."', '— Anne Lamott'],
-        ['"In today\'s rush, we all think too much, seek too much, want too much — and forget about the joy of just being."', '— Eckhart Tolle'],
-        ['"Mindfulness-based cognitive therapy is as effective as antidepressants for preventing depression relapse."', '— Prof Mark Williams, Oxford University'],
-        ['"The present moment is the only moment available to us, and it is the door to all moments."', '— Thich Nhat Hanh'],
-        ['"Between stimulus and response there is a space. In that space is our freedom and power to choose."', '— Viktor Frankl']
-      ];
-      var idx = new Date().getDate() % quotes.length;
-      document.getElementById('dailyQuote').textContent = quotes[idx][0];
-      document.getElementById('dailyAuthor').textContent = quotes[idx][1];
-    })();
-  </script>
 </body>
 </html>
