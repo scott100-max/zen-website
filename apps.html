@@ -104,56 +104,78 @@
   .nav-drawer__ctas .nav-cta{flex:1;text-align:center;padding:12px 20px;font-size:.88rem}
   @media(max-width:860px){.nav-primary,.nav-row-2,.nav-ctas{display:none}.nav-burger{display:flex}.nav-row-1{height:56px}}
 
-  /* ═══════════════ PRICING (existing) ═══════════════ */
-  .pricing-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
-    max-width: 900px; margin: 0 auto;
+  /* ═══════════════ SUBSCRIBE BODY ═══════════════ */
+  .sp-value{padding:100px 24px 60px;text-align:center;position:relative;overflow:hidden}
+  .sp-value::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 40% at 50% 0%,rgba(78,205,196,0.04) 0%,transparent 70%)}
+  .sp-value__label{display:inline-flex;align-items:center;gap:10px;font-weight:300;font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(78,205,196,0.6);margin-bottom:20px}
+  .sp-value__label::before,.sp-value__label::after{content:'';width:24px;height:1px;background:linear-gradient(90deg,transparent,rgba(78,205,196,0.35),transparent)}
+  .sp-value h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,4.5vw,2.8rem);line-height:1.25;margin-bottom:16px;max-width:640px;margin-left:auto;margin-right:auto}
+  .sp-value p{font-weight:200;font-size:.88rem;line-height:1.7;color:var(--text-mid);max-width:520px;margin:0 auto}
+
+  .sp-pricing{padding:40px 24px 60px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap;max-width:780px;margin:0 auto}
+  .sp-plan{position:relative;flex:1;min-width:280px;max-width:360px;border-radius:20px;padding:36px 32px 32px;overflow:hidden;display:flex;flex-direction:column;transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s ease}
+  .sp-plan:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.35)}
+  .sp-plan::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:.5;pointer-events:none;border-radius:inherit}
+  .sp-plan--monthly{background:linear-gradient(145deg,#0e1420 0%,#141c2e 50%,#0e1420 100%);border:1px solid rgba(255,255,255,0.06)}
+  .sp-plan--annual{background:linear-gradient(145deg,#0d3d4a 0%,#1a5568 50%,#0f4c5c 100%);border:1px solid rgba(78,205,196,0.15)}
+  .sp-plan__orb{position:absolute;border-radius:50%;filter:blur(40px);pointer-events:none;opacity:.25}
+  .sp-plan--annual .sp-plan__orb{background:#22d3ee;width:140px;height:140px;top:-30px;right:-20px}
+  .sp-plan__popular{position:absolute;top:16px;right:16px;z-index:3;font-weight:400;font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;padding:4px 12px;border-radius:20px;color:var(--teal);background:rgba(78,205,196,0.1);border:1px solid rgba(78,205,196,0.2)}
+  .sp-plan__content{position:relative;z-index:3;flex:1;display:flex;flex-direction:column}
+  .sp-plan__name{font-weight:400;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px}
+  .sp-plan__price{display:flex;align-items:baseline;gap:4px;margin-bottom:4px}
+  .sp-plan__currency{font-weight:300;font-size:1rem;color:var(--text-mid)}
+  .sp-plan__amount{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:3rem;line-height:1;color:#fff}
+  .sp-plan__period{font-weight:200;font-size:.78rem;color:var(--text-muted)}
+  .sp-plan__save{font-weight:300;font-size:.72rem;color:var(--teal);margin-top:4px;margin-bottom:20px;min-height:18px}
+  .sp-plan__features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px;flex:1}
+  .sp-plan__features li{display:flex;align-items:flex-start;gap:8px;font-weight:200;font-size:.8rem;color:var(--text-mid);line-height:1.4}
+  .sp-plan__features li::before{content:'';flex-shrink:0;width:16px;height:16px;margin-top:1px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234ecdc4' stroke-width='2'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center/contain no-repeat}
+  .sp-plan__cta{font-family:'Outfit',sans-serif;font-weight:400;font-size:.84rem;letter-spacing:.04em;padding:14px 28px;border-radius:40px;border:none;cursor:pointer;text-decoration:none;text-align:center;transition:all .35s cubic-bezier(.22,1,.36,1);display:block}
+  .sp-plan--monthly .sp-plan__cta{color:var(--text-bright);background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12)}
+  .sp-plan--monthly .sp-plan__cta:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2)}
+  .sp-plan--annual .sp-plan__cta{color:var(--deep);background:linear-gradient(135deg,var(--teal),#6dd5c8)}
+  .sp-plan--annual .sp-plan__cta:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(78,205,196,0.25)}
+  .sp-plan__note{text-align:center;font-weight:200;font-size:.66rem;color:rgba(255,255,255,0.3);margin-top:12px}
+
+  .sp-breakdown{padding:60px 24px 80px;max-width:980px;margin:0 auto}
+  .sp-breakdown__header{text-align:center;margin-bottom:40px}
+  .sp-breakdown__header h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.6rem,3.5vw,2.2rem);margin-bottom:8px}
+  .sp-breakdown__header p{font-weight:200;font-size:.82rem;color:var(--text-muted)}
+  .sp-breakdown__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.06);border-radius:16px;overflow:hidden}
+  .sp-breakdown__item{background:#0a0d18;padding:32px 28px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px}
+  .sp-breakdown__icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.08)}
+  .sp-breakdown__icon svg{width:20px;height:20px}
+  .sp-breakdown__item-title{font-weight:400;font-size:.84rem;color:var(--text-bright)}
+  .sp-breakdown__item-desc{font-weight:200;font-size:.74rem;line-height:1.5;color:var(--text-muted);max-width:200px}
+  .sp-breakdown__item-stat{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:1.6rem;color:var(--teal);line-height:1}
+
+  .sp-guarantee{padding:0 24px 80px;max-width:720px;margin:0 auto;text-align:center}
+  .sp-guarantee__card{background:#0a0d18;border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:40px 36px;position:relative;overflow:hidden}
+  .sp-guarantee__card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 40% 50% at 50% 0%,rgba(78,205,196,0.03) 0%,transparent 70%)}
+  .sp-guarantee__icon{width:48px;height:48px;border-radius:50%;background:rgba(78,205,196,0.06);border:1px solid rgba(78,205,196,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+  .sp-guarantee__icon svg{width:22px;height:22px;fill:none;stroke:rgba(78,205,196,0.7);stroke-width:1.5}
+  .sp-guarantee__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.4rem;margin-bottom:10px;position:relative;z-index:2}
+  .sp-guarantee__text{font-weight:200;font-size:.84rem;line-height:1.7;color:var(--text-mid);position:relative;z-index:2;max-width:520px;margin:0 auto}
+
+  .sp-faq{padding:0 24px 100px;max-width:720px;margin:0 auto}
+  .sp-faq__header{text-align:center;margin-bottom:32px}
+  .sp-faq__header h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.4rem,3vw,1.8rem)}
+  .sp-faq__item{border-bottom:1px solid rgba(255,255,255,0.06);padding:20px 0}
+  .sp-faq__item:first-child{border-top:1px solid rgba(255,255,255,0.06)}
+  .sp-faq__q{font-weight:400;font-size:.84rem;color:var(--text-bright);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .sp-faq__q::after{content:'+';font-weight:200;font-size:1.2rem;color:var(--text-muted);transition:transform .3s ease;flex-shrink:0}
+  .sp-faq__item.open .sp-faq__q::after{transform:rotate(45deg);color:var(--teal)}
+  .sp-faq__a{font-weight:200;font-size:.82rem;line-height:1.7;color:var(--text-mid);max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s ease;padding-top:0}
+  .sp-faq__item.open .sp-faq__a{max-height:200px;padding-top:12px}
+
+  @media(max-width:768px){
+    .sp-pricing{flex-direction:column;align-items:center}
+    .sp-plan{max-width:100%}
+    .sp-breakdown__grid{grid-template-columns:repeat(2,1fr)}
   }
-  .pricing-card {
-    background: transparent; border: 2px solid transparent;
-    border-radius: 16px; padding: 40px 28px; text-align: center;
-    position: relative; transition: all 0.3s ease;
-  }
-  .pricing-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
-  .pricing-card.featured {
-    border-color: var(--accent); box-shadow: 0 8px 30px rgba(79,109,245,0.15);
-  }
-  .pricing-card.featured::before {
-    content: 'Most Popular'; position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
-    background: var(--accent); color: #fff; padding: 4px 20px; border-radius: 50px;
-    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
-  }
-  .pricing-card h3 { font-size: 1.2rem; margin-bottom: 8px; }
-  .pricing-card .price {
-    font-size: 2.8rem; font-weight: 700; margin: 16px 0 4px;
-  }
-  .pricing-card .price-sub {
-    font-size: 0.85rem; color: var(--mid-gray); margin-bottom: 24px;
-  }
-  .pricing-card .price-sub .equiv {
-    display: block; font-size: 0.8rem; margin-top: 4px; opacity: 0.7;
-  }
-  .pricing-features {
-    list-style: none; padding: 0; margin: 0 0 28px; text-align: left;
-  }
-  .pricing-features li {
-    padding: 8px 0; font-size: 0.9rem; color: var(--mid-gray);
-    border-bottom: 1px solid var(--off-white);
-    display: flex; align-items: center; gap: 8px;
-  }
-  .pricing-features li::before { content: '✓'; color: var(--accent); font-weight: 700; }
-  .pricing-card .btn { width: 100%; text-align: center; }
-  .guarantee {
-    text-align: center; margin-top: 32px; color: var(--mid-gray); font-size: 0.85rem;
-  }
-  .everything-banner {
-    background: transparent; border: none; border-radius: 12px; padding: 24px 32px;
-    text-align: center; margin-bottom: 60px;
-  }
-  .everything-banner h3 { color: var(--dark); margin-bottom: 8px; }
-  .everything-banner p { color: var(--mid-gray); font-size: 0.9rem; }
-  @media (max-width: 600px) {
-    .pricing-grid { grid-template-columns: 1fr !important; max-width: 400px !important; }
+  @media(max-width:500px){
+    .sp-breakdown__grid{grid-template-columns:1fr}
   }
   </style>
 </head>
@@ -233,154 +255,146 @@
   <div class="scroll-hint"><span class="scroll-hint__text">Plans</span><span class="scroll-hint__line"></span></div>
 </section>
 
-  <!-- Pricing -->
-  <section style="padding-top:0;background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%);">
-    <div class="container">
-      <div class="section-header fade-in">
-        <h2>Simple, Honest Pricing</h2>
-        <p>Start free. Upgrade when you're ready. Cancel anytime.</p>
+<!-- ═══ VALUE PROPOSITION ═══ -->
+<section class="sp-value">
+  <div class="sp-value__label"><span></span>Salus Premium<span></span></div>
+  <h2>One subscription. Everything inside. New content every week.</h2>
+  <p>No tiers, no upsells, no content locked behind a higher plan. Subscribe once and you get the full library — plus fresh material added every single week. The longer you stay, the more there is.</p>
+</section>
+
+<!-- ═══ PRICING ═══ -->
+<section class="sp-pricing">
+  <div class="sp-plan sp-plan--monthly">
+    <div class="sp-plan__content">
+      <span class="sp-plan__name">Monthly</span>
+      <div class="sp-plan__price">
+        <span class="sp-plan__currency">£</span>
+        <span class="sp-plan__amount">5.99</span>
       </div>
-
-      <div class="pricing-grid" style="grid-template-columns:repeat(3,1fr);max-width:900px;">
-
-        <!-- Free -->
-        <div class="pricing-card fade-in">
-          <h3>Free</h3>
-          <div class="price">£0</div>
-          <div class="price-sub">Forever</div>
-          <ul class="pricing-features">
-            <li>2 guided meditations</li>
-            <li>Breathing exercises</li>
-            <li>4 sample ASMR sounds</li>
-            <li>Meditation timer</li>
-            <li>Education articles</li>
-          </ul>
-          <a href="sessions.html" class="btn btn-outline">Try Free</a>
-        </div>
-
-        <!-- Monthly -->
-        <div class="pricing-card fade-in">
-          <h3>Monthly</h3>
-          <div class="price" style="color:var(--accent);">£5.99</div>
-          <div class="price-sub">per month</div>
-          <ul class="pricing-features">
-            <li>Everything in Free</li>
-            <li>Full session library</li>
-            <li>All ASMR + mixing</li>
-            <li>Sleep stories</li>
-            <li>New content weekly</li>
-            <li>Cancel anytime</li>
-          </ul>
-          <a href="https://buy.stripe.com/aFacN46Yr4kmffLec0eAg01" class="btn btn-outline stripe-subscribe-btn">Subscribe</a>
-        </div>
-
-        <!-- Yearly (featured) -->
-        <div class="pricing-card featured fade-in">
-          <div style="background:var(--accent);color:#fff;font-size:0.7rem;font-weight:700;padding:4px 12px;border-radius:20px;position:absolute;top:-12px;left:50%;transform:translateX(-50%);">SAVE 30%</div>
-          <h3>Yearly</h3>
-          <div class="price" style="color:var(--accent);">£49.99</div>
-          <div class="price-sub">per year <span style="font-size:0.8rem;opacity:0.7;">(£4.17/mo)</span></div>
-          <ul class="pricing-features">
-            <li>Everything in Monthly</li>
-            <li>Priority support</li>
-            <li>Best value</li>
-          </ul>
-          <a href="https://buy.stripe.com/8x24gy4Qj9EGffL8RGeAg02" class="btn btn-primary stripe-subscribe-btn">Subscribe</a>
-        </div>
-
-      </div>
-
-      <div class="guarantee fade-in">
-        <p style="margin-bottom:4px;font-weight:600;color:var(--dark);">Cancel anytime</p>
-        <p>No commitment. No questions asked. Cancel whenever you like.</p>
-        <p style="margin-top:12px;font-size:0.8rem;opacity:0.6;">Secure payments powered by Stripe. We never see your card details.</p>
-      </div>
+      <span class="sp-plan__period">per month</span>
+      <span class="sp-plan__save">&nbsp;</span>
+      <ul class="sp-plan__features">
+        <li>Full access to all 48 guided meditations</li>
+        <li>52 sleep stories — one new each week</li>
+        <li>ASMR sound mixer with 14 ambient tracks</li>
+        <li>Mindfulness courses &amp; tools</li>
+        <li>Cancel any time</li>
+      </ul>
+      <a href="https://buy.stripe.com/aFacN46Yr4kmffLec0eAg01" class="sp-plan__cta stripe-subscribe-btn" id="monthlyBtn">Start Monthly</a>
+      <span class="sp-plan__note">Cancel any time — no commitment</span>
     </div>
-  </section>
+  </div>
 
-  <!-- What's Included -->
-  <section style="background:linear-gradient(135deg,#f4f1ec 0%,#ece7e0 100%);">
-    <div class="container">
-      <div class="section-header fade-in">
-        <h2>What's Inside Premium</h2>
-        <p>Everything you need for a complete mindfulness practice.</p>
+  <div class="sp-plan sp-plan--annual">
+    <div class="sp-plan__orb"></div>
+    <span class="sp-plan__popular">Best Value</span>
+    <div class="sp-plan__content">
+      <span class="sp-plan__name">Annual</span>
+      <div class="sp-plan__price">
+        <span class="sp-plan__currency">£</span>
+        <span class="sp-plan__amount">49.99</span>
       </div>
-      <div class="feature-grid">
-        <div class="feature-card fade-in">
-          <h3>Guided Meditations</h3>
-          <p>Hundreds of meditations for sleep, anxiety, focus, self-compassion, and more. New content added weekly.</p>
-        </div>
-        <div class="feature-card fade-in" style="cursor:pointer;" onclick="window.location.href='sleep-stories.html'">
-          <h3>Sleep Stories</h3>
-          <p>Calming narrated stories and ambient sounds designed to ease you into restful sleep.</p>
-        </div>
-        <div class="feature-card fade-in" style="cursor:pointer;" onclick="window.location.href='breathe.html'">
-          <h3>Breathing Exercises</h3>
-          <p>Six tailored techniques with visual guides — relax, focus, sleep, energise, calm, and unwind.</p>
-        </div>
-        <div class="feature-card fade-in">
-          <h3>ASMR</h3>
-          <p>20+ ambient sounds with mixing, sleep timer, and curated combinations. Rain, forest, ocean, and more.</p>
-        </div>
-        <div class="feature-card fade-in">
-          <h3>Learn</h3>
-          <p>Articles, science, and practical tips from our consultant to deepen your understanding.</p>
-        </div>
-      </div>
+      <span class="sp-plan__period">per year</span>
+      <span class="sp-plan__save">Save over 30% vs monthly</span>
+      <ul class="sp-plan__features">
+        <li>Everything in Monthly — for less</li>
+        <li>Full access to all 48 guided meditations</li>
+        <li>52 sleep stories — one new each week</li>
+        <li>ASMR sound mixer with 14 ambient tracks</li>
+        <li>Mindfulness courses &amp; tools</li>
+        <li>Priority access to new content</li>
+      </ul>
+      <a href="https://buy.stripe.com/8x24gy4Qj9EGffL8RGeAg02" class="sp-plan__cta stripe-subscribe-btn" id="annualBtn">Start Annual</a>
+      <span class="sp-plan__note">Works out at £4.17/month</span>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section class="cta-banner">
-    <div class="container">
-      <h2 class="fade-in">Join the Salus family</h2>
-      <p class="fade-in">Sleep better. Stress less. Start your journey today.</p>
-      <a href="#stripe-monthly" class="btn fade-in">Get Salus Premium</a>
+<!-- ═══ WHAT YOU GET ═══ -->
+<section class="sp-breakdown">
+  <div class="sp-breakdown__header">
+    <h2>What You're Unlocking</h2>
+    <p>Everything included — and new material added every week, not monthly, not quarterly.</p>
+  </div>
+  <div class="sp-breakdown__grid">
+    <div class="sp-breakdown__item">
+      <div class="sp-breakdown__icon" style="background:rgba(78,205,196,0.06);border-color:rgba(78,205,196,0.12)"><svg viewBox="0 0 24 24" fill="none" stroke="#4ecdc4" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+      <span class="sp-breakdown__item-stat">48</span>
+      <span class="sp-breakdown__item-title">Guided Meditations</span>
+      <span class="sp-breakdown__item-desc">Sleep, stress, mindfulness, focus, beginner, and advanced</span>
     </div>
-  </section>
+    <div class="sp-breakdown__item">
+      <div class="sp-breakdown__icon" style="background:rgba(167,139,250,0.06);border-color:rgba(167,139,250,0.12)"><svg viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.5"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
+      <span class="sp-breakdown__item-stat">52</span>
+      <span class="sp-breakdown__item-title">Sleep Stories</span>
+      <span class="sp-breakdown__item-desc">A new story every week for a full year</span>
+    </div>
+    <div class="sp-breakdown__item">
+      <div class="sp-breakdown__icon" style="background:rgba(148,163,184,0.06);border-color:rgba(148,163,184,0.12)"><svg viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5"><path d="M12 3v10.55A4 4 0 1014 17V7h4V3h-6z"/></svg></div>
+      <span class="sp-breakdown__item-stat">14</span>
+      <span class="sp-breakdown__item-title">Ambient Sounds</span>
+      <span class="sp-breakdown__item-desc">Layer rain, fire, birdsong, and more in the sound mixer</span>
+    </div>
+    <div class="sp-breakdown__item">
+      <div class="sp-breakdown__icon" style="background:rgba(52,211,153,0.06);border-color:rgba(52,211,153,0.12)"><svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+      <span class="sp-breakdown__item-stat">15+</span>
+      <span class="sp-breakdown__item-title">Hours of Audio</span>
+      <span class="sp-breakdown__item-desc">Enough to listen every day and not repeat for weeks</span>
+    </div>
+    <div class="sp-breakdown__item">
+      <div class="sp-breakdown__icon" style="background:rgba(56,189,248,0.06);border-color:rgba(56,189,248,0.12)"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="1.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg></div>
+      <span class="sp-breakdown__item-stat">21</span>
+      <span class="sp-breakdown__item-title">Day Mindfulness Course</span>
+      <span class="sp-breakdown__item-desc">Structured programme from first breath to lasting habit</span>
+    </div>
+    <div class="sp-breakdown__item">
+      <div class="sp-breakdown__icon" style="background:rgba(251,191,36,0.06);border-color:rgba(251,191,36,0.12)"><svg viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="1.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div>
+      <span class="sp-breakdown__item-stat">∞</span>
+      <span class="sp-breakdown__item-title">Tools &amp; Timers</span>
+      <span class="sp-breakdown__item-desc">Breathing exercises, interval bells, and self-guided practice aids</span>
+    </div>
+  </div>
+</section>
 
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div>
-          <h4 style="letter-spacing:2px;">SALUS</h4>
-          <p style="margin-top:4px;">SLEEP &middot; RELAX &middot; RESTORE</p>
-          <p style="margin-top:8px;">A family-run meditation &amp; mindfulness platform.</p>
-        </div>
-        <div>
-          <h4>Pages</h4>
-          <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="sessions.html">Guided Meditations</a></li>
-            <li><a href="asmr.html">ASMR</a></li>
-            <li><a href="about.html">About</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4>Support</h4>
-          <ul>
-            <li><a href="contact.html">Contact Us Directly</a></li>
-            <li><a href="faq.html">FAQ</a></li>
-            <li><a href="privacy.html">Privacy</a></li>
-            <li><a href="terms.html">Terms</a></li>
-            <li><a href="disclaimer.html">Health Disclaimer</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4>Tools</h4>
-          <ul>
-            <li><a href="breathe.html">Breathing Exercises</a></li>
-            <li><a href="timer.html">Meditation Timer</a></li>
-            <li><a href="sounds.html">ASMR</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <a href="#" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to Top</a>
-        <p>&copy; 2026 Salus. All rights reserved.</p>
-        <p style="font-size:0.75rem;opacity:0.5;margin-top:4px;">Salus is not a replacement for professional medical advice. <a href="disclaimer.html" style="color:inherit;">Health Disclaimer</a></p>
-      </div>
-    </div>
-  </footer>
+<!-- ═══ GUARANTEE ═══ -->
+<section class="sp-guarantee">
+  <div class="sp-guarantee__card">
+    <div class="sp-guarantee__icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+    <h3 class="sp-guarantee__title">No Contracts. No Catches. A Library That Grows.</h3>
+    <p class="sp-guarantee__text">Cancel any time with one click — no emails, no phone calls, no retention screens. New sessions, stories, and tools arrive weekly, so your subscription becomes more valuable the longer you hold it. If Salus isn't for you, you keep access until your billing period ends and that's that.</p>
+  </div>
+</section>
+
+<!-- ═══ FAQ ═══ -->
+<section class="sp-faq">
+  <div class="sp-faq__header">
+    <h2>Common Questions</h2>
+  </div>
+  <div class="sp-faq__item">
+    <div class="sp-faq__q">What do I get with Salus Premium?</div>
+    <div class="sp-faq__a">Everything. All 48 guided meditations, 52 sleep stories (one new each week), the ASMR sound mixer, mindfulness courses, breathing tools, and every piece of new content we publish — which is weekly, without fail. There are no hidden tiers or locked features.</div>
+  </div>
+  <div class="sp-faq__item">
+    <div class="sp-faq__q">Is there a free trial?</div>
+    <div class="sp-faq__a">We offer two free sample sessions you can listen to right now — no account needed. Just head to the Guided Meditations page and press play. They'll give you a fair sense of what the full library sounds like.</div>
+  </div>
+  <div class="sp-faq__item">
+    <div class="sp-faq__q">Can I cancel any time?</div>
+    <div class="sp-faq__a">Yes, instantly. No emails, no phone calls, no hoops. Cancel from your dashboard and you keep full access until your current billing period ends.</div>
+  </div>
+  <div class="sp-faq__item">
+    <div class="sp-faq__q">Is Salus available as a mobile app?</div>
+    <div class="sp-faq__a">Salus is currently web-only, designed to work beautifully on any device through your browser. iOS and Android apps are on the roadmap — subscribe now and you'll have full access when they launch.</div>
+  </div>
+  <div class="sp-faq__item">
+    <div class="sp-faq__q">Who creates the content?</div>
+    <div class="sp-faq__a">Salus is a family-run project with over 40 years of combined experience in psychology and mental health. Every session is reviewed for accuracy, pacing, and therapeutic integrity before it goes live.</div>
+  </div>
+  <div class="sp-faq__item">
+    <div class="sp-faq__q">Do you sell my data or show adverts?</div>
+    <div class="sp-faq__a">No. Salus is funded entirely by subscriptions. We do not sell data, track behaviour for advertisers, or show any adverts. Your calm is not a product.</div>
+  </div>
+</section>
 
   <script src="js/main.js?v=1770053724"></script>
   <script src="js/tracker.js"></script>
@@ -436,6 +450,15 @@
   drawer.querySelectorAll(".nav-drawer__link").forEach(l=>{l.addEventListener("click",()=>{burger.classList.remove("open");drawer.classList.remove("open");document.body.style.overflow=""})});
   </script>
   <script>
+    // FAQ accordion
+    document.querySelectorAll('.sp-faq__item').forEach(item=>{
+      item.querySelector('.sp-faq__q').addEventListener('click',()=>{
+        const wasOpen=item.classList.contains('open');
+        document.querySelectorAll('.sp-faq__item').forEach(i=>i.classList.remove('open'));
+        if(!wasOpen)item.classList.add('open');
+      });
+    });
+
     // Handle subscribe buttons based on login state
     (async function() {
       if (typeof SalusAuth !== 'undefined') {
