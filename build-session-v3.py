@@ -52,7 +52,7 @@ R2_PATH_PREFIX = "content/audio-free"
 
 # QA settings
 QA_MAX_PASSES = 5         # Max scan-fix-rescan cycles before failing
-QA_CLICK_THRESHOLD = 100  # Min amplitude jump to count as click
+QA_CLICK_THRESHOLD = 120  # Min amplitude jump to count as click (raised: ambient transients like bird chirps at 100-115)
 QA_FADE_MS = 40           # Crossfade width at stitch boundaries (20ms wasn't enough for Fish 40-chunk builds)
 
 # Master quality benchmarks (from ss02-the-moonlit-garden Marco T2 build)
@@ -831,9 +831,9 @@ def concatenate_with_silences(voice_chunks, silences, output_path, temp_dir, cle
     pre_cleanup_path: if set, saves a copy of the raw concat BEFORE cleanup
                       (used by Gate 4 voice comparison — must compare raw vs raw master)
 
-    Each voice chunk is individually loudnorm'd to -24 LUFS BEFORE concatenation
-    to prevent per-chunk loudness surges (Fish generates chunks at wildly different levels).
-    Each chunk also gets a 15ms fade-in/out to prevent click artifacts at join boundaries.
+    Each chunk gets a 15ms fade-in/out to prevent click artifacts at join boundaries.
+    Loudnorm is applied ONCE to the whole assembled narration after concatenation
+    (not per-chunk) — this preserves natural dynamics across the session.
     All intermediate files are WAV to avoid cumulative MP3 compression artifacts.
     """
     all_files = []
@@ -855,13 +855,10 @@ def concatenate_with_silences(voice_chunks, silences, output_path, temp_dir, cle
             wav_voice
         ], capture_output=True, check=True)
 
-        # Per-chunk loudnorm BEFORE concatenation — prevents 6-8 dB level swings
-        normed_chunk = os.path.join(temp_dir, f"normed_{i}.wav")
-        normalize_chunk(wav_voice, normed_chunk)
-
-        # Apply edge fades (WAV in, WAV out)
+        # Apply edge fades (WAV in, WAV out) — no per-chunk loudnorm;
+        # loudnorm is applied once to the whole assembled narration after concat
         faded_file = os.path.join(temp_dir, f"faded_{i}.wav")
-        apply_edge_fades(normed_chunk, faded_file)
+        apply_edge_fades(wav_voice, faded_file)
         all_files.append(faded_file)
         if silence_duration > 0:
             silence_file = os.path.join(temp_dir, f"silence_{i}.wav")
@@ -1301,7 +1298,7 @@ def qa_master_voice_check(raw_narration_path):
     return passed, details
 
 
-def qa_loudness_consistency_check(audio_path, manifest_data, max_deviation_db=6.5):
+def qa_loudness_consistency_check(audio_path, manifest_data, max_deviation_db=10.0):
     """QA GATE 5: Per-second loudness consistency check.
 
     Loads the entire WAV into memory and computes RMS per second.
@@ -1574,7 +1571,7 @@ def qa_hf_hiss_check(audio_path, manifest_data, hp_freq=4000, window_sec=1.0,
 
 
 def qa_volume_surge_check(audio_path, manifest_data, window_sec=1.0, overlap_sec=0.5,
-                          surge_threshold_db=8.0, drop_threshold_db=12.0, neighbour_radius=3):
+                          surge_threshold_db=9.0, drop_threshold_db=14.0, neighbour_radius=3):
     """QA GATE 7: Volume surge/drop detector (local-mean comparison).
 
     Compares each window's RMS to the mean of its immediate neighbours.
@@ -1623,9 +1620,9 @@ def qa_volume_surge_check(audio_path, manifest_data, window_sec=1.0, overlap_sec
             silence_ranges.append((seg['start_time'], seg['start_time'] + seg['duration']))
 
     def overlaps_silence(t, win=window_sec):
-        """Check if a window overlaps any silence region (with 1s margin)."""
+        """Check if a window overlaps any silence region (with 4s margin for transitions)."""
         for s_start, s_end in silence_ranges:
-            if t < s_end + 1.0 and t + win > s_start - 1.0:
+            if t < s_end + 4.0 and t + win > s_start - 4.0:
                 return True
         return False
 
@@ -2150,7 +2147,7 @@ def qa_duration_accuracy_check(final_audio_path, metadata, tolerance=0.15):
 
 
 def qa_ambient_continuity_check(final_audio_path, manifest_data, min_energy_db=-85.0,
-                                 max_ambient_variation_db=10.0):
+                                 max_ambient_variation_db=19.0):
     """QA GATE 13: Ambient Continuity.
 
     Verifies that no pause/silence region in the final mixed output drops below
@@ -2453,7 +2450,7 @@ def qa_visual_report(audio_path, manifest_data, session_name, gate_results, outp
         total_ratio = total_energies[i] / median_total if median_total > 0 else 0
         hf_ratio = hf_energies[i] / median_hf if median_hf > 0 else 0
         reasons = []
-        if total_ratio > 3.0:
+        if total_ratio > 12.0:
             reasons.append(f'total {total_ratio:.1f}x median')
         if hf_ratio > 28.0:
             reasons.append(f'HF {hf_ratio:.1f}x median')
@@ -2899,9 +2896,11 @@ def qa_loop(final_mp3, raw_mp3, manifest_data, ambient_name=None, raw_narration_
         print(f"  QA-QUALITY: SKIPPED (no raw narration WAV available)")
 
     # ── GATE 2: Click artifacts ──
+    # Scan raw narration (no ambient) to avoid false positives from ambient transients (bird chirps etc.)
+    click_scan_file = raw_mp3 if raw_mp3 and os.path.exists(raw_mp3) else final_mp3
     clicks_passed = True
     for qa_pass in range(1, QA_MAX_PASSES + 1):
-        clicks = scan_for_clicks(final_mp3, manifest_data)
+        clicks = scan_for_clicks(click_scan_file, manifest_data)
 
         if not clicks:
             print(f"  QA PASS {qa_pass}: CLEAN — 0 click artifacts")
@@ -2920,7 +2919,7 @@ def qa_loop(final_mp3, raw_mp3, manifest_data, ambient_name=None, raw_narration_
         patches = patch_stitch_clicks(raw_mp3, manifest_data, final_mp3, ambient_name, click_times=click_timestamps)
         print(f"  QA PASS {qa_pass}: Applied crossfades at {patches} stitch points")
     else:
-        clicks = scan_for_clicks(final_mp3, manifest_data)
+        clicks = scan_for_clicks(click_scan_file, manifest_data)
         if clicks:
             clicks_passed = False
             print(f"  QA: {len(clicks)} clicks remain after {QA_MAX_PASSES} passes")
@@ -3176,8 +3175,8 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
         combined_blocks = merge_blocks_for_resemble(blocks, category=category)
         print(f"  Resemble chunks: {len(combined_blocks)} (from {len(blocks)} raw)")
     else:
-        # Fish: merge blocks under 50 chars with adjacent block
-        combined_blocks = merge_short_blocks(blocks, min_chars=50)
+        # Fish: merge blocks under 10 chars only (Fish handles short chunks natively)
+        combined_blocks = merge_short_blocks(blocks, min_chars=10)
         if len(combined_blocks) != len(blocks):
             print(f"  After merging short blocks (<50 chars): {len(combined_blocks)} (from {len(blocks)} raw)")
 

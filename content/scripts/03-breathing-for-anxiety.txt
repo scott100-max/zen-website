@@ -1,8 +1,9 @@
 Breathing for Anxiety
-Duration: 10 minutes
+Duration: 15 minutes
 Category: stress
 Ambient: birds
 Style: Warm, calm, reassuring male narrator
+Expected-Repetitions: breathe in, hold your breath, let it go, breathe out, now hold, and release, breath in through your nose, slow breath
 ---
 
 This is a gentle breathing session for when anxiety feels heavy.
@@ -39,15 +40,15 @@ Close your eyes when you're ready.
 
 Take a breath in through your nose. Nice and slow.
 
-[4 second pause]
+[SILENCE: 4]
 
 Now hold your breath gently.
 
-[5 second pause]
+[SILENCE: 5]
 
 And breathe out through your mouth. Let it all go.
 
-[6 second pause]
+[SILENCE: 6]
 
 ...
 
@@ -61,15 +62,15 @@ There's no rush. Let your body settle.
 
 Let's do that again. Breathe in slowly.
 
-[4 second pause]
+[SILENCE: 4]
 
 Now hold your breath gently.
 
-[5 second pause]
+[SILENCE: 5]
 
 And release. A long, slow breath out.
 
-[6 second pause]
+[SILENCE: 6]
 
 ...
 
@@ -83,15 +84,15 @@ Good. You're already doing something kind for yourself.
 
 One more time. Breathe in.
 
-[4 second pause]
+[SILENCE: 4]
 
 Now hold your breath.
 
-[5 second pause]
+[SILENCE: 5]
 
 And let it go completely.
 
-[6 second pause]
+[SILENCE: 6]
 
 ...
 
@@ -113,7 +114,7 @@ Even a few breaths can make a difference.
 
 ...
 
-[45 second pause]
+[SILENCE: 45]
 
 Now we'll continue with a slower rhythm.
 
@@ -127,15 +128,15 @@ This time, the exhale is longer. Just let the air leave gently.
 
 Breathe in through your nose.
 
-[4 second pause]
+[SILENCE: 4]
 
 Now hold your breath.
 
-[5 second pause]
+[SILENCE: 5]
 
 And exhale very slowly through your mouth.
 
-[6 second pause]
+[SILENCE: 6]
 
 ...
 
@@ -143,7 +144,7 @@ And exhale very slowly through your mouth.
 
 I'll be quiet for a while now. Just keep breathing at your own pace. Let the birds hold you.
 
-[60 second pause]
+[SILENCE: 60]
 
 Welcome back. You're doing beautifully.
 
@@ -157,15 +158,15 @@ Let's do a few more together.
 
 Take a slow breath in through your nose.
 
-[4 second pause]
+[SILENCE: 4]
 
 Now hold your breath gently.
 
-[5 second pause]
+[SILENCE: 5]
 
 And a long, slow breath out.
 
-[6 second pause]
+[SILENCE: 6]
 
 ...
 
@@ -173,15 +174,15 @@ And a long, slow breath out.
 
 Once more. Breathe in when you're ready.
 
-[4 second pause]
+[SILENCE: 4]
 
 Now hold your breath softly.
 
-[5 second pause]
+[SILENCE: 5]
 
 And release everything. Let it all pour out of you.
 
-[6 second pause]
+[SILENCE: 6]
 
 ...
 
@@ -189,7 +190,7 @@ And release everything. Let it all pour out of you.
 
 I'm going to give you some quiet now. Stay with your breath. I'll be back soon.
 
-[75 second pause]
+[SILENCE: 75]
 
 You've been so patient with yourself. That matters more than you know.
 
