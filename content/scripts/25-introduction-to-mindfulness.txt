@@ -1,250 +1,193 @@
-10-Minute Mindfulness
-Duration: 15 minutes
+Introduction to Mindfulness
+Duration: 15
 Category: mindfulness
 Ambient: garden
-Style: Warm, grounded male narrator
+API-Emotion: calm
+Expected-Repetitions: come back to the breath, breathe in
 ---
 
-This is a simple introduction to mindfulness.
+This is a simple introduction to mindfulness. There is nothing complicated about it.
 
 ...
 
-There's nothing complicated about it. We're just going to practice paying attention.
+We are just going to practice paying attention together, starting right now.
 
 ...
 
-Find somewhere comfortable to sit or lie down.
+Find somewhere comfortable to sit or lie down, and let your hands rest wherever is natural.
 
 ...
 
-Let your hands rest wherever feels natural.
+Close your eyes whenever you are ready, and allow yourself to arrive in this moment.
 
 ...
 
-Close your eyes when you're ready.
-
-...
-
 ...
-
-...
-
-Let's start with your breath. Not because it's special — but because it's always there.
 
 ...
 
-Don't try to change anything. Just notice the air coming in.
+Let's start with your breath. Not because it's special, but because it's always there.
 
 ...
 
-...
-
-And notice it leaving.
-
-...
+Don't try to change anything. Just notice the air coming in, and notice it leaving.
 
 ...
-
-That's all this is. Noticing what's already happening.
 
 ...
 
-...
+That's all this is. Noticing what's already happening, moment by moment.
 
 ...
-
-Feel your chest rise slightly as you breathe in.
 
 ...
 
-And feel it settle as you breathe out.
-
 ...
 
-...
+Notice your chest rise slightly as you breathe in, and notice it soften as you breathe out.
 
 ...
-
-Your mind will wander. That's not a problem.
 
 ...
 
-When you notice it's wandered, just come back to the breath. Gently.
+Your mind will wander. That is not a problem at all.
 
 ...
-
-...
-
-That moment of noticing — that's the whole practice.
 
-...
+When you notice it has wandered, just come back to the breath, gently and without judgement.
 
 ...
 
 ...
 
-You don't need to stop your thoughts. You just need to see them.
+That moment of noticing, that is the whole practice right there.
 
 ...
 
-And then let them pass, like clouds moving through.
-
 ...
 
-...
+You don't need to stop your thoughts. You just need to see them for what they are.
 
 ...
 
-[45 second pause]
+And then let them pass, like clouds moving through a wide open sky.
 
-Breathe in slowly through your nose.
+[SILENCE: 45]
 
-...
-
-And breathe out through your mouth.
-
-...
+Breathe in slowly through your nose, and breathe out gently through your mouth.
 
 ...
 
-There's nowhere else you need to be right now.
-
 ...
 
-...
+There is nowhere else you need to be right now. This moment is yours completely.
 
 ...
-
-If a thought pulls you away, that's fine. Just notice it.
 
 ...
 
-Name it quietly if that helps. Planning. Remembering. Worrying.
+If a thought pulls you away, that is absolutely fine. Just notice it happened.
 
 ...
 
-And come back to the breath.
+Name it quietly if that helps. Planning. Remembering. Worrying. Whatever it may be.
 
 ...
 
-...
-
-...
+And when you are ready, gently come back to the breath once more.
 
-[60 second pause]
+[SILENCE: 45]
 
-You're doing this exactly right.
+You are doing this exactly right, even if it does not quite seem like it.
 
 ...
 
-Even if it feels like nothing is happening, something is.
+Even if nothing seems to be happening, something very real is taking place inside you.
 
 ...
 
 ...
 
-You're building a habit of returning. Of being here.
+You are building a habit of returning, of being here, in this present moment.
 
 ...
 
 ...
 
-...
+Let's take a few more breaths together now, gently and without any rushing.
 
-Let's take a few more breaths together.
-
 ...
 
-Breathe in gently through your nose.
+Breathe in gently through your nose, allowing the warmth to enter.
 
 ...
 
 ...
-
-And let it go completely.
 
-...
+And let it all go, releasing any tension that remains in your body.
 
 ...
-
-Breathe in once more.
 
-...
+Breathe in once more, as slowly and as naturally as you can manage.
 
 ...
-
-And release everything slowly.
 
 ...
 
-...
+And release everything, letting your body grow soft and completely at rest.
 
 ...
 
 ...
 
-The thing about mindfulness is that it goes with you.
-
 ...
-
-You can do this on a bus. At your desk. Waiting for someone.
 
-...
+The thing about mindfulness is that it goes with you wherever you are.
 
 ...
 
-Any moment you choose to notice what's happening — that's enough.
+You can do this on a bus. At your desk. Waiting for someone. Anywhere at all.
 
 ...
 
 ...
 
-...
+Any moment you choose to notice what is happening around you, that is enough.
 
-[45 second pause]
+[SILENCE: 30]
 
-Now gently begin to widen your awareness.
+Now gently begin to widen your awareness and notice the space all around you.
 
 ...
 
-Notice the sounds around you.
+Notice the sounds in the room or outside, whatever they may be right now.
 
 ...
 
 ...
 
-Feel whatever is beneath you.
-
-...
+Notice whatever is beneath you, how it supports you, holding your full weight.
 
 ...
 
-The temperature of the air on your skin.
+The temperature of the air on your skin, and the gentle rise and fall of your breath.
 
 ...
 
 ...
 
-...
-
-Wiggle your fingers if you'd like.
-
-...
+Wiggle your fingers gently if you would like, and begin to reconnect with your body.
 
 ...
-
-When you're ready, let your eyes open softly.
 
 ...
 
-...
+When you are ready, let your eyes open softly and take in the world around you.
 
 ...
 
 ...
-
-Thank you for practicing with Salus.
 
 ...
 
-Sleep, relax, restore.
+Thank you for practicing with Salus today. Rest well, and carry this calm with you.
