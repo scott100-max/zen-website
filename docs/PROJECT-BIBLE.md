@@ -1,7 +1,7 @@
 # Salus Project Bible
 
-**Version:** 2.1
-**Updated:** 7 February 2026
+**Version:** 2.2
+**Updated:** 8 February 2026
 **Purpose:** Single source of truth for all Salus website and audio production standards
 
 This document is the canonical reference for Claude Code and all contributors. Where this document conflicts with earlier briefs, amendment logs, or conversation history, **this document wins**.
@@ -80,8 +80,7 @@ This document is the canonical reference for Claude Code and all contributors. W
 ### Navigation
 - Two-row layout applied site-wide
 - Row 1: Sessions, Mindfulness, ASMR, Sleep Stories, Learn, About
-- Row 2: Tools, Reading, Newsletter, Contact (smaller, gray text, `gap:32px`, `font-size:0.9rem`)
-- Sleep Stories NOT in main nav (linked from homepage "What's Inside" section)
+- Row 2: Tools, Reading, Applied Psychology, Newsletter, Contact (smaller, gray text, `gap:32px`, `font-size:0.9rem`)
 - Latin phrase: "Salūs — Latin: health, safety, well-being" under hero sections on all pages
 - Light backgrounds: `color:var(--mid-gray);opacity:0.7`
 - Dark/hero backgrounds: `color:rgba(255,255,255,0.6)`
@@ -437,11 +436,16 @@ Unsure?                                         → Fish (Marco's home)
 
 **Fish cleanup chain (CANONICAL — use this, nothing else):**
 1. Edge fades: 15ms cosine on each chunk before concatenation
-2. Per-chunk loudnorm: `loudnorm=I=-26:TP=-2:LRA=11` on each chunk BEFORE concatenation
-3. High shelf boost: `highshelf=f=3000:g=3` (restores presence lost by loudnorm)
-4. Final encode: 128kbps MP3
+2. Concatenate all chunks + silences (WAV)
+3. Whole-file loudnorm: `loudnorm=I=-26:TP=-2:LRA=11` on full narration AFTER concatenation
+4. Ambient mix (`amix` with `normalize=0`)
+5. Final encode: 128kbps MP3 (ONLY lossy step)
 
-The HF shelf cut (`highshelf=f=7000:g=-3`) was proposed and tested across the full tuning range (−2 to −5 dB at 6–8 kHz) during the Gate 6 investigation. It failed — removing the 3 kHz boost entirely produced identical flag counts, proving the root cause of Gate 6 false positives was natural speech sibilants, not pipeline-induced HF noise. The pipeline is unchanged.
+Per-chunk loudnorm was REMOVED (8 Feb 2026) — whole-file approach preserves natural dynamics between chunks. Requires Gate 7 thresholds 9/14 dB + 4s silence margin to accommodate Fish chunk-level swings.
+
+The `highshelf=f=3000:g=3` boost was REMOVED (8 Feb 2026) — A/B testing confirmed +3dB HF boost causes perceived echo on certain words. Loudnorm-only is cleaner with less hiss.
+
+The HF shelf cut (`highshelf=f=7000:g=-3`) was proposed and tested across the full tuning range (−2 to −5 dB at 6–8 kHz) during the Gate 6 investigation. It failed — removing the 3 kHz boost entirely produced identical flag counts, proving the root cause of Gate 6 false positives was natural speech sibilants, not pipeline-induced HF noise.
 
 **DO NOT APPLY to Fish output:**
 - ~~lowpass=f=10000~~ (kills clarity and consonant detail)
@@ -450,6 +454,7 @@ The HF shelf cut (`highshelf=f=7000:g=-3`) was proposed and tested across the fu
 - ~~aggressive de-essers~~ (removes natural sibilance)
 - ~~highpass=80~~ (not needed for Fish — no low-frequency noise)
 - ~~highshelf=f=7000:g=-3~~ (tested and failed — does not address root cause)
+- ~~highshelf=f=3000:g=3~~ (removed 8 Feb — causes perceived echo on certain words)
 
 ### Resemble AI — LONG-FORM PROVIDER
 
@@ -596,19 +601,16 @@ generate_tts_chunk() → Fish API → WAV
 apply_edge_fades() → 15ms cosine fade on each chunk (WAV in, WAV out)
         │
         ▼
-PER-CHUNK LOUDNORM: loudnorm=I=-26:TP=-2:LRA=11 on EACH chunk individually
-        │
-        ▼
 generate_silence() → WAV (mono, pcm_s16le) via humanize_pauses()
         │
         ▼
 concatenate_with_silences() → concat demuxer → WAV
         │
         ▼
-HIGH SHELF BOOST: highshelf=f=3000:g=3 (restores presence after loudnorm)
+WHOLE-FILE LOUDNORM: loudnorm=I=-26:TP=-2:LRA=11 on full narration
         │
         ▼
-mix_ambient() → amix → WAV
+mix_ambient() → amix (normalize=0) → WAV
         │
         ▼
 SINGLE MP3 ENCODE (libmp3lame, 128kbps) ← ONLY lossy step
@@ -653,17 +655,13 @@ qa_loop() → 14-GATE QA (see Section 12)
 deploy_to_r2() → send_build_email()
 ```
 
-### Per-Chunk Loudnorm (Fish only)
+### Whole-File Loudnorm (Fish only)
 
-Apply `loudnorm` to each chunk individually to −26 LUFS BEFORE concatenation. This fixes the 6–8 dB volume swings between chunks at source rather than relying on whole-file normalisation after assembly. Previously, chunks were concatenated raw and then the whole file was normalised — this masked volume inconsistencies rather than fixing them.
+Apply `loudnorm` to the full concatenated narration WAV AFTER assembly — not per-chunk. This preserves the natural dynamic variation between chunks that gives Marco his character. Per-chunk loudnorm was tested and removed (8 Feb 2026) because it flattened the delivery and, combined with the highshelf boost, introduced perceived echo on certain words.
 
-### Known Trade-Off: Loudnorm vs Presence
+The highshelf boost (`highshelf=f=3000:g=3`) was also removed (8 Feb 2026). A/B testing confirmed the +3dB HF boost was causing perceived echo and hiss on words like "settling", "stillness", "feel/feeling", "peace", "ease", "deeply". The loudnorm-only chain is cleaner.
 
-Loudnorm slightly reduces Marco's presence and "sharpness" — the voice sounds slightly muted compared to raw Fish output (the "behind a sheet" problem).
-
-**Fix:** High shelf boost `highshelf=f=3000:g=3` — lifts everything above 3kHz by 3dB (presence and articulation range). Applied AFTER loudnorm, BEFORE ambient mixing. Start at +3dB, test up to +4 or +5 if 3 feels subtle.
-
-**Experimental option:** Skip loudnorm entirely. Given Fish's 45 dB SNR, raw TTS with edge fades only, straight to ambient mix. Risk: volume inconsistency between chunks (~8 dB spread). Worth testing on a future build.
+Gate 7 thresholds were widened to 9/14 dB with 4s silence margin to accommodate Fish's natural chunk-level swings under whole-file normalisation.
 
 ### Atempo
 
@@ -733,7 +731,7 @@ Sliding-window HF-to-total energy ratio on POST-CLEANUP audio. Evaluates non-spe
 **History:** Gate 6 originally ran on all audio including speech. This caused 100% build failure rates — every build flagged 4–11 regions of natural speech sibilants. HF shelf cut was tested across the full tuning range (−2 to −5 dB at 6–8 kHz) and failed. Removing the 3 kHz boost entirely produced identical flag counts, confirming the root cause was speech sibilants, not pipeline-induced noise. Speech-aware detection resolved the issue without threshold changes or pipeline modifications.
 
 ### Gate 7: Volume Surge/Drop
-Local-mean comparison with silence exclusion. 8/12 dB thresholds.
+Local-mean comparison with silence exclusion. 9/14 dB thresholds, 4s silence margin for transitions.
 
 **Low-baseline skip:** Skip detection when local mean energy is below −28 dB. This threshold represents ambient/silence regions, not speech. Flagging silence as "surges" is a false positive.
 
@@ -749,11 +747,11 @@ Expected-Repetitions: May I be, May you be, May they be, May all beings be
 ### Gate 9: Energy Spike Detection (Visual Report)
 Generates PNG with waveform, spectrogram, energy plot, and summary. Additionally performs per-window energy analysis (1–2 second windows) to detect anomalous spikes.
 
-**Pass condition:** No window exceeds 3× session median total energy AND no window exceeds 10× session median high-frequency energy (above 4 kHz, speech-only windows used as baseline).
+**Pass condition:** No window exceeds 12× session median total energy AND no window exceeds 28× session median high-frequency energy (above 4 kHz, speech-only windows used as baseline).
 
 **Fail condition:** Any window exceeds either threshold. Flagged timestamps and energy values included in the visual report PNG.
 
-**Calibration note:** The HF spike threshold was calibrated at 10× speech-only median (not the originally proposed 4× all-window median). Sibilance outliers in known-good sessions reach 4–8× the all-window median, which would cause false positives at 4×. Using speech-only windows as the baseline and a 10× threshold eliminates false positives while still catching catastrophic hiss walls.
+**Calibration note:** The HF spike threshold was recalibrated at 28× speech-only median and total energy at 12× (8 Feb 2026). No-ambient sessions have lower HF median, so sibilants appear as 16–25× spikes. Ambient sessions show sibilants at 4–8× and genuine hiss at 32–36×. The 28× HF threshold catches genuine hiss while passing sibilants in all session types. Fish per-chunk level swings can exceed 10 dB, requiring the generous 12× total energy threshold.
 
 **History:** Previously ran as informational-only with no pass/fail condition. Changed after the loving-kindness build deployed with a catastrophic hiss wall from 12:00 onwards that was clearly visible on the Gate 9 spectrogram but not evaluated programmatically.
 
@@ -837,7 +835,7 @@ These thresholds were calibrated against two known-good deployed sessions (25-in
 | Gate | Parameter | Brief estimate | Calibrated value | Evidence |
 |------|-----------|----------------|------------------|----------|
 | Gate 3 | HF sliding window | 10 dB | 18 dB | Natural speech HF up to 17 dB above reference |
-| Gate 9 | HF spike threshold | 4× all-window median | 10× speech-only median | Sibilance outliers at 4–8× all-window median |
+| Gate 9 | HF spike threshold | 4× all-window median | 28× speech-only median (HF), 12× total | No-ambient sibilants at 16–25×, genuine hiss at 32–36× |
 | Gate 13 | Dead silence | −55 dBFS | −80 dBFS | Quiet ambient at −72 to −77 dBFS |
 | Gate 13 | Ambient consistency | 6 dB | 10 dB | 8 dB range on known-good session |
 | Gate 14 | Loudness (opening) | 4 dB | 6 dB | 5.3 dB on known-good session |
@@ -1118,7 +1116,7 @@ python3 build-session-v3.py SESSION --no-cleanup
 | 03-breathing-for-anxiety | 19.3 min | Fish | Deployed, patched (68 clicks) |
 | 09-rainfall-sleep-journey | — | Fish | Deployed, patched (10 clicks) |
 | 25-introduction-to-mindfulness | 14.4 min | Fish | Deployed, patched (83 stitch points) |
-| 36-loving-kindness-intro | 12.9 min | Fish | Deployed (build 3, 0 click artifacts) |
+| 36-loving-kindness-intro | 10.5 min | Fish | Deployed (build 11, per-chunk QA, 14/14 gates) |
 | 38-seven-day-mindfulness-day1 | 11.6 min | Fish | Deployed, patched (8 clicks) |
 
 ---
@@ -1396,7 +1394,28 @@ Expanded from 10 gates to 14 gates. All gates now pass/fail — no informational
 
 ---
 
-*Last updated: 7 February 2026 — Bible v2.1: 14-gate QA system, speech-aware Gate 6, calibrated thresholds, V3-HD migration, governance expansion.*
+### 8 February 2026 — Pipeline & Website Updates (v2.2)
+
+**Audio pipeline:**
+- Per-chunk loudnorm replaced with whole-file loudnorm (preserves natural dynamics)
+- Highshelf boost (`highshelf=f=3000:g=3`) removed — caused perceived echo on certain words
+- Per-chunk QA system: generates 2 versions of each chunk, scores both via composite metric (spectral flux variance + contrast + flatness + HF ratio + tonal distance), keeps best
+- Tonal consistency: MFCC distance to previous chunk penalised at 50× weight
+- Flag threshold: 0.50 (OK avg=0.708, Echo avg=0.542, calibrated on 27 human-labeled chunks)
+- Gate 7 thresholds widened to 9/14 dB + 4s silence margin
+- Gate 9 thresholds recalibrated: HF 28× speech-only median, total 12×
+- Session 36-loving-kindness-intro rebuilt (build 11, 10.5 min, 14/14 gates)
+
+**Website:**
+- Navigation Row 2 now includes Applied Psychology
+- New page: `articles/anxiety-thinking.html` (first article detail page, `articles/` subdirectory)
+- Applied Psychology page: featured article link, "Updated Regularly" approach item
+- Mindfulness page restructured: session cards first, then 7-day + 21-day course banners
+- Home page: fixed white bands caused by old light-theme `style.css` overrides
+
+---
+
+*Last updated: 8 February 2026 — Bible v2.2: whole-file loudnorm, highshelf removed, per-chunk QA system, recalibrated Gate 7/9 thresholds, website restructuring.*
 
 ---
 
