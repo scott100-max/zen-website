@@ -13,9 +13,366 @@
   <meta property="og:image" content="https://salus-mind.com/images/meditation-woman-outdoor.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=1770053724">
   <style>
+    /* ═══════════════════════════════════════════
+       LEARN HERO — scoped under .learn-hero
+    ═══════════════════════════════════════════ */
+    .learn-hero {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #0a0804;
+    }
+
+    .learn-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 50% 50% at 50% 40%, rgba(251, 191, 36, 0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 70% 60% at 30% 60%, rgba(146, 64, 14, 0.04) 0%, transparent 50%),
+        radial-gradient(ellipse 40% 40% at 70% 30%, rgba(245, 158, 11, 0.03) 0%, transparent 50%),
+        linear-gradient(180deg, #0c0a05 0%, #110e08 30%, #0e0b06 65%, #0a0804 100%);
+      z-index: 0;
+    }
+
+    .learn-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.5;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Neural constellation canvas */
+    .lh-constellation {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    .lh-constellation canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Central radiance */
+    .lh-radiance {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .lh-radiance__core {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle,
+        rgba(251, 191, 36, 0.06) 0%,
+        rgba(245, 158, 11, 0.03) 40%,
+        transparent 65%);
+      filter: blur(50px);
+      animation: lhRadiancePulse 8s ease-in-out infinite;
+    }
+
+    @keyframes lhRadiancePulse {
+      0%, 100% { transform: scale(0.9); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 0.8; }
+    }
+
+    .lh-radiance__rays {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 500px;
+      height: 500px;
+    }
+
+    .lh-ray {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 1px;
+      height: 200px;
+      transform-origin: bottom center;
+      background: linear-gradient(to top, rgba(251, 191, 36, 0.06), transparent);
+      opacity: 0;
+      animation: lhRayPulse 6s ease-in-out infinite;
+    }
+
+    .lh-ray:nth-child(1) { transform: translate(-50%, -100%) rotate(0deg); animation-delay: 0s; }
+    .lh-ray:nth-child(2) { transform: translate(-50%, -100%) rotate(45deg); animation-delay: 0.8s; }
+    .lh-ray:nth-child(3) { transform: translate(-50%, -100%) rotate(90deg); animation-delay: 1.6s; }
+    .lh-ray:nth-child(4) { transform: translate(-50%, -100%) rotate(135deg); animation-delay: 2.4s; }
+    .lh-ray:nth-child(5) { transform: translate(-50%, -100%) rotate(180deg); animation-delay: 3.2s; }
+    .lh-ray:nth-child(6) { transform: translate(-50%, -100%) rotate(225deg); animation-delay: 4s; }
+    .lh-ray:nth-child(7) { transform: translate(-50%, -100%) rotate(270deg); animation-delay: 4.8s; }
+    .lh-ray:nth-child(8) { transform: translate(-50%, -100%) rotate(315deg); animation-delay: 5.6s; }
+
+    @keyframes lhRayPulse {
+      0%, 100% { opacity: 0; }
+      30%, 60% { opacity: 0.4; }
+    }
+
+    /* Content */
+    .lh-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 0 24px;
+      max-width: 780px;
+      opacity: 0;
+      transform: translateY(28px);
+      animation: lhRevealContent 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes lhRevealContent {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .lh-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 300;
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #fbbf24;
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: lhFadeUp 1s 0.5s ease-out forwards;
+    }
+
+    .lh-label::before,
+    .lh-label::after {
+      content: '';
+      width: 28px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #fbbf24, transparent);
+    }
+
+    @keyframes lhFadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .lh-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(3.4rem, 9vw, 7rem);
+      line-height: 1;
+      letter-spacing: -0.015em;
+      margin-bottom: 22px;
+      opacity: 0;
+      animation: lhFadeUp 1.4s 0.3s ease-out forwards;
+    }
+
+    .lh-title span {
+      background: linear-gradient(135deg, #faf5eb 15%, #fbbf24 55%, #f59e0b 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .lh-subtitle {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 200;
+      font-size: clamp(0.95rem, 2vw, 1.2rem);
+      line-height: 1.75;
+      color: rgba(250, 245, 235, 0.42);
+      max-width: 480px;
+      margin: 0 auto 32px;
+      opacity: 0;
+      animation: lhFadeUp 1.2s 0.7s ease-out forwards;
+    }
+
+    /* Topic pills */
+    .lh-topics {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+      opacity: 0;
+      animation: lhFadeUp 1s 0.9s ease-out forwards;
+    }
+
+    .lh-topic {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 300;
+      font-size: 0.68rem;
+      letter-spacing: 0.05em;
+      padding: 6px 14px;
+      border-radius: 40px;
+      border: 1px solid rgba(251, 191, 36, 0.1);
+      background: rgba(251, 191, 36, 0.03);
+      color: rgba(250, 245, 235, 0.42);
+      transition: all 0.35s ease;
+      cursor: default;
+    }
+
+    .lh-topic:hover {
+      border-color: rgba(251, 191, 36, 0.25);
+      background: rgba(251, 191, 36, 0.06);
+      color: rgba(250, 245, 235, 0.62);
+      transform: translateY(-1px);
+    }
+
+    .lh-topic__icon { font-size: 0.8rem; }
+
+    /* CTAs */
+    .lh-ctas {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: lhFadeUp 1s 1.1s ease-out forwards;
+    }
+
+    .lh-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 400;
+      font-size: 0.9rem;
+      letter-spacing: 0.06em;
+      padding: 14px 34px;
+      border-radius: 60px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .lh-cta--primary {
+      color: #faf5eb;
+      background: rgba(251, 191, 36, 0.12);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .lh-cta--primary:hover {
+      background: rgba(251, 191, 36, 0.22);
+      border-color: rgba(251, 191, 36, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px rgba(251, 191, 36, 0.12);
+    }
+
+    .lh-cta--secondary {
+      color: rgba(250, 245, 235, 0.62);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .lh-cta--secondary:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.18);
+      color: #faf5eb;
+      transform: translateY(-2px);
+    }
+
+    .lh-cta svg {
+      width: 16px;
+      height: 16px;
+      fill: #fbbf24;
+    }
+
+    /* Latin */
+    .lh-latin {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.22);
+      margin-top: 44px;
+      letter-spacing: 0.04em;
+      opacity: 0;
+      animation: lhFadeUp 1s 1.4s ease-out forwards;
+    }
+
+    /* Bottom fade */
+    .lh-fade {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 140px;
+      background: linear-gradient(to bottom, transparent, #f8f6f3);
+      z-index: 8;
+      pointer-events: none;
+    }
+
+    /* Scroll hint */
+    .lh-scroll {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      animation: lhFadeUp 1s 2s ease-out forwards;
+    }
+
+    .lh-scroll__text {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(250, 245, 235, 0.42);
+    }
+
+    .lh-scroll__line {
+      width: 1px;
+      height: 28px;
+      background: linear-gradient(to bottom, #fbbf24, transparent);
+      animation: lhScrollPulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes lhScrollPulse {
+      0%, 100% { opacity: 0.2; transform: scaleY(0.5); transform-origin: top; }
+      50% { opacity: 0.6; transform: scaleY(1); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .learn-hero { min-height: 100svh; }
+      .lh-radiance__core { width: 200px; height: 200px; }
+      .lh-radiance__rays { width: 350px; height: 350px; }
+      .lh-ray { height: 140px; }
+      .lh-topics { gap: 6px; }
+    }
+
+    @media (max-width: 480px) {
+      .lh-ctas { flex-direction: column; width: 100%; max-width: 280px; margin: 0 auto; }
+      .lh-cta { width: 100%; justify-content: center; }
+    }
+
     .article-grid {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;
     }
@@ -231,18 +588,68 @@
   </nav>
 
   <!-- Hero -->
-  <section style="position:relative;min-height:420px;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;">
-    <div style="position:absolute;inset:0;background:url('content/images/heroes/education-hero.jpg') center/cover no-repeat;"></div>
-    <div style="position:absolute;inset:0;background:linear-gradient(to bottom, rgba(27,67,50,0.5) 0%, rgba(40,80,60,0.4) 50%, rgba(200,200,190,0.6) 80%, #f8f6f3 100%);"></div>
-    <div class="container" style="position:relative;z-index:2;padding:100px 24px 60px;">
-      <h1 class="fade-in" style="font-family:'Cormorant Garamond',Georgia,serif;font-size:3.2rem;font-weight:700;color:#fff;margin-bottom:16px;text-shadow:0 2px 20px rgba(0,0,0,0.5);"><span style="color:#90e0b0;">Learn</span></h1>
-      <p class="fade-in" style="font-size:1.1rem;color:rgba(255,255,255,0.95);max-width:560px;margin:0 auto;text-shadow:0 1px 10px rgba(0,0,0,0.4);">Understand the science, build your practice, and discover practical techniques for a calmer mind.</p>
-      <p class="fade-in" style="font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(255,255,255,0.6);font-size:0.9rem;margin-top:20px;letter-spacing:1px;">Salūs — Latin: health, safety, well-being</p>
+  <section class="learn-hero">
+    <!-- Neural constellation -->
+    <div class="lh-constellation">
+      <canvas id="lhConstellationCanvas"></canvas>
+    </div>
+
+    <!-- Central radiance -->
+    <div class="lh-radiance">
+      <div class="lh-radiance__core"></div>
+      <div class="lh-radiance__rays">
+        <div class="lh-ray"></div>
+        <div class="lh-ray"></div>
+        <div class="lh-ray"></div>
+        <div class="lh-ray"></div>
+        <div class="lh-ray"></div>
+        <div class="lh-ray"></div>
+        <div class="lh-ray"></div>
+        <div class="lh-ray"></div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="lh-content">
+      <div class="lh-label">Knowledge Library</div>
+
+      <h1 class="lh-title"><span>Learn</span></h1>
+
+      <p class="lh-subtitle">
+        Understand the science behind the practice. Articles, guides, and insights to deepen your journey and inform your wellbeing.
+      </p>
+
+      <div class="lh-topics">
+        <span class="lh-topic"><span class="lh-topic__icon">🧠</span> Neuroscience</span>
+        <span class="lh-topic"><span class="lh-topic__icon">🫁</span> Breathwork</span>
+        <span class="lh-topic"><span class="lh-topic__icon">😴</span> Sleep Science</span>
+        <span class="lh-topic"><span class="lh-topic__icon">🧘</span> Mindfulness</span>
+        <span class="lh-topic"><span class="lh-topic__icon">💡</span> Beginners</span>
+      </div>
+
+      <div class="lh-ctas">
+        <a href="#articles" class="lh-cta lh-cta--primary">
+          <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+          Start Reading
+        </a>
+        <a href="sessions.html" class="lh-cta lh-cta--secondary">
+          Or Start Practising
+        </a>
+      </div>
+
+      <p class="lh-latin">Salūs — Latin: health, safety, well-being</p>
+    </div>
+
+    <div class="lh-fade"></div>
+
+    <div class="lh-scroll">
+      <span class="lh-scroll__text">Articles</span>
+      <span class="lh-scroll__line"></span>
     </div>
   </section>
 
   <!-- Category Filters -->
-  <section style="padding:0 0 20px;background:#f8f6f3;">
+  <section id="articles" style="padding:0 0 20px;background:#f8f6f3;">
     <div class="container">
       <div class="filter-bar" id="filterBar">
         <button class="filter-btn active" data-filter="all">All</button>
@@ -620,6 +1027,158 @@
       </div>
     </div>
   </footer>
+
+  <!-- Learn Hero: Neural Constellation -->
+  <script>
+    (function() {
+      var canvas = document.getElementById('lhConstellationCanvas');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var w, h, nodes = [], edges = [], pulses = [], time = 0;
+
+      var getDpr = function() { return window.devicePixelRatio || 1; };
+
+      function resize() {
+        var d = getDpr();
+        var rect = canvas.parentElement.getBoundingClientRect();
+        w = canvas.width = rect.width * d;
+        h = canvas.height = rect.height * d;
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+        ctx.setTransform(d, 0, 0, d, 0, 0);
+        createNetwork();
+      }
+
+      function createNetwork() {
+        var rw = w / getDpr();
+        var rh = h / getDpr();
+        nodes = [];
+        edges = [];
+        pulses = [];
+
+        var count = Math.min(Math.floor((rw * rh) / 18000), 50);
+
+        for (var i = 0; i < count; i++) {
+          nodes.push({
+            x: Math.random() * rw,
+            y: Math.random() * rh,
+            r: 1 + Math.random() * 2,
+            vx: (Math.random() - 0.5) * 0.15,
+            vy: (Math.random() - 0.5) * 0.15,
+            baseAlpha: 0.15 + Math.random() * 0.35,
+            twinkleSpeed: 0.01 + Math.random() * 0.03,
+            twinkleOffset: Math.random() * Math.PI * 2
+          });
+        }
+
+        var maxDist = Math.min(rw, rh) * 0.22;
+        for (var i = 0; i < nodes.length; i++) {
+          for (var j = i + 1; j < nodes.length; j++) {
+            var dx = nodes[i].x - nodes[j].x;
+            var dy = nodes[i].y - nodes[j].y;
+            var dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < maxDist) {
+              edges.push({ a: i, b: j, dist: dist });
+            }
+          }
+        }
+      }
+
+      function spawnPulse() {
+        if (edges.length === 0) return;
+        var edge = edges[Math.floor(Math.random() * edges.length)];
+        var forward = Math.random() > 0.5;
+        pulses.push({
+          edge: edge,
+          t: 0,
+          speed: 0.004 + Math.random() * 0.006,
+          forward: forward,
+          alpha: 0.5 + Math.random() * 0.4,
+          size: 1.5 + Math.random() * 1.5
+        });
+      }
+
+      function animate() {
+        var rw = w / getDpr();
+        var rh = h / getDpr();
+        ctx.clearRect(0, 0, rw, rh);
+
+        nodes.forEach(function(n) {
+          n.x += n.vx;
+          n.y += n.vy;
+          if (n.x < 0 || n.x > rw) n.vx *= -1;
+          if (n.y < 0 || n.y > rh) n.vy *= -1;
+        });
+
+        var maxDist = Math.min(rw, rh) * 0.22;
+        edges.forEach(function(e) {
+          var a = nodes[e.a];
+          var b = nodes[e.b];
+          var dx = a.x - b.x;
+          var dy = a.y - b.y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          var alpha = Math.max(0, (1 - dist / maxDist) * 0.08);
+
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.strokeStyle = 'rgba(251, 191, 36, ' + alpha + ')';
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        });
+
+        nodes.forEach(function(n) {
+          var twinkle = Math.sin(time * n.twinkleSpeed + n.twinkleOffset);
+          var alpha = n.baseAlpha + twinkle * 0.15;
+
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(251, 191, 36, ' + Math.max(0.05, alpha).toFixed(2) + ')';
+          ctx.fill();
+
+          if (n.r > 1.8 && alpha > 0.3) {
+            ctx.beginPath();
+            ctx.arc(n.x, n.y, n.r * 4, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(251, 191, 36, ' + (alpha * 0.06).toFixed(3) + ')';
+            ctx.fill();
+          }
+        });
+
+        if (Math.random() < 0.03) spawnPulse();
+
+        pulses = pulses.filter(function(p) {
+          p.t += p.speed;
+          if (p.t > 1) return false;
+
+          var a = nodes[p.edge.a];
+          var b = nodes[p.edge.b];
+          var t = p.forward ? p.t : 1 - p.t;
+          var x = a.x + (b.x - a.x) * t;
+          var y = a.y + (b.y - a.y) * t;
+          var fadeAlpha = p.alpha * Math.sin(p.t * Math.PI);
+
+          ctx.beginPath();
+          ctx.arc(x, y, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(251, 191, 36, ' + fadeAlpha.toFixed(2) + ')';
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(x, y, p.size * 5, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(251, 191, 36, ' + (fadeAlpha * 0.1).toFixed(3) + ')';
+          ctx.fill();
+
+          return true;
+        });
+
+        time++;
+        requestAnimationFrame(animate);
+      }
+
+      window.addEventListener('resize', resize);
+      resize();
+      animate();
+    })();
+  </script>
 
   <script src="js/main.js?v=1770053724"></script>
   <script src="js/tracker.js"></script>
