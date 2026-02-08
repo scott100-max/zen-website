@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASMR | Salus Mind</title>
+  <meta name="description" content="Immersive ASMR audio sessions designed to calm your mind, sharpen your focus, or carry you into sleep. Layered soundscapes from Salus Mind.">
+  <link rel="canonical" href="https://salus-mind.com/asmr">
+  <meta property="og:title" content="ASMR | Salus Mind">
+  <meta property="og:description" content="Immersive ASMR audio sessions designed to calm your mind, sharpen your focus, or carry you into sleep.">
+  <meta property="og:url" content="https://salus-mind.com/asmr">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://salus-mind.com/images/meditation-woman-outdoor.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=1770053724">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/auth.js"></script>
+  <style>
+  /* ═══════════════════════════════════════════
+     ASMR HERO
+  ═══════════════════════════════════════════ */
+  .hero {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* Mesh gradient background */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 40%, rgba(124, 108, 240, 0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 80% at 80% 30%, rgba(78, 205, 196, 0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 50% 80%, rgba(247, 160, 114, 0.08) 0%, transparent 50%),
+      linear-gradient(180deg, var(--ink) 0%, #0f0f20 40%, #0a0e1a 100%);
+    z-index: 0;
+  }
+
+  /* Grain overlay */
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.5;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  :root {
+    --deep: #0a0a12;
+    --ink: #0d0d1a;
+    --glow-primary: #7c6cf0;
+    --glow-secondary: #4ecdc4;
+    --glow-warm: #f7a072;
+    --text-bright: #f0eefc;
+    --text-muted: rgba(240, 238, 252, 0.55);
+  }
+
+  /* ═══════════════════════════════════════════
+     FLOATING ORBS (ambient light blobs)
+  ═══════════════════════════════════════════ */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0;
+    z-index: 1;
+    animation: orbFloat 12s ease-in-out infinite, orbFadeIn 2s ease-out forwards;
+  }
+
+  .orb--1 {
+    width: 400px; height: 400px;
+    background: var(--glow-primary);
+    top: 10%; left: -5%;
+    animation-delay: 0s;
+    opacity: 0.15;
+  }
+  .orb--2 {
+    width: 300px; height: 300px;
+    background: var(--glow-secondary);
+    top: 50%; right: -8%;
+    animation-delay: -4s;
+    opacity: 0.12;
+  }
+  .orb--3 {
+    width: 250px; height: 250px;
+    background: var(--glow-warm);
+    bottom: 5%; left: 30%;
+    animation-delay: -8s;
+    opacity: 0.08;
+  }
+
+  @keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -20px) scale(1.05); }
+    66% { transform: translate(-20px, 15px) scale(0.95); }
+  }
+
+  @keyframes orbFadeIn {
+    from { opacity: 0; }
+    to { opacity: var(--orb-opacity, 0.12); }
+  }
+
+  .orb--1 { --orb-opacity: 0.15; }
+  .orb--2 { --orb-opacity: 0.12; }
+  .orb--3 { --orb-opacity: 0.08; }
+
+  /* ═══════════════════════════════════════════
+     SOUND WAVE VISUALISER
+  ═══════════════════════════════════════════ */
+  .wave-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 260px;
+    z-index: 2;
+    pointer-events: none;
+    mask-image: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+  }
+
+  .wave-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* ═══════════════════════════════════════════
+     PARTICLE FIELD (tingles)
+  ═══════════════════════════════════════════ */
+  .particles {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--glow-primary);
+    opacity: 0;
+    animation: particleDrift linear infinite;
+  }
+
+  @keyframes particleDrift {
+    0% { opacity: 0; transform: translateY(0) scale(0.5); }
+    15% { opacity: 0.8; }
+    85% { opacity: 0.6; }
+    100% { opacity: 0; transform: translateY(-120px) scale(0); }
+  }
+
+  /* ═══════════════════════════════════════════
+     CONTENT
+  ═══════════════════════════════════════════ */
+  .hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 0 24px;
+    max-width: 800px;
+    animation: contentReveal 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  @keyframes contentReveal {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    font-size: 0.8rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--glow-secondary);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: labelReveal 1s 0.4s ease-out forwards;
+  }
+
+  @keyframes labelReveal {
+    to { opacity: 1; }
+  }
+
+  .hero-label::before,
+  .hero-label::after {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--glow-secondary), transparent);
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(3.8rem, 10vw, 8rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--text-bright);
+    margin-bottom: 24px;
+    text-shadow: 0 0 80px rgba(124, 108, 240, 0.25);
+  }
+
+  .hero-title span {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--text-bright) 30%, var(--glow-secondary) 70%, var(--glow-primary) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-subtitle {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 200;
+    font-size: clamp(1rem, 2.2vw, 1.3rem);
+    line-height: 1.7;
+    color: var(--text-muted);
+    max-width: 520px;
+    margin: 0 auto 36px;
+    opacity: 0;
+    animation: subtitleReveal 1.2s 0.6s ease-out forwards;
+  }
+
+  @keyframes subtitleReveal {
+    to { opacity: 1; }
+  }
+
+  /* Tingle indicator */
+  .tingle-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: subtitleReveal 1s 0.8s ease-out forwards;
+  }
+
+  .tingle-bar__dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--glow-primary);
+    animation: tinglePulse 2.4s ease-in-out infinite;
+  }
+
+  .tingle-bar__dot:nth-child(2) { animation-delay: 0.15s; background: var(--glow-secondary); }
+  .tingle-bar__dot:nth-child(3) { animation-delay: 0.3s; }
+  .tingle-bar__dot:nth-child(4) { animation-delay: 0.45s; background: var(--glow-secondary); }
+  .tingle-bar__dot:nth-child(5) { animation-delay: 0.6s; }
+
+  @keyframes tinglePulse {
+    0%, 100% { transform: scale(1); opacity: 0.4; }
+    50% { transform: scale(2.2); opacity: 1; }
+  }
+
+  /* CTA Button */
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    color: var(--text-bright);
+    background: rgba(124, 108, 240, 0.12);
+    border: 1px solid rgba(124, 108, 240, 0.3);
+    padding: 14px 36px;
+    border-radius: 60px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    opacity: 0;
+    animation: subtitleReveal 1s 1s ease-out forwards;
+  }
+
+  .hero-cta:hover {
+    background: rgba(124, 108, 240, 0.25);
+    border-color: rgba(124, 108, 240, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 40px rgba(124, 108, 240, 0.2);
+  }
+
+  .hero-cta svg {
+    width: 18px;
+    height: 18px;
+    fill: var(--glow-secondary);
+    transition: transform 0.3s ease;
+  }
+
+  .hero-cta:hover svg {
+    transform: scale(1.15);
+  }
+
+  /* Latin phrase */
+  .latin-phrase {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.35);
+    margin-top: 48px;
+    letter-spacing: 0.05em;
+    opacity: 0;
+    animation: subtitleReveal 1s 1.2s ease-out forwards;
+  }
+
+  /* ═══════════════════════════════════════════
+     SCROLL INDICATOR
+  ═══════════════════════════════════════════ */
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: subtitleReveal 1s 1.8s ease-out forwards;
+  }
+
+  .scroll-hint__text {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .scroll-hint__line {
+    width: 1px;
+    height: 32px;
+    background: linear-gradient(to bottom, var(--glow-primary), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(0.6); transform-origin: top; }
+    50% { opacity: 0.8; transform: scaleY(1); }
+  }
+
+  /* ═══════════════════════════════════════════
+     RESPONSIVE
+  ═══════════════════════════════════════════ */
+  @media (max-width: 768px) {
+    .hero { min-height: 100svh; }
+    .orb { filter: blur(60px); }
+    .orb--1 { width: 250px; height: 250px; }
+    .orb--2 { width: 200px; height: 200px; }
+    .orb--3 { width: 180px; height: 180px; }
+    .wave-container { height: 160px; }
+    .hero-subtitle { max-width: 90%; }
+  }
+
+  /* ═══════════════ NAVIGATION ═══════════════ */
+  .nav-wrap{position:fixed;top:0;left:0;right:0;z-index:1000;transition:background .4s ease,box-shadow .4s ease;background:rgba(6,8,16,0.5);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+  .nav-wrap.scrolled{background:rgba(6,8,16,0.92);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);box-shadow:0 1px 0 rgba(255,255,255,0.06),0 12px 40px rgba(0,0,0,0.3)}
+  .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px}
+  .nav-row-1{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .nav-brand{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.5rem;letter-spacing:.12em;text-decoration:none;color:#f0eefc;transition:opacity .3s ease;flex-shrink:0}
+  .nav-brand:hover{opacity:.8}
+  .nav-primary{display:flex;align-items:center;gap:4px;list-style:none}
+  .nav-primary a{font-weight:300;font-size:.82rem;letter-spacing:.02em;color:rgba(240,238,252,0.6);text-decoration:none;padding:6px 13px;border-radius:8px;transition:all .3s ease;position:relative;white-space:nowrap}
+  .nav-primary a:hover{color:#f0eefc;background:rgba(255,255,255,0.04)}
+  .nav-primary a.active{color:#f0eefc;background:rgba(255,255,255,0.06)}
+  .nav-primary a.active::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:16px;height:2px;border-radius:1px;background:#4ecdc4;opacity:.7}
+  .nav-ctas{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  .nav-cta{font-family:'Outfit',sans-serif;font-weight:400;font-size:.78rem;letter-spacing:.04em;padding:7px 18px;border-radius:40px;cursor:pointer;text-decoration:none;transition:all .35s cubic-bezier(.22,1,.36,1);white-space:nowrap}
+  .nav-cta--subscribe{color:#060810;background:#4ecdc4;border:1px solid #4ecdc4}
+  .nav-cta--subscribe:hover{background:#5ed8d0;transform:translateY(-1px);box-shadow:0 4px 16px rgba(78,205,196,0.25)}
+  .nav-cta--login{color:rgba(240,238,252,0.6);background:transparent;border:1px solid rgba(255,255,255,0.1)}
+  .nav-cta--login:hover{color:#f0eefc;border-color:rgba(255,255,255,0.22);background:rgba(255,255,255,0.04)}
+  .nav-row-2{display:flex;align-items:center;justify-content:center;gap:32px;height:34px;border-top:1px solid rgba(255,255,255,0.06);transition:height .4s ease,opacity .3s ease,border-top-color .3s ease;overflow:hidden}
+  .nav-wrap.scrolled .nav-row-2{height:0;opacity:0;border-top-color:transparent}
+  .nav-row-2 a{font-weight:300;font-size:.72rem;letter-spacing:.03em;color:rgba(240,238,252,0.4);text-decoration:none;transition:color .3s ease;white-space:nowrap}
+  .nav-row-2 a:hover{color:rgba(240,238,252,0.6)}
+  .nav-burger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;transition:background .3s ease}
+  .nav-burger:hover{background:rgba(255,255,255,0.04)}
+  .nav-burger span{display:block;width:100%;height:1.5px;background:rgba(240,238,252,0.6);border-radius:1px;transition:all .3s ease;transform-origin:center}
+  .nav-burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+  .nav-burger.open span:nth-child(2){opacity:0}
+  .nav-burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+  .nav-drawer{display:none;position:fixed;top:56px;left:0;right:0;bottom:0;background:rgba(6,8,16,0.95);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);z-index:999;flex-direction:column;padding:32px 28px 40px;overflow-y:auto;opacity:0;transform:translateY(-8px);transition:opacity .3s ease,transform .3s ease}
+  .nav-drawer.open{display:flex;opacity:1;transform:translateY(0)}
+  .nav-drawer__section-label{font-weight:300;font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(240,238,252,0.4);margin-bottom:14px;margin-top:24px}
+  .nav-drawer__section-label:first-child{margin-top:0}
+  .nav-drawer__link{display:flex;align-items:center;gap:12px;font-weight:300;font-size:1.05rem;color:rgba(240,238,252,0.6);text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);transition:color .3s ease}
+  .nav-drawer__link:hover{color:#f0eefc}
+  .nav-drawer__link-dot{width:5px;height:5px;border-radius:50%;background:#4ecdc4;opacity:.5}
+  .nav-drawer__ctas{display:flex;gap:10px;margin-top:32px}
+  .nav-drawer__ctas .nav-cta{flex:1;text-align:center;padding:12px 20px;font-size:.88rem}
+  @media(max-width:860px){.nav-primary,.nav-row-2,.nav-ctas{display:none}.nav-burger{display:flex}.nav-row-1{height:56px}}
+
+  /* ═══════════════════════════════════════════
+     COMING SOON SECTION
+  ═══════════════════════════════════════════ */
+  .asmr-coming-soon {
+    padding: 80px 0 100px;
+    background: linear-gradient(180deg, var(--deep) 0%, #0f0f20 100%);
+    text-align: center;
+  }
+  .asmr-coming-soon h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    color: var(--text-bright);
+    margin-bottom: 16px;
+  }
+  .asmr-coming-soon p {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 200;
+    font-size: 1rem;
+    color: var(--text-muted);
+    max-width: 480px;
+    margin: 0 auto 32px;
+    line-height: 1.7;
+  }
+  .asmr-coming-soon .cta-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: var(--glow-secondary);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: opacity 0.3s ease;
+  }
+  .asmr-coming-soon .cta-link:hover {
+    opacity: 0.7;
+  }
+  </style>
+</head>
+<body>
+<!-- ═══════════════ NAVIGATION ═══════════════ -->
+<nav class="nav-wrap" id="navWrap">
+  <div class="nav-inner">
+    <div class="nav-row-1">
+      <a href="index.html" class="nav-brand">SALUS</a>
+      <ul class="nav-primary">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="sessions.html">Meditations</a></li>
+        <li><a href="mindfulness.html">Mindfulness</a></li>
+        <li><a href="asmr.html" class="active">ASMR</a></li>
+        <li><a href="sleep-stories.html">Sleep Stories</a></li>
+        <li><a href="education.html">Learn</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <div class="nav-ctas">
+        <a href="apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+        <a href="#" class="nav-cta nav-cta--login">Log In</a>
+      </div>
+      <button class="nav-burger" id="burgerBtn" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav-row-2">
+      <a href="tools.html">Tools</a>
+      <a href="reading.html">Reading</a>
+      <a href="applied-psychology.html">Applied Psychology</a>
+      <a href="newsletter.html">Newsletter</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+</nav>
+<div class="nav-drawer" id="navDrawer">
+  <div class="nav-drawer__section-label">Main</div>
+  <a href="index.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Home</a>
+  <a href="sessions.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Meditations</a>
+  <a href="mindfulness.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Mindfulness</a>
+  <a href="asmr.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>ASMR</a>
+  <a href="sleep-stories.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Sleep Stories</a>
+  <a href="education.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Learn</a>
+  <a href="about.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>About</a>
+  <div class="nav-drawer__section-label">More</div>
+  <a href="tools.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Tools</a>
+  <a href="reading.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Reading</a>
+  <a href="applied-psychology.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Applied Psychology</a>
+  <a href="newsletter.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Newsletter</a>
+  <a href="contact.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Contact</a>
+  <div class="nav-drawer__ctas">
+    <a href="apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+    <a href="#" class="nav-cta nav-cta--login">Log In</a>
+  </div>
+</div>
+
+
+<section class="hero">
+  <!-- Ambient light orbs -->
+  <div class="orb orb--1"></div>
+  <div class="orb orb--2"></div>
+  <div class="orb orb--3"></div>
+
+  <!-- Floating particles -->
+  <div class="particles" id="particles"></div>
+
+  <!-- Sound wave visualiser -->
+  <div class="wave-container">
+    <canvas class="wave-canvas" id="waveCanvas"></canvas>
+  </div>
+
+  <!-- Main content -->
+  <div class="hero-content">
+    <div class="hero-label">Immersive Audio</div>
+
+    <h1 class="hero-title"><span>ASMR</span></h1>
+
+    <p class="hero-subtitle">
+      Feel the tingles. Layered soundscapes that wrap around you — designed to calm your mind, sharpen your focus, or carry you into sleep.
+    </p>
+
+    <div class="tingle-bar">
+      <span class="tingle-bar__dot"></span>
+      <span class="tingle-bar__dot"></span>
+      <span class="tingle-bar__dot"></span>
+      <span class="tingle-bar__dot"></span>
+      <span class="tingle-bar__dot"></span>
+    </div>
+
+    <a href="#explore" class="hero-cta">
+      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      Start Listening
+    </a>
+
+    <p class="latin-phrase">Salus — Latin: health, safety, well-being</p>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="scroll-hint">
+    <span class="scroll-hint__text">Explore</span>
+    <span class="scroll-hint__line"></span>
+  </div>
+</section>
+
+<!-- Coming Soon -->
+<section id="explore" class="asmr-coming-soon">
+  <h2>ASMR Sessions Coming Soon</h2>
+  <p>We are crafting immersive audio experiences designed to trigger deep relaxation. Check back soon, or explore our guided meditations in the meantime.</p>
+  <a href="sessions.html" class="cta-link">Explore Meditations &rarr;</a>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4 style="letter-spacing:2px;">SALUS</h4>
+        <p>SLEEP &middot; RELAX &middot; RESTORE</p>
+        <p style="margin-top:8px;">Meditation and mindfulness for everyday life.</p>
+      </div>
+      <div>
+        <h4>Pages</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="sessions.html">Guided Meditations</a></li>
+          <li><a href="asmr.html">ASMR</a></li>
+          <li><a href="sleep-stories.html">Sleep Stories</a></li>
+          <li><a href="education.html">Learn</a></li>
+          <li><a href="mindfulness.html">Mindfulness</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+          <li><a href="terms.html">Terms</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Tools</h4>
+        <ul>
+          <li><a href="breathe.html">Breathing Timer</a></li>
+          <li><a href="timer.html">Meditation Timer</a></li>
+          <li><a href="sounds.html">ASMR</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <a href="#" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to Top</a>
+      &copy; 2026 Salus. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ═══════════════════════════════════════════
+  // PARTICLE SYSTEM
+  // ═══════════════════════════════════════════
+  (function() {
+    const container = document.getElementById('particles');
+    const colours = ['#7c6cf0', '#4ecdc4', '#f7a072', '#a78bfa', '#34d399'];
+    const count = 35;
+
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('div');
+      p.classList.add('particle');
+      p.style.left = Math.random() * 100 + '%';
+      p.style.top = (40 + Math.random() * 55) + '%';
+      p.style.background = colours[Math.floor(Math.random() * colours.length)];
+      p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
+      p.style.animationDuration = (4 + Math.random() * 6) + 's';
+      p.style.animationDelay = (Math.random() * 8) + 's';
+      container.appendChild(p);
+    }
+  })();
+
+  // ═══════════════════════════════════════════
+  // WAVE VISUALISER (canvas)
+  // ═══════════════════════════════════════════
+  (function() {
+    const canvas = document.getElementById('waveCanvas');
+    const ctx = canvas.getContext('2d');
+    let w, h, time = 0;
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      w = canvas.width = rect.width * dpr;
+      h = canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    const waves = [
+      { amp: 18, freq: 0.008, speed: 0.015, colour: 'rgba(124, 108, 240, 0.25)', phase: 0 },
+      { amp: 14, freq: 0.012, speed: 0.02,  colour: 'rgba(78, 205, 196, 0.18)',  phase: 2 },
+      { amp: 10, freq: 0.006, speed: 0.01,  colour: 'rgba(247, 160, 114, 0.12)', phase: 4 },
+      { amp: 22, freq: 0.01,  speed: 0.018, colour: 'rgba(167, 139, 250, 0.15)', phase: 1 },
+      { amp: 8,  freq: 0.015, speed: 0.025, colour: 'rgba(52, 211, 153, 0.10)',  phase: 3 },
+    ];
+
+    function drawWave(wave) {
+      const rw = w / (window.devicePixelRatio || 1);
+      const rh = h / (window.devicePixelRatio || 1);
+      const baseY = rh * 0.5;
+
+      ctx.beginPath();
+      ctx.moveTo(0, rh);
+
+      for (let x = 0; x <= rw; x += 2) {
+        const y = baseY +
+          Math.sin(x * wave.freq + time * wave.speed + wave.phase) * wave.amp +
+          Math.sin(x * wave.freq * 0.5 + time * wave.speed * 1.3 + wave.phase * 0.7) * (wave.amp * 0.5);
+        ctx.lineTo(x, y);
+      }
+
+      ctx.lineTo(rw, rh);
+      ctx.closePath();
+      ctx.fillStyle = wave.colour;
+      ctx.fill();
+    }
+
+    function animate() {
+      const rw = w / (window.devicePixelRatio || 1);
+      const rh = h / (window.devicePixelRatio || 1);
+      ctx.clearRect(0, 0, rw, rh);
+
+      waves.forEach(drawWave);
+      time++;
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  })();
+
+
+  // Navigation
+  const navWrap=document.getElementById("navWrap");
+  window.addEventListener("scroll",()=>{navWrap.classList.toggle("scrolled",window.scrollY>30)},{passive:true});
+  const burger=document.getElementById("burgerBtn");
+  const drawer=document.getElementById("navDrawer");
+  burger.addEventListener("click",()=>{burger.classList.toggle("open");drawer.classList.toggle("open");document.body.style.overflow=drawer.classList.contains("open")?"hidden":""});
+  drawer.querySelectorAll(".nav-drawer__link").forEach(l=>{l.addEventListener("click",()=>{burger.classList.remove("open");drawer.classList.remove("open");document.body.style.overflow=""})});
+
+</script>
+
+<script src="js/main.js?v=1770053724"></script>
+<script src="js/tracker.js"></script>
+</body>
+</html>

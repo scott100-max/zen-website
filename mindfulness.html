@@ -16,373 +16,517 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=1770053724">
   <style>
-    /* ═══════════════════════════════════════════
-       MINDFULNESS HERO
-    ═══════════════════════════════════════════ */
-    .mindfulness-hero {
-      position: relative;
-      width: 100%;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-    .mindfulness-hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 70% 70% at 50% 45%, rgba(14, 165, 162, 0.08) 0%, transparent 60%),
-        radial-gradient(ellipse 90% 50% at 30% 70%, rgba(99, 102, 241, 0.06) 0%, transparent 50%),
-        radial-gradient(ellipse 60% 60% at 70% 20%, rgba(29, 143, 181, 0.05) 0%, transparent 50%),
-        linear-gradient(180deg, #060d15 0%, #0a1220 35%, #080e18 70%, #060b12 100%);
-      z-index: 0;
-    }
-    .mindfulness-hero::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-      opacity: 0.5;
-      z-index: 1;
-      pointer-events: none;
-    }
-    .mindfulness-hero .breath-ring-container {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 2;
-      width: 500px;
-      height: 500px;
-      pointer-events: none;
-    }
-    .mindfulness-hero .breath-ring {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-    }
-    .mindfulness-hero .breath-ring--core {
-      width: 180px;
-      height: 180px;
-      background: radial-gradient(circle, rgba(14, 165, 162, 0.2) 0%, rgba(14, 165, 162, 0.05) 50%, transparent 70%);
-      animation: mhBreathe 8s ease-in-out infinite;
-    }
-    .mindfulness-hero .breath-ring--1 {
-      width: 200px;
-      height: 200px;
-      border: 1px solid rgba(14, 165, 162, 0.25);
-      animation: mhBreathe 8s ease-in-out infinite;
-      box-shadow: 0 0 30px rgba(14, 165, 162, 0.08), inset 0 0 30px rgba(14, 165, 162, 0.05);
-    }
-    .mindfulness-hero .breath-ring--2 {
-      width: 280px;
-      height: 280px;
-      border: 1px solid rgba(29, 143, 181, 0.15);
-      animation: mhBreathe 8s ease-in-out infinite 0.3s;
-      box-shadow: 0 0 40px rgba(29, 143, 181, 0.04);
-    }
-    .mindfulness-hero .breath-ring--3 {
-      width: 380px;
-      height: 380px;
-      border: 1px solid rgba(99, 102, 241, 0.08);
-      animation: mhBreathe 8s ease-in-out infinite 0.6s;
-    }
-    .mindfulness-hero .breath-ring--4 {
-      width: 480px;
-      height: 480px;
-      border: 1px solid rgba(99, 102, 241, 0.04);
-      animation: mhBreathe 8s ease-in-out infinite 0.9s;
-    }
-    @keyframes mhBreathe {
-      0%, 100% { transform: translate(-50%, -50%) scale(0.88); opacity: 0.6; }
-      40% { transform: translate(-50%, -50%) scale(1.12); opacity: 1; }
-      60% { transform: translate(-50%, -50%) scale(1.12); opacity: 1; }
-    }
-    .mindfulness-hero .ripple-field {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 1;
-      pointer-events: none;
-      width: 800px;
-      height: 800px;
-    }
-    .mindfulness-hero .ripple {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      border: 1px solid rgba(14, 165, 162, 0.3);
-      transform: translate(-50%, -50%) scale(1);
-      opacity: 0;
-      animation: mhRippleOut 8s ease-out infinite;
-    }
-    .mindfulness-hero .ripple:nth-child(2) { animation-delay: 2s; border-color: rgba(29, 143, 181, 0.2); }
-    .mindfulness-hero .ripple:nth-child(3) { animation-delay: 4s; border-color: rgba(99, 102, 241, 0.15); }
-    .mindfulness-hero .ripple:nth-child(4) { animation-delay: 6s; border-color: rgba(14, 165, 162, 0.18); }
-    @keyframes mhRippleOut {
-      0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
-      100% { transform: translate(-50%, -50%) scale(13); opacity: 0; }
-    }
-    .mindfulness-hero .motes {
-      position: absolute;
-      inset: 0;
-      z-index: 3;
-      pointer-events: none;
-    }
-    .mindfulness-hero .mote {
-      position: absolute;
-      border-radius: 50%;
-      opacity: 0;
-      animation: mhMoteFloat linear infinite;
-    }
-    @keyframes mhMoteFloat {
-      0% { opacity: 0; transform: translate(0, 0) scale(0.3); }
-      20% { opacity: 0.7; }
-      80% { opacity: 0.5; }
-      100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0); }
-    }
-    .mindfulness-hero .breath-guide {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 4;
-      pointer-events: none;
-      text-align: center;
-    }
-    .mindfulness-hero .breath-guide__text {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 200;
-      font-size: 0.75rem;
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      color: #0ea5a2;
-      opacity: 0;
-    }
-    .mindfulness-hero .breath-guide__in,
-    .mindfulness-hero .breath-guide__out {
-      opacity: 0;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      white-space: nowrap;
-    }
-    .mindfulness-hero .breath-guide__in {
-      animation: mhBreathIn 8s ease-in-out infinite;
-    }
-    .mindfulness-hero .breath-guide__out {
-      animation: mhBreathOut 8s ease-in-out infinite;
-    }
-    @keyframes mhBreathIn {
-      0%, 2% { opacity: 0; }
-      8%, 35% { opacity: 0.6; }
-      42%, 100% { opacity: 0; }
-    }
-    @keyframes mhBreathOut {
-      0%, 52% { opacity: 0; }
-      58%, 88% { opacity: 0.6; }
-      95%, 100% { opacity: 0; }
-    }
-    .mindfulness-hero .mh-content {
-      position: relative;
-      z-index: 10;
-      text-align: center;
-      padding: 0 24px;
-      max-width: 780px;
-      margin-top: -40px;
-      animation: mhContentReveal 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-      opacity: 0;
-      transform: translateY(28px);
-    }
-    @keyframes mhContentReveal {
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .mindfulness-hero .mh-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-family: 'Outfit', sans-serif;
-      font-weight: 300;
-      font-size: 0.75rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: #0ea5a2;
-      margin-bottom: 24px;
-      opacity: 0;
-      animation: mhFadeUp 1s 0.5s ease-out forwards;
-    }
-    .mindfulness-hero .mh-label::before,
-    .mindfulness-hero .mh-label::after {
-      content: '';
-      width: 28px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, #0ea5a2, transparent);
-    }
-    @keyframes mhFadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .mindfulness-hero .mh-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 300;
-      font-size: clamp(3.2rem, 9vw, 7rem);
-      line-height: 1;
-      letter-spacing: -0.015em;
-      color: #edf5f5;
-      margin-bottom: 22px;
-      opacity: 0;
-      animation: mhFadeUp 1.2s 0.3s ease-out forwards;
-    }
-    .mindfulness-hero .mh-title span {
-      display: inline-block;
-      background: linear-gradient(135deg, #edf5f5 20%, #0ea5a2 60%, #1d8fb5 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .mindfulness-hero .mh-subtitle {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 200;
-      font-size: clamp(0.95rem, 2vw, 1.2rem);
-      line-height: 1.75;
-      color: rgba(237, 245, 245, 0.5);
-      max-width: 480px;
-      margin: 0 auto 40px;
-      opacity: 0;
-      animation: mhFadeUp 1.2s 0.7s ease-out forwards;
-    }
-    .mindfulness-hero .mh-ctas {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      opacity: 0;
-      animation: mhFadeUp 1s 1s ease-out forwards;
-    }
-    .mindfulness-hero .mh-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-family: 'Outfit', sans-serif;
-      font-weight: 400;
-      font-size: 0.9rem;
-      letter-spacing: 0.06em;
-      color: #edf5f5;
-      padding: 13px 32px;
-      border-radius: 60px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-    }
-    .mindfulness-hero .mh-cta--primary {
-      background: rgba(14, 165, 162, 0.15);
-      border: 1px solid rgba(14, 165, 162, 0.35);
-    }
-    .mindfulness-hero .mh-cta--primary:hover {
-      background: rgba(14, 165, 162, 0.28);
-      border-color: rgba(14, 165, 162, 0.6);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 40px rgba(14, 165, 162, 0.15);
-    }
-    .mindfulness-hero .mh-cta--secondary {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: rgba(237, 245, 245, 0.5);
-    }
-    .mindfulness-hero .mh-cta--secondary:hover {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(255, 255, 255, 0.25);
-      color: #edf5f5;
-      transform: translateY(-2px);
-    }
-    .mindfulness-hero .mh-cta svg {
-      width: 16px;
-      height: 16px;
-      fill: currentColor;
-      transition: transform 0.3s ease;
-    }
-    .mindfulness-hero .mh-cta:hover svg {
-      transform: scale(1.15);
-    }
-    .mindfulness-hero .mh-latin {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-weight: 300;
-      font-size: 0.88rem;
-      color: rgba(255, 255, 255, 0.3);
-      margin-top: 44px;
-      letter-spacing: 0.04em;
-      opacity: 0;
-      animation: mhFadeUp 1s 1.3s ease-out forwards;
-    }
-    .mindfulness-hero .mh-fade {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 120px;
-      background: linear-gradient(to bottom, transparent, #060b12);
-      z-index: 8;
-      pointer-events: none;
-    }
-    .mindfulness-hero .mh-scroll {
-      position: absolute;
-      bottom: 28px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      opacity: 0;
-      animation: mhFadeUp 1s 2s ease-out forwards;
-    }
-    .mindfulness-hero .mh-scroll__text {
-      font-family: 'Outfit', sans-serif;
-      font-size: 0.62rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: rgba(237, 245, 245, 0.5);
-    }
-    .mindfulness-hero .mh-scroll__line {
-      width: 1px;
-      height: 28px;
-      background: linear-gradient(to bottom, #0ea5a2, transparent);
-      animation: mhScrollPulse 2.5s ease-in-out infinite;
-    }
-    @keyframes mhScrollPulse {
-      0%, 100% { opacity: 0.25; transform: scaleY(0.5); transform-origin: top; }
-      50% { opacity: 0.7; transform: scaleY(1); }
-    }
-    @media (max-width: 768px) {
-      .mindfulness-hero { min-height: 100svh; }
-      .mindfulness-hero .breath-ring-container { width: 340px; height: 340px; }
-      .mindfulness-hero .breath-ring--3 { width: 260px; height: 260px; }
-      .mindfulness-hero .breath-ring--4 { width: 330px; height: 330px; }
-      .mindfulness-hero .ripple-field { width: 500px; height: 500px; }
-      .mindfulness-hero .mh-content { margin-top: -20px; }
-      .mindfulness-hero .mh-ctas { gap: 12px; }
-    }
-    @media (max-width: 480px) {
-      .mindfulness-hero .breath-ring-container { width: 280px; height: 280px; }
-      .mindfulness-hero .breath-ring--2 { width: 200px; height: 200px; }
-      .mindfulness-hero .breath-ring--3 { width: 220px; height: 220px; }
-      .mindfulness-hero .breath-ring--4 { width: 270px; height: 270px; }
-      .mindfulness-hero .mh-ctas { flex-direction: column; }
-    }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --deep: #060b12;
+    --ink: #0a1018;
+    --glow-core: #0ea5a2;
+    --glow-mid: #1d8fb5;
+    --glow-outer: #6366f1;
+    --glow-warm: #d4a574;
+    --text-bright: #edf5f5;
+    --text-muted: rgba(237, 245, 245, 0.5);
+    --breath-duration: 8s;
+  }
+
+  /* ═══════════════════════════════════════════
+     HERO SECTION
+  ═══════════════════════════════════════════ */
+  .hero {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* Deep gradient base */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 70% at 50% 45%, rgba(14, 165, 162, 0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 90% 50% at 30% 70%, rgba(99, 102, 241, 0.06) 0%, transparent 50%),
+      radial-gradient(ellipse 60% 60% at 70% 20%, rgba(29, 143, 181, 0.05) 0%, transparent 50%),
+      linear-gradient(180deg, #060d15 0%, #0a1220 35%, #080e18 70%, #060b12 100%);
+    z-index: 0;
+  }
+
+  /* Subtle grain */
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    opacity: 0.5;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* ═══════════════════════════════════════════
+     BREATHING RING — the centrepiece
+  ═══════════════════════════════════════════ */
+  .breath-ring-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    width: 500px;
+    height: 500px;
+    pointer-events: none;
+  }
+
+  .breath-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Core glow — the "breath" */
+  .breath-ring--core {
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(14, 165, 162, 0.2) 0%, rgba(14, 165, 162, 0.05) 50%, transparent 70%);
+    animation: breathe var(--breath-duration) ease-in-out infinite;
+  }
+
+  /* Ring 1 — inner */
+  .breath-ring--1 {
+    width: 200px;
+    height: 200px;
+    border: 1px solid rgba(14, 165, 162, 0.25);
+    animation: breathe var(--breath-duration) ease-in-out infinite;
+    box-shadow: 0 0 30px rgba(14, 165, 162, 0.08), inset 0 0 30px rgba(14, 165, 162, 0.05);
+  }
+
+  /* Ring 2 — middle */
+  .breath-ring--2 {
+    width: 280px;
+    height: 280px;
+    border: 1px solid rgba(29, 143, 181, 0.15);
+    animation: breathe var(--breath-duration) ease-in-out infinite 0.3s;
+    box-shadow: 0 0 40px rgba(29, 143, 181, 0.04);
+  }
+
+  /* Ring 3 — outer */
+  .breath-ring--3 {
+    width: 380px;
+    height: 380px;
+    border: 1px solid rgba(99, 102, 241, 0.08);
+    animation: breathe var(--breath-duration) ease-in-out infinite 0.6s;
+  }
+
+  /* Ring 4 — outermost whisper */
+  .breath-ring--4 {
+    width: 480px;
+    height: 480px;
+    border: 1px solid rgba(99, 102, 241, 0.04);
+    animation: breathe var(--breath-duration) ease-in-out infinite 0.9s;
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: translate(-50%, -50%) scale(0.88); opacity: 0.6; }
+    40% { transform: translate(-50%, -50%) scale(1.12); opacity: 1; }
+    60% { transform: translate(-50%, -50%) scale(1.12); opacity: 1; }
+  }
+
+  /* ═══════════════════════════════════════════
+     RIPPLE BURSTS (periodic outward ripples)
+  ═══════════════════════════════════════════ */
+  .ripple-field {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    pointer-events: none;
+    width: 800px;
+    height: 800px;
+  }
+
+  .ripple {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 1px solid rgba(14, 165, 162, 0.3);
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+    animation: rippleOut 8s ease-out infinite;
+  }
+
+  .ripple:nth-child(2) { animation-delay: 2s; border-color: rgba(29, 143, 181, 0.2); }
+  .ripple:nth-child(3) { animation-delay: 4s; border-color: rgba(99, 102, 241, 0.15); }
+  .ripple:nth-child(4) { animation-delay: 6s; border-color: rgba(14, 165, 162, 0.18); }
+
+  @keyframes rippleOut {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+    100% { transform: translate(-50%, -50%) scale(13); opacity: 0; }
+  }
+
+  /* ═══════════════════════════════════════════
+     FLOATING MOTES (awareness particles)
+  ═══════════════════════════════════════════ */
+  .motes {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .mote {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0;
+    animation: moteFloat linear infinite;
+  }
+
+  @keyframes moteFloat {
+    0% { opacity: 0; transform: translate(0, 0) scale(0.3); }
+    20% { opacity: 0.7; }
+    80% { opacity: 0.5; }
+    100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0); }
+  }
+
+  /* ═══════════════════════════════════════════
+     BREATH GUIDE (in / out text)
+  ═══════════════════════════════════════════ */
+  .breath-guide {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 4;
+    pointer-events: none;
+    text-align: center;
+  }
+
+  .breath-guide__text {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 200;
+    font-size: 0.75rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--glow-core);
+    opacity: 0;
+    animation: breathGuide var(--breath-duration) ease-in-out infinite;
+  }
+
+  @keyframes breathGuide {
+    0%, 5% { opacity: 0; }
+    10%, 35% { opacity: 0.7; }
+    40%, 55% { opacity: 0; }
+    60%, 85% { opacity: 0.7; }
+    90%, 100% { opacity: 0; }
+  }
+
+  .breath-guide__in,
+  .breath-guide__out {
+    animation: none;
+    opacity: 0;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+
+  .breath-guide__in {
+    animation: breathIn var(--breath-duration) ease-in-out infinite;
+  }
+
+  .breath-guide__out {
+    animation: breathOut var(--breath-duration) ease-in-out infinite;
+  }
+
+  @keyframes breathIn {
+    0%, 2% { opacity: 0; }
+    8%, 35% { opacity: 0.6; }
+    42%, 100% { opacity: 0; }
+  }
+
+  @keyframes breathOut {
+    0%, 52% { opacity: 0; }
+    58%, 88% { opacity: 0.6; }
+    95%, 100% { opacity: 0; }
+  }
+
+  /* ═══════════════════════════════════════════
+     CONTENT
+  ═══════════════════════════════════════════ */
+  .hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 0 24px;
+    max-width: 780px;
+    margin-top: -40px;
+    animation: contentReveal 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    opacity: 0;
+    transform: translateY(28px);
+  }
+
+  @keyframes contentReveal {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--glow-core);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 1s 0.5s ease-out forwards;
+  }
+
+  .hero-label::before,
+  .hero-label::after {
+    content: '';
+    width: 28px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--glow-core), transparent);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(3.2rem, 9vw, 7rem);
+    line-height: 1;
+    letter-spacing: -0.015em;
+    color: var(--text-bright);
+    margin-bottom: 22px;
+    opacity: 0;
+    animation: fadeUp 1.2s 0.3s ease-out forwards;
+  }
+
+  .hero-title span {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--text-bright) 20%, var(--glow-core) 60%, var(--glow-mid) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-subtitle {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 200;
+    font-size: clamp(0.95rem, 2vw, 1.2rem);
+    line-height: 1.75;
+    color: var(--text-muted);
+    max-width: 480px;
+    margin: 0 auto 40px;
+    opacity: 0;
+    animation: fadeUp 1.2s 0.7s ease-out forwards;
+  }
+
+  /* CTA row */
+  .hero-ctas {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 1s 1s ease-out forwards;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+    font-size: 0.9rem;
+    letter-spacing: 0.06em;
+    color: var(--text-bright);
+    padding: 13px 32px;
+    border-radius: 60px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .hero-cta--primary {
+    background: rgba(14, 165, 162, 0.15);
+    border: 1px solid rgba(14, 165, 162, 0.35);
+  }
+
+  .hero-cta--primary:hover {
+    background: rgba(14, 165, 162, 0.28);
+    border-color: rgba(14, 165, 162, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 40px rgba(14, 165, 162, 0.15);
+  }
+
+  .hero-cta--secondary {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-muted);
+  }
+
+  .hero-cta--secondary:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: var(--text-bright);
+    transform: translateY(-2px);
+  }
+
+  .hero-cta svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+    transition: transform 0.3s ease;
+  }
+
+  .hero-cta:hover svg {
+    transform: scale(1.15);
+  }
+
+  /* Latin phrase */
+  .latin-phrase {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.3);
+    margin-top: 44px;
+    letter-spacing: 0.04em;
+    opacity: 0;
+    animation: fadeUp 1s 1.3s ease-out forwards;
+  }
+
+  /* ═══════════════════════════════════════════
+     BOTTOM FADE (transition to page content)
+  ═══════════════════════════════════════════ */
+  .hero-fade {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 120px;
+    background: linear-gradient(to bottom, transparent, var(--deep));
+    z-index: 8;
+    pointer-events: none;
+  }
+
+  /* ═══════════════════════════════════════════
+     SCROLL INDICATOR
+  ═══════════════════════════════════════════ */
+  .scroll-hint {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeUp 1s 2s ease-out forwards;
+  }
+
+  .scroll-hint__text {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .scroll-hint__line {
+    width: 1px;
+    height: 28px;
+    background: linear-gradient(to bottom, var(--glow-core), transparent);
+    animation: scrollPulse 2.5s ease-in-out infinite;
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.25; transform: scaleY(0.5); transform-origin: top; }
+    50% { opacity: 0.7; transform: scaleY(1); }
+  }
+
+  /* ═══════════════════════════════════════════
+     RESPONSIVE
+  ═══════════════════════════════════════════ */
+  @media (max-width: 768px) {
+    .hero { min-height: 100svh; }
+    .breath-ring-container { width: 340px; height: 340px; }
+    .breath-ring--3 { width: 260px; height: 260px; }
+    .breath-ring--4 { width: 330px; height: 330px; }
+    .ripple-field { width: 500px; height: 500px; }
+    .hero-content { margin-top: -20px; }
+    .hero-ctas { gap: 12px; }
+  }
+
+  @media (max-width: 480px) {
+    .breath-ring-container { width: 280px; height: 280px; }
+    .breath-ring--2 { width: 200px; height: 200px; }
+    .breath-ring--3 { width: 220px; height: 220px; }
+    .breath-ring--4 { width: 270px; height: 270px; }
+    .hero-ctas { flex-direction: column; }
+  }
+
+  /* ═══════════════ NAVIGATION ═══════════════ */
+  .nav-wrap{position:fixed;top:0;left:0;right:0;z-index:1000;transition:background .4s ease,box-shadow .4s ease;background:rgba(6,8,16,0.5);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+  .nav-wrap.scrolled{background:rgba(6,8,16,0.92);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);box-shadow:0 1px 0 rgba(255,255,255,0.06),0 12px 40px rgba(0,0,0,0.3)}
+  .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px}
+  .nav-row-1{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .nav-brand{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.5rem;letter-spacing:.12em;text-decoration:none;color:#f0eefc;transition:opacity .3s ease;flex-shrink:0}
+  .nav-brand:hover{opacity:.8}
+  .nav-primary{display:flex;align-items:center;gap:4px;list-style:none}
+  .nav-primary a{font-weight:300;font-size:.82rem;letter-spacing:.02em;color:rgba(240,238,252,0.6);text-decoration:none;padding:6px 13px;border-radius:8px;transition:all .3s ease;position:relative;white-space:nowrap}
+  .nav-primary a:hover{color:#f0eefc;background:rgba(255,255,255,0.04)}
+  .nav-primary a.active{color:#f0eefc;background:rgba(255,255,255,0.06)}
+  .nav-primary a.active::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:16px;height:2px;border-radius:1px;background:#4ecdc4;opacity:.7}
+  .nav-ctas{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  .nav-cta{font-family:'Outfit',sans-serif;font-weight:400;font-size:.78rem;letter-spacing:.04em;padding:7px 18px;border-radius:40px;cursor:pointer;text-decoration:none;transition:all .35s cubic-bezier(.22,1,.36,1);white-space:nowrap}
+  .nav-cta--subscribe{color:#060810;background:#4ecdc4;border:1px solid #4ecdc4}
+  .nav-cta--subscribe:hover{background:#5ed8d0;transform:translateY(-1px);box-shadow:0 4px 16px rgba(78,205,196,0.25)}
+  .nav-cta--login{color:rgba(240,238,252,0.6);background:transparent;border:1px solid rgba(255,255,255,0.1)}
+  .nav-cta--login:hover{color:#f0eefc;border-color:rgba(255,255,255,0.22);background:rgba(255,255,255,0.04)}
+  .nav-row-2{display:flex;align-items:center;justify-content:center;gap:32px;height:34px;border-top:1px solid rgba(255,255,255,0.06);transition:height .4s ease,opacity .3s ease,border-top-color .3s ease;overflow:hidden}
+  .nav-wrap.scrolled .nav-row-2{height:0;opacity:0;border-top-color:transparent}
+  .nav-row-2 a{font-weight:300;font-size:.72rem;letter-spacing:.03em;color:rgba(240,238,252,0.4);text-decoration:none;transition:color .3s ease;white-space:nowrap}
+  .nav-row-2 a:hover{color:rgba(240,238,252,0.6)}
+  .nav-burger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;transition:background .3s ease}
+  .nav-burger:hover{background:rgba(255,255,255,0.04)}
+  .nav-burger span{display:block;width:100%;height:1.5px;background:rgba(240,238,252,0.6);border-radius:1px;transition:all .3s ease;transform-origin:center}
+  .nav-burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+  .nav-burger.open span:nth-child(2){opacity:0}
+  .nav-burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+  .nav-drawer{display:none;position:fixed;top:56px;left:0;right:0;bottom:0;background:rgba(6,8,16,0.95);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);z-index:999;flex-direction:column;padding:32px 28px 40px;overflow-y:auto;opacity:0;transform:translateY(-8px);transition:opacity .3s ease,transform .3s ease}
+  .nav-drawer.open{display:flex;opacity:1;transform:translateY(0)}
+  .nav-drawer__section-label{font-weight:300;font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(240,238,252,0.4);margin-bottom:14px;margin-top:24px}
+  .nav-drawer__section-label:first-child{margin-top:0}
+  .nav-drawer__link{display:flex;align-items:center;gap:12px;font-weight:300;font-size:1.05rem;color:rgba(240,238,252,0.6);text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);transition:color .3s ease}
+  .nav-drawer__link:hover{color:#f0eefc}
+  .nav-drawer__link-dot{width:5px;height:5px;border-radius:50%;background:#4ecdc4;opacity:.5}
+  .nav-drawer__ctas{display:flex;gap:10px;margin-top:32px}
+  .nav-drawer__ctas .nav-cta{flex:1;text-align:center;padding:12px 20px;font-size:.88rem}
+  @media(max-width:860px){.nav-primary,.nav-row-2,.nav-ctas{display:none}.nav-burger{display:flex}.nav-row-1{height:56px}}
 
     .practice-grid {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;
@@ -490,103 +634,118 @@
   <script src="js/auth.js"></script>
 </head>
 <body>
-
-
-      <nav class="nav" style="position:relative;">
-    <div class="container" style="display:flex;justify-content:space-between;align-items:center;">
-      <a href="index.html" class="nav-logo" style="display:flex;flex-direction:column;align-items:flex-start;line-height:1;"><span style="font-family:'Cormorant Garamond',serif;font-size:2rem;">SALUS</span></a>
-      <div style="display:flex;gap:8px;">
-        <a href="apps.html" class="btn btn-primary" style="padding:8px 18px;font-size:0.85rem;">Subscribe</a>
-        <a href="login.html" class="btn btn-outline nav-auth-btn" style="padding:8px 18px;font-size:0.85rem;">Log In</a>
+<!-- ═══════════════ NAVIGATION ═══════════════ -->
+<nav class="nav-wrap" id="navWrap">
+  <div class="nav-inner">
+    <div class="nav-row-1">
+      <a href="index.html" class="nav-brand">SALUS</a>
+      <ul class="nav-primary">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="sessions.html">Meditations</a></li>
+        <li><a href="mindfulness.html" class="active">Mindfulness</a></li>
+        <li><a href="asmr.html">ASMR</a></li>
+        <li><a href="sleep-stories.html">Sleep Stories</a></li>
+        <li><a href="education.html">Learn</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <div class="nav-ctas">
+        <a href="apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+        <a href="#" class="nav-cta nav-cta--login">Log In</a>
       </div>
-      <button class="nav-toggle" aria-label="Toggle menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+      <button class="nav-burger" id="burgerBtn" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
-    <div style="border-bottom:1px solid rgba(0,0,0,0.04);">
-      <div style="display:flex;justify-content:center;padding:12px 0;">
-        <ul style="display:flex;gap:28px;list-style:none;margin:0;padding:0;">
-          <li><a href="index.html" style="font-size:0.9rem;color:var(--dark);text-decoration:none;font-weight:500;">Home</a></li>
-          <li><a href="sessions.html" style="font-size:0.9rem;color:var(--dark);text-decoration:none;font-weight:500;">Meditations</a></li>
-          <li><a href="mindfulness.html" style="font-size:0.9rem;color:var(--dark);text-decoration:none;font-weight:500;">Mindfulness</a></li>
-          <li><a href="soundscapes.html" style="font-size:0.9rem;color:var(--dark);text-decoration:none;font-weight:500;">ASMR</a></li>
-          <li><a href="sleep-stories.html" style="font-size:0.9rem;color:var(--dark);text-decoration:none;font-weight:500;">Sleep Stories</a></li>
-          <li><a href="education.html" style="font-size:0.9rem;color:var(--dark);text-decoration:none;font-weight:500;">Learn</a></li>
-          <li><a href="about.html" style="font-size:0.9rem;color:var(--dark);text-decoration:none;font-weight:500;">About</a></li>
-        </ul>
-      </div>
+    <div class="nav-row-2">
+      <a href="tools.html">Tools</a>
+      <a href="reading.html">Reading</a>
+      <a href="applied-psychology.html">Applied Psychology</a>
+      <a href="newsletter.html">Newsletter</a>
+      <a href="contact.html">Contact</a>
     </div>
-    <div style="background:rgba(0,0,0,0.02);border-bottom:1px solid rgba(0,0,0,0.04);">
-      <div style="display:flex;justify-content:center;padding:8px 0;">
-        <ul style="display:flex;gap:32px;list-style:none;margin:0;padding:0;">
-          <li><a href="tools.html" style="font-size:0.85rem;color:var(--mid-gray);text-decoration:none;font-weight:500;">Tools</a></li>
-          <li><a href="reading.html" style="font-size:0.85rem;color:var(--mid-gray);text-decoration:none;font-weight:500;">Reading</a></li>
-          <li><a href="applied-psychology.html" style="font-size:0.85rem;color:var(--mid-gray);text-decoration:none;font-weight:500;">Applied Psychology</a></li>
-          <li><a href="newsletter.html" style="font-size:0.85rem;color:var(--mid-gray);text-decoration:none;font-weight:500;">Newsletter</a></li>
-          <li><a href="contact.html" style="font-size:0.85rem;color:var(--mid-gray);text-decoration:none;font-weight:500;">Contact</a></li>
-        </ul>
-      </div>
+  </div>
+</nav>
+<div class="nav-drawer" id="navDrawer">
+  <div class="nav-drawer__section-label">Main</div>
+  <a href="index.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Home</a>
+  <a href="sessions.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Meditations</a>
+  <a href="mindfulness.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Mindfulness</a>
+  <a href="asmr.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>ASMR</a>
+  <a href="sleep-stories.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Sleep Stories</a>
+  <a href="education.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Learn</a>
+  <a href="about.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>About</a>
+  <div class="nav-drawer__section-label">More</div>
+  <a href="tools.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Tools</a>
+  <a href="reading.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Reading</a>
+  <a href="applied-psychology.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Applied Psychology</a>
+  <a href="newsletter.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Newsletter</a>
+  <a href="contact.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Contact</a>
+  <div class="nav-drawer__ctas">
+    <a href="apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+    <a href="#" class="nav-cta nav-cta--login">Log In</a>
+  </div>
+</div>
+
+
+<section class="hero">
+  <!-- Ripple bursts -->
+  <div class="ripple-field">
+    <div class="ripple"></div>
+    <div class="ripple"></div>
+    <div class="ripple"></div>
+    <div class="ripple"></div>
+  </div>
+
+  <!-- Breathing rings -->
+  <div class="breath-ring-container">
+    <div class="breath-ring breath-ring--4"></div>
+    <div class="breath-ring breath-ring--3"></div>
+    <div class="breath-ring breath-ring--2"></div>
+    <div class="breath-ring breath-ring--1"></div>
+    <div class="breath-ring breath-ring--core"></div>
+  </div>
+
+  <!-- Breath guide text -->
+  <div class="breath-guide">
+    <span class="breath-guide__text breath-guide__in">Breathe in</span>
+    <span class="breath-guide__text breath-guide__out" style="margin-top: 4px;">Breathe out</span>
+  </div>
+
+  <!-- Floating motes -->
+  <div class="motes" id="motes"></div>
+
+  <!-- Main content -->
+  <div class="hero-content">
+    <div class="hero-label">Present Moment</div>
+
+    <h1 class="hero-title"><span>Mindfulness</span></h1>
+
+    <p class="hero-subtitle">
+      Arrive right here. Guided practices that train your attention, quiet the noise, and bring you back to what matters.
+    </p>
+
+    <div class="hero-ctas">
+      <a href="#listen-section" class="hero-cta hero-cta--primary">
+        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        Begin Practice
+      </a>
+      <a href="#what-is-mindfulness" class="hero-cta hero-cta--secondary">
+        Learn More
+      </a>
     </div>
-  </nav>
 
-  <!-- Hero -->
-  <section class="mindfulness-hero">
-    <!-- Ripple bursts -->
-    <div class="ripple-field">
-      <div class="ripple"></div>
-      <div class="ripple"></div>
-      <div class="ripple"></div>
-      <div class="ripple"></div>
-    </div>
+    <p class="latin-phrase">Salūs — Latin: health, safety, well-being</p>
+  </div>
 
-    <!-- Breathing rings -->
-    <div class="breath-ring-container">
-      <div class="breath-ring breath-ring--4"></div>
-      <div class="breath-ring breath-ring--3"></div>
-      <div class="breath-ring breath-ring--2"></div>
-      <div class="breath-ring breath-ring--1"></div>
-      <div class="breath-ring breath-ring--core"></div>
-    </div>
+  <!-- Bottom fade -->
+  <div class="hero-fade"></div>
 
-    <!-- Breath guide text -->
-    <div class="breath-guide">
-      <span class="breath-guide__text breath-guide__in">Breathe in</span>
-      <span class="breath-guide__text breath-guide__out" style="margin-top: 4px;">Breathe out</span>
-    </div>
-
-    <!-- Floating motes -->
-    <div class="motes" id="mindfulness-motes"></div>
-
-    <!-- Main content -->
-    <div class="mh-content">
-      <div class="mh-label">Present Moment</div>
-
-      <h1 class="mh-title"><span>Mindfulness</span></h1>
-
-      <p class="mh-subtitle">
-        Arrive right here. Guided practices that train your attention, quiet the noise, and bring you back to what matters.
-      </p>
-
-      <div class="mh-ctas">
-        <a href="#listen-section" class="mh-cta mh-cta--primary">
-          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-          Begin Practice
-        </a>
-        <a href="#what-is-mindfulness" class="mh-cta mh-cta--secondary">
-          Learn More
-        </a>
-      </div>
-
-      <p class="mh-latin">Salūs — Latin: health, safety, well-being</p>
-    </div>
-
-    <!-- Bottom fade -->
-    <div class="mh-fade"></div>
-
-    <!-- Scroll indicator -->
-    <div class="mh-scroll">
-      <span class="mh-scroll__text">Explore</span>
-      <span class="mh-scroll__line"></span>
-    </div>
-  </section>
+  <!-- Scroll indicator -->
+  <div class="scroll-hint">
+    <span class="scroll-hint__text">Explore</span>
+    <span class="scroll-hint__line"></span>
+  </div>
+</section>
 
   <!-- Listen: Guided Mindfulness -->
   <section id="listen-section" style="background:#f8f6f3;">
@@ -1007,7 +1166,7 @@
           <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="sessions.html">Guided Meditations</a></li>
-            <li><a href="soundscapes.html">ASMR</a></li>
+            <li><a href="asmr.html">ASMR</a></li>
         <li><a href="sleep-stories.html">Sleep Stories</a></li>
             <li><a href="education.html">Learn</a></li>
             <li><a href="mindfulness.html">Mindfulness</a></li>
@@ -1042,37 +1201,51 @@
   <script src="js/main.js?v=1770053724"></script>
   <script src="js/tracker.js"></script>
   <script>
-    // Mindfulness Hero — floating motes
-    (function() {
-      var container = document.getElementById('mindfulness-motes');
-      if (!container) return;
-      var count = 28;
-      var colours = [
-        'rgba(14, 165, 162, 0.6)',
-        'rgba(29, 143, 181, 0.5)',
-        'rgba(99, 102, 241, 0.4)',
-        'rgba(14, 165, 162, 0.35)',
-        'rgba(212, 165, 116, 0.3)'
-      ];
-      for (var i = 0; i < count; i++) {
-        var m = document.createElement('div');
-        m.classList.add('mote');
-        var size = 2 + Math.random() * 4;
-        var dx = (Math.random() - 0.5) * 120;
-        var dy = -40 - Math.random() * 100;
-        m.style.width = size + 'px';
-        m.style.height = size + 'px';
-        m.style.left = (15 + Math.random() * 70) + '%';
-        m.style.top = (20 + Math.random() * 60) + '%';
-        m.style.background = colours[Math.floor(Math.random() * colours.length)];
-        m.style.boxShadow = '0 0 ' + (size * 3) + 'px ' + colours[Math.floor(Math.random() * colours.length)];
-        m.style.setProperty('--dx', dx + 'px');
-        m.style.setProperty('--dy', dy + 'px');
-        m.style.animationDuration = (6 + Math.random() * 8) + 's';
-        m.style.animationDelay = (Math.random() * 10) + 's';
-        container.appendChild(m);
-      }
-    })();
+  // ═══════════════════════════════════════════
+  // FLOATING MOTES — gentle awareness particles
+  // ═══════════════════════════════════════════
+  (function() {
+    const container = document.getElementById('motes');
+    const count = 28;
+    const colours = [
+      'rgba(14, 165, 162, 0.6)',
+      'rgba(29, 143, 181, 0.5)',
+      'rgba(99, 102, 241, 0.4)',
+      'rgba(14, 165, 162, 0.35)',
+      'rgba(212, 165, 116, 0.3)'
+    ];
+
+    for (let i = 0; i < count; i++) {
+      const m = document.createElement('div');
+      m.classList.add('mote');
+
+      const size = 2 + Math.random() * 4;
+      const dx = (Math.random() - 0.5) * 120;
+      const dy = -40 - Math.random() * 100;
+
+      m.style.width = size + 'px';
+      m.style.height = size + 'px';
+      m.style.left = (15 + Math.random() * 70) + '%';
+      m.style.top = (20 + Math.random() * 60) + '%';
+      m.style.background = colours[Math.floor(Math.random() * colours.length)];
+      m.style.boxShadow = `0 0 ${size * 3}px ${colours[Math.floor(Math.random() * colours.length)]}`;
+      m.style.setProperty('--dx', dx + 'px');
+      m.style.setProperty('--dy', dy + 'px');
+      m.style.animationDuration = (6 + Math.random() * 8) + 's';
+      m.style.animationDelay = (Math.random() * 10) + 's';
+
+      container.appendChild(m);
+    }
+  })();
+
+
+  // Navigation
+  const navWrap=document.getElementById("navWrap");
+  window.addEventListener("scroll",()=>{navWrap.classList.toggle("scrolled",window.scrollY>30)},{passive:true});
+  const burger=document.getElementById("burgerBtn");
+  const drawer=document.getElementById("navDrawer");
+  burger.addEventListener("click",()=>{burger.classList.toggle("open");drawer.classList.toggle("open");document.body.style.overflow=drawer.classList.contains("open")?"hidden":""});
+  drawer.querySelectorAll(".nav-drawer__link").forEach(l=>{l.addEventListener("click",()=>{burger.classList.remove("open");drawer.classList.remove("open");document.body.style.overflow=""})});
   </script>
   <script>
     // 7-Day Course Tab Switching

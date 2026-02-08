@@ -13,110 +13,225 @@
   <meta property="og:image" content="https://salus-mind.com/images/meditation-woman-outdoor.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=1770053724">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
   <script src="js/auth.js"></script>
   <style>
-    .pricing-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
-      max-width: 900px; margin: 0 auto;
-    }
-    .pricing-card {
-      background: transparent; border: 2px solid transparent;
-      border-radius: 16px; padding: 40px 28px; text-align: center;
-      position: relative; transition: all 0.3s ease;
-    }
-    .pricing-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
-    .pricing-card.featured {
-      border-color: var(--accent); box-shadow: 0 8px 30px rgba(79,109,245,0.15);
-    }
-    .pricing-card.featured::before {
-      content: 'Most Popular'; position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
-      background: var(--accent); color: #fff; padding: 4px 20px; border-radius: 50px;
-      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
-    }
-    .pricing-card h3 { font-size: 1.2rem; margin-bottom: 8px; }
-    .pricing-card .price {
-      font-size: 2.8rem; font-weight: 700; margin: 16px 0 4px;
-    }
-    .pricing-card .price-sub {
-      font-size: 0.85rem; color: var(--mid-gray); margin-bottom: 24px;
-    }
-    .pricing-card .price-sub .equiv {
-      display: block; font-size: 0.8rem; margin-top: 4px; opacity: 0.7;
-    }
-    .pricing-features {
-      list-style: none; padding: 0; margin: 0 0 28px; text-align: left;
-    }
-    .pricing-features li {
-      padding: 8px 0; font-size: 0.9rem; color: var(--mid-gray);
-      border-bottom: 1px solid var(--off-white);
-      display: flex; align-items: center; gap: 8px;
-    }
-    .pricing-features li::before { content: '✓'; color: var(--accent); font-weight: 700; }
-    .pricing-card .btn { width: 100%; text-align: center; }
-    .guarantee {
-      text-align: center; margin-top: 32px; color: var(--mid-gray); font-size: 0.85rem;
-    }
-    .everything-banner {
-      background: transparent; border: none; border-radius: 12px; padding: 24px 32px;
-      text-align: center; margin-bottom: 60px;
-    }
-    .everything-banner h3 { color: var(--dark); margin-bottom: 8px; }
-    .everything-banner p { color: var(--mid-gray); font-size: 0.9rem; }
-    @media (max-width: 600px) {
-      .pricing-grid { grid-template-columns: 1fr !important; max-width: 400px !important; }
-    }
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  :root{--deep:#060810;--teal:#4ecdc4;--purple:#a78bfa;--green:#34d399;--amber:#fbbf24;--sky:#38bdf8;--rose:#f472b6;--text-bright:#f2f0fa;--text-muted:rgba(242,240,250,0.42);--text-mid:rgba(242,240,250,0.62)}
+  html{font-size:16px}body{background:var(--deep);color:var(--text-bright);font-family:'Outfit',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+  .hero{position:relative;width:100%;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 50% at 50% 40%,rgba(78,205,196,0.05) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 30% 55%,rgba(167,139,250,0.03) 0%,transparent 50%),linear-gradient(180deg,#070a14 0%,#0b0f1c 30%,#090c16 65%,#060810 100%);z-index:0}
+
+  .gem-canvas{position:absolute;inset:0;z-index:1}
+  .gem-canvas canvas{width:100%;height:100%;display:block}
+
+  .hero-content{position:relative;z-index:10;text-align:center;padding:0 24px;max-width:740px}
+  .hero-label{display:inline-flex;align-items:center;gap:10px;font-weight:300;font-size:.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--teal);margin-bottom:24px;opacity:0;animation:fadeUp 1s .5s ease-out forwards}
+  .hero-label::before,.hero-label::after{content:'';width:28px;height:1px;background:linear-gradient(90deg,transparent,var(--teal),transparent)}
+  .hero-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3rem,8vw,6rem);line-height:1.05;margin-bottom:12px;opacity:0;animation:fadeUp 1.4s .3s ease-out forwards}
+  .hero-title span{background:linear-gradient(135deg,var(--text-bright) 0%,var(--teal) 35%,var(--purple) 65%,var(--text-bright) 100%);background-size:200% 200%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:gradShift 8s ease-in-out infinite}
+  @keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  .hero-tagline{font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:clamp(1rem,2vw,1.25rem);color:var(--text-mid);margin-bottom:28px;opacity:0;animation:fadeUp 1.2s .6s ease-out forwards}
+  .hero-subtitle{font-weight:200;font-size:clamp(.88rem,1.7vw,1rem);line-height:1.75;color:var(--text-muted);max-width:480px;margin:0 auto 32px;opacity:0;animation:fadeUp 1.2s .8s ease-out forwards}
+
+  .hero-includes{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:40px;opacity:0;animation:fadeUp 1s 1s ease-out forwards}
+  .hero-include{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:80px}
+  .hero-include__icon{width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all .4s ease}
+  .hero-include:hover .hero-include__icon{border-color:rgba(255,255,255,0.16);background:rgba(255,255,255,0.06);transform:translateY(-2px)}
+  .hero-include__label{font-weight:300;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)}
+  .hero-include__count{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--text-mid)}
+
+  .hero-ctas{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;opacity:0;animation:fadeUp 1s 1.2s ease-out forwards}
+  .hero-cta{display:inline-flex;align-items:center;gap:10px;font-family:'Outfit',sans-serif;font-weight:400;font-size:.9rem;letter-spacing:.06em;padding:14px 34px;border-radius:60px;cursor:pointer;text-decoration:none;transition:all .4s cubic-bezier(.22,1,.36,1)}
+  .hero-cta--primary{color:var(--deep);background:linear-gradient(135deg,var(--teal),#6dd5c8);border:none;box-shadow:0 4px 24px rgba(78,205,196,0.2)}
+  .hero-cta--primary:hover{transform:translateY(-2px);box-shadow:0 8px 40px rgba(78,205,196,0.3)}
+  .hero-cta--secondary{color:var(--text-bright);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12)}
+  .hero-cta--secondary:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.22);transform:translateY(-2px)}
+
+  .hero-price{margin-top:20px;font-weight:200;font-size:.78rem;color:var(--text-muted);opacity:0;animation:fadeUp 1s 1.4s ease-out forwards}
+  .hero-price strong{font-weight:400;color:var(--text-mid);font-size:1rem}
+
+  .latin-phrase{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:.88rem;color:rgba(255,255,255,0.22);margin-top:40px;letter-spacing:.04em;opacity:0;animation:fadeUp 1s 1.6s ease-out forwards}
+  .hero-fade{position:absolute;bottom:0;left:0;width:100%;height:140px;background:linear-gradient(to bottom,transparent,var(--deep));z-index:8;pointer-events:none}
+  .scroll-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:10;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeUp 1s 2s ease-out forwards}
+  .scroll-hint__text{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text-muted)}
+  .scroll-hint__line{width:1px;height:28px;background:linear-gradient(to bottom,var(--teal),transparent);animation:scrollPulse 2.5s ease-in-out infinite}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes scrollPulse{0%,100%{opacity:.2;transform:scaleY(.5);transform-origin:top}50%{opacity:.6;transform:scaleY(1)}}
+  @media(max-width:768px){.hero{min-height:100svh}.hero-includes{gap:14px}}
+  @media(max-width:480px){.hero-ctas{flex-direction:column;width:100%;max-width:280px;margin:0 auto}.hero-cta{width:100%;justify-content:center}}
+
+  /* ═══════════════ NAVIGATION ═══════════════ */
+  .nav-wrap{position:fixed;top:0;left:0;right:0;z-index:1000;transition:background .4s ease,box-shadow .4s ease;background:rgba(6,8,16,0.5);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+  .nav-wrap.scrolled{background:rgba(6,8,16,0.92);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);box-shadow:0 1px 0 rgba(255,255,255,0.06),0 12px 40px rgba(0,0,0,0.3)}
+  .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px}
+  .nav-row-1{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .nav-brand{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.5rem;letter-spacing:.12em;text-decoration:none;color:#f0eefc;transition:opacity .3s ease;flex-shrink:0}
+  .nav-brand:hover{opacity:.8}
+  .nav-primary{display:flex;align-items:center;gap:4px;list-style:none}
+  .nav-primary a{font-weight:300;font-size:.82rem;letter-spacing:.02em;color:rgba(240,238,252,0.6);text-decoration:none;padding:6px 13px;border-radius:8px;transition:all .3s ease;position:relative;white-space:nowrap}
+  .nav-primary a:hover{color:#f0eefc;background:rgba(255,255,255,0.04)}
+  .nav-primary a.active{color:#f0eefc;background:rgba(255,255,255,0.06)}
+  .nav-primary a.active::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:16px;height:2px;border-radius:1px;background:#4ecdc4;opacity:.7}
+  .nav-ctas{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  .nav-cta{font-family:'Outfit',sans-serif;font-weight:400;font-size:.78rem;letter-spacing:.04em;padding:7px 18px;border-radius:40px;cursor:pointer;text-decoration:none;transition:all .35s cubic-bezier(.22,1,.36,1);white-space:nowrap}
+  .nav-cta--subscribe{color:#060810;background:#4ecdc4;border:1px solid #4ecdc4}
+  .nav-cta--subscribe:hover{background:#5ed8d0;transform:translateY(-1px);box-shadow:0 4px 16px rgba(78,205,196,0.25)}
+  .nav-cta--login{color:rgba(240,238,252,0.6);background:transparent;border:1px solid rgba(255,255,255,0.1)}
+  .nav-cta--login:hover{color:#f0eefc;border-color:rgba(255,255,255,0.22);background:rgba(255,255,255,0.04)}
+  .nav-row-2{display:flex;align-items:center;justify-content:center;gap:32px;height:34px;border-top:1px solid rgba(255,255,255,0.06);transition:height .4s ease,opacity .3s ease,border-top-color .3s ease;overflow:hidden}
+  .nav-wrap.scrolled .nav-row-2{height:0;opacity:0;border-top-color:transparent}
+  .nav-row-2 a{font-weight:300;font-size:.72rem;letter-spacing:.03em;color:rgba(240,238,252,0.4);text-decoration:none;transition:color .3s ease;white-space:nowrap}
+  .nav-row-2 a:hover{color:rgba(240,238,252,0.6)}
+  .nav-burger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;transition:background .3s ease}
+  .nav-burger:hover{background:rgba(255,255,255,0.04)}
+  .nav-burger span{display:block;width:100%;height:1.5px;background:rgba(240,238,252,0.6);border-radius:1px;transition:all .3s ease;transform-origin:center}
+  .nav-burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+  .nav-burger.open span:nth-child(2){opacity:0}
+  .nav-burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+  .nav-drawer{display:none;position:fixed;top:56px;left:0;right:0;bottom:0;background:rgba(6,8,16,0.95);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);z-index:999;flex-direction:column;padding:32px 28px 40px;overflow-y:auto;opacity:0;transform:translateY(-8px);transition:opacity .3s ease,transform .3s ease}
+  .nav-drawer.open{display:flex;opacity:1;transform:translateY(0)}
+  .nav-drawer__section-label{font-weight:300;font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(240,238,252,0.4);margin-bottom:14px;margin-top:24px}
+  .nav-drawer__section-label:first-child{margin-top:0}
+  .nav-drawer__link{display:flex;align-items:center;gap:12px;font-weight:300;font-size:1.05rem;color:rgba(240,238,252,0.6);text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);transition:color .3s ease}
+  .nav-drawer__link:hover{color:#f0eefc}
+  .nav-drawer__link-dot{width:5px;height:5px;border-radius:50%;background:#4ecdc4;opacity:.5}
+  .nav-drawer__ctas{display:flex;gap:10px;margin-top:32px}
+  .nav-drawer__ctas .nav-cta{flex:1;text-align:center;padding:12px 20px;font-size:.88rem}
+  @media(max-width:860px){.nav-primary,.nav-row-2,.nav-ctas{display:none}.nav-burger{display:flex}.nav-row-1{height:56px}}
+
+  /* ═══════════════ PRICING (existing) ═══════════════ */
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    max-width: 900px; margin: 0 auto;
+  }
+  .pricing-card {
+    background: transparent; border: 2px solid transparent;
+    border-radius: 16px; padding: 40px 28px; text-align: center;
+    position: relative; transition: all 0.3s ease;
+  }
+  .pricing-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
+  .pricing-card.featured {
+    border-color: var(--accent); box-shadow: 0 8px 30px rgba(79,109,245,0.15);
+  }
+  .pricing-card.featured::before {
+    content: 'Most Popular'; position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    background: var(--accent); color: #fff; padding: 4px 20px; border-radius: 50px;
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .pricing-card h3 { font-size: 1.2rem; margin-bottom: 8px; }
+  .pricing-card .price {
+    font-size: 2.8rem; font-weight: 700; margin: 16px 0 4px;
+  }
+  .pricing-card .price-sub {
+    font-size: 0.85rem; color: var(--mid-gray); margin-bottom: 24px;
+  }
+  .pricing-card .price-sub .equiv {
+    display: block; font-size: 0.8rem; margin-top: 4px; opacity: 0.7;
+  }
+  .pricing-features {
+    list-style: none; padding: 0; margin: 0 0 28px; text-align: left;
+  }
+  .pricing-features li {
+    padding: 8px 0; font-size: 0.9rem; color: var(--mid-gray);
+    border-bottom: 1px solid var(--off-white);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .pricing-features li::before { content: '✓'; color: var(--accent); font-weight: 700; }
+  .pricing-card .btn { width: 100%; text-align: center; }
+  .guarantee {
+    text-align: center; margin-top: 32px; color: var(--mid-gray); font-size: 0.85rem;
+  }
+  .everything-banner {
+    background: transparent; border: none; border-radius: 12px; padding: 24px 32px;
+    text-align: center; margin-bottom: 60px;
+  }
+  .everything-banner h3 { color: var(--dark); margin-bottom: 8px; }
+  .everything-banner p { color: var(--mid-gray); font-size: 0.9rem; }
+  @media (max-width: 600px) {
+    .pricing-grid { grid-template-columns: 1fr !important; max-width: 400px !important; }
+  }
   </style>
 </head>
 <body>
 
+<nav class="nav-wrap" id="navWrap">
+  <div class="nav-inner">
+    <div class="nav-row-1">
+      <a href="index.html" class="nav-brand">SALUS</a>
+      <ul class="nav-primary">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="sessions.html">Meditations</a></li>
+        <li><a href="mindfulness.html">Mindfulness</a></li>
+        <li><a href="asmr.html">ASMR</a></li>
+        <li><a href="sleep-stories.html">Sleep Stories</a></li>
+        <li><a href="education.html">Learn</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <div class="nav-ctas">
+        <a href="apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+        <a href="#" class="nav-cta nav-cta--login">Log In</a>
+      </div>
+      <button class="nav-burger" id="burgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+    <div class="nav-row-2">
+      <a href="tools.html">Tools</a>
+      <a href="reading.html">Reading</a>
+      <a href="applied-psychology.html">Applied Psychology</a>
+      <a href="newsletter.html">Newsletter</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+</nav>
+<div class="nav-drawer" id="navDrawer">
+  <div class="nav-drawer__section-label">Main</div>
+  <a href="index.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Home</a>
+  <a href="sessions.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Meditations</a>
+  <a href="mindfulness.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Mindfulness</a>
+  <a href="asmr.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>ASMR</a>
+  <a href="sleep-stories.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Sleep Stories</a>
+  <a href="education.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Learn</a>
+  <a href="about.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>About</a>
+  <div class="nav-drawer__section-label">More</div>
+  <a href="tools.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Tools</a>
+  <a href="reading.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Reading</a>
+  <a href="applied-psychology.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Applied Psychology</a>
+  <a href="newsletter.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Newsletter</a>
+  <a href="contact.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Contact</a>
+  <div class="nav-drawer__ctas">
+    <a href="apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+    <a href="#" class="nav-cta nav-cta--login">Log In</a>
+  </div>
+</div>
 
-      <nav class="nav" style="position:relative;">
-    <div class="container" style="display:flex;justify-content:space-between;align-items:center;">
-      <a href="index.html" class="nav-logo" style="display:flex;flex-direction:column;align-items:flex-start;line-height:1;"><span style="font-family:'Cormorant Garamond',serif;font-size:2rem;">SALUS</span></a>
-      <div style="display:flex;gap:8px;">
-        <a href="apps.html" class="btn btn-primary" style="padding:8px 18px;font-size:0.85rem;">Subscribe</a>
-        <a href="login.html" class="btn btn-outline nav-auth-btn" style="padding:8px 18px;font-size:0.85rem;">Log In</a>
-      </div>
-      <button class="nav-toggle" aria-label="Toggle menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+<section class="hero">
+  <div class="gem-canvas"><canvas id="gemCanvas"></canvas></div>
+  <div class="hero-content">
+    <div class="hero-label">Salus Premium</div>
+    <h1 class="hero-title"><span>Everything. Unlocked.</span></h1>
+    <p class="hero-tagline">One subscription, the full library</p>
+    <p class="hero-subtitle">Every meditation, every soundscape, every sleep story, every tool — plus new material unlocked each week.</p>
+    <div class="hero-includes">
+      <div class="hero-include"><div class="hero-include__icon">🧘</div><div class="hero-include__count">48</div><span class="hero-include__label">Sessions</span></div>
+      <div class="hero-include"><div class="hero-include__icon">🎧</div><div class="hero-include__count">14</div><span class="hero-include__label">ASMR</span></div>
+      <div class="hero-include"><div class="hero-include__icon">🌙</div><div class="hero-include__count">52</div><span class="hero-include__label">Stories</span></div>
+      <div class="hero-include"><div class="hero-include__icon">🔧</div><div class="hero-include__count">All</div><span class="hero-include__label">Tools</span></div>
+      <div class="hero-include"><div class="hero-include__icon">📚</div><div class="hero-include__count">24h</div><span class="hero-include__label">Content</span></div>
     </div>
-    <div style="border-bottom:1px solid rgba(0,0,0,0.04);">
-      <div style="display:flex;justify-content:center;padding:12px 0;">
-        <ul style="display:flex;gap:28px;list-style:none;margin:0;padding:0;">
-          <li><a href="index.html" style="font-size:0.9rem;color:var(--dark);text-decoration:none;font-weight:500;">Home</a></li>
-          <li><a href="sessions.html" style="font-size:0.9rem;color:var(--dark);text-decoration:none;font-weight:500;">Meditations</a></li>
-          <li><a href="mindfulness.html" style="font-size:0.9rem;color:var(--dark);text-decoration:none;font-weight:500;">Mindfulness</a></li>
-          <li><a href="soundscapes.html" style="font-size:0.9rem;color:var(--dark);text-decoration:none;font-weight:500;">ASMR</a></li>
-          <li><a href="sleep-stories.html" style="font-size:0.9rem;color:var(--dark);text-decoration:none;font-weight:500;">Sleep Stories</a></li>
-          <li><a href="education.html" style="font-size:0.9rem;color:var(--dark);text-decoration:none;font-weight:500;">Learn</a></li>
-          <li><a href="about.html" style="font-size:0.9rem;color:var(--dark);text-decoration:none;font-weight:500;">About</a></li>
-        </ul>
-      </div>
+    <div class="hero-ctas">
+      <a href="#pricing" class="hero-cta hero-cta--primary">Start Free Trial</a>
+      <a href="#compare" class="hero-cta hero-cta--secondary">Compare Plans</a>
     </div>
-    <div style="background:rgba(0,0,0,0.02);border-bottom:1px solid rgba(0,0,0,0.04);">
-      <div style="display:flex;justify-content:center;padding:8px 0;">
-        <ul style="display:flex;gap:32px;list-style:none;margin:0;padding:0;">
-          <li><a href="tools.html" style="font-size:0.85rem;color:var(--mid-gray);text-decoration:none;font-weight:500;">Tools</a></li>
-          <li><a href="reading.html" style="font-size:0.85rem;color:var(--mid-gray);text-decoration:none;font-weight:500;">Reading</a></li>
-          <li><a href="applied-psychology.html" style="font-size:0.85rem;color:var(--mid-gray);text-decoration:none;font-weight:500;">Applied Psychology</a></li>
-          <li><a href="newsletter.html" style="font-size:0.85rem;color:var(--mid-gray);text-decoration:none;font-weight:500;">Newsletter</a></li>
-          <li><a href="contact.html" style="font-size:0.85rem;color:var(--mid-gray);text-decoration:none;font-weight:500;">Contact</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <section class="hero hero-bg" style="padding-bottom:60px;background-image:url('content/images/heroes/apps-hero-new.jpg?v=20260205');">
-    <div class="container">
-      <h1 class="fade-in">One Subscription. <span>Everything Included.</span></h1>
-      <p class="fade-in">No separate apps. No hidden extras. Sleep, meditation, ASMR, breathwork — all of it.</p>
-    
-      <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(255,255,255,0.6);font-size:0.9rem;margin-top:20px;letter-spacing:1px;">Salūs — Latin: health, safety, well-being</p>
-    </div>
-  </section>
+    <p class="hero-price">From <strong>£4.99/month</strong> · Cancel anytime</p>
+    <p class="latin-phrase">Salūs — Latin: health, safety, well-being</p>
+  </div>
+  <div class="hero-fade"></div>
+  <div class="scroll-hint"><span class="scroll-hint__text">Plans</span><span class="scroll-hint__line"></span></div>
+</section>
 
   <!-- Pricing -->
   <section style="padding-top:0;background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%);">
@@ -236,7 +351,7 @@
           <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="sessions.html">Guided Meditations</a></li>
-            <li><a href="soundscapes.html">ASMR</a></li>
+            <li><a href="asmr.html">ASMR</a></li>
             <li><a href="about.html">About</a></li>
           </ul>
         </div>
@@ -269,6 +384,57 @@
 
   <script src="js/main.js?v=1770053724"></script>
   <script src="js/tracker.js"></script>
+  <script>
+(function(){
+  const canvas=document.getElementById('gemCanvas');const ctx=canvas.getContext('2d');let w,h,time=0;
+  const colours=[[78,205,196],[167,139,250],[52,211,153],[251,191,36],[56,189,248],[244,114,182]];
+  function resize(){const d=window.devicePixelRatio||1;const r=canvas.parentElement.getBoundingClientRect();w=canvas.width=r.width*d;h=canvas.height=r.height*d;canvas.style.width=r.width+'px';canvas.style.height=r.height+'px';ctx.setTransform(d,0,0,d,0,0)}
+  window.addEventListener('resize',resize);resize();
+
+  function animate(){
+    const rw=w/(window.devicePixelRatio||1);const rh=h/(window.devicePixelRatio||1);const cx=rw/2;const cy=rh/2;
+    ctx.clearRect(0,0,rw,rh);
+
+    // Rotating colour facets
+    colours.forEach(([r,g,b],i)=>{
+      const angle=time*0.003+i*(Math.PI*2/colours.length);
+      const dist=100+Math.sin(time*0.005+i)*30;
+      const fx=cx+Math.cos(angle)*dist;const fy=cy+Math.sin(angle)*dist;
+      ctx.beginPath();ctx.arc(fx,fy,50+Math.sin(time*0.008+i)*15,0,Math.PI*2);
+      const grad=ctx.createRadialGradient(fx,fy,0,fx,fy,80);
+      grad.addColorStop(0,`rgba(${r},${g},${b},0.06)`);grad.addColorStop(1,`rgba(${r},${g},${b},0)`);
+      ctx.fillStyle=grad;ctx.filter='blur(40px)';ctx.fill();ctx.filter='none';
+    });
+
+    // Central gem glow
+    ctx.beginPath();ctx.arc(cx,cy,40,0,Math.PI*2);
+    const cg=ctx.createRadialGradient(cx,cy,0,cx,cy,60);
+    cg.addColorStop(0,`rgba(78,205,196,${0.08+Math.sin(time*0.01)*0.03})`);
+    cg.addColorStop(0.5,'rgba(167,139,250,0.04)');cg.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=cg;ctx.filter='blur(20px)';ctx.fill();ctx.filter='none';
+
+    // Connecting lines between facets
+    colours.forEach(([r,g,b],i)=>{
+      const a1=time*0.003+i*(Math.PI*2/colours.length);const a2=time*0.003+((i+1)%colours.length)*(Math.PI*2/colours.length);
+      const d1=100+Math.sin(time*0.005+i)*30;const d2=100+Math.sin(time*0.005+((i+1)%colours.length))*30;
+      ctx.beginPath();ctx.moveTo(cx+Math.cos(a1)*d1,cy+Math.sin(a1)*d1);ctx.lineTo(cx+Math.cos(a2)*d2,cy+Math.sin(a2)*d2);
+      ctx.strokeStyle=`rgba(255,255,255,0.02)`;ctx.lineWidth=.5;ctx.stroke();
+    });
+
+    time++;requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+
+  // Navigation
+  const navWrap=document.getElementById("navWrap");
+  window.addEventListener("scroll",()=>{navWrap.classList.toggle("scrolled",window.scrollY>30)},{passive:true});
+  const burger=document.getElementById("burgerBtn");
+  const drawer=document.getElementById("navDrawer");
+  burger.addEventListener("click",()=>{burger.classList.toggle("open");drawer.classList.toggle("open");document.body.style.overflow=drawer.classList.contains("open")?"hidden":""});
+  drawer.querySelectorAll(".nav-drawer__link").forEach(l=>{l.addEventListener("click",()=>{burger.classList.remove("open");drawer.classList.remove("open");document.body.style.overflow=""})});
+  </script>
   <script>
     // Handle subscribe buttons based on login state
     (async function() {
