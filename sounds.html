@@ -30,7 +30,7 @@
       cursor: pointer; transition: all 0.3s ease; user-select: none;
     }
     .sound-card:hover { transform: translateY(-2px); }
-    .sound-card.active { border-color: var(--accent); background: var(--accent-light); }
+    .sound-card.active { border-color: var(--accent); background: rgba(79,109,245,0.15); }
     .sound-card .sound-emoji { font-size: 2rem; margin-bottom: 8px; }
     .sound-card .sound-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 12px; }
     .sound-card input[type="range"] {
@@ -62,20 +62,20 @@
       </div>
       <button class="nav-toggle" aria-label="Toggle menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     </div>
-    <div style="border-bottom:1px solid rgba(0,0,0,0.04);">
+    <div style="border-bottom:1px solid rgba(255,255,255,0.06);">
       <div style="display:flex;justify-content:center;padding:12px 0;">
         <ul style="display:flex;gap:28px;list-style:none;margin:0;padding:0;">
-          <li><a href="index.html" style="font-size:0.9rem;color:var(--dark);text-decoration:none;font-weight:500;">Home</a></li>
-          <li><a href="sessions.html" style="font-size:0.9rem;color:var(--dark);text-decoration:none;font-weight:500;">Meditations</a></li>
-          <li><a href="mindfulness.html" style="font-size:0.9rem;color:var(--dark);text-decoration:none;font-weight:500;">Mindfulness</a></li>
-          <li><a href="asmr.html" style="font-size:0.9rem;color:var(--dark);text-decoration:none;font-weight:500;">ASMR</a></li>
-          <li><a href="sleep-stories.html" style="font-size:0.9rem;color:var(--dark);text-decoration:none;font-weight:500;">Sleep Stories</a></li>
-          <li><a href="education.html" style="font-size:0.9rem;color:var(--dark);text-decoration:none;font-weight:500;">Learn</a></li>
-          <li><a href="about.html" style="font-size:0.9rem;color:var(--dark);text-decoration:none;font-weight:500;">About</a></li>
+          <li><a href="index.html" style="font-size:0.9rem;color:rgba(240,238,252,0.6);text-decoration:none;font-weight:500;">Home</a></li>
+          <li><a href="sessions.html" style="font-size:0.9rem;color:rgba(240,238,252,0.6);text-decoration:none;font-weight:500;">Meditations</a></li>
+          <li><a href="mindfulness.html" style="font-size:0.9rem;color:rgba(240,238,252,0.6);text-decoration:none;font-weight:500;">Mindfulness</a></li>
+          <li><a href="asmr.html" style="font-size:0.9rem;color:rgba(240,238,252,0.6);text-decoration:none;font-weight:500;">ASMR</a></li>
+          <li><a href="sleep-stories.html" style="font-size:0.9rem;color:rgba(240,238,252,0.6);text-decoration:none;font-weight:500;">Sleep Stories</a></li>
+          <li><a href="education.html" style="font-size:0.9rem;color:rgba(240,238,252,0.6);text-decoration:none;font-weight:500;">Learn</a></li>
+          <li><a href="about.html" style="font-size:0.9rem;color:rgba(240,238,252,0.6);text-decoration:none;font-weight:500;">About</a></li>
         </ul>
       </div>
     </div>
-    <div style="background:rgba(0,0,0,0.02);border-bottom:1px solid rgba(0,0,0,0.04);">
+    <div style="background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06);">
       <div style="display:flex;justify-content:center;padding:8px 0;">
         <ul style="display:flex;gap:32px;list-style:none;margin:0;padding:0;">
           <li><a href="tools.html" style="font-size:0.85rem;color:var(--mid-gray);text-decoration:none;font-weight:500;">Tools</a></li>
@@ -95,7 +95,7 @@
     </div>
   </section>
 
-  <section style="background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%);">
+  <section style="background:transparent;">
     <div class="container">
       <div class="sounds-container">
         <div class="sound-grid" id="soundGrid">
@@ -142,7 +142,7 @@
         </div>
         <div style="margin-top:24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;">
           <span style="font-size:0.85rem;color:var(--mid-gray);font-weight:500;">Sleep Timer:</span>
-          <select id="sleepTimer" style="padding:8px 16px;border-radius:8px;border:1px solid var(--light-gray);font-size:0.85rem;font-family:inherit;color:var(--dark);background:var(--white);">
+          <select id="sleepTimer" style="padding:8px 16px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);font-size:0.85rem;font-family:inherit;color:#f0eefc;background:rgba(255,255,255,0.06);">
             <option value="0">Off</option>
             <option value="15">15 min</option>
             <option value="30">30 min</option>
