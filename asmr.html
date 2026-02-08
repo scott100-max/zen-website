@@ -996,20 +996,20 @@
   // ═══════════════════════════════════════════
   (function() {
     const soundDefs = [
-      { id: 'rain',       name: 'Rain',        icon: '\u{1F327}', category: 'weather', duration: '1:57', src: 'https://media.salus-mind.com/content/sounds/rain.mp3' },
-      { id: 'ocean',      name: 'Ocean',       icon: '\u{1F30A}', category: 'nature',  duration: '2:00', src: 'https://media.salus-mind.com/content/sounds/ocean.mp3' },
-      { id: 'forest',     name: 'Forest',      icon: '\u{1F332}', category: 'nature',  duration: '1:01', src: 'https://media.salus-mind.com/content/sounds/forest.mp3' },
-      { id: 'thunder',    name: 'Thunder',     icon: '\u26A1',    category: 'weather', duration: '0:23', src: 'https://media.salus-mind.com/content/sounds/thunder.mp3' },
-      { id: 'birds',      name: 'Birds',       icon: '\u{1F426}', category: 'nature',  duration: '3:29', src: 'https://media.salus-mind.com/content/sounds/birds.mp3' },
-      { id: 'fire',       name: 'Fire',        icon: '\u{1F525}', category: 'ambient', duration: '1:00', src: 'https://media.salus-mind.com/content/sounds/fire.mp3' },
-      { id: 'stream',     name: 'Stream',      icon: '\u{1F4A7}', category: 'nature',  duration: '3:00', src: 'https://media.salus-mind.com/content/sounds/stream.mp3' },
-      { id: 'cafe',       name: 'Caf\u00e9',   icon: '\u2615',    category: 'spaces',  duration: '2:00', src: 'https://media.salus-mind.com/content/sounds/cafe.mp3' },
-      { id: 'garden',     name: 'Garden',      icon: '\u{1F33F}', category: 'nature',  duration: '1:50', src: 'https://media.salus-mind.com/content/sounds/garden.mp3' },
-      { id: 'library',    name: 'Library',     icon: '\u{1F4DA}', category: 'spaces',  duration: '0:42', src: 'https://media.salus-mind.com/content/sounds/library.mp3' },
-      { id: 'night',      name: 'Night',       icon: '\u{1F319}', category: 'ambient', duration: '1:30', src: 'https://media.salus-mind.com/content/sounds/night.mp3' },
-      { id: 'temple',     name: 'Temple',      icon: '\u{1F514}', category: 'spaces',  duration: '2:33', src: 'https://media.salus-mind.com/content/sounds/temple.mp3' },
-      { id: 'waterfall',  name: 'Waterfall',   icon: '\u{1F4A6}', category: 'nature',  duration: '1:12', src: 'https://media.salus-mind.com/content/sounds/waterfall.mp3' },
-      { id: 'whitenoise', name: 'White Noise', icon: '\u3030',    category: 'ambient', duration: '3:00', src: 'https://media.salus-mind.com/content/sounds/white-noise.mp3' },
+      { id: 'rain',       name: 'Rain',        icon: '\u{1F327}', category: 'weather', src: 'https://media.salus-mind.com/content/sounds/rain.mp3' },
+      { id: 'ocean',      name: 'Ocean',       icon: '\u{1F30A}', category: 'nature',  src: 'https://media.salus-mind.com/content/sounds/ocean.mp3' },
+      { id: 'forest',     name: 'Forest',      icon: '\u{1F332}', category: 'nature',  src: 'https://media.salus-mind.com/content/sounds/forest.mp3' },
+      { id: 'thunder',    name: 'Thunder',     icon: '\u26A1',    category: 'weather', src: 'https://media.salus-mind.com/content/sounds/thunder.mp3' },
+      { id: 'birds',      name: 'Birds',       icon: '\u{1F426}', category: 'nature',  src: 'https://media.salus-mind.com/content/sounds/birds.mp3' },
+      { id: 'fire',       name: 'Fire',        icon: '\u{1F525}', category: 'ambient', src: 'https://media.salus-mind.com/content/sounds/fire.mp3' },
+      { id: 'stream',     name: 'Stream',      icon: '\u{1F4A7}', category: 'nature',  src: 'https://media.salus-mind.com/content/sounds/stream.mp3' },
+      { id: 'cafe',       name: 'Caf\u00e9',   icon: '\u2615',    category: 'spaces',  src: 'https://media.salus-mind.com/content/sounds/cafe.mp3' },
+      { id: 'garden',     name: 'Garden',      icon: '\u{1F33F}', category: 'nature',  src: 'https://media.salus-mind.com/content/sounds/garden.mp3' },
+      { id: 'library',    name: 'Library',     icon: '\u{1F4DA}', category: 'spaces',  src: 'https://media.salus-mind.com/content/sounds/library.mp3' },
+      { id: 'night',      name: 'Night',       icon: '\u{1F319}', category: 'ambient', src: 'https://media.salus-mind.com/content/sounds/night.mp3' },
+      { id: 'temple',     name: 'Temple',      icon: '\u{1F514}', category: 'spaces',  src: 'https://media.salus-mind.com/content/sounds/temple.mp3' },
+      { id: 'waterfall',  name: 'Waterfall',   icon: '\u{1F4A6}', category: 'nature',  src: 'https://media.salus-mind.com/content/sounds/waterfall.mp3' },
+      { id: 'whitenoise', name: 'White Noise', icon: '\u3030',    category: 'ambient', src: 'https://media.salus-mind.com/content/sounds/white-noise.mp3' },
     ];
 
     const audioElements = {};
@@ -1034,8 +1034,6 @@
             <div class="sound-card__name">${s.name}</div>
             <div class="sound-card__meta">
               <span class="sound-card__tag">${s.category}</span>
-              <span class="sound-card__dot"></span>
-              <span class="sound-card__duration">${s.duration}</span>
             </div>
           </div>
           <div class="sound-card__toggle">
