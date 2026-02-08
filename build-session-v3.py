@@ -410,21 +410,49 @@ def score_chunk_quality(audio_path):
     }
 
 
+def compute_mfcc_profile(audio_path):
+    """Extract mean MFCC profile from an audio file for tonal comparison."""
+    import librosa
+    import numpy as np
+    y, sr = librosa.load(audio_path, sr=22050)
+    if len(y) < 2048:
+        return None
+    mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13)
+    return mfcc.mean(axis=1)
+
+
+def tonal_distance(mfcc_a, mfcc_b):
+    """Cosine distance between two MFCC profiles. Lower = more similar."""
+    import numpy as np
+    if mfcc_a is None or mfcc_b is None:
+        return 0.0
+    cos_sim = np.dot(mfcc_a, mfcc_b) / (
+        np.linalg.norm(mfcc_a) * np.linalg.norm(mfcc_b) + 1e-10
+    )
+    return round(float(1.0 - cos_sim), 6)
+
+
 def generate_chunk_with_qa(text, output_path, chunk_num, emotion='calm',
-                           n_versions=2, max_retries=3):
+                           n_versions=2, max_retries=3, prev_chunk_mfcc=None):
     """Generate a Fish TTS chunk with per-chunk QA.
 
     Generates n_versions of the chunk, scores each, and keeps the best.
+    Score combines quality metrics + tonal consistency with previous chunk.
     If the best score is below threshold after max_retries total attempts,
     flags the chunk text for potential rewrite.
 
-    Returns (output_path, score_dict, flagged).
+    prev_chunk_mfcc: MFCC profile of the previously accepted chunk.
+        If provided, tonal distance is factored into the score to penalise
+        voice character shifts at chunk boundaries.
+
+    Returns (output_path, score_dict, flagged, mfcc_profile).
     """
     import shutil
 
     best_path = None
     best_score = None
     best_details = None
+    best_mfcc = None
     all_scores = []
 
     for attempt in range(max_retries):
@@ -448,20 +476,33 @@ def generate_chunk_with_qa(text, output_path, chunk_num, emotion='calm',
                 pass
             continue
 
-        # Score it
+        # Score quality
         details = score_chunk_quality(temp_path)
-        score = details['score']
-        all_scores.append(score)
+        quality_score = details['score']
+
+        # Score tonal consistency with previous chunk
+        chunk_mfcc = compute_mfcc_profile(temp_path)
+        tone_dist = tonal_distance(prev_chunk_mfcc, chunk_mfcc)
+        # Tonal penalty: distance typically 0.001-0.01, scale to impact score
+        # Weight 50x so a 0.01 distance costs 0.5 points (significant)
+        tone_penalty = tone_dist * 50.0
+        combined_score = quality_score - tone_penalty
+
+        details['tone_dist'] = tone_dist
+        details['tone_penalty'] = round(tone_penalty, 3)
+        details['combined_score'] = round(combined_score, 4)
+        all_scores.append(combined_score)
 
         marker = ""
-        if best_score is not None and score > best_score:
+        if best_score is not None and combined_score > best_score:
             marker = " ★ new best"
         elif best_score is None:
             marker = " ★ first"
 
-        print(f"      v{attempt+1}: score={score:.3f} (echo={details['echo_risk']:.5f} hiss={details['hiss_risk']:.1f}dB){marker}")
+        tone_info = f" tone={tone_dist:.4f}" if prev_chunk_mfcc is not None else ""
+        print(f"      v{attempt+1}: score={combined_score:.3f} (q={quality_score:.3f}{tone_info} hiss={details['hiss_risk']:.1f}dB){marker}")
 
-        if best_score is None or score > best_score:
+        if best_score is None or combined_score > best_score:
             # New best — keep it, discard previous best
             if best_path and best_path != output_path and os.path.exists(best_path):
                 try:
@@ -469,8 +510,9 @@ def generate_chunk_with_qa(text, output_path, chunk_num, emotion='calm',
                 except OSError:
                     pass
             best_path = temp_path
-            best_score = score
+            best_score = combined_score
             best_details = details
+            best_mfcc = chunk_mfcc
         else:
             # Worse than current best — discard
             try:
@@ -494,7 +536,7 @@ def generate_chunk_with_qa(text, output_path, chunk_num, emotion='calm',
     # Threshold 0.50: catches worst offenders without excessive false positives
     flagged = best_score < 0.50 if best_score is not None else True
 
-    return output_path, best_details, flagged
+    return output_path, best_details, flagged, best_mfcc
 
 
 # ============================================================================
@@ -3357,6 +3399,7 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
         manifest_segments = []
         request_ids = []
         flagged_chunks = []
+        prev_chunk_mfcc = None  # For tonal consistency scoring
         current_time = 0.0
 
         print(f"\n  Generating TTS chunks ({provider})...")
@@ -3390,11 +3433,14 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
                     crossfade_audio_files(chunk_files, block_path)
                 else:
                     # Standard chunk: generate multiple versions, score, keep best
+                    # Tonal consistency: pass previous chunk's MFCC profile
                     print(f"    Chunk {i+1} QA:")
-                    _, chunk_score, chunk_flagged = generate_chunk_with_qa(
+                    _, chunk_score, chunk_flagged, chunk_mfcc = generate_chunk_with_qa(
                         text, block_path, len(voice_files),
-                        emotion=api_emotion, n_versions=2, max_retries=3
+                        emotion=api_emotion, n_versions=2, max_retries=3,
+                        prev_chunk_mfcc=prev_chunk_mfcc
                     )
+                    prev_chunk_mfcc = chunk_mfcc  # Chain for next chunk
                     if chunk_flagged:
                         flagged_chunks.append({
                             'index': i + 1,
