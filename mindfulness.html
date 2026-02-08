@@ -528,6 +528,76 @@
   .nav-drawer__ctas .nav-cta{flex:1;text-align:center;padding:12px 20px;font-size:.88rem}
   @media(max-width:860px){.nav-primary,.nav-row-2,.nav-ctas{display:none}.nav-burger{display:flex}.nav-row-1{height:56px}}
 
+    /* ═══════════════ MINDFULNESS CARDS ═══════════════ */
+  .m-section-header{text-align:center;margin-bottom:40px}
+  .m-section-header__label{display:inline-flex;align-items:center;gap:10px;font-weight:300;font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(78,205,196,0.7);margin-bottom:16px}
+  .m-section-header__label::before,.m-section-header__label::after{content:'';width:24px;height:1px;background:linear-gradient(90deg,transparent,rgba(78,205,196,0.4),transparent)}
+  .m-section-header h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.8rem,4vw,2.4rem);margin-bottom:8px;color:var(--text-bright)}
+  .m-section-header p{font-weight:200;font-size:.85rem;color:var(--text-muted);max-width:480px;margin:0 auto;line-height:1.6}
+  .m-filters{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-bottom:36px}
+  .m-filter-btn{font-family:'Outfit',sans-serif;font-weight:300;font-size:.72rem;letter-spacing:.04em;padding:7px 16px;border-radius:40px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text-muted);cursor:pointer;transition:all .3s ease;white-space:nowrap}
+  .m-filter-btn:hover{border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.72)}
+  .m-filter-btn.active{background:rgba(78,205,196,0.08);border-color:rgba(78,205,196,0.2);color:#4ecdc4}
+  .m-section-divider{text-align:center;padding:44px 0 28px;position:relative}
+  .m-section-divider__line{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;height:1px;background:linear-gradient(90deg,transparent,rgba(78,205,196,0.08),transparent)}
+  .m-section-divider__label{position:relative;z-index:1;display:inline-flex;flex-direction:column;align-items:center;font-weight:300;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text-muted);background:var(--deep);padding:0 16px}
+  .m-section-divider__sub{display:block;font-weight:200;font-size:.78rem;letter-spacing:.02em;text-transform:none;color:rgba(255,255,255,0.35);margin-top:6px}
+  .m-sub-hook{max-width:980px;margin:36px auto 0;display:flex;align-items:center;justify-content:space-between;gap:16px;background:linear-gradient(135deg,rgba(78,205,196,0.06) 0%,rgba(34,211,238,0.04) 100%);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:16px 24px}
+  .m-sub-hook__text{display:flex;flex-direction:column;gap:2px}
+  .m-sub-hook__title{font-weight:400;font-size:.82rem;color:var(--text-bright);display:flex;align-items:center;gap:8px}
+  .m-sub-hook__title svg{width:14px;height:14px;fill:rgba(78,205,196,0.8)}
+  .m-sub-hook__desc{font-weight:200;font-size:.74rem;color:var(--text-muted)}
+  .m-sub-hook__cta{font-family:'Outfit',sans-serif;font-weight:400;font-size:.74rem;letter-spacing:.04em;padding:8px 20px;border-radius:40px;color:#060810;background:linear-gradient(135deg,#4ecdc4,#6dd5c8);border:none;cursor:pointer;text-decoration:none;white-space:nowrap;transition:all .35s cubic-bezier(.22,1,.36,1)}
+  .m-sub-hook__cta:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(78,205,196,0.25)}
+  .course-banner{max-width:980px;margin:0 auto 8px;position:relative;border-radius:18px;overflow:hidden;padding:32px 32px 28px;background:linear-gradient(145deg,#0a3a40 0%,#0d4a52 40%,#0f5c66 100%);border:1px solid rgba(78,205,196,0.12);transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s ease;cursor:default}
+  .course-banner:hover{transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,0,0,0.3)}
+  .course-banner::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:.5;pointer-events:none;border-radius:inherit}
+  .course-banner__orb{position:absolute;border-radius:50%;filter:blur(50px);opacity:.25;pointer-events:none}
+  .course-banner__orb--1{background:#4ecdc4;width:200px;height:200px;top:-60px;right:-40px}
+  .course-banner__orb--2{background:#06b6d4;width:120px;height:120px;bottom:-30px;left:-20px;opacity:.15}
+  .course-banner__content{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:24px}
+  .course-banner__left{flex:1}
+  .course-banner__badge{display:inline-flex;align-items:center;gap:6px;font-weight:400;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:#4ecdc4;background:rgba(78,205,196,0.1);border:1px solid rgba(78,205,196,0.2);padding:4px 12px;border-radius:20px;margin-bottom:12px}
+  .course-banner__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.5rem;line-height:1.2;color:#fff;margin-bottom:6px}
+  .course-banner__desc{font-weight:200;font-size:.82rem;line-height:1.6;color:rgba(255,255,255,0.55);max-width:520px}
+  .course-banner__progress{display:flex;align-items:center;gap:8px;margin-top:14px}
+  .course-banner__dots{display:flex;gap:4px}
+  .course-banner__dot{width:8px;height:8px;border-radius:50%;background:rgba(78,205,196,0.15);border:1px solid rgba(78,205,196,0.2)}
+  .course-banner__dot--active{background:#4ecdc4;border-color:#4ecdc4}
+  .course-banner__progress-label{font-weight:200;font-size:.68rem;color:rgba(255,255,255,0.4)}
+  .course-banner__cta{flex-shrink:0;font-family:'Outfit',sans-serif;font-weight:400;font-size:.78rem;letter-spacing:.04em;padding:10px 24px;border-radius:40px;color:#060810;background:linear-gradient(135deg,#4ecdc4,#6dd5c8);border:none;cursor:pointer;text-decoration:none;transition:all .35s cubic-bezier(.22,1,.36,1)}
+  .course-banner__cta:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(78,205,196,0.25)}
+  .m-card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;max-width:980px;margin:0 auto}
+  .m-card{position:relative;border-radius:18px;padding:30px 30px 24px;overflow:hidden;transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s ease;cursor:default;min-height:260px;display:flex;flex-direction:column}
+  .m-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.35)}
+  .m-card::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:.5;pointer-events:none;border-radius:inherit}
+  .mcat-mindfulness{background:linear-gradient(145deg,#0d3d4a 0%,#1a5568 35%,#0f4c5c 100%)}
+  .mcat-compassion{background:linear-gradient(145deg,#0d3d4a 0%,#155e5a 35%,#1a6b5c 100%)}
+  .mcat-course{background:linear-gradient(145deg,#0a3a40 0%,#0d4a52 35%,#0f5c66 100%)}
+  .mcat-beginner{background:linear-gradient(145deg,#0e4250 0%,#1a6070 35%,#147080 100%)}
+  .m-card__orb{position:absolute;border-radius:50%;filter:blur(40px);opacity:.35;pointer-events:none;transition:opacity .4s ease;background:#22d3ee;width:140px;height:140px;top:-30px;right:-20px}
+  .m-card:hover .m-card__orb{opacity:.5}
+  .m-card__orb--2{background:#06b6d4;width:100px;height:100px;bottom:-20px;left:-10px;top:auto;right:auto;opacity:.2}
+  .mcat-compassion .m-card__orb{background:#2dd4bf}
+  .mcat-compassion .m-card__orb--2{background:#14b8a6}
+  .m-card__badge{position:absolute;top:18px;right:20px;z-index:4;font-weight:400;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  .m-badge--premium{color:rgba(255,255,255,0.85);background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15)}
+  .m-badge--type{color:#4ecdc4;background:rgba(78,205,196,0.1);border:1px solid rgba(78,205,196,0.2)}
+  .m-card__content{position:relative;z-index:3;flex:1;display:flex;flex-direction:column}
+  .m-card__meta{display:flex;align-items:center;gap:6px;margin-bottom:10px;font-weight:300;font-size:.78rem;color:rgba(255,255,255,0.55)}
+  .m-card__cat-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;background:#4ecdc4}
+  .m-card__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.6rem;line-height:1.2;color:#fff;margin-bottom:10px}
+  .m-card__desc{font-weight:200;font-size:.84rem;line-height:1.65;color:rgba(255,255,255,0.6);margin-bottom:auto;padding-bottom:18px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .m-player{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:10px 18px 10px 10px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);position:relative;z-index:3}
+  .m-player__btn{width:40px;height:40px;border-radius:50%;flex-shrink:0;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s ease}
+  .m-player__btn:hover{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.25);transform:scale(1.05)}
+  .m-player__btn svg{width:14px;height:14px;fill:#fff;margin-left:2px}
+  .m-player__track{flex:1;height:3px;background:rgba(255,255,255,0.12);border-radius:2px;overflow:hidden;cursor:pointer}
+  .m-player__progress{height:100%;width:0%;border-radius:2px;background:#4ecdc4;transition:width .1s linear}
+  .m-player__time{font-weight:300;font-size:.7rem;color:rgba(255,255,255,0.45);white-space:nowrap;min-width:72px;text-align:right;font-variant-numeric:tabular-nums}
+  @media(max-width:768px){.m-card-grid{grid-template-columns:1fr}.m-card{padding:24px 24px 20px;min-height:auto}.m-card__title{font-size:1.4rem}.m-sub-hook,.course-banner{flex-direction:column;text-align:center;gap:12px}.course-banner__content{flex-direction:column;text-align:center}.course-banner__progress{justify-content:center}}
+  @media(max-width:480px){.m-card{padding:22px 20px 18px}}
+
     .practice-grid {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;
     }
@@ -747,120 +817,136 @@
   </div>
 </section>
 
-  <!-- Listen: Guided Mindfulness -->
-  <section id="listen-section" style="background:#f8f6f3;">
-    <div class="container">
-      <div class="section-header fade-in">
-        <h2>Listen: 10-Minute Mindfulness</h2>
-        <p>A guided mindfulness practice. Press play, close your eyes, and follow along.</p>
-      </div>
-      <div style="max-width:600px;margin:0 auto;">
-        <div class="custom-player" data-src="https://media.salus-mind.com/content/audio-free/25-introduction-to-mindfulness.mp3" style="margin-top:8px;">
-          <div style="display:flex;align-items:center;gap:12px;background:var(--off-white);border-radius:8px;padding:12px 16px;">
-            <button class="cp-play" style="flex-shrink:0;background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-            <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-            <span class="cp-time" style="font-size:0.8rem;color:var(--mid-gray);min-width:70px;text-align:right;">0:00 / 0:00</span>
-          </div>
+  <!-- Mindfulness Sessions -->
+  <section id="listen-section" style="padding:60px 0;background:var(--deep);">
+
+<div class="m-section-header">
+  <div class="m-section-header__label"><span></span>Mindfulness<span></span></div>
+  <h2>Arrive Right Here</h2>
+  <p>Guided practices to sharpen attention, soften reactivity, and bring you back to the present moment.</p>
+</div>
+
+<div class="m-filters">
+  <button class="m-filter-btn active" data-filter="all">All</button>
+  <button class="m-filter-btn" data-filter="beginner">Beginner</button>
+  <button class="m-filter-btn" data-filter="guided">Guided</button>
+  <button class="m-filter-btn" data-filter="compassion">Compassion</button>
+  <button class="m-filter-btn" data-filter="course">Courses</button>
+</div>
+
+<div class="course-banner" id="courseBanner" data-category="course">
+  <div class="course-banner__orb course-banner__orb--1"></div>
+  <div class="course-banner__orb course-banner__orb--2"></div>
+  <div class="course-banner__content">
+    <div class="course-banner__left">
+      <div class="course-banner__badge">Structured Course</div>
+      <h3 class="course-banner__title">21-Day Mindfulness Programme</h3>
+      <p class="course-banner__desc">A complete guided journey from first breath to lasting habit. One session per day, building progressively — no experience needed.</p>
+      <div class="course-banner__progress">
+        <div class="course-banner__dots">
+          <span class="course-banner__dot course-banner__dot--active"></span>
+          <span class="course-banner__dot"></span>
+          <span class="course-banner__dot"></span>
+          <span class="course-banner__dot"></span>
+          <span class="course-banner__dot"></span>
+          <span class="course-banner__dot"></span>
+          <span class="course-banner__dot"></span>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 7-Day Mindfulness Course -->
-  <section style="background:linear-gradient(160deg,#1b2838 0%,#0d1b2a 100%);color:#fff;padding:80px 0;">
-    <div class="container">
-      <div class="section-header fade-in" style="margin-bottom:40px;">
-        <h2 style="color:#fff;">7-Day Mindfulness Course</h2>
-        <p style="color:rgba(255,255,255,0.7);">A structured week-long programme to build your mindfulness habit from scratch. Each day builds on the last.</p>
-      </div>
-
-      <!-- Day Tabs -->
-      <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:32px;" class="fade-in">
-        <button class="day-tab active" data-day="1" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:14px 24px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:0.95rem;">Day 1 <span style="opacity:0.7;font-size:0.8rem;">(Free)</span></button>
-        <button class="day-tab locked" data-day="2" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border:none;border-radius:8px;padding:14px 24px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:0.95rem;">Day 2 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></button>
-        <button class="day-tab locked" data-day="3" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border:none;border-radius:8px;padding:14px 24px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:0.95rem;">Day 3 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></button>
-        <button class="day-tab locked" data-day="4" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border:none;border-radius:8px;padding:14px 24px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:0.95rem;">Day 4 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></button>
-        <button class="day-tab locked" data-day="5" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border:none;border-radius:8px;padding:14px 24px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:0.95rem;">Day 5 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></button>
-        <button class="day-tab locked" data-day="6" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border:none;border-radius:8px;padding:14px 24px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:0.95rem;">Day 6 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></button>
-        <button class="day-tab locked" data-day="7" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border:none;border-radius:8px;padding:14px 24px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:0.95rem;">Day 7 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></button>
-      </div>
-
-      <!-- Day Content Panels -->
-      <div style="max-width:700px;margin:0 auto;">
-        <!-- Day 1 (Free) -->
-        <div class="day-panel fade-in" data-day="1" style="background:rgba(255,255,255,0.05);border-radius:16px;padding:32px;">
-          <h3 style="color:#fff;font-size:1.3rem;margin-bottom:8px;">Day 1: The Foundation</h3>
-          <p style="color:rgba(255,255,255,0.6);font-size:0.9rem;margin-bottom:20px;">10 minutes &middot; Breath awareness &middot; Your first mindfulness practice</p>
-          <p style="color:rgba(255,255,255,0.85);line-height:1.7;margin-bottom:20px;">Today we begin with the simplest and most powerful practice: paying attention to your breath. You'll learn to notice when your mind wanders and gently bring it back — the core skill that underpins everything else.</p>
-          <div class="custom-player" data-src="https://media.salus-mind.com/content/audio-free/38-seven-day-mindfulness-day1.mp3">
-            <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.1);border-radius:8px;padding:12px 16px;">
-              <button class="cp-play" style="flex-shrink:0;background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:rgba(255,255,255,0.6);min-width:70px;text-align:right;">0:00 / 0:00</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Day 2-7 (Locked) -->
-        <div class="day-panel fade-in" data-day="2" style="display:none;background:rgba(255,255,255,0.05);border-radius:16px;padding:32px;text-align:center;">
-          <h3 style="color:#fff;font-size:1.3rem;margin-bottom:8px;">Day 2: Body Awareness</h3>
-          <p style="color:rgba(255,255,255,0.6);font-size:0.9rem;margin-bottom:20px;">10 minutes &middot; Body scan basics &middot; Connecting mind and body</p>
-          <p style="color:rgba(255,255,255,0.7);line-height:1.7;margin-bottom:24px;">Learn to scan your body from head to toe, noticing sensations without judgement. This practice builds the foundation for releasing tension you didn't know you were holding.</p>
-          <a href="apps.html" class="btn" style="background:var(--accent);">Unlock Full Course</a>
-        </div>
-
-        <div class="day-panel fade-in" data-day="3" style="display:none;background:rgba(255,255,255,0.05);border-radius:16px;padding:32px;text-align:center;">
-          <h3 style="color:#fff;font-size:1.3rem;margin-bottom:8px;">Day 3: Observing Thoughts</h3>
-          <p style="color:rgba(255,255,255,0.6);font-size:0.9rem;margin-bottom:20px;">10 minutes &middot; Thought awareness &middot; The sky and the clouds</p>
-          <p style="color:rgba(255,255,255,0.7);line-height:1.7;margin-bottom:24px;">Today you'll learn to watch your thoughts like clouds passing through the sky — present, but not permanent. This shift in perspective is transformative.</p>
-          <a href="apps.html" class="btn" style="background:var(--accent);">Unlock Full Course</a>
-        </div>
-
-        <div class="day-panel fade-in" data-day="4" style="display:none;background:rgba(255,255,255,0.05);border-radius:16px;padding:32px;text-align:center;">
-          <h3 style="color:#fff;font-size:1.3rem;margin-bottom:8px;">Day 4: Emotional Awareness</h3>
-          <p style="color:rgba(255,255,255,0.6);font-size:0.9rem;margin-bottom:20px;">10 minutes &middot; Feeling emotions &middot; Non-reactive awareness</p>
-          <p style="color:rgba(255,255,255,0.7);line-height:1.7;margin-bottom:24px;">Emotions carry information. Today you'll practise sitting with feelings — pleasant and unpleasant — without pushing them away or getting lost in them.</p>
-          <a href="apps.html" class="btn" style="background:var(--accent);">Unlock Full Course</a>
-        </div>
-
-        <div class="day-panel fade-in" data-day="5" style="display:none;background:rgba(255,255,255,0.05);border-radius:16px;padding:32px;text-align:center;">
-          <h3 style="color:#fff;font-size:1.3rem;margin-bottom:8px;">Day 5: Loving-Kindness</h3>
-          <p style="color:rgba(255,255,255,0.6);font-size:0.9rem;margin-bottom:20px;">10 minutes &middot; Self-compassion &middot; Extending kindness</p>
-          <p style="color:rgba(255,255,255,0.7);line-height:1.7;margin-bottom:24px;">A gentle introduction to loving-kindness meditation. You'll send compassion first to yourself, then gradually outward to others.</p>
-          <a href="apps.html" class="btn" style="background:var(--accent);">Unlock Full Course</a>
-        </div>
-
-        <div class="day-panel fade-in" data-day="6" style="display:none;background:rgba(255,255,255,0.05);border-radius:16px;padding:32px;text-align:center;">
-          <h3 style="color:#fff;font-size:1.3rem;margin-bottom:8px;">Day 6: Open Awareness</h3>
-          <p style="color:rgba(255,255,255,0.6);font-size:0.9rem;margin-bottom:20px;">10 minutes &middot; Expanding attention &middot; Choiceless awareness</p>
-          <p style="color:rgba(255,255,255,0.7);line-height:1.7;margin-bottom:24px;">Instead of focusing on one anchor, you'll practise opening your awareness to everything at once — sounds, sensations, thoughts — letting it all be.</p>
-          <a href="apps.html" class="btn" style="background:var(--accent);">Unlock Full Course</a>
-        </div>
-
-        <div class="day-panel fade-in" data-day="7" style="display:none;background:rgba(255,255,255,0.05);border-radius:16px;padding:32px;text-align:center;">
-          <h3 style="color:#fff;font-size:1.3rem;margin-bottom:8px;">Day 7: Integration</h3>
-          <p style="color:rgba(255,255,255,0.6);font-size:0.9rem;margin-bottom:20px;">12 minutes &middot; Bringing it together &middot; Your ongoing practice</p>
-          <p style="color:rgba(255,255,255,0.7);line-height:1.7;margin-bottom:24px;">The final session weaves together everything you've learned. You'll also receive guidance on building a sustainable daily practice going forward.</p>
-          <a href="apps.html" class="btn" style="background:var(--accent);">Unlock Full Course</a>
-        </div>
-      </div>
-
-      <p class="fade-in" style="text-align:center;color:rgba(255,255,255,0.5);font-size:0.85rem;margin-top:32px;">Day 1 is free. Unlock the full 7-day course with Salus Premium.</p>
-    </div>
-  </section>
-
-  <!-- 21-Day Mindfulness Course Teaser -->
-  <section style="background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%);padding:60px 0;">
-    <div class="container" style="text-align:center;max-width:700px;">
-      <div class="fade-in" style="background:linear-gradient(135deg, #ffffff 0%, #faf9f7 50%, #f5f3ef 100%);border-radius:16px;padding:40px 40px 40px 44px;box-shadow:0 4px 20px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.02);position:relative;overflow:hidden;border:1px solid rgba(0,0,0,0.03);transition:all 0.3s ease;">
-        <div style="position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg, var(--accent) 0%, #7c8cf5 100%);border-radius:4px 0 0 4px;"></div>
-        <div style="position:absolute;top:-30px;right:-30px;width:100px;height:100px;background:radial-gradient(circle, rgba(79,109,245,0.04) 0%, transparent 70%);border-radius:50%;pointer-events:none;"></div>
-        <span style="display:inline-block;background:var(--accent);color:#fff;padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:700;margin-bottom:16px;">COMING SOON</span>
-        <h2 style="font-size:1.8rem;font-weight:700;margin-bottom:12px;">21-Day Mindfulness Course</h2>
-        <p style="color:var(--mid-gray);line-height:1.7;margin-bottom:24px;">Go deeper. Three weeks of structured practice to transform your relationship with your mind. Build lasting habits, explore advanced techniques, and develop a practice that stays with you for life.</p>
-        <a href="mindfulness-21-day.html" class="btn btn-primary">Explore the Course</a>
+        <span class="course-banner__progress-label">7 days available · 21 total</span>
       </div>
     </div>
+    <a href="mindfulness-21-day.html" class="course-banner__cta">Start Day 1</a>
+  </div>
+</div>
+
+<div class="m-section-divider" id="mSessionsDivider">
+  <div class="m-section-divider__line"></div>
+  <div class="m-section-divider__label">Individual Sessions
+    <span class="m-section-divider__sub">Practise at your own pace</span>
+  </div>
+</div>
+
+<div class="m-card-grid" id="mSessionGrid">
+
+  <div class="m-card mcat-beginner" data-category="beginner">
+    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
+    <span class="m-card__badge m-badge--type">Beginner</span>
+    <div class="m-card__content">
+      <div class="m-card__meta"><span class="m-card__cat-dot"></span>8 min</div>
+      <h3 class="m-card__title">Introduction to Mindfulness</h3>
+      <p class="m-card__desc">Your starting point. A warm, unhurried introduction to the basics — breath, attention, and the art of simply being present.</p>
+      <div class="m-player"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 8:12</span></div>
+    </div>
+  </div>
+
+  <div class="m-card mcat-mindfulness" data-category="guided">
+    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
+    <span class="m-card__badge m-badge--premium">Premium</span>
+    <div class="m-card__content">
+      <div class="m-card__meta"><span class="m-card__cat-dot"></span>9 min</div>
+      <h3 class="m-card__title">Observing Emotions</h3>
+      <p class="m-card__desc">Learn to sit with feelings without being swept away. A practice in noticing, naming, and letting emotions pass through.</p>
+      <div class="m-player"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 9:24</span></div>
+    </div>
+  </div>
+
+  <div class="m-card mcat-mindfulness" data-category="guided">
+    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
+    <span class="m-card__badge m-badge--premium">Premium</span>
+    <div class="m-card__content">
+      <div class="m-card__meta"><span class="m-card__cat-dot"></span>11 min</div>
+      <h3 class="m-card__title">Open Awareness</h3>
+      <p class="m-card__desc">Move beyond the breath. Expand your attention to hold everything — sounds, sensations, thoughts — without grasping.</p>
+      <div class="m-player"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 11:24</span></div>
+    </div>
+  </div>
+
+  <div class="m-card mcat-course" data-category="course">
+    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
+    <span class="m-card__badge m-badge--type">Day 1 of 7</span>
+    <div class="m-card__content">
+      <div class="m-card__meta"><span class="m-card__cat-dot"></span>11 min</div>
+      <h3 class="m-card__title">Seven-Day Mindfulness</h3>
+      <p class="m-card__desc">Day one of a week-long foundation. Today: settling into stillness, finding the breath, and learning to simply notice.</p>
+      <div class="m-player"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 11:36</span></div>
+    </div>
+  </div>
+
+  <div class="m-card mcat-compassion" data-category="compassion">
+    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
+    <span class="m-card__badge m-badge--premium">Premium</span>
+    <div class="m-card__content">
+      <div class="m-card__meta"><span class="m-card__cat-dot"></span>12 min</div>
+      <h3 class="m-card__title">Loving-Kindness Introduction</h3>
+      <p class="m-card__desc">The traditional metta practice — extending warmth first to yourself, then outward. A gentle entry point into compassion meditation.</p>
+      <div class="m-player"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 12:54</span></div>
+    </div>
+  </div>
+
+  <div class="m-card mcat-mindfulness" data-category="guided">
+    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
+    <span class="m-card__badge m-badge--premium">Premium</span>
+    <div class="m-card__content">
+      <div class="m-card__meta"><span class="m-card__cat-dot"></span>20 min</div>
+      <h3 class="m-card__title">Non-Dual Awareness</h3>
+      <p class="m-card__desc">Rest in the space before thought. An advanced practice in observing consciousness itself — the observer and the observed as one.</p>
+      <div class="m-player"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 20:06</span></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="m-sub-hook" id="mSubHook">
+  <div class="m-sub-hook__text">
+    <div class="m-sub-hook__title">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      New material unlocked each week
+    </div>
+    <div class="m-sub-hook__desc">Walking mindfulness, body scan, gratitude, self-compassion, and more — all arriving with Salus Premium</div>
+  </div>
+  <a href="apps.html" class="m-sub-hook__cta">Go Premium</a>
+</div>
+
   </section>
 
   <!-- What is Mindfulness -->
@@ -1239,6 +1325,33 @@
   })();
 
 
+  // Mindfulness card filters
+  const mFilterBtns=document.querySelectorAll('.m-filter-btn');
+  const mSessionCards=document.querySelectorAll('#mSessionGrid .m-card');
+  const mCourseBanner=document.getElementById('courseBanner');
+  const mSessionsDivider=document.getElementById('mSessionsDivider');
+  mFilterBtns.forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      mFilterBtns.forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const f=btn.dataset.filter;
+      if(f==='all'){
+        mCourseBanner.style.display='';
+        mSessionsDivider.style.display='';
+        mSessionCards.forEach(c=>c.style.display='');
+        return;
+      }
+      mCourseBanner.style.display=(f==='course')?'':'none';
+      let anySession=false;
+      mSessionCards.forEach(c=>{
+        const show=c.dataset.category===f;
+        c.style.display=show?'':'none';
+        if(show)anySession=true;
+      });
+      mSessionsDivider.style.display=anySession?'':'none';
+    });
+  });
+
   // Navigation
   const navWrap=document.getElementById("navWrap");
   window.addEventListener("scroll",()=>{navWrap.classList.toggle("scrolled",window.scrollY>30)},{passive:true});
@@ -1246,32 +1359,6 @@
   const drawer=document.getElementById("navDrawer");
   burger.addEventListener("click",()=>{burger.classList.toggle("open");drawer.classList.toggle("open");document.body.style.overflow=drawer.classList.contains("open")?"hidden":""});
   drawer.querySelectorAll(".nav-drawer__link").forEach(l=>{l.addEventListener("click",()=>{burger.classList.remove("open");drawer.classList.remove("open");document.body.style.overflow=""})});
-  </script>
-  <script>
-    // 7-Day Course Tab Switching
-    document.querySelectorAll('.day-tab').forEach(function(tab) {
-      tab.addEventListener('click', function() {
-        var day = this.getAttribute('data-day');
-        // Update active tab styling
-        document.querySelectorAll('.day-tab').forEach(function(t) {
-          if (t.classList.contains('locked')) {
-            t.style.background = 'rgba(255,255,255,0.1)';
-          } else {
-            t.style.background = 'rgba(255,255,255,0.1)';
-          }
-        });
-        if (this.classList.contains('locked')) {
-          this.style.background = 'rgba(255,255,255,0.2)';
-        } else {
-          this.style.background = 'var(--accent)';
-        }
-        // Show corresponding panel
-        document.querySelectorAll('.day-panel').forEach(function(panel) {
-          panel.style.display = 'none';
-        });
-        document.querySelector('.day-panel[data-day="' + day + '"]').style.display = 'block';
-      });
-    });
   </script>
 </body>
 </html>
