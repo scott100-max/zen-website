@@ -262,29 +262,32 @@ section { padding: 100px 0; }
 
 /* ---- CTA Banner ---- */
 .cta-banner {
-  background: linear-gradient(135deg, var(--forest-mid) 0%, var(--forest) 100%) !important;
-  color: var(--white); text-align: center; padding: 80px 0;
+  background: rgba(255,255,255,0.03) !important;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  color: #f0eefc; text-align: center; padding: 80px 0;
 }
 .cta-banner h2 { font-size: 2rem; margin-bottom: 12px; }
 .cta-banner p { opacity: 0.9; margin-bottom: 32px; font-size: 1.1rem; }
-.cta-banner .btn { background: var(--white); color: var(--accent-dark); }
-.cta-banner .btn:hover { background: var(--off-white); }
+.cta-banner .btn { background: #f0eefc; color: var(--accent); }
+.cta-banner .btn:hover { background: rgba(240,238,252,0.85); }
 
 /* ---- Footer ---- */
 .footer {
-  background: var(--forest); color: rgba(255,255,255,0.6);
+  background: transparent; color: rgba(255,255,255,0.6);
+  border-top: 1px solid rgba(255,255,255,0.06);
   padding: 60px 0 32px;
 }
 .footer-grid {
   display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px;
   margin-bottom: 40px;
 }
-.footer h4 { color: var(--white); margin-bottom: 16px; font-size: 1rem; }
+.footer h4 { color: #f0eefc; margin-bottom: 16px; font-size: 1rem; }
 .footer p { font-size: 0.9rem; }
 .footer ul { list-style: none; }
 .footer ul li { margin-bottom: 8px; }
 .footer ul a { color: rgba(255,255,255,0.6); font-size: 0.9rem; }
-.footer ul a:hover { color: var(--white); }
+.footer ul a:hover { color: #f0eefc; }
 .footer-bottom {
   border-top: 1px solid rgba(255,255,255,0.1);
   padding-top: 24px; text-align: center; font-size: 0.85rem;
