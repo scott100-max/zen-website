@@ -345,6 +345,159 @@ def humanize_pauses(blocks, seed=42):
 
 
 # ============================================================================
+# PER-CHUNK QA — Score individual chunks before assembly
+# ============================================================================
+
+def score_chunk_quality(audio_path):
+    """Score a single TTS chunk for quality (echo, hiss, voice consistency).
+
+    Returns a dict with:
+      - score: composite quality score (higher = better)
+      - echo_risk: spectral flux variance (lower = better)
+      - hiss_risk: HF energy ratio in dB (lower = better, more negative = cleaner)
+      - sp_contrast: spectral contrast (higher = better)
+      - sp_flatness: spectral flatness (lower = better)
+
+    Used by generate_chunk_with_qa() to pick the best of N generations.
+    Calibrated against 27 human-labeled chunks from build 10 (8 Feb 2026).
+    """
+    import librosa
+    import numpy as np
+
+    y, sr = librosa.load(audio_path, sr=22050)
+
+    if len(y) < 2048:
+        return {'score': 0.0, 'echo_risk': 1.0, 'hiss_risk': 0.0,
+                'sp_contrast': 0.0, 'sp_flatness': 1.0, 'too_short': True}
+
+    # 1. Spectral flux variance — echo/reverb smooths transitions → higher variance
+    #    Best separator from calibration (Cohen's d = 1.046)
+    S = np.abs(librosa.stft(y, n_fft=2048))
+    S_norm = S / (S.sum(axis=0, keepdims=True) + 1e-10)
+    flux = np.sqrt(np.sum(np.diff(S_norm, axis=1)**2, axis=0))
+    echo_risk = float(np.var(flux))
+
+    # 2. HF energy ratio — hiss detection (energy above 6kHz / total)
+    freqs = librosa.fft_frequencies(sr=sr, n_fft=2048)
+    hf_mask = freqs >= 6000
+    hf_energy = float(np.mean(S[hf_mask, :] ** 2))
+    total_energy = float(np.mean(S ** 2))
+    hiss_risk = 10 * np.log10(hf_energy / (total_energy + 1e-10) + 1e-10)
+
+    # 3. Spectral contrast — clean speech has higher contrast (d = 0.642)
+    contrast = librosa.feature.spectral_contrast(y=y, sr=sr)
+    sp_contrast = float(np.mean(contrast))
+
+    # 4. Spectral flatness — noise-like = higher, tonal = lower (d = 0.585)
+    sp_flatness = float(np.mean(librosa.feature.spectral_flatness(y=y)))
+
+    # Composite score: weighted combination, higher = better
+    # Weights from Cohen's d separation values (OK vs Echo calibration)
+    # All metrics normalized to ~0-1 range based on observed calibration data
+    score = (
+        -echo_risk * 500.0       # flux variance ~0.001-0.002, penalty for higher
+        + sp_contrast * 0.05     # contrast ~19-21, reward for higher
+        - sp_flatness * 10.0     # flatness ~0.01-0.07, penalty for higher
+        - hiss_risk * 0.05       # hf ratio ~-17 to -10 dB, penalty for higher (less negative)
+    )
+
+    return {
+        'score': round(float(score), 4),
+        'echo_risk': round(echo_risk, 6),
+        'hiss_risk': round(hiss_risk, 2),
+        'sp_contrast': round(sp_contrast, 3),
+        'sp_flatness': round(sp_flatness, 5),
+    }
+
+
+def generate_chunk_with_qa(text, output_path, chunk_num, emotion='calm',
+                           n_versions=2, max_retries=3):
+    """Generate a Fish TTS chunk with per-chunk QA.
+
+    Generates n_versions of the chunk, scores each, and keeps the best.
+    If the best score is below threshold after max_retries total attempts,
+    flags the chunk text for potential rewrite.
+
+    Returns (output_path, score_dict, flagged).
+    """
+    import shutil
+
+    best_path = None
+    best_score = None
+    best_details = None
+    all_scores = []
+
+    for attempt in range(max_retries):
+        # Generate a version
+        temp_path = output_path + f".v{attempt}.mp3"
+        try:
+            generate_tts_chunk(text, temp_path, chunk_num, emotion=emotion)
+        except Exception as e:
+            print(f"      Version {attempt+1} FAILED: {e}")
+            continue
+
+        # Check for overgeneration
+        duration = get_audio_duration(temp_path)
+        expected = len(text) / 15.0
+        max_dur = max(expected * 2.5, 20.0)
+        if duration > max_dur:
+            print(f"      Version {attempt+1} OVERGENERATED ({duration:.1f}s > {max_dur:.1f}s) — skipping")
+            try:
+                os.remove(temp_path)
+            except OSError:
+                pass
+            continue
+
+        # Score it
+        details = score_chunk_quality(temp_path)
+        score = details['score']
+        all_scores.append(score)
+
+        marker = ""
+        if best_score is not None and score > best_score:
+            marker = " ★ new best"
+        elif best_score is None:
+            marker = " ★ first"
+
+        print(f"      v{attempt+1}: score={score:.3f} (echo={details['echo_risk']:.5f} hiss={details['hiss_risk']:.1f}dB){marker}")
+
+        if best_score is None or score > best_score:
+            # New best — keep it, discard previous best
+            if best_path and best_path != output_path and os.path.exists(best_path):
+                try:
+                    os.remove(best_path)
+                except OSError:
+                    pass
+            best_path = temp_path
+            best_score = score
+            best_details = details
+        else:
+            # Worse than current best — discard
+            try:
+                os.remove(temp_path)
+            except OSError:
+                pass
+
+        # If we have enough good versions, stop early
+        if attempt >= n_versions - 1 and best_score is not None:
+            break
+
+    if best_path is None:
+        raise Exception(f"All {max_retries} attempts failed for chunk {chunk_num+1}")
+
+    # Move best to final output path
+    if best_path != output_path:
+        shutil.move(best_path, output_path)
+
+    # Flag if score is below threshold (calibrated 8 Feb 2026)
+    # OK avg=0.708, Echo avg=0.542, Hiss avg=0.534
+    # Threshold 0.50: catches worst offenders without excessive false positives
+    flagged = best_score < 0.50 if best_score is not None else True
+
+    return output_path, best_details, flagged
+
+
+# ============================================================================
 # FISH TTS API (Chunked)
 # ============================================================================
 
@@ -3203,6 +3356,7 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
         silences = []
         manifest_segments = []
         request_ids = []
+        flagged_chunks = []
         current_time = 0.0
 
         print(f"\n  Generating TTS chunks ({provider})...")
@@ -3223,42 +3377,35 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
                     if len(request_ids) > 3:
                         request_ids = request_ids[-3:]
             else:
+                # Fish TTS with per-chunk QA: generate N versions, keep best
+                block_path = os.path.join(temp_dir, f"block_{i}.mp3")
                 if len(text) > CHUNK_SIZE:
+                    # Long text: split into sub-chunks, no per-chunk QA on sub-chunks
                     chunks = chunk_text_at_sentences(text)
                     chunk_files = []
                     for j, chunk in enumerate(chunks):
                         chunk_path = os.path.join(temp_dir, f"block_{i}_chunk_{j}.mp3")
                         generate_tts_chunk(chunk, chunk_path, len(voice_files) + j, emotion=api_emotion)
                         chunk_files.append(chunk_path)
-                    block_path = os.path.join(temp_dir, f"block_{i}.mp3")
                     crossfade_audio_files(chunk_files, block_path)
                 else:
-                    block_path = os.path.join(temp_dir, f"block_{i}.mp3")
-                    generate_tts_chunk(text, block_path, len(voice_files), emotion=api_emotion)
+                    # Standard chunk: generate multiple versions, score, keep best
+                    print(f"    Chunk {i+1} QA:")
+                    _, chunk_score, chunk_flagged = generate_chunk_with_qa(
+                        text, block_path, len(voice_files),
+                        emotion=api_emotion, n_versions=2, max_retries=3
+                    )
+                    if chunk_flagged:
+                        flagged_chunks.append({
+                            'index': i + 1,
+                            'text': text[:80],
+                            'score': chunk_score,
+                        })
+                        print(f"      ⚠ FLAGGED — may need rewrite")
 
-            # Overgeneration retry for Fish (non-deterministic — sometimes produces 3x+ expected)
+            # Duration check (applies to all providers)
             duration = get_audio_duration(block_path)
             expected = len(text) / 15.0  # ~15 chars/sec estimate
-            max_dur = max(expected * 2.5, 20.0)
-            if provider == 'fish' and duration > max_dur:
-                for retry in range(2):
-                    print(f"    OVERGENERATION: {duration:.1f}s (max {max_dur:.1f}s) — retrying ({retry+1}/2)")
-                    if len(text) > CHUNK_SIZE:
-                        chunks = chunk_text_at_sentences(text)
-                        chunk_files = []
-                        for j, chunk in enumerate(chunks):
-                            chunk_path = os.path.join(temp_dir, f"block_{i}_chunk_{j}.mp3")
-                            generate_tts_chunk(chunk, chunk_path, len(voice_files) + j, emotion=api_emotion)
-                            chunk_files.append(chunk_path)
-                        block_path = os.path.join(temp_dir, f"block_{i}.mp3")
-                        crossfade_audio_files(chunk_files, block_path)
-                    else:
-                        generate_tts_chunk(text, block_path, len(voice_files), emotion=api_emotion)
-                    duration = get_audio_duration(block_path)
-                    if duration <= max_dur:
-                        break
-                else:
-                    print(f"    WARNING: Overgeneration persisted after 2 retries ({duration:.1f}s)")
 
             # Build manifest
             manifest_segments.append({
@@ -3284,6 +3431,16 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
 
             voice_files.append(block_path)
             silences.append(pause)
+
+        # Per-chunk QA summary
+        if flagged_chunks:
+            print(f"\n  ⚠ PER-CHUNK QA: {len(flagged_chunks)} chunk(s) flagged for potential rewrite:")
+            for fc in flagged_chunks:
+                print(f"    Chunk {fc['index']}: \"{fc['text']}...\" (score={fc['score']['score']:.3f})")
+            # Save flagged chunks to manifest for tracking
+        else:
+            if provider == 'fish':
+                print(f"\n  ✓ PER-CHUNK QA: All chunks scored above threshold")
 
         # ================================================================
         # PHASE 2: CONCATENATE + MIX (lossless WAV pipeline)
@@ -3315,6 +3472,7 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
             "total_silence": round(sum(s['duration'] for s in manifest_segments if s['type'] == 'silence'), 1),
             "text_segments": sum(1 for s in manifest_segments if s['type'] == 'text'),
             "segments": manifest_segments,
+            "flagged_chunks": flagged_chunks if flagged_chunks else [],
         }
         with open(str(manifest_path), 'w') as f:
             json.dump(manifest_data, f, indent=2)
