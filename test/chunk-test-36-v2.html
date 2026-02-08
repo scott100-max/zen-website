@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chunk Review: 36-loving-kindness-intro v2 (best-of-5)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, sans-serif; background: #1a1a2e; color: #eee; padding: 16px; max-width: 700px; margin: 0 auto; }
+    h1 { font-size: 1.3rem; margin-bottom: 4px; }
+    .sub { color: #888; font-size: 0.82rem; margin-bottom: 16px; }
+    .stats { background: #16213e; border-radius: 10px; padding: 12px 16px; margin-bottom: 16px; display: flex; gap: 12px; flex-wrap: wrap; }
+    .stat { text-align: center; flex: 1; min-width: 50px; }
+    .stat .num { font-size: 1.4rem; font-weight: 700; }
+    .stat .lbl { font-size: 0.7rem; color: #888; text-transform: uppercase; }
+    .chunk { background: #16213e; border-radius: 10px; padding: 12px 16px; margin-bottom: 10px; }
+    .chunk.flagged { border-left: 3px solid #ef4444; }
+    .chunk .hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .chunk .hdr h2 { font-size: 0.95rem; }
+    .chunk .hdr .badge { font-size: 0.7rem; background: #ef4444; color: #fff; padding: 2px 6px; border-radius: 4px; }
+    .chunk p { color: #aaa; font-size: 0.78rem; margin-bottom: 8px; line-height: 1.4; }
+    audio { width: 100%; height: 36px; margin-bottom: 8px; }
+    .btns { display: flex; gap: 6px; flex-wrap: wrap; }
+    .btns button { padding: 6px 14px; border: 2px solid #333; border-radius: 6px; background: transparent; color: #ccc; font-size: 0.8rem; cursor: pointer; transition: all 0.15s; }
+    .btns button:hover { border-color: #666; }
+    .btns button.sel-ok { background: #22c55e; border-color: #22c55e; color: #000; }
+    .btns button.sel-echo { background: #f59e0b; border-color: #f59e0b; color: #000; }
+    .btns button.sel-hiss { background: #a855f7; border-color: #a855f7; color: #fff; }
+    .btns button.sel-voice { background: #3b82f6; border-color: #3b82f6; color: #fff; }
+    .btns button.sel-bad { background: #ef4444; border-color: #ef4444; color: #fff; }
+    .notes { width: 100%; margin-top: 6px; padding: 6px 10px; background: #0f1629; border: 1px solid #333; border-radius: 6px; color: #eee; font-size: 0.78rem; resize: none; height: 28px; }
+    .verdict-tag { display: inline-block; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; margin-left: 8px; }
+    .full-track { background: #16213e; border-radius: 10px; padding: 12px 16px; margin-bottom: 10px; }
+    .full-track h2 { font-size: 0.95rem; margin-bottom: 4px; }
+    .full-track p { color: #aaa; font-size: 0.78rem; margin-bottom: 8px; }
+    #export-btn { margin-top: 16px; padding: 10px 24px; background: #22c55e; border: none; border-radius: 8px; color: #000; font-size: 0.9rem; font-weight: 600; cursor: pointer; width: 100%; }
+    #export-btn:hover { background: #16a34a; }
+    #results { margin-top: 12px; background: #0f1629; border-radius: 8px; padding: 12px; font-family: monospace; font-size: 0.78rem; white-space: pre-wrap; display: none; }
+  </style>
+</head>
+<body>
+  <h1>v2 Script — Best-of-5 Per-Chunk Review</h1>
+  <p class="sub">Best-of-5 generation (135 TTS calls). 14/14 gates passed. 2 chunks flagged (7, 20). Compare vs Build 11 (52% clean).</p>
+
+  <div class="stats">
+    <div class="stat"><div class="num" id="s-ok">0</div><div class="lbl">OK</div></div>
+    <div class="stat"><div class="num" id="s-echo" style="color:#f59e0b">0</div><div class="lbl">Echo</div></div>
+    <div class="stat"><div class="num" id="s-hiss" style="color:#a855f7">0</div><div class="lbl">Hiss</div></div>
+    <div class="stat"><div class="num" id="s-voice" style="color:#3b82f6">0</div><div class="lbl">Voice</div></div>
+    <div class="stat"><div class="num" id="s-bad" style="color:#ef4444">0</div><div class="lbl">Bad</div></div>
+    <div class="stat"><div class="num" id="s-pct">0%</div><div class="lbl">Clean</div></div>
+  </div>
+
+  <div class="full-track">
+    <h2>Full Mix (with ambient)</h2>
+    <p>Complete session as it would be deployed.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test-v2/full_mix.mp3"></audio>
+  </div>
+  <div class="full-track">
+    <h2>Raw Narration (no cleanup, no ambient)</h2>
+    <p>Voice only, straight from Fish TTS with edge fades.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test-v2/raw_narration.mp3"></audio>
+  </div>
+
+  <div id="chunks"></div>
+
+  <button id="export-btn" onclick="exportResults()">Export Results</button>
+  <div id="results"></div>
+
+<script>
+const BASE = "https://media.salus-mind.com/test/chunk-test-v2-bo5/";
+const chunks = [
+  {n:1, text:"Find a comfortable position, wherever you are right now, and gently allow your eyes to close.", flag:false},
+  {n:2, text:"There is nowhere else you need to be. Nothing else that needs your attention in this moment.", flag:false},
+  {n:3, text:"Let your shoulders drop away from your ears, and soften the muscles around your jaw and forehead.", flag:false},
+  {n:4, text:"Take a slow, deep breath in through your nose, letting your chest open wide, and let it go.", flag:false},
+  {n:5, text:"And one more breath, a little longer this time. Notice your whole body growing quiet and calm as you exhale.", flag:false},
+  {n:6, text:"Today we are going to explore a practice called loving-kindness. It is one of the oldest meditation traditions in the world, and it works in a beautifully simple way. We quietly offer kind wishes, first to ourselves, and then gradually outward to the people around us.", flag:false},
+  {n:7, text:"There is nothing to force here. No emotion you need to create. Simply offer the words like seeds planted in open ground, and trust that something will grow in its own time.", flag:true, score:"0.404"},
+  {n:8, text:"Rest one hand gently over your heart, if that is comfortable. Notice the warmth of your palm there, and the quiet rhythm beneath it. This is your anchor for the practice ahead.", flag:false},
+  {n:9, text:"Now bring your attention inward, towards yourself, with the same care you would show a close friend who needed comfort. We often find it easier to be kind to others than to ourselves, so this first step may seem new. That is perfectly normal.", flag:false},
+  {n:10, text:"In your own mind, begin to repeat these words directed towards yourself. May I be safe and protected from harm.", flag:false},
+  {n:11, text:"May I be happy and content, just as I am in this moment.", flag:false},
+  {n:12, text:"May I be healthy and strong in body and in mind.", flag:false},
+  {n:13, text:"May I live my life with a sense of ease and deep, abiding peace.", flag:false},
+  {n:14, text:"There is no need to judge whatever arises. If the words seem empty, let them be empty. If emotion comes, let it come and go. Simply keep offering the phrases, gently, without expecting anything in return.", flag:false},
+  {n:15, text:"I am going to be quiet now for a short while. Stay with this warmth directed towards yourself, and let the sounds around you hold the space.", flag:false},
+  {n:16, text:"Now, gently turn your attention outward, towards someone you care about. A friend, a family member, a partner. Picture their face, the way they look when they are at their most joyful.", flag:false},
+  {n:17, text:"Offer them the same kind wishes you gave yourself. May you be safe. May you be happy. May you be healthy and strong. May you live with ease and peace.", flag:false},
+  {n:18, text:"Now bring to mind someone you see regularly but do not know well. Perhaps a neighbour, or someone you pass on your way to work each morning. You may not know their name, but just like you, they want to be safe and loved.", flag:false},
+  {n:19, text:"Offer them these same wishes now. May you be safe. May you be happy. May you be healthy. May you live with ease.", flag:false},
+  {n:20, text:"And now, if you are willing, bring to mind someone who has caused you some difficulty recently. Not the hardest person in your life, just someone with whom things have been a little tense.", flag:true, score:"-0.185"},
+  {n:21, text:"Remember that offering kindness does not mean you approve of their actions. It simply means recognising that they, too, are a human being who knows pain. If it is possible, offer them the same words. May you be safe. May you be happy. May you be healthy. May you live with ease.", flag:false},
+  {n:22, text:"Now let your awareness expand as wide as you can imagine. Your street, your town, your country, and gradually the whole world. Billions of people, each one carrying their own hopes and their own sorrows.", flag:false},
+  {n:23, text:"May all beings, everywhere, be safe and protected from harm. May all beings be happy. May all beings be healthy. May all beings live their lives with a sense of ease and deep, abiding peace.", flag:false},
+  {n:24, text:"Picture that warmth radiating outward from your heart, like ripples moving across calm water. There is no limit to how far kindness can reach.", flag:false},
+  {n:25, text:"Gently let go of the phrases and the images now. Let everything become quiet, and simply notice how you are, without needing to name it or explain it.", flag:false},
+  {n:26, text:"Begin to bring your awareness back to your breath. The gentle rise and fall of your chest. The sounds around you. The weight of your body against what is beneath you.", flag:false},
+  {n:27, text:"When you are ready, in your own time, gently open your eyes. Carry whatever warmth you have found here with you into the rest of your day.", flag:false}
+];
+
+const verdicts = {};
+const notes = {};
+const container = document.getElementById("chunks");
+
+chunks.forEach(c => {
+  const pad = String(c.n).padStart(2,"0");
+  const cls = c.flag ? "chunk flagged" : "chunk";
+  const badge = c.flag ? '<span class="badge">FLAGGED '+c.score+'</span>' : '';
+  const div = document.createElement("div");
+  div.className = cls;
+  div.id = "c"+c.n;
+  div.innerHTML = '<div class="hdr"><h2>Chunk '+c.n+' <span id="vt'+c.n+'"></span></h2>'+badge+'</div>'
+    + '<p>'+c.text+'</p>'
+    + '<audio controls preload="none" src="'+BASE+'chunk_'+pad+'.mp3"></audio>'
+    + '<div class="btns">'
+    + '<button onclick="tag(this,'+c.n+',\'ok\')">OK</button>'
+    + '<button onclick="tag(this,'+c.n+',\'echo\')">Echo</button>'
+    + '<button onclick="tag(this,'+c.n+',\'hiss\')">Hiss</button>'
+    + '<button onclick="tag(this,'+c.n+',\'voice\')">Voice</button>'
+    + '<button onclick="tag(this,'+c.n+',\'bad\')">Bad</button>'
+    + '</div>'
+    + '<textarea class="notes" placeholder="notes..." oninput="notes['+c.n+']=this.value"></textarea>';
+  container.appendChild(div);
+});
+
+function tag(el, n, verdict) {
+  verdicts[n] = verdict;
+  const btns = el.parentElement.querySelectorAll("button");
+  btns.forEach(b => b.className = "");
+  el.className = "sel-" + verdict;
+  const vt = document.getElementById("vt"+n);
+  const colors = {ok:"#22c55e",echo:"#f59e0b",hiss:"#a855f7",voice:"#3b82f6",bad:"#ef4444"};
+  vt.innerHTML = '<span class="verdict-tag" style="background:'+colors[verdict]+'">'+verdict.toUpperCase()+'</span>';
+  updateStats();
+  fetch("http://localhost:8111/verdict", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({chunk: n, verdict: verdict, notes: notes[n]||""})
+  }).catch(()=>{});
+}
+
+function updateStats() {
+  const counts = {ok:0,echo:0,hiss:0,voice:0,bad:0};
+  Object.values(verdicts).forEach(v => counts[v]++);
+  document.getElementById("s-ok").textContent = counts.ok;
+  document.getElementById("s-echo").textContent = counts.echo;
+  document.getElementById("s-hiss").textContent = counts.hiss;
+  document.getElementById("s-voice").textContent = counts.voice;
+  document.getElementById("s-bad").textContent = counts.bad;
+  const total = Object.keys(verdicts).length;
+  const pct = total > 0 ? Math.round(counts.ok / total * 100) : 0;
+  document.getElementById("s-pct").textContent = pct + "%";
+}
+
+function exportResults() {
+  let lines = [];
+  chunks.forEach(c => {
+    const v = verdicts[c.n] || "—";
+    const n = notes[c.n] || "";
+    lines.push(c.n + ". " + v + (n ? " — " + n : ""));
+  });
+  const ok = Object.values(verdicts).filter(v=>v==="ok").length;
+  const total = Object.keys(verdicts).length;
+  lines.push("\\nClean: " + ok + "/" + total + " (" + Math.round(ok/Math.max(total,1)*100) + "%)");
+  const el = document.getElementById("results");
+  el.style.display = "block";
+  el.textContent = lines.join("\\n");
+}
+</script>
+</body>
+</html>

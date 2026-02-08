@@ -520,8 +520,8 @@ def generate_chunk_with_qa(text, output_path, chunk_num, emotion='calm',
             except OSError:
                 pass
 
-        # If we have enough good versions, stop early
-        if attempt >= n_versions - 1 and best_score is not None:
+        # If we have enough scored versions, stop early
+        if len(all_scores) >= n_versions and best_score is not None:
             break
 
     if best_path is None:
@@ -531,10 +531,13 @@ def generate_chunk_with_qa(text, output_path, chunk_num, emotion='calm',
     if best_path != output_path:
         shutil.move(best_path, output_path)
 
-    # Flag if score is below threshold (calibrated 8 Feb 2026)
-    # OK avg=0.708, Echo avg=0.542, Hiss avg=0.534
-    # Threshold 0.50: catches worst offenders without excessive false positives
-    flagged = best_score < 0.50 if best_score is not None else True
+    # Flag based on QUALITY score only (not combined score with tonal penalty).
+    # Tonal penalty is for ranking versions, not for flagging script rewrites.
+    # A chunk with good quality but poor tonal match doesn't need a rewrite —
+    # it just needs a different generation that matches the previous chunk better.
+    # Calibrated 8 Feb 2026: OK avg=0.708, Echo avg=0.542, Hiss avg=0.534
+    quality_score = best_details.get('score', 0.0) if best_details else 0.0
+    flagged = quality_score < 0.50 if quality_score is not None else True
 
     return output_path, best_details, flagged, best_mfcc
 
@@ -1809,16 +1812,21 @@ def qa_volume_surge_check(audio_path, manifest_data, window_sec=1.0, overlap_sec
     rms_db = np.array(rms_db)
     window_times = np.array(window_times)
 
-    # Build silence region lookup from manifest
+    # Build silence region lookup from manifest (with duration for margin scaling)
     silence_ranges = []
     for seg in manifest_data['segments']:
         if seg['type'] == 'silence':
-            silence_ranges.append((seg['start_time'], seg['start_time'] + seg['duration']))
+            silence_ranges.append((seg['start_time'], seg['start_time'] + seg['duration'], seg['duration']))
 
     def overlaps_silence(t, win=window_sec):
-        """Check if a window overlaps any silence region (with 4s margin for transitions)."""
-        for s_start, s_end in silence_ranges:
-            if t < s_end + 4.0 and t + win > s_start - 4.0:
+        """Check if a window overlaps any silence region (margin scales with silence duration).
+
+        Short pauses (8s) get 4s margin. Long silences (50s) get proportionally larger
+        margins because the voice ramp-up after extended silence is longer.
+        """
+        for s_start, s_end, s_dur in silence_ranges:
+            margin = max(4.0, s_dur * 0.15)
+            if t < s_end + margin and t + win > s_start - margin:
                 return True
         return False
 
@@ -2059,8 +2067,25 @@ def qa_repeated_content_check(audio_path, manifest_data, expected_repetitions=No
     # MFCC alone cannot flag — meditation monotone voice produces >0.96 similarity
     # between ALL segments. Only when Whisper also finds matching text at the same
     # timestamps do we confirm a real duplicate.
+    # ADDITIONAL GUARD: verify against manifest text — if the script text for two
+    # segments is clearly different, this is a false positive from similar prosody,
+    # not a real repeat.
     confirmed_repeats = []
     for mfcc_dup in mfcc_duplicates:
+        # Guard: check manifest text for these segments
+        seg_a_text = text_segments[mfcc_dup['seg_a']].get('text', '').lower().strip()
+        seg_b_text = text_segments[mfcc_dup['seg_b']].get('text', '').lower().strip()
+        if seg_a_text and seg_b_text:
+            # Word overlap check — if < 60% words in common, texts are different
+            words_a = set(seg_a_text.split())
+            words_b = set(seg_b_text.split())
+            overlap = len(words_a & words_b)
+            max_words = max(len(words_a), len(words_b), 1)
+            word_overlap_ratio = overlap / max_words
+            if word_overlap_ratio < 0.6:
+                print(f"  QA-REPEAT: Skipping MFCC pair seg {mfcc_dup['seg_a']}↔{mfcc_dup['seg_b']} — different text (overlap={word_overlap_ratio:.0%})")
+                continue
+
         # Only flag if Whisper also found repeated text near these timestamps
         for w_dup in whisper_duplicates:
             if (abs(w_dup['first_time'] - mfcc_dup['time_a']) < 10 and
@@ -3297,7 +3322,7 @@ def send_build_email(session_name, duration_min, qa_passed, r2_url):
 # ============================================================================
 
 def build_session(session_name, dry_run=False, provider='fish', voice_id=None, model='v2',
-                   cleanup_mode='full', no_deploy=False):
+                   cleanup_mode='full', no_deploy=False, focus_chunks=None):
     """Build a complete session: TTS → concat → mix → QA loop → deploy.
 
     The full pipeline runs autonomously:
@@ -3434,10 +3459,16 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
                 else:
                     # Standard chunk: generate multiple versions, score, keep best
                     # Tonal consistency: pass previous chunk's MFCC profile
-                    print(f"    Chunk {i+1} QA:")
+                    # Focus mode: problem chunks get 10 versions, others get 5
+                    chunk_num = i + 1
+                    is_focus = focus_chunks and chunk_num in focus_chunks
+                    n_ver = 10 if is_focus else 5
+                    max_ret = 12 if is_focus else 6
+                    focus_tag = " [FOCUS]" if is_focus else ""
+                    print(f"    Chunk {chunk_num} QA (best-of-{n_ver}):{focus_tag}")
                     _, chunk_score, chunk_flagged, chunk_mfcc = generate_chunk_with_qa(
                         text, block_path, len(voice_files),
-                        emotion=api_emotion, n_versions=2, max_retries=3,
+                        emotion=api_emotion, n_versions=n_ver, max_retries=max_ret,
                         prev_chunk_mfcc=prev_chunk_mfcc
                     )
                     prev_chunk_mfcc = chunk_mfcc  # Chain for next chunk
@@ -3623,8 +3654,17 @@ def main():
                         help='Override cleanup mode (default: full for fish, resemble for resemble)')
     parser.add_argument('--no-deploy', action='store_true',
                         help='Build and QA only — do not upload to R2')
+    parser.add_argument('--focus-chunks', default=None,
+                        help='Comma-separated chunk numbers to regenerate with extra attempts (e.g. 1,3,11,13,14)')
 
     args = parser.parse_args()
+
+    # Parse focus chunks into a set
+    focus_chunk_set = set()
+    if args.focus_chunks:
+        for c in args.focus_chunks.split(','):
+            focus_chunk_set.add(int(c.strip()))
+        print(f"  FOCUS MODE: Chunks {sorted(focus_chunk_set)} get 10 versions, others get 5")
 
     # Determine cleanup mode
     if args.cleanup:
@@ -3647,6 +3687,7 @@ def main():
             model=args.model,
             cleanup_mode=cleanup_mode,
             no_deploy=args.no_deploy,
+            focus_chunks=focus_chunk_set,
         )
     except Exception as e:
         print(f"\nERROR: {e}")

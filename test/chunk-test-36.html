@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Build 11 — Chunk Review</title>
+  <style>
+    body { font-family: -apple-system, sans-serif; background: #1a1a2e; color: #eee; padding: 20px; max-width: 700px; margin: 0 auto; }
+    h1 { font-size: 1.4rem; margin-bottom: 4px; }
+    p.sub { color: #888; font-size: 0.85rem; margin-bottom: 24px; }
+    .track { background: #16213e; border-radius: 12px; padding: 16px 20px; margin-bottom: 10px; }
+    .track.flagged { border-left: 3px solid #ef4444; }
+    .track h2 { font-size: 0.9rem; margin: 0 0 4px 0; color: #f59e0b; }
+    .track p { color: #ccc; font-size: 0.85rem; margin: 0 0 10px 0; line-height: 1.5; }
+    .flag { background: #ef4444; color: #fff; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; margin-left: 6px; }
+    audio { width: 100%; height: 36px; }
+    .verdict-row { display: flex; gap: 6px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
+    .btn { border: none; border-radius: 6px; padding: 6px 14px; font-size: 0.8rem; cursor: pointer; opacity: 0.5; transition: opacity 0.2s; }
+    .btn:hover { opacity: 0.8; }
+    .btn.selected { opacity: 1; box-shadow: 0 0 0 2px #fff; }
+    .btn.ok { background: #22c55e; color: #000; }
+    .btn.echo { background: #ef4444; color: #fff; }
+    .btn.hiss { background: #f97316; color: #000; }
+    .btn.voice { background: #a855f7; color: #fff; }
+    .btn.bad { background: #dc2626; color: #fff; }
+    .note { flex: 1; min-width: 120px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 6px 10px; color: #eee; font-size: 0.8rem; }
+    .track.tagged-ok { border-left: 3px solid #22c55e; }
+    .track.tagged-echo { border-left: 3px solid #ef4444; }
+    .track.tagged-hiss { border-left: 3px solid #f97316; }
+    .track.tagged-voice { border-left: 3px solid #a855f7; }
+    .track.tagged-bad { border-left: 3px solid #dc2626; }
+    #summary { background: #0f172a; border-radius: 12px; padding: 16px 20px; margin-top: 24px; display: none; }
+    #summary h2 { font-size: 1rem; margin: 0 0 10px 0; }
+    #summary pre { color: #ccc; font-size: 0.8rem; white-space: pre-wrap; }
+    .action-btn { background: #f59e0b; color: #000; border: none; border-radius: 6px; padding: 10px 20px; font-size: 0.85rem; cursor: pointer; margin-top: 10px; width: 100%; }
+    .action-btn:hover { background: #d97706; }
+    .stats { background: #0f172a; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; font-size: 0.8rem; color: #888; }
+    .stats span { color: #eee; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Build 11 — Per-Chunk QA Review</h1>
+  <p class="sub">Raw TTS, zero processing. Tag each chunk. 4 flagged by QA scoring.</p>
+  <div class="stats">
+    Tagged: <span id="count">0</span>/27 &nbsp; OK: <span id="ok-count">0</span> &nbsp; Issues: <span id="issue-count">0</span>
+  </div>
+  <div class="track" id="c1">
+    <h2>1. [0:00.0] (6.4s)</h2>
+    <p>Find a comfortable position, wherever you are right now, and gently allow your eyes to close.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_01.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,1,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,1,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,1,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,1,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,1,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note1" placeholder="notes..." class="note" onblur="saveNote(1)">
+    </div>
+  </div>\n  <div class="track" id="c2">
+    <h2>2. [0:14.4] (7.3s)</h2>
+    <p>There is nowhere else you need to be. Nothing else that needs your attention in this moment.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_02.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,2,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,2,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,2,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,2,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,2,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note2" placeholder="notes..." class="note" onblur="saveNote(2)">
+    </div>
+  </div>\n  <div class="track" id="c3">
+    <h2>3. [0:29.7] (6.1s)</h2>
+    <p>Let your shoulders drop away from your ears, and soften the muscles around your jaw and forehead.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_03.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,3,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,3,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,3,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,3,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,3,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note3" placeholder="notes..." class="note" onblur="saveNote(3)">
+    </div>
+  </div>\n  <div class="track flagged" id="c4">
+    <h2>4. [0:43.8] (6.4s) <span class="flag">FLAGGED</span></h2>
+    <p>Take a slow, deep breath in through your nose, filling your lungs completely... and let it go.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_04.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,4,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,4,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,4,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,4,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,4,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note4" placeholder="notes..." class="note" onblur="saveNote(4)">
+    </div>
+  </div>\n  <div class="track" id="c5">
+    <h2>5. [0:58.2] (7.9s)</h2>
+    <p>And one more breath, a little deeper this time. Feel your whole body settling into stillness as you exhale.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_05.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,5,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,5,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,5,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,5,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,5,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note5" placeholder="notes..." class="note" onblur="saveNote(5)">
+    </div>
+  </div>\n  <div class="track" id="c6">
+    <h2>6. [1:14.1] (20.9s)</h2>
+    <p>Today we are going to explore a practice called loving-kindness. It is one of the oldest meditation traditions in the world, and it works in a beautifully simple way. We silently offer kind wishes, first to ourselves, and then gradually outward to the people around us.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_06.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,6,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,6,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,6,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,6,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,6,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note6" placeholder="notes..." class="note" onblur="saveNote(6)">
+    </div>
+  </div>\n  <div class="track flagged" id="c7">
+    <h2>7. [1:43.0] (13.1s) <span class="flag">FLAGGED</span></h2>
+    <p>There is nothing to force here. No feeling you need to manufacture. Simply offer the words like seeds planted in open ground, and trust that something will grow in its own time.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_07.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,7,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,7,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,7,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,7,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,7,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note7" placeholder="notes..." class="note" onblur="saveNote(7)">
+    </div>
+  </div>\n  <div class="track" id="c8">
+    <h2>8. [2:04.1] (17.3s)</h2>
+    <p>Rest one hand gently over your heart, if that feels comfortable. Feel the warmth of your palm there, and the steady rhythm beneath it. This is your anchor for the practice ahead.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_08.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,8,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,8,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,8,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,8,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,8,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note8" placeholder="notes..." class="note" onblur="saveNote(8)">
+    </div>
+  </div>\n  <div class="track flagged" id="c9">
+    <h2>9. [2:29.4] (18.1s) <span class="flag">FLAGGED</span></h2>
+    <p>Now bring your attention inward, towards yourself, with the same tenderness you would offer a close friend who needed reassurance. We often find it easier to be kind to others than to ourselves, so this first step may feel unfamiliar. That is perfectly normal.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_09.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,9,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,9,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,9,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,9,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,9,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note9" placeholder="notes..." class="note" onblur="saveNote(9)">
+    </div>
+  </div>\n  <div class="track" id="c10">
+    <h2>10. [2:55.5] (10.6s)</h2>
+    <p>Silently, in your own mind, begin to repeat these words directed towards yourself. May I be safe and protected from harm.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_10.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,10,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,10,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,10,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,10,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,10,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note10" placeholder="notes..." class="note" onblur="saveNote(10)">
+    </div>
+  </div>\n  <div class="track" id="c11">
+    <h2>11. [3:31.1] (4.8s)</h2>
+    <p>May I be happy and content, just as I am in this moment.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_11.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,11,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,11,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,11,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,11,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,11,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note11" placeholder="notes..." class="note" onblur="saveNote(11)">
+    </div>
+  </div>\n  <div class="track" id="c12">
+    <h2>12. [3:43.9] (3.6s)</h2>
+    <p>May I be healthy and strong in body and in mind.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_12.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,12,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,12,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,12,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,12,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,12,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note12" placeholder="notes..." class="note" onblur="saveNote(12)">
+    </div>
+  </div>\n  <div class="track" id="c13">
+    <h2>13. [3:55.5] (5.6s)</h2>
+    <p>May I live my life with a sense of ease and deep, abiding peace.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_13.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,13,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,13,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,13,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,13,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,13,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note13" placeholder="notes..." class="note" onblur="saveNote(13)">
+    </div>
+  </div>\n  <div class="track" id="c14">
+    <h2>14. [4:09.1] (16.3s)</h2>
+    <p>There is no need to judge whatever arises. If the words feel hollow, let them be hollow. If emotions surface, let them come and go. Simply keep offering the phrases, gently, without expectation.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_14.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,14,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,14,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,14,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,14,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,14,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note14" placeholder="notes..." class="note" onblur="saveNote(14)">
+    </div>
+  </div>\n  <div class="track" id="c15">
+    <h2>15. [4:50.4] (11.6s)</h2>
+    <p>I am going to be quiet now for a little while. Stay with this feeling of warmth directed towards yourself, and let the sounds around you hold the space.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_15.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,15,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,15,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,15,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,15,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,15,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note15" placeholder="notes..." class="note" onblur="saveNote(15)">
+    </div>
+  </div>\n  <div class="track" id="c16">
+    <h2>16. [5:52.0] (14.9s)</h2>
+    <p>Now, gently shift your attention outward, towards someone you care about deeply. A friend, a family member, a partner. Picture their face, the way they look when they are at their happiest.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_16.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,16,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,16,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,16,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,16,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,16,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note16" placeholder="notes..." class="note" onblur="saveNote(16)">
+    </div>
+  </div>\n  <div class="track" id="c17">
+    <h2>17. [6:14.9] (11.0s)</h2>
+    <p>Offer them the same kind wishes you gave yourself. May you be safe. May you be happy. May you be healthy and strong. May you live with ease and peace.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_17.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,17,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,17,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,17,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,17,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,17,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note17" placeholder="notes..." class="note" onblur="saveNote(17)">
+    </div>
+  </div>\n  <div class="track" id="c18">
+    <h2>18. [6:50.8] (16.1s)</h2>
+    <p>Now bring to mind someone you see regularly but do not know well. Perhaps a neighbour, or someone you pass on your way to work each morning. You may not know their name, but just like you, they want to feel safe and loved.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_18.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,18,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,18,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,18,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,18,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,18,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note18" placeholder="notes..." class="note" onblur="saveNote(18)">
+    </div>
+  </div>\n  <div class="track" id="c19">
+    <h2>19. [7:14.9] (10.1s)</h2>
+    <p>Offer them these same wishes now. May you be safe. May you be happy. May you be healthy. May you live with ease.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_19.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,19,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,19,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,19,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,19,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,19,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note19" placeholder="notes..." class="note" onblur="saveNote(19)">
+    </div>
+  </div>\n  <div class="track flagged" id="c20">
+    <h2>20. [7:33.0] (10.3s) <span class="flag">FLAGGED</span></h2>
+    <p>And now, if you are willing, bring to mind someone who has caused you some frustration recently. Not the most challenging person in your life, just someone with whom things have felt a little strained.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_20.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,20,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,20,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,20,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,20,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,20,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note20" placeholder="notes..." class="note" onblur="saveNote(20)">
+    </div>
+  </div>\n  <div class="track" id="c21">
+    <h2>21. [7:51.3] (19.6s)</h2>
+    <p>Remember that offering kindness does not mean you approve of their actions. It simply means recognising that they, too, are a human being who suffers. If it feels possible, offer them the same words. May you be safe. May you be happy. May you be healthy. May you live with ease.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_21.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,21,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,21,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,21,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,21,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,21,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note21" placeholder="notes..." class="note" onblur="saveNote(21)">
+    </div>
+  </div>\n  <div class="track" id="c22">
+    <h2>22. [8:35.8] (16.0s)</h2>
+    <p>Now let your awareness expand as wide as you can imagine. Your street, your town, your country, and gradually the whole world. Billions of people, each one carrying their own hopes and their own sorrows.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_22.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,22,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,22,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,22,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,22,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,22,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note22" placeholder="notes..." class="note" onblur="saveNote(22)">
+    </div>
+  </div>\n  <div class="track" id="c23">
+    <h2>23. [8:59.9] (13.9s)</h2>
+    <p>May all beings, everywhere, be safe and protected from harm. May all beings be happy. May all beings be healthy. May all beings live their lives with a sense of ease and deep, abiding peace.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_23.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,23,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,23,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,23,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,23,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,23,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note23" placeholder="notes..." class="note" onblur="saveNote(23)">
+    </div>
+  </div>\n  <div class="track" id="c24">
+    <h2>24. [9:21.8] (11.7s)</h2>
+    <p>Feel that warmth radiating outward from your heart, like ripples spreading across the surface of still water. There is no limit to how far kindness can reach.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_24.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,24,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,24,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,24,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,24,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,24,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note24" placeholder="notes..." class="note" onblur="saveNote(24)">
+    </div>
+  </div>\n  <div class="track" id="c25">
+    <h2>25. [9:41.5] (11.6s)</h2>
+    <p>Gently release the phrases and the images now. Let everything settle, and simply notice how you feel, without needing to name it or understand it.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_25.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,25,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,25,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,25,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,25,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,25,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note25" placeholder="notes..." class="note" onblur="saveNote(25)">
+    </div>
+  </div>\n  <div class="track" id="c26">
+    <h2>26. [10:01.2] (11.2s)</h2>
+    <p>Begin to bring your awareness back to your breath. The gentle rise and fall of your chest. The sounds around you. The weight of your body against the surface beneath you.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_26.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,26,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,26,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,26,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,26,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,26,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note26" placeholder="notes..." class="note" onblur="saveNote(26)">
+    </div>
+  </div>\n  <div class="track" id="c27">
+    <h2>27. [10:20.4] (10.7s)</h2>
+    <p>When you are ready, in your own time, gently open your eyes. Carry whatever warmth you have found here with you into the rest of your day.</p>
+    <audio controls preload="none" src="https://media.salus-mind.com/test/chunk-test/chunk_27.mp3"></audio>
+    <div class="verdict-row">
+      <button onclick="tag(this,27,'ok')" class="btn ok">OK</button>
+      <button onclick="tag(this,27,'echo')" class="btn echo">Echo</button>
+      <button onclick="tag(this,27,'hiss')" class="btn hiss">Hiss</button>
+      <button onclick="tag(this,27,'voice')" class="btn voice">Voice Shift</button>
+      <button onclick="tag(this,27,'bad')" class="btn bad">Bad</button>
+      <input type="text" id="note27" placeholder="notes..." class="note" onblur="saveNote(27)">
+    </div>
+  </div>
+  <div id="summary">
+    <h2>Results</h2>
+    <pre id="results"></pre>
+    <button class="action-btn" onclick="copyResults()">Copy to Clipboard</button>
+  </div>
+  <br>
+  <button class="action-btn" onclick="showSummary()">Show Summary</button>
+  <br><br>
+<script>
+  var tags = {};
+  var total = 27;
+
+  function updateStats() {
+    var count = Object.keys(tags).length;
+    var okCount = Object.values(tags).filter(function(v) { return v === 'ok'; }).length;
+    document.getElementById('count').textContent = count;
+    document.getElementById('ok-count').textContent = okCount;
+    document.getElementById('issue-count').textContent = count - okCount;
+  }
+
+  function tag(el, n, verdict) {
+    tags[n] = verdict;
+    var track = document.getElementById('c' + n);
+    track.className = track.className.replace(/tagged-\w+/g, '').trim();
+    track.classList.add('track');
+    track.classList.add('tagged-' + verdict);
+    track.querySelectorAll('.btn').forEach(function(b) { b.classList.remove('selected'); });
+    el.classList.add('selected');
+    updateStats();
+    send(n, verdict);
+  }
+
+  function send(n, verdict) {
+    var note = document.getElementById('note' + n).value;
+    fetch('http://localhost:8111/save', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({chunk: n, verdict: verdict, note: note})
+    }).catch(function() {});
+  }
+
+  function saveNote(n) {
+    if (tags[n]) send(n, tags[n]);
+  }
+
+  function showSummary() {
+    var el = document.getElementById('summary');
+    var pre = document.getElementById('results');
+    var lines = [];
+    for (var i = 1; i <= total; i++) {
+      var v = tags[i] || '—';
+      var note = document.getElementById('note' + i).value;
+      lines.push(i + '. ' + v + (note ? ' — ' + note : ''));
+    }
+    pre.textContent = lines.join('\n');
+    el.style.display = 'block';
+    el.scrollIntoView({behavior: 'smooth'});
+  }
+
+  function copyResults() {
+    var text = document.getElementById('results').textContent;
+    navigator.clipboard.writeText(text);
+    event.target.textContent = 'Copied!';
+    setTimeout(function() { event.target.textContent = 'Copy to Clipboard'; }, 2000);
+  }
+</script>
+</body>
+</html>
