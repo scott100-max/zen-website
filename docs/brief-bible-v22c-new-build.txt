@@ -1,0 +1,371 @@
+BRIEF: Bible v2.2c Updates + New Production Build
+Status: ACTIVE
+Date: 8 February 2026
+Issued by: Scott (via Claude Desktop)
+For: Claude Code
+
+====================================================================
+INSTRUCTIONS
+====================================================================
+
+This brief contains everything that changed today (8 Feb 2026). Read
+the entire document before doing anything. Your first action is to
+create the state file. Your second action is to update the Bible with
+the corrected version provided. Then proceed to build a new session.
+
+This brief supersedes any conflicting information in conversation
+history, previous briefs, or the current Bible on disk.
+
+====================================================================
+PART 1: BIBLE CORRECTIONS (apply immediately)
+====================================================================
+
+The Bible was updated to v2.2 by Code during today's session. That
+version contained conflicts with existing non-negotiable rules. A
+corrected version (v2.2c) has been produced by Claude Desktop and
+approved by Scott. Replace the Bible on disk with the corrected
+version provided alongside this brief (PROJECT-BIBLE.md).
+
+Key corrections you must understand:
+
+1.1 PRODUCTION RULE 6 — REWRITTEN
+Old: "QA is automated. No human listening required before deploy."
+New: "QA is two-stage. The pipeline runs 14 automated gates, then
+human review is MANDATORY before deploy. Automated gates catch
+measurable defects; human listening catches what metrics miss.
+Neither stage alone is sufficient. Use --no-deploy to hold builds
+for review."
+
+1.2 PRODUCTION RULE 7 — REWRITTEN
+Old: "Deploy is automatic."
+New: "Deploy after human review. Default build mode is --no-deploy.
+Build runs -> 14 gates -> human review -> only then deploy to R2.
+Automatic deploy (without --no-deploy) is available but should only
+be used for re-deploys of already-reviewed sessions."
+
+1.3 PRODUCTION RULE 11 — CLARIFIED
+Old: "Full rebuilds only. No targeted repair."
+New: "No post-build splicing. Never splice individual chunks into an
+existing build. Selective regeneration WITHIN a build is permitted:
+--focus-chunks gives problem chunks more generation attempts
+(best-of-10) while others get best-of-5. The distinction is:
+regenerating chunks before assembly = acceptable; patching chunks
+into an already-assembled file = prohibited."
+
+1.4 PRODUCTION RULE 12 — CLARIFIED
+Old: "100% OR NO SHIP — any audible glitch = FAIL."
+New: "Automated gates: 100% pass required. All 14 gates must pass —
+no exceptions. Human review: accept a reasonable clean rate and ship.
+Perfection should not prevent shipping, but the clean rate and any
+flagged chunks must be documented in the build record. If a session
+ships below 100% human clean rate, the specific issues accepted are
+logged for future pipeline improvement."
+
+1.5 DOCUMENT GOVERNANCE — RESTORED
+Code must NOT edit the Bible under any circumstances. If you identify
+an error, omission, or outdated information, report it and wait. The
+Bible is maintained by Claude Desktop on Scott's behalf. This
+separation exists because today's session demonstrated that Code
+editing the Bible introduces contradictions with existing rules.
+
+1.6 THRESHOLD APPROVALS
+Gate 7, 8, and 9 threshold changes made today are approved by Scott.
+They are documented in the Bible amendment log with approval trail.
+
+====================================================================
+PART 2: FISH AUDIO TRIGGER WORDS (new Bible section 13 addition)
+====================================================================
+
+The following words cause consistent artifacts in Fish/Marco output.
+These were identified during 2+ hours of human chunk review on
+Session 36. They are now in Bible Section 13.
+
+Word/Phrase           Defect        Suggested Alternatives
+------------------------------------------------------------
+settling              echo          resting, arriving, easing
+stillness             echo          quiet, calm, silence
+feel / feeling        echo          notice, sense, become aware of
+peace                 echo          calm, tranquillity, serenity
+ease                  echo          comfort, gentleness, softness
+deeply                echo          gently, fully, completely
+hollow                echo          open, spacious, empty
+simply                echo          just, only, quietly
+family                hiss          loved ones, those close to you
+joyful                hiss          happy, glad, filled with joy
+be (standalone)       voice shift   Embed in longer phrases
+breath in             hiss          breathe in, inhale, draw a breath
+filling your lungs    hiss          Rewrite shorter: "breathe in fully"
+  completely
+
+REQUIRED IMPLEMENTATION:
+- Add an automated pre-flight check to the build script
+- Runs during --dry-run and at the start of every live build
+- Scans all script blocks against this trigger word list
+- Flags matches and suggests alternatives from the table
+- This is a WARNING, not a build-blocker
+- The trigger word list should be stored in a format the script can
+  read (JSON, CSV, or Python dict — your choice) so new words can be
+  added without editing the scanner logic
+- When writing new scripts, avoid these words where possible and use
+  the suggested alternatives
+
+====================================================================
+PART 3: AMBIENT MASKING STRATEGY (new Bible section 11 addition)
+====================================================================
+
+Ambient is now explicitly part of the quality strategy, not just
+atmosphere. This is standard practice in commercial meditation audio.
+
+3.1 PER-SESSION AMBIENT LEVEL
+- No universal dB target — set by ear per session
+- Different ambient types mask differently:
+  - Broadband (rain, stream, ocean) = masks more effectively
+  - Sparse (nighttime birds, wind chimes) = has gaps, may need
+    higher level or dynamic adjustment
+- Deployed level recorded in Deployed Sessions table
+
+3.2 CEILING RULE
+If ambient needs to go above -8dB relative to voice to make the
+session listenable, the chunks need rebuilding. Ambient is a
+finishing technique, not a repair tool.
+
+3.3 DYNAMIC AMBIENT (targeted masking) — IMPLEMENT THIS
+Where human review identifies specific problem chunks, the ambient
+level can be locally adjusted at those timestamps.
+
+Implementation rules:
+- Ramp up over 2-3 seconds before the problem chunk
+- Hold through the chunk
+- Ramp down over 2-3 seconds after
+- Maximum swell: +4dB above the session's base ambient level
+- Must sound like natural variation (birds getting busier, rain
+  picking up briefly)
+- Driven by human review labels — chunk numbers and timestamps
+- All dynamic adjustments documented in build record
+
+The mix_ambient() function needs updating to support:
+- A base ambient level (set per session)
+- An optional list of timestamp ranges with swell amounts
+- Gradual ramp in/out at specified durations
+
+====================================================================
+PART 4: CHUNK FEEDBACK & SCORER CALIBRATION SYSTEM
+====================================================================
+
+4.1 PROBLEM
+The per-chunk composite scorer uses guessed weights. Scott spent 2+
+hours rating chunks. That data is sitting in TXT files with no
+connection to the build pipeline. Without closing this loop, every
+future build uses the same uncalibrated scorer.
+
+4.2 STANDARD LABEL FORMAT
+All human review results must be saved as CSV:
+
+chunk,verdict,spectral_flux_var,contrast,flatness,hf_ratio,tonal_distance,composite_score,notes
+1,BAD,0.0234,0.412,0.087,0.156,0.032,0.542,"glitching/interference"
+2,OK,0.0089,0.523,0.041,0.098,0.011,0.748,""
+
+Columns: chunk number, human verdict (OK/ECHO/HISS/VOICE/BAD),
+five metric values, composite score, optional notes.
+
+4.3 FILE STORAGE
+Location: reference/human-labels/
+Naming: {session-id}-{version}-labels.csv
+Examples:
+  reference/human-labels/36-loving-kindness-intro-v3a-labels.csv
+  reference/human-labels/37-body-scan-v1-labels.csv
+
+These are small text files — store in git, not R2.
+
+4.4 BACKFILL TASK (do this first)
+The v3a per-chunk verdicts exist (27 labels). The metric values need
+recovering. Steps:
+1. Download the 27 v3a chunks from R2 (test/chunk-test-v3/)
+2. Run the scorer on each chunk to compute the five metrics
+3. Pair with the verdicts from the TXT file (provided below)
+4. Output standardised CSV to reference/human-labels/
+
+v3a verdicts (from Scott's review):
+ 1  BAD    glitching/interference
+ 2  OK
+ 3  ECHO
+ 4  OK
+ 5  OK
+ 6  VOICE
+ 7  OK     FLAGGED
+ 8  OK
+ 9  OK
+10  OK
+11  BAD
+12  OK     mind cut off
+13  BAD    interference/glitch
+14  BAD    glitchy
+15  OK
+16  OK
+17  OK
+18  OK
+19  OK
+20  OK
+21  OK
+22  ECHO
+23  OK
+24  ECHO
+25  OK
+26  OK
+27  OK
+
+v3b per-chunk data was LOST (page refreshed before export). Only
+summary survives: 17 OK, 3 Echo, 6 Hiss, 0 Voice, 0 Bad.
+This is a known gap — cannot be backfilled.
+
+4.5 REVIEW PAGE UPDATES
+The interactive HTML review page must be updated:
+- Auto-save on every verdict (localStorage + downloadable file).
+  Refreshing the page must NOT lose data. This is why v3b was lost.
+- Pre-populate each chunk row with the five scorer metric values
+  and composite score alongside the audio player
+- Export produces the standard CSV format (not free-text TXT)
+- Import previous session for re-review or amendment
+
+4.6 CALIBRATION SCRIPT
+Create calibrate-scorer.py (or add to existing tooling):
+- Reads ALL CSV files from reference/human-labels/
+- Pairs each chunk's verdict with its five metric values
+- Optimises weights to minimise misclassification (OK = high score,
+  ECHO/HISS/VOICE/BAD = low score)
+- Outputs proposed weights and flag threshold with evidence
+- DO NOT update scorer weights without Scott's approval
+
+4.7 RECALIBRATION SCHEDULE
+- After EVERY session's human review (while dataset < 200 labels)
+- After every 5th session once dataset exceeds 200 labels
+- Mandatory if a session's human clean rate drops below 60%
+- Scorer weights treated identically to gate thresholds: no silent
+  changes, approval required
+
+====================================================================
+PART 5: FULL PRODUCTION PROCEDURE (17 steps)
+====================================================================
+
+SCRIPT PREPARATION
+  1. Write script — blocks 50-400 chars, metadata header, pause
+     markers, no parenthetical tags
+  2. Trigger word pre-flight — scan against known list, replace or
+     consciously accept any flagged words
+  3. Dry run — verify block count, silence totals, ambient duration
+
+BUILD
+  4. Generate TTS chunks — Fish V3-HD, Marco, emotion:calm,
+     best-of-5 per chunk (best-of-10 for --focus-chunks)
+  5. Chunk scorer — score all variants, keep best per chunk using
+     composite metric (spectral flux, contrast, flatness, HF ratio,
+     tonal distance at 50x weight)
+  6. Edge fades & assembly — 15ms cosine fades, humanised silences,
+     concatenate via ffmpeg, everything WAV
+  7. Whole-file loudnorm — loudnorm=I=-26:TP=-2:LRA=11 on full
+     narration after concatenation
+  8. Ambient mix — amix (normalize=0), per-session level set by ear,
+     dynamic swells at problem timestamps if needed, 15s fade in,
+     8s fade out. Ceiling: -8dB relative to voice max.
+  9. Final encode — 128kbps MP3, the ONLY lossy step
+
+AUTOMATED QA
+ 10. 14-gate QA — ALL must pass, no exceptions:
+     G1  Quality Benchmarks
+     G2  Click Artifacts
+     G3  Spectral Comparison (18dB sliding window)
+     G4  Voice Comparison (MFCC + F0 vs master)
+     G5  Loudness Consistency
+     G6  HF Hiss (speech-aware, non-speech regions only)
+     G7  Volume Surge/Drop (9/14dB, proportional silence margin)
+     G8  Repeated Content (MFCC + Whisper, 60% text overlap guard)
+     G9  Energy Spike (28x HF, 12x total, speech-only baseline)
+     G10 Speech Rate Anomaly (silence-aware, 130% threshold)
+     G11 Silence Region Integrity (-50dBFS raw, +/-3dB ambient)
+     G12 Duration Accuracy (15% of target)
+     G13 Ambient Continuity (-80dBFS, 10dB consistency)
+     G14 Opening Quality (tighter thresholds on first 60s)
+
+HUMAN REVIEW (mandatory)
+ 11. Extract chunks from raw narration, upload to R2 at
+     test/chunk-test-{version}/, generate review page with
+     metrics and auto-save
+ 12. Scott listens to every chunk on AirPods at high volume.
+     Rates each: OK / ECHO / HISS / VOICE / BAD
+ 13. Accept or rebuild — if problem chunks, use --focus-chunks
+     for targeted regeneration, re-review
+ 14. Feedback loop — save labels to reference/human-labels/ as
+     standard CSV, add new trigger words to list, flag scorer
+     recalibration if needed
+
+DEPLOY
+ 15. Final mix & upload — MP3 to Cloudflare R2, test on desktop
+     AND mobile, verify CORS
+ 16. Website & notification — update ALL referencing pages, wire
+     players with data-src, commit, push, email
+ 17. Record — update Deployed Sessions table (session, duration,
+     provider, ambient type & level, clean rate, status)
+
+====================================================================
+PART 6: YOUR TASK — NEW SESSION BUILD
+====================================================================
+
+You are cleared to build a new production session. Follow the 17-step
+procedure above exactly. Specific requirements:
+
+6.1 BEFORE BUILDING
+- Replace the Bible on disk with the corrected PROJECT-BIBLE.md
+- Create state file for this brief
+- Implement the trigger word pre-flight scanner
+- Create reference/human-labels/ directory
+- Backfill v3a labels (Part 4.4)
+- Update the review HTML page with auto-save and CSV export
+
+6.2 SCRIPT
+- Write a new session script (choose an appropriate session from
+  the catalogue that hasn't been built yet)
+- Run the trigger word pre-flight — replace flagged words
+- All blocks 50-400 characters
+- Use expression-through-punctuation techniques (Bible Section 14)
+
+6.3 BUILD
+- Use --no-deploy (human review is mandatory before deploy)
+- Best-of-5 for all chunks
+- Whole-file loudnorm, no per-chunk loudnorm, no highshelf boost
+- Choose appropriate ambient, set level by ear
+- If any chunks are flagged during review, implement dynamic ambient
+  swells at those timestamps
+
+6.4 AFTER BUILD
+- Run all 14 gates — all must pass
+- Extract chunks and prepare review page for Scott
+- Upload chunks to R2 for review
+- Email Scott when ready for listening review
+- DO NOT deploy until Scott has reviewed and approved
+
+6.5 WHAT YOU MUST NOT DO
+- Do not edit the Bible
+- Do not loosen gate thresholds
+- Do not skip the trigger word pre-flight
+- Do not deploy without human review
+- Do not update scorer weights without approval
+- Do not use per-chunk loudnorm
+- Do not use highshelf boost (f=3000:g=3)
+- Do not use any filter on the DO NOT APPLY list (Bible Section 9)
+
+====================================================================
+GOVERNANCE REMINDERS
+====================================================================
+
+- This brief is read-only for Code
+- Create state file immediately, update after every step
+- The Bible is read-only for Code — report issues, do not fix them
+- Scorer weight changes and gate threshold changes require approval
+- If a STOP rule is triggered, output status report and cease work
+- Context compaction: persist all state to file, never rely on
+  conversation context
+
+====================================================================
+END OF BRIEF
+====================================================================
+

@@ -405,13 +405,13 @@ sed -i '' 's|../sessions.html">Guided Meditations</a></li>|../sessions.html">Gui
 3. **Fish has a ~60% rebuild rate on 45-min stories.** This is expected. Rebuild until it lands.
 4. **Never identical gaps.** All pauses go through `humanize_pauses()`.
 5. **Marco is the only voice.** Do not audition alternatives unless Marco is discontinued.
-6. **QA is automated.** The pipeline scans, patches, and re-scans until clean. No human listening required before deploy.
-7. **Deploy is automatic.** Build passes QA → uploads to R2 → live. Use `--no-deploy` to hold.
+6. **QA is two-stage.** The pipeline runs 14 automated gates, then human review is MANDATORY before deploy. Automated gates catch measurable defects; human listening catches what metrics miss. Neither stage alone is sufficient. Use `--no-deploy` to hold builds for review.
+7. **Deploy after human review.** Default build mode is `--no-deploy`. Build runs → 14 gates → human review → only then deploy to R2. Automatic deploy (without `--no-deploy`) is available but should only be used for re-deploys of already-reviewed sessions.
 8. **Email is mandatory.** Every completed build cycle ends with an email to scottripley@icloud.com — pass or fail.
 9. **Fully autonomous** (except where a STOP rule is triggered — see [Section 17](#17-governance)).
 10. **No OneDrive.** All files go to git (code) or Cloudflare R2 (media). Never copy files to OneDrive.
-11. **Full rebuilds only.** No targeted repair, no splicing individual chunks. Splicing causes tonal seams at splice boundaries. Tested and failed.
-12. **100% OR NO SHIP** — any audible glitch = FAIL.
+11. **No post-build splicing.** Never splice individual chunks into an existing build — splicing causes tonal seams at splice boundaries (tested and failed). Selective regeneration WITHIN a build is permitted: `--focus-chunks` gives problem chunks more generation attempts (best-of-10) while others get best-of-5. The distinction is: regenerating chunks before assembly = acceptable; patching chunks into an already-assembled file = prohibited.
+12. **Automated gates: 100% pass required.** All 14 gates must pass — no exceptions. Human review: accept a reasonable clean rate and ship. Perfection should not prevent shipping, but the clean rate and any flagged chunks must be documented in the build record. If a session ships below 100% human clean rate, the specific issues accepted are logged for future pipeline improvement.
 13. **Lossless pipeline.** All intermediate audio MUST be WAV. MP3 encoding happens exactly ONCE at the final step.
 
 ---
@@ -696,12 +696,39 @@ Marco standard speed adjustment: 0.95x atempo. Applied to the master and consist
 All files MUST be mono before concatenation. When ffmpeg's concat demuxer joins mono and stereo PCM files, it misinterprets the sample data — stereo segments play at double duration. Silence files must be generated as mono (`cl=mono`), not stereo.
 
 ### Ambient Rules
+
+**Core rules:**
 - Ambient file MUST be longer than voice track — **NEVER loop**
 - Looping causes an audible glitch at the loop point
 - Use 8-hour ambient files (available in `content/audio/ambient/`)
 - Background ambient must not fade in until narrator introduction is complete
 - Fade in: 15 seconds, Fade out: 8 seconds
 - `mix_ambient()` file search order: `-8hr` → `-extended` → base name. WAV checked before MP3.
+
+**Ambient as masking (standard practice):**
+
+A well-mixed ambient bed makes minor artifacts (soft echo, slight tonal shifts) disappear into the soundscape. This is standard practice in commercial meditation audio — every major app uses ambient beds for both atmosphere and artifact masking. The listener's brain attributes the anomaly to the environment rather than the voice.
+
+Different ambient types mask differently. Broadband ambient (rain, stream, ocean) fills the full frequency spectrum and masks more effectively at a given level. Sparse ambient (nighttime birds, wind chimes, temple bells) has gaps where artifacts can peek through and may need higher relative levels or dynamic adjustment to be effective.
+
+**Per-session ambient level:**
+
+Ambient level is set by ear, per session, based on the ambient type and the chunk quality. There is no universal dB target. The person mixing (Scott) listens to the problem chunks with ambient at the proposed level and decides whether artifacts are sufficiently masked.
+
+**Ceiling rule:** If the ambient has to be raised above −8dB relative to the voice to make the session listenable, the chunks have a quality problem that should be solved at the scorer/rebuild level, not the mix level. Ambient is a finishing technique, not a repair tool.
+
+The deployed ambient level is recorded in the Deployed Sessions table (Section 16) for every session, building an empirical reference of what works per ambient type.
+
+**Dynamic ambient (targeted masking):**
+
+Where human review has identified specific problem chunks, the ambient level can be locally adjusted at those timestamps to provide additional masking. Rather than raising the ambient globally (which affects clean sections unnecessarily), the mixer applies a gentle volume swell around the problem spot and settles back to the base level afterward.
+
+Implementation rules:
+- Swell must be gradual — ramp up over 2–3 seconds before the problem chunk, hold through the chunk, ramp down over 2–3 seconds after. No sudden jumps.
+- Maximum swell: +4dB above the session's base ambient level. Beyond this the ambient draws attention to itself and defeats the purpose.
+- The swell should sound like natural variation in the ambient (birds getting busier, rain picking up briefly). Abrupt level changes are more noticeable than the artifact they're trying to mask.
+- Dynamic ambient adjustments are driven by human review data — the chunk numbers and timestamps from the review labels. This connects the human feedback loop directly to the mix stage.
+- All dynamic adjustments must be documented in the build record: which chunks were targeted, the swell amount, and the ramp durations.
 
 **Available 8-hour ambients:**
 
@@ -713,6 +740,12 @@ All files MUST be mono before concatenation. When ffmpeg's concat demuxer joins 
 | `rain-extended.mp3` | 70 min | `content/audio/ambient/` |
 | `stream-3hr.mp3` | 3 hr | `content/audio/ambient/youtube-downloads/` |
 | `loving-kindness-ambient.wav` | 15 min | `content/audio/ambient/` |
+
+**Ambient type masking reference (to be populated as sessions are deployed):**
+
+| Ambient type | Effective base level | Notes |
+|-------------|---------------------|-------|
+| Nighttime birds | −42dB (14dB below voice) | Sparse — gaps between chirps need dynamic masking on problem chunks |
 
 ---
 
@@ -922,6 +955,39 @@ Expected-Repetitions: [comma-separated phrases for Gate 8]
 - `API-Emotion` is a per-session setting read by the build script. Default: `calm`. Used with V3-HD API calls (see Section 18).
 - `Expected-Repetitions` excludes listed phrases from Gate 8's duplicate detection.
 
+### Fish Audio Trigger Words
+
+Certain words cause consistent artifacts in Fish/Marco output. Most are sibilant-heavy words or sustained vowels — exactly where Fish struggles to hold a clean, gentle tone. These appear constantly in meditation scripts, making this a high-impact issue.
+
+**Known trigger words (calibrated from Session 36 human review, 8 Feb 2026):**
+
+| Word / Phrase | Defect | Suggested alternatives |
+|--------------|--------|----------------------|
+| settling | echo | resting, arriving, easing |
+| stillness | echo | quiet, calm, silence |
+| feel / feeling | echo | notice, sense, become aware of |
+| peace | echo | calm, tranquillity, serenity |
+| ease | echo | comfort, gentleness, softness |
+| deeply | echo | gently, fully, completely |
+| hollow | echo | open, spacious, empty |
+| simply | echo | just, only, quietly |
+| family | hiss | loved ones, those close to you |
+| joyful | hiss | happy, glad, filled with joy |
+| be (standalone) | voice shift | Embed in longer phrases — never isolate |
+| breath in | hiss | breathe in, inhale, draw a breath |
+| filling your lungs completely | hiss | Rewrite as shorter phrase — "breathe in fully" |
+
+**Pattern:** Most triggers are soft, sibilant-heavy words or words with sustained vowels where Fish needs to hold a gentle, open tone. These are the exact words that appear constantly in meditation content.
+
+**Workarounds:**
+- Use synonyms from the table above
+- Break the word into a longer phrase where it's less exposed (e.g. "deeply" alone is worse than "more deeply now")
+- If a trigger word is essential to the meaning and has no good synonym, ensure it falls within a block of 100+ characters so the TTS has surrounding context to stabilise
+
+**Pre-flight scan:** The build script includes an automated pre-flight check that scans all script blocks against this list before any TTS calls. Blocks containing trigger words are flagged with suggested alternatives. This runs during dry-run and at the start of a live build. It is a WARNING, not a build-blocker — some trigger words may be unavoidable, but the scriptwriter should make a conscious choice rather than discovering the problem at the listening stage.
+
+**Maintaining the list:** New trigger words discovered during human review are added to this table with their defect type and suggested alternatives. The pre-flight scan reads from this list. The list is expected to grow as more sessions are built and reviewed.
+
 ---
 
 ## 14. Expression Through Punctuation
@@ -1096,6 +1162,7 @@ python3 build-session-v3.py SESSION --no-cleanup
 - [ ] Pauses humanised (no identical gap durations)
 - [ ] Zero parenthetical emotion tags in text
 - [ ] `Expected-Repetitions` set if session has intentional structural repetition
+- [ ] **Trigger word pre-flight passed** — script scanned against known trigger word list (Section 13). Any flagged words either replaced with synonyms or consciously accepted
 
 **Environment:**
 - [ ] Only building ONE session (no parallel builds)
@@ -1126,7 +1193,7 @@ python3 build-session-v3.py SESSION --no-cleanup
 9. Re-review focused chunks. Repeat if needed, but perfection should not prevent shipping.
 
 **Deployment:**
-- [ ] Final audio remixed with ambient at desired level (default -14dB, adjust per session)
+- [ ] Final audio remixed with ambient at per-session level (set by ear — see Ambient Rules in Section 11). Dynamic masking applied to problem chunks if needed.
 - [ ] Final MP3 uploaded to Cloudflare R2 (NOT committed to git)
 - [ ] Audio plays from `media.salus-mind.com` URL (test on both desktop AND mobile)
 - [ ] CORS verified: `Access-Control-Allow-Origin` header present in response
@@ -1148,14 +1215,14 @@ python3 build-session-v3.py SESSION --no-cleanup
 
 ### Deployed Sessions
 
-| Session | Duration | Provider | Status |
-|---------|----------|----------|--------|
-| 01-morning-meditation | — | Fish | Deployed, patched (0 clicks) |
-| 03-breathing-for-anxiety | 19.3 min | Fish | Deployed, patched (68 clicks) |
-| 09-rainfall-sleep-journey | — | Fish | Deployed, patched (10 clicks) |
-| 25-introduction-to-mindfulness | 14.4 min | Fish | Deployed, patched (83 stitch points) |
-| 36-loving-kindness-intro-v3 | 10.5 min | Fish | Deployed (v3b focused rebuild, best-of-10 on problem chunks, 14/14 gates, 65% human clean rate, ambient -11dB) |
-| 38-seven-day-mindfulness-day1 | 11.6 min | Fish | Deployed, patched (8 clicks) |
+| Session | Duration | Provider | Ambient | Status |
+|---------|----------|----------|---------|--------|
+| 01-morning-meditation | — | Fish | — | Deployed, patched (0 clicks) |
+| 03-breathing-for-anxiety | 19.3 min | Fish | — | Deployed, patched (68 clicks) |
+| 09-rainfall-sleep-journey | — | Fish | — | Deployed, patched (10 clicks) |
+| 25-introduction-to-mindfulness | 14.4 min | Fish | — | Deployed, patched (83 stitch points) |
+| 36-loving-kindness-intro-v3 | 10.5 min | Fish | birds, −42dB (14dB below voice) | Deployed (v3b focused rebuild, best-of-10, 14/14 gates, 65% clean rate) |
+| 38-seven-day-mindfulness-day1 | 11.6 min | Fish | — | Deployed, patched (8 clicks) |
 
 ---
 
@@ -1440,14 +1507,16 @@ Expanded from 10 gates to 14 gates. All gates now pass/fail — no informational
 - Per-chunk QA system: generates up to 5 versions of each chunk (best-of-5), scores all via composite metric (spectral flux variance + contrast + flatness + HF ratio + tonal distance), keeps best
 - Tonal consistency: MFCC distance to previous chunk penalised at 50× weight
 - Flag threshold: 0.50 (OK avg=0.708, Echo avg=0.542, calibrated on 27 human-labeled chunks)
-- Gate 7 thresholds widened to 9/14 dB + proportional silence margin (`max(4s, dur×0.15)`)
-- Gate 8 manifest text guard: word overlap <60% skips MFCC pairs as false positives
-- Gate 9 thresholds recalibrated: HF 28× speech-only median, total 12×
 - Session 36-loving-kindness-intro rebuilt (build 11, 10.5 min, 14/14 gates)
 - Per-chunk QA upgraded from best-of-2 to best-of-5 (135 TTS calls for 27 chunks)
 - v3 script rewritten: varied benedictions (no formulaic repetition), trigger words avoided
 - v3 build: 14/14 gates, 70% clean rate on human review (19/27 OK, up from 58% on v2)
 - Known Fish trigger words expanded: "breath in", "be" (standalone), "simply", "family", "joyful"
+
+**Threshold recalibrations (approved by Scott during live testing session, 8 Feb 2026):**
+- Gate 7 widened to 9/14 dB + proportional silence margin (`max(4s, dur×0.15)`) — required to accommodate Fish chunk-level swings under whole-file loudnorm
+- Gate 8 manifest text guard added: word overlap <60% skips MFCC pairs as false positives — prevents meditation cadence patterns from triggering duplicate detection
+- Gate 9 HF threshold recalibrated to 28× speech-only median, total to 12× — calibrated against no-ambient and ambient sessions to separate sibilants from genuine hiss
 
 **Website:**
 - Navigation Row 2 now includes Applied Psychology
@@ -1511,19 +1580,24 @@ Expanded from 10 gates to 14 gates. All gates now pass/fail — no informational
 
 ---
 
-*Last updated: 8 February 2026 — Session 36 shipped, review workflow established, R2 CORS, mindfulness players wired, Resend email fix.*
+*Last updated: 8 February 2026 — v2.2c (corrected): Rule 6/7/11/12 conflicts resolved, document governance restored, threshold approvals documented, ambient masking strategy and dynamic ambient codified, per-session ambient tracking added. Session 36 shipped, review workflow established, R2 CORS, mindfulness players wired, Resend email fix.*
 
 ---
 
 ## Document Governance
 
-**Owner:** Scott
-**Consumers:** Claude Code, Claude Desktop, any future contributors
+**Owner:** Scott (via Claude Desktop — Scott's conversational Claude instance)
+**Consumers:** Claude Code, any future contributors
 
-Claude Code **may** edit this document when explicitly directed by Scott. Code must not make unsolicited edits — if it identifies an error, omission, or outdated information without being asked to fix it, it must report the issue and wait for instruction.
+This document is maintained by Claude Desktop on Scott's behalf. Claude Code reads it as a reference but **must not edit, append to, or modify it under any circumstances.** If Code identifies an error, omission, or outdated information, it must report the issue and wait — not fix it.
 
-**Guardrails on Code edits:**
-- Only append to the Amendment Log or update existing sections when told to
-- Never loosen QA thresholds, remove gates, or weaken governance rules
-- Never delete or contradict existing operating rules in Parts A/B without explicit approval
-- If unsure whether an edit is authorised, ask first
+Changes to this document follow this workflow:
+1. Scott or Claude Desktop identifies needed change
+2. Claude Desktop drafts the update
+3. Scott approves
+4. Claude Desktop produces the updated bible
+5. Code receives the new version via brief
+
+This separation exists because Code previously both wrote and read the bible, leading to contradictions, self-certified completions, and unauthorised pipeline modifications. The contractor does not amend the specification.
+
+**Note (8 Feb 2026):** Code edited this document directly during the 8 Feb session. The edits were largely accurate but introduced governance conflicts and contradicted existing non-negotiable rules. This corrected version (v2.2c) restores Desktop ownership and resolves those conflicts. All future Bible edits go through the workflow above.
