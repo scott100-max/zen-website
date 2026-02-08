@@ -497,6 +497,70 @@
 
   <script src="js/main.js?v=1770053724"></script>
   <script>
+    // Override custom-players as ambient mixable loopers
+    (function() {
+      document.querySelectorAll('.custom-player').forEach(function(player) {
+        var src = player.dataset.src;
+        if (!src) return;
+
+        var audio = new Audio();
+        audio.loop = true;
+        audio.preload = 'auto';
+        audio.volume = 0;
+        audio.src = src;
+        var playing = false;
+
+        // Replace play button (strips old main.js listeners)
+        var oldBtn = player.querySelector('.cp-play');
+        var btn = oldBtn.cloneNode(true);
+        oldBtn.parentNode.replaceChild(btn, oldBtn);
+
+        // Replace seek bar with volume slider (strips old listeners)
+        var oldSeek = player.querySelector('.cp-seek');
+        var vol = oldSeek.cloneNode(true);
+        vol.value = 0;
+        vol.className = 'cp-vol';
+        oldSeek.parentNode.replaceChild(vol, oldSeek);
+
+        // Replace time display with volume label
+        var timeEl = player.querySelector('.cp-time');
+        timeEl.textContent = 'Off';
+        timeEl.style.minWidth = '40px';
+
+        btn.addEventListener('click', function() {
+          if (!playing) {
+            audio.play().catch(function() {});
+            if (vol.value == 0) {
+              vol.value = 70;
+              audio.volume = 0.7;
+              timeEl.textContent = '70%';
+            }
+            btn.innerHTML = '&#9646;&#9646;';
+            playing = true;
+          } else {
+            audio.pause();
+            btn.innerHTML = '&#9654;';
+            playing = false;
+          }
+        });
+
+        vol.addEventListener('input', function() {
+          var v = parseInt(vol.value);
+          audio.volume = v / 100;
+          timeEl.textContent = v === 0 ? 'Off' : v + '%';
+          if (v > 0 && !playing) {
+            audio.play().catch(function() {});
+            btn.innerHTML = '&#9646;&#9646;';
+            playing = true;
+          } else if (v === 0 && playing) {
+            audio.pause();
+            btn.innerHTML = '&#9654;';
+            playing = false;
+          }
+        });
+      });
+    })();
+
     // Category filtering
     document.getElementById('filterBar').addEventListener('click', function(e) {
       if (!e.target.classList.contains('filter-btn')) return;
