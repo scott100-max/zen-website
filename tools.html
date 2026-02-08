@@ -87,6 +87,97 @@
   .nav-drawer__ctas .nav-cta{flex:1;text-align:center;padding:12px 20px;font-size:.88rem}
   @media(max-width:860px){.nav-primary,.nav-row-2,.nav-ctas{display:none}.nav-burger{display:flex}.nav-row-1{height:56px}}
 
+  /* ═══════════════ TOOLS BODY ═══════════════ */
+  .tl-tools{padding:100px 24px 60px;max-width:1080px;margin:0 auto}
+  .tl-tools__header{text-align:center;margin-bottom:20px}
+  .tl-tools__label{display:inline-flex;align-items:center;gap:10px;font-weight:300;font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(52,211,153,0.6);margin-bottom:20px}
+  .tl-tools__label::before,.tl-tools__label::after{content:'';width:24px;height:1px;background:linear-gradient(90deg,transparent,rgba(52,211,153,0.35),transparent)}
+  .tl-tools__header h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.8rem,4vw,2.4rem);margin-bottom:10px}
+  .tl-tools__header p{font-weight:200;font-size:.85rem;color:var(--text-muted);max-width:520px;margin:0 auto;line-height:1.7}
+
+  .tl-context{display:flex;justify-content:center;gap:36px;padding:24px 0 40px;flex-wrap:wrap}
+  .tl-context__item{display:flex;align-items:center;gap:8px}
+  .tl-context__dot{width:6px;height:6px;border-radius:50%;background:rgba(52,211,153,0.4);flex-shrink:0}
+  .tl-context__text{font-weight:200;font-size:.76rem;color:var(--text-muted)}
+
+  .tl-tool-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:48px}
+
+  .tl-tool-card{position:relative;border-radius:18px;overflow:hidden;padding:32px 28px 28px;display:flex;flex-direction:column;min-height:320px;transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s ease;cursor:pointer;text-decoration:none;color:#fff}
+  .tl-tool-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.35)}
+  .tl-tool-card::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:.5;pointer-events:none;border-radius:inherit}
+
+  .tl-tool-card__orb{position:absolute;border-radius:50%;filter:blur(40px);opacity:.25;pointer-events:none;transition:opacity .4s ease}
+  .tl-tool-card:hover .tl-tool-card__orb{opacity:.45}
+
+  .tl-tool-card--breathing{background:linear-gradient(145deg,#0d3d4a 0%,#1a5568 40%,#0f4c5c 100%)}
+  .tl-tool-card--timer{background:linear-gradient(145deg,#1e1b4b 0%,#312e81 40%,#3730a3 100%)}
+  .tl-tool-card--bodyscan{background:linear-gradient(145deg,#064e3b 0%,#065f46 40%,#047857 100%)}
+  .tl-tool-card--winddown{background:linear-gradient(145deg,#1a1d3a 0%,#2e3561 40%,#3d4578 100%)}
+  .tl-tool-card--grounding{background:linear-gradient(145deg,#451a03 0%,#78350f 40%,#92400e 100%)}
+  .tl-tool-card--journal{background:linear-gradient(145deg,#1f1a3e 0%,#3d2a6b 40%,#4c3480 100%)}
+
+  .tl-tool-card__badge{position:relative;z-index:3;display:inline-flex;align-self:flex-start;font-weight:400;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);margin-bottom:16px}
+  .tl-badge--free{color:#34d399;background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.2)}
+  .tl-badge--premium{color:rgba(255,255,255,0.85);background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15)}
+
+  .tl-tool-card__icon{position:relative;z-index:3;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:18px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.06);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  .tl-tool-card__icon svg{width:24px;height:24px;fill:none;stroke-width:1.5}
+
+  .tl-tool-card__content{position:relative;z-index:3;flex:1;display:flex;flex-direction:column}
+  .tl-tool-card__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.5rem;line-height:1.2;margin-bottom:10px}
+  .tl-tool-card__desc{font-weight:200;font-size:.82rem;line-height:1.65;color:rgba(255,255,255,0.55);margin-bottom:auto;padding-bottom:16px}
+
+  .tl-tool-card__features{display:flex;flex-wrap:wrap;gap:6px;position:relative;z-index:3}
+  .tl-tool-card__feat{font-weight:300;font-size:.62rem;letter-spacing:.04em;padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.04)}
+
+  .tl-tool-card__arrow{position:absolute;top:24px;right:24px;z-index:4;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;transition:all .3s ease}
+  .tl-tool-card:hover .tl-tool-card__arrow{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.2)}
+  .tl-tool-card__arrow svg{width:12px;height:12px;fill:rgba(255,255,255,0.6)}
+
+  .tl-breath-preview{position:relative;z-index:3;margin-top:auto;display:flex;align-items:center;gap:16px;padding-top:16px}
+  .tl-breath-ring{width:48px;height:48px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
+  .tl-breath-ring__inner{width:20px;height:20px;border-radius:50%;background:rgba(78,205,196,0.3);animation:tlBreathPulse 8s ease-in-out infinite}
+  @keyframes tlBreathPulse{0%,100%{transform:scale(1);opacity:.3}25%{transform:scale(1.6);opacity:.7}50%{transform:scale(1.6);opacity:.7}75%{transform:scale(1);opacity:.3}}
+  .tl-breath-phases{display:flex;gap:12px}
+  .tl-breath-phase{display:flex;flex-direction:column;align-items:center;gap:2px}
+  .tl-breath-phase__num{font-weight:400;font-size:.9rem;color:rgba(255,255,255,0.7)}
+  .tl-breath-phase__label{font-weight:200;font-size:.52rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,0.35)}
+
+  .tl-timer-preview{position:relative;z-index:3;margin-top:auto;display:flex;align-items:center;gap:16px;padding-top:16px}
+  .tl-timer-circle{width:48px;height:48px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
+  .tl-timer-circle svg{width:24px;height:24px}
+  .tl-timer-options{display:flex;gap:6px;flex-wrap:wrap}
+  .tl-timer-opt{font-weight:300;font-size:.62rem;padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5)}
+  .tl-timer-opt--active{border-color:rgba(167,139,250,0.3);color:rgba(167,139,250,0.8);background:rgba(167,139,250,0.08)}
+
+  .tl-senses-preview{position:relative;z-index:3;margin-top:auto;display:flex;gap:8px;padding-top:16px}
+  .tl-sense-step{flex:1;text-align:center;padding:8px 4px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02)}
+  .tl-sense-step__num{display:block;font-weight:400;font-size:1rem;color:rgba(251,191,36,0.6);margin-bottom:2px}
+  .tl-sense-step__label{font-weight:200;font-size:.52rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,0.35)}
+
+  .tl-tools-note{max-width:1080px;margin:0 auto 48px;padding:0 24px}
+  .tl-tools-note__inner{display:flex;align-items:center;gap:16px;padding:16px 24px;border-radius:14px;background:rgba(52,211,153,0.04);border:1px solid rgba(52,211,153,0.08)}
+  .tl-tools-note__icon{width:36px;height:36px;border-radius:50%;background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .tl-tools-note__icon svg{width:16px;height:16px;fill:none;stroke:rgba(52,211,153,0.6);stroke-width:1.5}
+  .tl-tools-note__text{font-weight:200;font-size:.78rem;line-height:1.6;color:var(--text-muted)}
+  .tl-tools-note__text strong{font-weight:400;color:var(--text-mid)}
+
+  .tl-coming{text-align:center;padding:40px 24px 100px;max-width:1080px;margin:0 auto;border-top:1px solid rgba(255,255,255,0.06)}
+  .tl-coming__label{font-weight:300;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px}
+  .tl-coming__tags{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+  .tl-coming__tag{font-weight:200;font-size:.74rem;padding:6px 16px;border-radius:40px;border:1px solid rgba(255,255,255,0.06);color:var(--text-muted);background:rgba(255,255,255,0.02)}
+
+  @media(max-width:768px){
+    .tl-tool-grid{grid-template-columns:1fr}
+    .tl-tool-card{min-height:260px;padding:28px 24px 24px}
+    .tl-context{gap:16px;flex-direction:column;align-items:center}
+    .tl-senses-preview{gap:4px}
+  }
+  @media(max-width:480px){
+    .tl-tool-card__title{font-size:1.3rem}
+    .tl-breath-phases{gap:8px}
+  }
+
   </style>
 </head>
 <body>
@@ -158,75 +249,161 @@
   <div class="scroll-hint"><span class="scroll-hint__text">Begin</span><span class="scroll-hint__line"></span></div>
 </section>
 
-  <section style="background:linear-gradient(135deg,#f8f6f3 0%,#f0ebe4 100%);padding:80px 0;">
-    <div class="container">
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px;max-width:960px;margin:0 auto;align-items:stretch;">
+<!-- ═══ TOOLS BODY ═══ -->
+<section class="tl-tools" id="tools">
+  <div class="tl-tools__header">
+    <div class="tl-tools__label"><span></span>Tools<span></span></div>
+    <h2>Your Self-Guided Practice Kit</h2>
+    <p>Not everything needs a narrator. These are the tools you reach for on your own — when you need to breathe, ground yourself, or simply sit in silence for a while.</p>
+  </div>
 
-        <a href="breathe.html" style="text-decoration:none;color:inherit;display:flex;">
-          <div style="background:linear-gradient(135deg, #0d3d4a 0%, #1a5568 50%, #0f4c5c 100%);border-radius:24px;padding:48px 32px;text-align:center;box-shadow:0 20px 60px rgba(6,182,212,0.25), 0 8px 24px rgba(0,0,0,0.15);transition:all 0.4s cubic-bezier(0.4, 0, 0.2, 1);position:relative;overflow:hidden;flex:1;display:flex;flex-direction:column;justify-content:flex-start;">
-            <div style="position:absolute;width:160px;height:160px;border-radius:50%;background:#06b6d4;filter:blur(50px);opacity:0.4;top:-60px;right:-40px;"></div>
-            <div style="position:absolute;width:100px;height:100px;border-radius:50%;background:#22d3ee;filter:blur(35px);opacity:0.3;bottom:-30px;left:-20px;"></div>
-            <div style="position:relative;z-index:1;">
-              <div style="width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;border:1px solid rgba(255,255,255,0.1);">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-              </div>
-              <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;margin-bottom:14px;color:#fff;font-weight:600;">Breathing Exercises</h3>
-              <p style="color:rgba(255,255,255,0.8);font-size:0.95rem;line-height:1.7;">Guided breathwork for relaxation, focus, sleep, and energy.</p>
-            </div>
-          </div>
-        </a>
+  <div class="tl-context">
+    <div class="tl-context__item"><span class="tl-context__dot"></span><span class="tl-context__text">No audio required</span></div>
+    <div class="tl-context__item"><span class="tl-context__dot"></span><span class="tl-context__text">Works alongside guided sessions</span></div>
+    <div class="tl-context__item"><span class="tl-context__dot"></span><span class="tl-context__text">Use any time, any place</span></div>
+  </div>
 
-        <a href="timer.html" style="text-decoration:none;color:inherit;display:flex;">
-          <div style="background:linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #3730a3 100%);border-radius:24px;padding:48px 32px;text-align:center;box-shadow:0 20px 60px rgba(99,102,241,0.25), 0 8px 24px rgba(0,0,0,0.15);transition:all 0.4s cubic-bezier(0.4, 0, 0.2, 1);position:relative;overflow:hidden;flex:1;display:flex;flex-direction:column;justify-content:flex-start;">
-            <div style="position:absolute;width:160px;height:160px;border-radius:50%;background:#818cf8;filter:blur(50px);opacity:0.4;top:-60px;right:-40px;"></div>
-            <div style="position:absolute;width:100px;height:100px;border-radius:50%;background:#a78bfa;filter:blur(35px);opacity:0.3;bottom:-30px;left:-20px;"></div>
-            <div style="position:relative;z-index:1;">
-              <div style="width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;border:1px solid rgba(255,255,255,0.1);">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
-              </div>
-              <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;margin-bottom:14px;color:#fff;font-weight:600;">Meditation Timer</h3>
-              <p style="color:rgba(255,255,255,0.8);font-size:0.95rem;line-height:1.7;">Set your duration. Gentle bells mark intervals and completion.</p>
-            </div>
-          </div>
-        </a>
+  <div class="tl-tool-grid">
 
-        <a href="sounds.html" style="text-decoration:none;color:inherit;display:flex;">
-          <div style="background:linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%);border-radius:24px;padding:48px 32px;text-align:center;box-shadow:0 20px 60px rgba(16,185,129,0.25), 0 8px 24px rgba(0,0,0,0.15);transition:all 0.4s cubic-bezier(0.4, 0, 0.2, 1);position:relative;overflow:hidden;flex:1;display:flex;flex-direction:column;justify-content:flex-start;">
-            <div style="position:absolute;width:160px;height:160px;border-radius:50%;background:#10b981;filter:blur(50px);opacity:0.4;top:-60px;right:-40px;"></div>
-            <div style="position:absolute;width:100px;height:100px;border-radius:50%;background:#34d399;filter:blur(35px);opacity:0.3;bottom:-30px;left:-20px;"></div>
-            <div style="position:relative;z-index:1;">
-              <div style="width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;border:1px solid rgba(255,255,255,0.1);">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-              </div>
-              <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;margin-bottom:14px;color:#fff;font-weight:600;">Sleep Sounds</h3>
-              <p style="color:rgba(255,255,255,0.8);font-size:0.95rem;line-height:1.7;">Mix ambient sounds — rain, forest, ocean, fire.</p>
-            </div>
-          </div>
-        </a>
-
+    <!-- 1. BREATHING EXERCISES -->
+    <a href="breathe.html" class="tl-tool-card tl-tool-card--breathing">
+      <div class="tl-tool-card__orb" style="width:140px;height:140px;top:-30px;right:-20px;background:#06b6d4"></div>
+      <span class="tl-tool-card__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      <span class="tl-tool-card__badge tl-badge--free">Free</span>
+      <div class="tl-tool-card__icon"><svg viewBox="0 0 24 24" stroke="#22d3ee"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l2 2"/></svg></div>
+      <div class="tl-tool-card__content">
+        <h3 class="tl-tool-card__title">Breathing Exercises</h3>
+        <p class="tl-tool-card__desc">Four guided patterns with animated visual pacing. Pick one based on what you need right now — calm, focus, energy, or balance.</p>
       </div>
-    </div>
-  </section>
-
-  <section class="cta-banner">
-    <div class="container">
-      <h2 class="fade-in">Want more?</h2>
-      <p class="fade-in">Explore our full library of guided meditations, soundscapes, and educational content.</p>
-      <div class="btn-group fade-in">
-        <a href="sessions.html" class="btn" style="background:var(--white);color:var(--accent-dark);">Meditations</a>
-        <a href="soundscapes.html" class="btn" style="background:var(--white);color:var(--accent-dark);">Soundscapes</a>
+      <div class="tl-breath-preview">
+        <div class="tl-breath-ring"><div class="tl-breath-ring__inner"></div></div>
+        <div class="tl-breath-phases">
+          <div class="tl-breath-phase"><span class="tl-breath-phase__num">4-7-8</span><span class="tl-breath-phase__label">Calm</span></div>
+          <div class="tl-breath-phase"><span class="tl-breath-phase__num">4-4-4-4</span><span class="tl-breath-phase__label">Box</span></div>
+          <div class="tl-breath-phase"><span class="tl-breath-phase__num">5-5</span><span class="tl-breath-phase__label">Coherent</span></div>
+          <div class="tl-breath-phase"><span class="tl-breath-phase__num">Custom</span><span class="tl-breath-phase__label">Yours</span></div>
+        </div>
       </div>
-    </div>
-  </section>
+    </a>
 
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-bottom">
-        <a href="#" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to Top</a>
-        &copy; 2026 Salus. All rights reserved.
+    <!-- 2. MEDITATION TIMER -->
+    <a href="timer.html" class="tl-tool-card tl-tool-card--timer">
+      <div class="tl-tool-card__orb" style="width:120px;height:120px;top:-20px;right:-10px;background:#818cf8"></div>
+      <span class="tl-tool-card__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      <span class="tl-tool-card__badge tl-badge--free">Free</span>
+      <div class="tl-tool-card__icon"><svg viewBox="0 0 24 24" stroke="#a78bfa"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <div class="tl-tool-card__content">
+        <h3 class="tl-tool-card__title">Meditation Timer</h3>
+        <p class="tl-tool-card__desc">A quiet timer for unguided sits. Choose your duration, add interval bells, and optionally layer in ambient sound from the ASMR library.</p>
       </div>
-    </div>
-  </footer>
+      <div class="tl-timer-preview">
+        <div class="tl-timer-circle"><svg viewBox="0 0 24 24" fill="none" stroke="rgba(167,139,250,0.5)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+        <div class="tl-timer-options">
+          <span class="tl-timer-opt">5 min</span>
+          <span class="tl-timer-opt tl-timer-opt--active">10 min</span>
+          <span class="tl-timer-opt">20 min</span>
+          <span class="tl-timer-opt">30 min</span>
+          <span class="tl-timer-opt">45 min</span>
+          <span class="tl-timer-opt">60 min</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 3. BODY SCAN GUIDE -->
+    <a href="#" class="tl-tool-card tl-tool-card--bodyscan">
+      <div class="tl-tool-card__orb" style="width:130px;height:130px;top:-25px;right:-15px;background:#10b981"></div>
+      <span class="tl-tool-card__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      <span class="tl-tool-card__badge tl-badge--premium">Premium</span>
+      <div class="tl-tool-card__icon"><svg viewBox="0 0 24 24" stroke="#34d399"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+      <div class="tl-tool-card__content">
+        <h3 class="tl-tool-card__title">Body Scan Guide</h3>
+        <p class="tl-tool-card__desc">A visual, self-paced body scan. Regions highlight in sequence — feet to crown — with adjustable timing. No audio, just you and your attention.</p>
+        <div class="tl-tool-card__features">
+          <span class="tl-tool-card__feat">Visual body map</span>
+          <span class="tl-tool-card__feat">Adjustable pacing</span>
+          <span class="tl-tool-card__feat">Region-by-region</span>
+          <span class="tl-tool-card__feat">5–20 min</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 4. WIND-DOWN ROUTINE -->
+    <a href="#" class="tl-tool-card tl-tool-card--winddown">
+      <div class="tl-tool-card__orb" style="width:120px;height:120px;top:-20px;right:-10px;background:#94a3b8"></div>
+      <span class="tl-tool-card__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      <span class="tl-tool-card__badge tl-badge--premium">Premium</span>
+      <div class="tl-tool-card__icon"><svg viewBox="0 0 24 24" stroke="#94a3b8"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></div>
+      <div class="tl-tool-card__content">
+        <h3 class="tl-tool-card__title">Wind-Down Routine</h3>
+        <p class="tl-tool-card__desc">A pre-sleep sequence that walks you through screen dimming, a short breathing exercise, and a gentle transition into a sleep story or silent timer.</p>
+        <div class="tl-tool-card__features">
+          <span class="tl-tool-card__feat">Step-by-step flow</span>
+          <span class="tl-tool-card__feat">Screen dims gradually</span>
+          <span class="tl-tool-card__feat">Links to sleep stories</span>
+          <span class="tl-tool-card__feat">~10 min</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 5. GROUNDING EXERCISE -->
+    <a href="#" class="tl-tool-card tl-tool-card--grounding">
+      <div class="tl-tool-card__orb" style="width:130px;height:130px;top:-25px;right:-15px;background:#f59e0b"></div>
+      <span class="tl-tool-card__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      <span class="tl-tool-card__badge tl-badge--free">Free</span>
+      <div class="tl-tool-card__icon"><svg viewBox="0 0 24 24" stroke="#fbbf24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div class="tl-tool-card__content">
+        <h3 class="tl-tool-card__title">5-4-3-2-1 Grounding</h3>
+        <p class="tl-tool-card__desc">An interactive walkthrough of the senses technique. For moments of anxiety, panic, or when your thoughts won't stop racing.</p>
+      </div>
+      <div class="tl-senses-preview">
+        <div class="tl-sense-step"><span class="tl-sense-step__num">5</span><span class="tl-sense-step__label">See</span></div>
+        <div class="tl-sense-step"><span class="tl-sense-step__num">4</span><span class="tl-sense-step__label">Touch</span></div>
+        <div class="tl-sense-step"><span class="tl-sense-step__num">3</span><span class="tl-sense-step__label">Hear</span></div>
+        <div class="tl-sense-step"><span class="tl-sense-step__num">2</span><span class="tl-sense-step__label">Smell</span></div>
+        <div class="tl-sense-step"><span class="tl-sense-step__num">1</span><span class="tl-sense-step__label">Taste</span></div>
+      </div>
+    </a>
+
+    <!-- 6. JOURNALING PROMPTS -->
+    <a href="#" class="tl-tool-card tl-tool-card--journal">
+      <div class="tl-tool-card__orb" style="width:120px;height:120px;top:-20px;right:-10px;background:#c084fc"></div>
+      <span class="tl-tool-card__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      <span class="tl-tool-card__badge tl-badge--free">Free</span>
+      <div class="tl-tool-card__icon"><svg viewBox="0 0 24 24" stroke="#c084fc"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+      <div class="tl-tool-card__content">
+        <h3 class="tl-tool-card__title">Reflection Prompts</h3>
+        <p class="tl-tool-card__desc">Daily rotating questions tied to mindfulness themes. A quiet moment of self-enquiry — no account needed, nothing saved unless you want it to be.</p>
+        <div class="tl-tool-card__features">
+          <span class="tl-tool-card__feat">New prompt daily</span>
+          <span class="tl-tool-card__feat">Mindfulness themes</span>
+          <span class="tl-tool-card__feat">Private by default</span>
+          <span class="tl-tool-card__feat">Optional save</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ═══ NOTE ═══ -->
+<div class="tl-tools-note">
+  <div class="tl-tools-note__inner">
+    <div class="tl-tools-note__icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div>
+    <div class="tl-tools-note__text"><strong>These tools are designed to stand alone or complement your guided sessions.</strong> Use a breathing exercise before a meditation. Run through the body scan after a stressful day. Start the wind-down routine thirty minutes before bed. They're here whenever you need them.</div>
+  </div>
+</div>
+
+<!-- ═══ COMING SOON ═══ -->
+<div class="tl-coming">
+  <div class="tl-coming__label">More Tools on the Way</div>
+  <div class="tl-coming__tags">
+    <span class="tl-coming__tag">Habit Tracker</span>
+    <span class="tl-coming__tag">Progress Journal</span>
+    <span class="tl-coming__tag">Sleep Log</span>
+    <span class="tl-coming__tag">Mood Check-In</span>
+    <span class="tl-coming__tag">Focus Timer (Pomodoro)</span>
+  </div>
+</div>
 
   <script src="js/main.js?v=1770053724"></script>
   <script src="js/tracker.js"></script>
