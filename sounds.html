@@ -242,28 +242,15 @@
   <script src="js/main.js?v=1770053724"></script>
   <script>
     (function () {
-      var audioCtx = null;
       var sounds = {};
 
-      function ensureCtx() {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        return audioCtx;
-      }
-
       function createSound(src) {
-        var ctx = ensureCtx();
         var audio = new Audio();
-        audio.crossOrigin = 'anonymous';
         audio.loop = true;
         audio.preload = 'auto';
+        audio.volume = 0;
         audio.src = src;
-        var source = ctx.createMediaElementSource(audio);
-        var gain = ctx.createGain();
-        gain.gain.value = 0;
-        source.connect(gain);
-        gain.connect(ctx.destination);
-        return { audio: audio, gain: gain, playing: false };
+        return { audio: audio, playing: false };
       }
 
       var cards = document.querySelectorAll('.sound-card');
@@ -282,7 +269,7 @@
             sounds[key] = createSound(src);
           }
           if (sounds[key]) {
-            sounds[key].gain.gain.value = val / 100;
+            sounds[key].audio.volume = val / 100;
             if (val > 0 && !sounds[key].playing) {
               sounds[key].audio.play().catch(function() {});
               sounds[key].playing = true;
@@ -295,7 +282,6 @@
       });
 
       document.getElementById('soundToggle').addEventListener('click', function () {
-        ensureCtx();
         var anyPlaying = false;
         cards.forEach(function (card) {
           var slider = card.querySelector('input[type="range"]');
