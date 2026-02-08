@@ -24,10 +24,9 @@ content/video/backgrounds/
 calm/
 Calm/
 
-# Build/test scripts
-*.py
-test-*.py
-build-*.py
+# Python cache
+__pycache__/
+*.pyc
 
 # Other
 transcripts by others/
