@@ -5,7 +5,11 @@ Ambient: garden
 Style: Warm, grounded male narrator
 ---
 
-This is your ten-minute morning meditation — a gentle way to start your day with clarity and intention.
+This is your morning meditation.
+
+...
+
+A gentle way to start your day with clarity and intention.
 
 ...
 
@@ -303,7 +307,7 @@ Take in the light.
 
 ...
 
-You've given yourself a gift this morning — ten minutes of stillness that will carry through the hours ahead.
+You've given yourself a gift this morning — a few minutes of stillness that will carry through the hours ahead.
 
 ...
 

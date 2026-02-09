@@ -4,8 +4,27 @@
 Regenerates specific bad chunks while keeping all good chunks intact.
 Rebuilds the full WAV from scratch using original good audio + fresh TTS for bad chunks.
 
+Supports:
+  - Text overrides: change the spoken text of a chunk
+  - Chunk splitting: replace one chunk with two (cold-start echo fix)
+  - Best-of-N scored generation (per Bible 16A)
+
 Usage:
-    python3 repair-chunks.py 36-loving-kindness-intro --chunks 22,36,11,34,39
+    # Basic repair (same text, best-of-10)
+    python3 repair-chunks.py 36-loving-kindness-intro --chunks 22,36
+
+    # With text override (change spoken text)
+    python3 repair-chunks.py 01-morning-meditation --chunks 48 \
+        --text-override '48:New text for chunk 48 here.'
+
+    # With chunk split (cold-start echo fix — Bible Section 13)
+    python3 repair-chunks.py 01-morning-meditation --chunks 1 \
+        --split-chunk '1:This is your morning meditation.|A gentle way to start your day.'
+
+    # Combined
+    python3 repair-chunks.py 01-morning-meditation --chunks 1,48 \
+        --split-chunk '1:Short opening.|Rest of the opening.' \
+        --text-override '48:New closing text here.'
 """
 
 import sys
@@ -72,16 +91,72 @@ def extract_text_segments(manifest):
     return text_segs
 
 
+def generate_scored_chunk(text, output_name, chunk_num, temp_dir, sr,
+                          best_of=10, prev_mfcc=None):
+    """Generate a chunk with best-of-N scoring per Bible 16A.
+
+    Uses generate_chunk_with_qa() for scored generation, then converts
+    to WAV and applies edge fades. NO per-chunk loudnorm (whole-file only).
+
+    output_name: unique filename (e.g. "repair_1.mp3", "split_1a.mp3")
+    Returns (samples, mfcc_profile, score_details, flagged).
+    """
+    base = os.path.splitext(output_name)[0]
+    mp3_path = os.path.join(temp_dir, output_name)
+    _, details, flagged, mfcc = build.generate_chunk_with_qa(
+        text, mp3_path, chunk_num - 1,
+        n_versions=best_of, max_retries=best_of,
+        prev_chunk_mfcc=prev_mfcc,
+    )
+
+    # Convert to WAV (lossless pipeline)
+    wav_path = os.path.join(temp_dir, f"{base}.wav")
+    subprocess.run([
+        'ffmpeg', '-y', '-i', mp3_path,
+        '-c:a', 'pcm_s16le', '-ar', str(sr), '-ac', '1',
+        wav_path
+    ], capture_output=True, check=True)
+
+    # Apply edge fades (15ms cosine) — NO per-chunk loudnorm
+    faded_path = os.path.join(temp_dir, f"{base}_faded.wav")
+    build.apply_edge_fades(wav_path, faded_path)
+
+    samples, _ = load_wav_samples(faded_path)
+    return samples, mfcc, details, flagged
+
+
 def main():
     import argparse
     parser = argparse.ArgumentParser(description='Targeted chunk repair')
     parser.add_argument('session_name', help='Session name (e.g., 36-loving-kindness-intro)')
     parser.add_argument('--chunks', required=True, help='Comma-separated chunk numbers to regenerate (1-based)')
+    parser.add_argument('--text-override', action='append', default=[],
+                        help='Override chunk text: CHUNK:NEW_TEXT (can repeat)')
+    parser.add_argument('--split-chunk', action='append', default=[],
+                        help='Split chunk into two: CHUNK:TEXT_A|TEXT_B (can repeat)')
+    parser.add_argument('--best-of', type=int, default=10,
+                        help='Number of versions to generate per chunk (default: 10)')
     parser.add_argument('--no-deploy', action='store_true', default=True)
     args = parser.parse_args()
 
     session_name = args.session_name
     bad_chunks = set(int(c.strip()) for c in args.chunks.split(','))
+
+    # Parse text overrides: {chunk_num: new_text}
+    text_overrides = {}
+    for ov in args.text_override:
+        chunk_str, text = ov.split(':', 1)
+        text_overrides[int(chunk_str)] = text
+
+    # Parse chunk splits: {chunk_num: (text_a, text_b)}
+    split_chunks = {}
+    for sp in args.split_chunk:
+        chunk_str, texts = sp.split(':', 1)
+        parts = texts.split('|', 1)
+        if len(parts) != 2:
+            print(f"ERROR: --split-chunk must have format CHUNK:TEXT_A|TEXT_B, got: {sp}")
+            sys.exit(1)
+        split_chunks[int(chunk_str)] = (parts[0].strip(), parts[1].strip())
 
     # Load manifest
     manifest_path = OUTPUT_DIR / f"{session_name}_manifest.json"
@@ -98,9 +173,19 @@ def main():
         print(f"ERROR: Pre-cleanup WAV not found: {precleanup_path}")
         sys.exit(1)
 
+    # Get category for pause duration
+    category = manifest.get('category', 'mindfulness')
+    pause_duration = build.PAUSE_PROFILES.get(category, build.PAUSE_PROFILES['mindfulness'])[1]
+
     print(f"\n{'='*60}")
     print(f"  TARGETED REPAIR: {session_name}")
+    print(f"  Category: {category}")
     print(f"  Chunks to regenerate: {sorted(bad_chunks)}")
+    if text_overrides:
+        print(f"  Text overrides: chunks {sorted(text_overrides.keys())}")
+    if split_chunks:
+        print(f"  Chunk splits: chunks {sorted(split_chunks.keys())}")
+    print(f"  Best-of-N: {args.best_of} versions per chunk")
     print(f"{'='*60}")
 
     text_segs = extract_text_segments(manifest)
@@ -108,55 +193,97 @@ def main():
     print(f"  Original pre-cleanup: {len(original_samples)/sr:.1f}s ({len(original_samples)} samples)")
 
     with tempfile.TemporaryDirectory() as temp_dir:
-        # For each bad chunk, regenerate via Fish TTS
-        new_chunk_audio = {}  # chunk_num -> numpy samples
+        # For each bad chunk, regenerate via Fish TTS with scoring
+        # new_chunk_audio: chunk_num -> numpy samples (for simple replacements)
+        # split_chunk_audio: chunk_num -> (samples_a, silence_samples, samples_b)
+        new_chunk_audio = {}
+        new_chunk_text = {}
+        new_chunk_details = {}
+        split_chunk_audio = {}
+        split_chunk_texts = {}
 
         for seg in text_segs:
             if seg['chunk_num'] not in bad_chunks:
                 continue
 
-            print(f"\n  Regenerating chunk {seg['chunk_num']}: \"{seg['text'][:60]}...\"")
+            chunk_num = seg['chunk_num']
 
-            expected_dur = seg.get('expected', len(seg['text']) / 15.0)
-            max_dur = max(expected_dur * 2.5, 20.0)  # Allow 2.5x expected, min 20s
+            if chunk_num in split_chunks:
+                # --- CHUNK SPLIT (cold-start echo fix) ---
+                text_a, text_b = split_chunks[chunk_num]
+                print(f"\n  SPLITTING chunk {chunk_num}:")
+                print(f"    0a: \"{text_a}\"")
+                print(f"    0b: \"{text_b}\"")
+                print(f"    Pause: {pause_duration}s ({category})")
 
-            # Generate new TTS with retry on overgeneration
-            chunk_path = os.path.join(temp_dir, f"repair_{seg['chunk_num']}.mp3")
-            for attempt in range(3):
-                build.generate_tts_chunk(seg['text'], chunk_path, seg['chunk_num'] - 1)
-                gen_dur = build.get_audio_duration(chunk_path)
-                if gen_dur <= max_dur:
-                    break
-                print(f"    OVERGENERATION: {gen_dur:.1f}s (max {max_dur:.1f}s) — retrying ({attempt+1}/3)")
+                # Generate chunk 0a (no conditioning — cold-start, but short = safe)
+                print(f"\n    Generating chunk {chunk_num}a (cold-start, no conditioning)...")
+                samples_a, mfcc_a, details_a, flagged_a = generate_scored_chunk(
+                    text_a, f"split_{chunk_num}a.mp3", chunk_num, temp_dir, sr,
+                    best_of=args.best_of, prev_mfcc=None,
+                )
+                score_a = details_a.get('combined_score', details_a.get('score', 0))
+                print(f"    Chunk {chunk_num}a: {len(samples_a)/sr:.2f}s, score={score_a:.3f}, flagged={flagged_a}")
+
+                # Generate chunk 0b (conditioned on 0a's MFCC)
+                print(f"\n    Generating chunk {chunk_num}b (conditioned on {chunk_num}a)...")
+                samples_b, mfcc_b, details_b, flagged_b = generate_scored_chunk(
+                    text_b, f"split_{chunk_num}b.mp3", chunk_num, temp_dir, sr,
+                    best_of=args.best_of, prev_mfcc=mfcc_a,
+                )
+                score_b = details_b.get('combined_score', details_b.get('score', 0))
+                print(f"    Chunk {chunk_num}b: {len(samples_b)/sr:.2f}s, score={score_b:.3f}, flagged={flagged_b}")
+
+                # Silence between the two
+                silence_samples = np.zeros(int(pause_duration * sr))
+
+                old_dur = seg['duration']
+                new_dur = (len(samples_a) + len(silence_samples) + len(samples_b)) / sr
+                print(f"    Total: {old_dur:.2f}s → {new_dur:.2f}s (delta: {new_dur - old_dur:+.2f}s)")
+
+                split_chunk_audio[chunk_num] = (samples_a, silence_samples, samples_b)
+                split_chunk_texts[chunk_num] = (text_a, text_b)
+                new_chunk_details[chunk_num] = {'a': details_a, 'b': details_b}
+
             else:
-                print(f"    WARNING: Overgeneration persisted after 3 retries ({gen_dur:.1f}s)")
+                # --- SIMPLE REPLACEMENT (same or overridden text) ---
+                text = text_overrides.get(chunk_num, seg['text'])
+                if chunk_num in text_overrides:
+                    print(f"\n  Regenerating chunk {chunk_num} (TEXT OVERRIDE):")
+                    print(f"    Old: \"{seg['text'][:80]}...\"")
+                    print(f"    New: \"{text[:80]}...\"")
+                else:
+                    print(f"\n  Regenerating chunk {chunk_num}: \"{text[:60]}...\"")
 
-            # Convert to WAV
-            wav_path = os.path.join(temp_dir, f"repair_{seg['chunk_num']}.wav")
-            subprocess.run([
-                'ffmpeg', '-y', '-i', chunk_path,
-                '-c:a', 'pcm_s16le', '-ar', str(sr), '-ac', '1',
-                wav_path
-            ], capture_output=True, check=True)
+                # Get MFCC of the previous chunk for tonal consistency
+                prev_mfcc = None
+                if chunk_num > 1:
+                    # Find previous text segment in manifest
+                    for prev_seg in text_segs:
+                        if prev_seg['chunk_num'] == chunk_num - 1:
+                            # Extract previous chunk audio and compute MFCC
+                            start_s = int(prev_seg['start_time'] * sr)
+                            end_s = int(prev_seg['end_time'] * sr)
+                            end_s = min(end_s, len(original_samples))
+                            prev_wav = os.path.join(temp_dir, f"prev_{chunk_num}.wav")
+                            samples_to_wav(original_samples[start_s:end_s], sr, prev_wav)
+                            prev_mfcc = build.compute_mfcc_profile(prev_wav)
+                            break
 
-            # Normalize (per-chunk loudnorm)
-            normed_path = os.path.join(temp_dir, f"repair_{seg['chunk_num']}_normed.wav")
-            build.normalize_chunk(wav_path, normed_path)
+                samples, mfcc, details, flagged = generate_scored_chunk(
+                    text, f"repair_{chunk_num}.mp3", chunk_num, temp_dir, sr,
+                    best_of=args.best_of, prev_mfcc=prev_mfcc,
+                )
+                score = details.get('combined_score', details.get('score', 0))
+                old_dur = seg['duration']
+                new_dur = len(samples) / sr
+                print(f"    {old_dur:.2f}s → {new_dur:.2f}s (delta: {new_dur - old_dur:+.2f}s), score={score:.3f}, flagged={flagged}")
 
-            # Apply edge fades
-            faded_path = os.path.join(temp_dir, f"repair_{seg['chunk_num']}_faded.wav")
-            build.apply_edge_fades(normed_path, faded_path)
-
-            # Load as samples
-            new_samples, _ = load_wav_samples(faded_path)
-            new_chunk_audio[seg['chunk_num']] = new_samples
-
-            old_dur = seg['duration']
-            new_dur = len(new_samples) / sr
-            print(f"    Old: {old_dur:.2f}s → New: {new_dur:.2f}s (delta: {new_dur - old_dur:+.2f}s)")
+                new_chunk_audio[chunk_num] = samples
+                new_chunk_text[chunk_num] = text
+                new_chunk_details[chunk_num] = details
 
         # Now rebuild the full pre-cleanup WAV
-        # Walk through manifest segments, extracting from original or using new audio
         print(f"\n  Rebuilding pre-cleanup WAV...")
         rebuilt_parts = []
         new_manifest_segments = []
@@ -167,11 +294,72 @@ def main():
             if seg['type'] == 'text':
                 chunk_idx += 1
 
-                if chunk_idx in new_chunk_audio:
-                    # Use regenerated audio
+                if chunk_idx in split_chunk_audio:
+                    # SPLIT: insert chunk_a + silence + chunk_b
+                    samples_a, silence, samples_b = split_chunk_audio[chunk_idx]
+                    text_a, text_b = split_chunk_texts[chunk_idx]
+
+                    # Chunk A
+                    dur_a = len(samples_a) / sr
+                    rebuilt_parts.append(samples_a)
+                    new_manifest_segments.append({
+                        'index': len(new_manifest_segments),
+                        'type': 'text',
+                        'start_time': round(current_time, 4),
+                        'text': text_a,
+                        'duration': round(dur_a, 2),
+                        'expected': round(len(text_a) / 15.0, 2),
+                        'end_time': round(current_time + dur_a, 4),
+                    })
+                    current_time += dur_a
+                    print(f"    Chunk {chunk_idx}a: SPLIT INSERT ({dur_a:.2f}s) \"{text_a[:40]}\"")
+
+                    # Silence between
+                    dur_sil = len(silence) / sr
+                    rebuilt_parts.append(silence)
+                    new_manifest_segments.append({
+                        'index': len(new_manifest_segments),
+                        'type': 'silence',
+                        'start_time': round(current_time, 4),
+                        'duration': round(dur_sil, 1),
+                        'end_time': round(current_time + dur_sil, 4),
+                    })
+                    current_time += dur_sil
+
+                    # Chunk B
+                    dur_b = len(samples_b) / sr
+                    rebuilt_parts.append(samples_b)
+                    new_manifest_segments.append({
+                        'index': len(new_manifest_segments),
+                        'type': 'text',
+                        'start_time': round(current_time, 4),
+                        'text': text_b,
+                        'duration': round(dur_b, 2),
+                        'expected': round(len(text_b) / 15.0, 2),
+                        'end_time': round(current_time + dur_b, 4),
+                    })
+                    current_time += dur_b
+                    print(f"    Chunk {chunk_idx}b: SPLIT INSERT ({dur_b:.2f}s) \"{text_b[:40]}\"")
+
+                elif chunk_idx in new_chunk_audio:
+                    # Use regenerated audio (possibly with text override)
                     audio = new_chunk_audio[chunk_idx]
                     duration = len(audio) / sr
+                    text = new_chunk_text.get(chunk_idx, seg['text'])
                     print(f"    Chunk {chunk_idx}: REPLACED ({seg['duration']:.2f}s → {duration:.2f}s)")
+
+                    rebuilt_parts.append(audio)
+                    new_manifest_segments.append({
+                        'index': len(new_manifest_segments),
+                        'type': 'text',
+                        'start_time': round(current_time, 4),
+                        'text': text,
+                        'duration': round(duration, 2),
+                        'expected': round(len(text) / 15.0, 2),
+                        'end_time': round(current_time + duration, 4),
+                    })
+                    current_time += duration
+
                 else:
                     # Extract from original pre-cleanup WAV
                     start_sample = int(seg['start_time'] * sr)
@@ -180,17 +368,17 @@ def main():
                     audio = original_samples[start_sample:end_sample]
                     duration = len(audio) / sr
 
-                rebuilt_parts.append(audio)
-                new_manifest_segments.append({
-                    'index': len(new_manifest_segments),
-                    'type': 'text',
-                    'start_time': current_time,
-                    'text': seg['text'],
-                    'duration': round(duration, 2),
-                    'expected': seg.get('expected', round(len(seg['text']) / 15.0, 2)),
-                    'end_time': round(current_time + duration, 2),
-                })
-                current_time += duration
+                    rebuilt_parts.append(audio)
+                    new_manifest_segments.append({
+                        'index': len(new_manifest_segments),
+                        'type': 'text',
+                        'start_time': round(current_time, 4),
+                        'text': seg['text'],
+                        'duration': round(duration, 2),
+                        'expected': seg.get('expected', round(len(seg['text']) / 15.0, 2)),
+                        'end_time': round(current_time + duration, 4),
+                    })
+                    current_time += duration
 
             elif seg['type'] == 'silence':
                 # Generate silence of same duration
@@ -200,9 +388,9 @@ def main():
                 new_manifest_segments.append({
                     'index': len(new_manifest_segments),
                     'type': 'silence',
-                    'start_time': round(current_time, 2),
+                    'start_time': round(current_time, 4),
                     'duration': round(silence_duration, 1),
-                    'end_time': round(current_time + silence_duration, 2),
+                    'end_time': round(current_time + silence_duration, 4),
                 })
                 current_time += silence_duration
 
@@ -218,8 +406,8 @@ def main():
         shutil.copy(rebuilt_precleanup, str(precleanup_path))
         print(f"  Saved: {precleanup_path}")
 
-        # Run cleanup (Fish chain)
-        print(f"\n  Running cleanup (full Fish chain)...")
+        # Run cleanup (Fish chain — whole-file loudnorm only)
+        print(f"\n  Running cleanup (whole-file loudnorm)...")
         voice_path = os.path.join(temp_dir, "voice_cleaned.wav")
         build.cleanup_audio(rebuilt_precleanup, voice_path)
 
@@ -292,6 +480,27 @@ def main():
             print(f"  Human review still MANDATORY.")
         else:
             print(f"\n  REPAIR FAILED — QA rejected the repaired build")
+
+        # Print summary
+        print(f"\n{'='*60}")
+        print(f"  REPAIR SUMMARY: {session_name}")
+        print(f"{'='*60}")
+        for cn in sorted(bad_chunks):
+            if cn in split_chunk_audio:
+                ta, tb = split_chunk_texts[cn]
+                d = new_chunk_details.get(cn, {})
+                sa = d.get('a', {}).get('combined_score', d.get('a', {}).get('score', '?'))
+                sb = d.get('b', {}).get('combined_score', d.get('b', {}).get('score', '?'))
+                print(f"  Chunk {cn}: SPLIT → \"{ta[:30]}\" ({sa}) + \"{tb[:30]}\" ({sb})")
+            elif cn in new_chunk_audio:
+                d = new_chunk_details.get(cn, {})
+                s = d.get('combined_score', d.get('score', '?'))
+                t = new_chunk_text.get(cn, '(original text)')
+                label = "TEXT OVERRIDE" if cn in text_overrides else "REGENERATED"
+                print(f"  Chunk {cn}: {label} → score={s}, \"{t[:50]}\"")
+        print(f"  QA: {'PASSED' if qa_passed else 'FAILED'}")
+        print(f"  Duration: {voice_duration/60:.1f} min")
+        print(f"{'='*60}")
 
         return qa_passed
 

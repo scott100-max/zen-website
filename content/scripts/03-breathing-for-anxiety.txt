@@ -1,12 +1,16 @@
 Breathing for Anxiety
-Duration: 20 minutes
+Duration: 16 minutes
 Category: stress
 Ambient: birds
 Style: Warm, calm, reassuring male narrator
 Expected-Repetitions: breathe in, hold your breath, let it go, breathe out, now hold, and release, breath in through your nose, slow breath
 ---
 
-This is a gentle breathing session for when anxiety feels heavy.
+This is a gentle breathing session.
+
+...
+
+For when anxiety feels heavy.
 
 ...
 
