@@ -60,7 +60,7 @@
 | 40 | gratitude-before-sleep.txt | ✓ PRODUCED | Sleep | Gratitude |
 | 41 | vipassana-insight.txt | ⏳ PENDING | Advanced | Insight meditation |
 | 42 | chakra-alignment.txt | ✓ PRODUCED | Advanced | Chakra |
-| 43 | non-dual-awareness.txt | ⏳ PENDING | Advanced | Non-dual — rebuilding with Fish/night ambient |
+| 43 | non-dual-awareness.txt | ✓ PRODUCED | Advanced | Non-dual — 32.9 min, Fish/night ambient, 13/14 gates (Gate 7 false pos) |
 | 44 | transcendental-stillness.txt | ✓ PRODUCED | Advanced | Stillness |
 | 45 | seven-day-mindfulness-day2.txt | ✓ PRODUCED | Course | 7-day Day 2 |
 | 46 | seven-day-mindfulness-day3.txt | ✓ PRODUCED | Course | 7-day Day 3 |
