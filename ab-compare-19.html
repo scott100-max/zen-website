@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A/B Compare — Session 19 Chunk 0 Repair</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #0a0a12; color: #f0eefc; font-family: -apple-system, BlinkMacSystemFont, 'SF Mono', monospace; padding: 32px; }
+        h1 { font-size: 1.5rem; color: #5eead4; margin-bottom: 8px; }
+        .subtitle { color: #888; font-size: 0.9rem; margin-bottom: 24px; }
+        .chunk-text { background: #1a1a2a; border-left: 3px solid #5eead4; padding: 16px; margin-bottom: 8px; font-size: 0.9rem; line-height: 1.6; color: #ccc; border-radius: 0 8px 8px 0; }
+        .chunk-text.old { border-left-color: #f59e0b; opacity: 0.6; }
+        .chunk-text em { color: #f59e0b; font-style: normal; font-weight: bold; }
+        .label { font-size: 0.75rem; color: #666; margin-bottom: 4px; }
+        .controls { display: flex; gap: 12px; margin: 24px 0; flex-wrap: wrap; }
+        button { background: #1a1a2a; color: #f0eefc; border: 1px solid #3a3a4a; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 0.85rem; transition: all 0.15s; }
+        button:hover { background: #2a2a3a; border-color: #5eead4; }
+        button:active { transform: scale(0.97); }
+        button.active { background: #5eead422; border-color: #5eead4; color: #5eead4; }
+        .players { display: flex; gap: 24px; margin-bottom: 24px; }
+        @media (max-width: 700px) { .players { flex-direction: column; } }
+        .player-card { flex: 1; background: #14141f; border: 1px solid #2a2a3a; border-radius: 12px; padding: 24px; }
+        .player-card.original { border-color: #f59e0b33; }
+        .player-card.repaired { border-color: #22c55e33; }
+        .player-card h2 { font-size: 1.1rem; margin-bottom: 4px; }
+        .player-card.original h2 { color: #f59e0b; }
+        .player-card.repaired h2 { color: #22c55e; }
+        .tag { display: inline-block; font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; margin-bottom: 16px; }
+        .player-card.original .tag { background: #f59e0b22; color: #f59e0b; }
+        .player-card.repaired .tag { background: #22c55e22; color: #22c55e; }
+        audio { width: 100%; margin-bottom: 12px; border-radius: 8px; }
+        .metrics { font-size: 0.8rem; color: #888; line-height: 1.6; }
+        .metrics span { color: #ccc; }
+        .note { background: #1a1a0a; border: 1px solid #f59e0b33; border-radius: 8px; padding: 16px; font-size: 0.85rem; color: #ccc; margin-top: 24px; line-height: 1.5; }
+        .note strong { color: #f59e0b; }
+        .warn { background: #2a0a0a; border-color: #ef444433; }
+        .warn strong { color: #ef4444; }
+    </style>
+</head>
+<body>
+    <h1>A/B Compare: Session 19, Chunk 0</h1>
+    <p class="subtitle">Release and Restore — Opening line rewrite — 9 Feb 2026</p>
+
+    <p class="label">ORIGINAL TEXT:</p>
+    <div class="chunk-text old">
+        "Find somewhere comfortable to lie down. A bed, a sofa, even the floor. <em>Whatever works for you right now.</em>"
+    </div>
+    <p class="label">REWRITTEN TEXT:</p>
+    <div class="chunk-text">
+        "Find somewhere comfortable to lie down. A bed, a sofa, even the floor. <em>Any spot that feels right.</em>"
+    </div>
+
+    <div class="controls">
+        <button onclick="playBoth()">Play Both from Start</button>
+        <button onclick="stopBoth()">Stop Both</button>
+        <button onclick="syncPlay('original')">Original Only</button>
+        <button onclick="syncPlay('repaired')">Repaired Only</button>
+        <button id="loopBtn" onclick="toggleLoop()">Loop: OFF</button>
+    </div>
+
+    <div class="players">
+        <div class="player-card original">
+            <h2>Original (Live)</h2>
+            <span class="tag">ECHO/GLITCH ON "WHATEVER"</span>
+            <audio id="original" controls preload="auto"
+                src="https://media.salus-mind.com/content/audio-free/19-release-and-restore.mp3">
+            </audio>
+            <div class="metrics">
+                Quality: <span>-50.13</span> &nbsp;|&nbsp;
+                Echo risk: <span>0.1027</span>
+            </div>
+        </div>
+        <div class="player-card repaired">
+            <h2>Repaired (rewrite v3)</h2>
+            <span class="tag">FOR REVIEW</span>
+            <audio id="repaired" controls preload="auto"
+                src="https://media.salus-mind.com/content/audio-free/19-release-and-restore-repair-1.mp3">
+            </audio>
+            <div class="metrics">
+                Quality: <span>-298.77</span> &nbsp;|&nbsp;
+                Echo risk: <span>0.5996</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="note warn">
+        <strong>Metrics warning:</strong> Both versions score catastrophically on echo_risk. This is likely a chunk-0 cold-start artefact —
+        the scoring formula penalises spectral flux variance, and unconditioned opening chunks naturally have high flux.
+        The metrics may not reflect what you actually hear. Trust your ears on this one.
+    </div>
+
+    <div class="note">
+        <strong>Listen for:</strong> The original has an audible echo/glitch on "whatever works for you right now" (first ~10s).
+        The repaired version uses rewritten text: "Any spot that feels right." Focus on whether the glitch is gone
+        and whether the new phrasing sounds natural. Headphones, high volume.
+    </div>
+
+    <script>
+        const orig = document.getElementById('original');
+        const repair = document.getElementById('repaired');
+        let looping = false;
+        function playBoth() { orig.currentTime = 0; repair.currentTime = 0; orig.play(); repair.play(); }
+        function stopBoth() { orig.pause(); repair.pause(); orig.currentTime = 0; repair.currentTime = 0; }
+        function syncPlay(w) { orig.pause(); repair.pause(); orig.currentTime = 0; repair.currentTime = 0; if (w === 'original') orig.play(); else repair.play(); }
+        function toggleLoop() { looping = !looping; orig.loop = looping; repair.loop = looping; const b = document.getElementById('loopBtn'); b.textContent = looping ? 'Loop: ON' : 'Loop: OFF'; b.classList.toggle('active', looping); }
+    </script>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A/B Compare — Session 32 Chunk 1 Repair</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0a12;
+            color: #f0eefc;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Mono', 'Fira Code', monospace;
+            padding: 32px;
+            min-height: 100vh;
+        }
+        h1 {
+            font-size: 1.5rem;
+            color: #5eead4;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 32px;
+        }
+        .players {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        @media (max-width: 700px) {
+            .players { flex-direction: column; }
+        }
+        .player-card {
+            flex: 1;
+            background: #14141f;
+            border: 1px solid #2a2a3a;
+            border-radius: 12px;
+            padding: 24px;
+        }
+        .player-card.original { border-color: #f59e0b33; }
+        .player-card.repaired { border-color: #22c55e33; }
+        .player-card h2 {
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+        .player-card.original h2 { color: #f59e0b; }
+        .player-card.repaired h2 { color: #22c55e; }
+        .player-card .tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+        }
+        .player-card.original .tag { background: #f59e0b22; color: #f59e0b; }
+        .player-card.repaired .tag { background: #22c55e22; color: #22c55e; }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+            border-radius: 8px;
+        }
+        .metrics {
+            font-size: 0.8rem;
+            color: #888;
+            line-height: 1.6;
+        }
+        .metrics span { color: #ccc; }
+        .chunk-text {
+            background: #1a1a2a;
+            border-left: 3px solid #5eead4;
+            padding: 16px;
+            margin-bottom: 24px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #ccc;
+            border-radius: 0 8px 8px 0;
+        }
+        .chunk-text em { color: #f59e0b; font-style: normal; font-weight: bold; }
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        button {
+            background: #1a1a2a;
+            color: #f0eefc;
+            border: 1px solid #3a3a4a;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.85rem;
+            transition: all 0.15s;
+        }
+        button:hover { background: #2a2a3a; border-color: #5eead4; }
+        button:active { transform: scale(0.97); }
+        button.active { background: #5eead422; border-color: #5eead4; color: #5eead4; }
+        .gate-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            margin-top: 24px;
+        }
+        .gate-table th {
+            text-align: left;
+            padding: 6px 10px;
+            border-bottom: 1px solid #333;
+            color: #888;
+            font-weight: normal;
+        }
+        .gate-table td {
+            padding: 6px 10px;
+            border-bottom: 1px solid #1a1a2a;
+        }
+        .pass { color: #22c55e; }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin-bottom: 24px;
+        }
+        .comparison-table th {
+            text-align: left;
+            padding: 8px 12px;
+            border-bottom: 1px solid #333;
+            color: #888;
+            font-weight: normal;
+        }
+        .comparison-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #1a1a2a;
+        }
+        .better { color: #22c55e; }
+        .worse { color: #ef4444; }
+        .neutral { color: #888; }
+        .section-title {
+            color: #5eead4;
+            font-size: 1rem;
+            margin: 32px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #2a2a3a;
+        }
+        .note {
+            background: #1a1a0a;
+            border: 1px solid #f59e0b33;
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 0.85rem;
+            color: #ccc;
+            margin-top: 24px;
+            line-height: 1.5;
+        }
+        .note strong { color: #f59e0b; }
+        .seek-hint {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>A/B Compare: Session 32, Chunk 1</h1>
+    <p class="subtitle">Observing Emotions — Echo repair on "something" — 9 Feb 2026</p>
+
+    <div class="chunk-text">
+        "Today we are going to practise <em>something</em> that might seem uncomfortable at first. Sitting with our emotions. Not fixing them. Not pushing them away. Just observing."
+    </div>
+
+    <div class="controls">
+        <button onclick="playBoth()">Play Both from Start</button>
+        <button onclick="stopBoth()">Stop Both</button>
+        <button onclick="syncPlay('original')">Play Original Only</button>
+        <button onclick="syncPlay('repaired')">Play Repaired Only</button>
+        <button id="loopBtn" onclick="toggleLoop()">Loop: OFF</button>
+    </div>
+
+    <div class="players">
+        <div class="player-card original">
+            <h2>Original (Live)</h2>
+            <span class="tag">BUILD 3 — DEPLOYED</span>
+            <audio id="original" controls preload="auto"
+                src="https://media.salus-mind.com/content/audio-free/32-observing-emotions.mp3">
+            </audio>
+            <div class="metrics">
+                Combined: <span>0.417</span> &nbsp;|&nbsp;
+                Quality: <span>0.426</span> &nbsp;|&nbsp;
+                Echo risk: <span>0.001470</span>
+            </div>
+            <p class="seek-hint">Listen to first ~14s for chunk 1</p>
+        </div>
+        <div class="player-card repaired">
+            <h2>Repaired (v4)</h2>
+            <span class="tag">REPAIR-1 — FOR REVIEW</span>
+            <audio id="repaired" controls preload="auto"
+                src="https://media.salus-mind.com/content/audio-free/32-observing-emotions-repair-1.mp3">
+            </audio>
+            <div class="metrics">
+                Combined: <span>0.467</span> &nbsp;|&nbsp;
+                Quality: <span>0.490</span> &nbsp;|&nbsp;
+                Echo risk: <span>0.001252</span>
+            </div>
+            <p class="seek-hint">Listen to first ~14s for chunk 1 (splice at ~14s)</p>
+        </div>
+    </div>
+
+    <h3 class="section-title">Metrics Comparison</h3>
+    <table class="comparison-table">
+        <tr><th>Metric</th><th>Original</th><th>Repaired</th><th>Change</th></tr>
+        <tr>
+            <td>Combined score</td><td>0.417</td><td>0.467</td>
+            <td class="better">+0.050</td>
+        </tr>
+        <tr>
+            <td>Quality score</td><td>0.426</td><td>0.490</td>
+            <td class="better">+0.064</td>
+        </tr>
+        <tr>
+            <td>Echo risk</td><td>0.001470</td><td>0.001252</td>
+            <td class="better">-15%</td>
+        </tr>
+        <tr>
+            <td>Hiss risk</td><td>-10.57 dB</td><td>-10.63 dB</td>
+            <td class="neutral">-0.06 dB</td>
+        </tr>
+        <tr>
+            <td>Tonal dist (to chunk 2)</td><td>0.000192</td><td>0.000452</td>
+            <td class="neutral">+0.00026</td>
+        </tr>
+        <tr>
+            <td>Duration (chunk 1)</td><td>12.62s</td><td>13.95s</td>
+            <td class="neutral">+1.33s</td>
+        </tr>
+        <tr>
+            <td>Post-splice MFCC</td><td>—</td><td>0.000443</td>
+            <td class="better">0.09% of threshold</td>
+        </tr>
+    </table>
+
+    <h3 class="section-title">14-Gate QA (Repaired)</h3>
+    <table class="gate-table">
+        <tr><th>#</th><th>Gate</th><th>Result</th><th>Value</th></tr>
+        <tr><td>1</td><td>Quality Benchmarks</td><td class="pass">PASS</td><td>noise=-29.8dB, HF=-44.9dB</td></tr>
+        <tr><td>2</td><td>Click Artifacts</td><td class="pass">PASS</td><td>0 clicks</td></tr>
+        <tr><td>3</td><td>Spectral Comparison</td><td class="pass">PASS</td><td>0 HF spikes</td></tr>
+        <tr><td>4</td><td>Voice Comparison</td><td class="pass">PASS</td><td>MFCC=0.039, F0=2.6%</td></tr>
+        <tr><td>5</td><td>Loudness Consistency</td><td class="pass">PASS</td><td>0 spikes</td></tr>
+        <tr><td>6</td><td>HF Hiss</td><td class="pass">PASS</td><td>0 regions</td></tr>
+        <tr><td>7</td><td>Volume Surge/Drop</td><td class="pass">PASS</td><td>0 surges, 0 drops</td></tr>
+        <tr><td>8</td><td>Repeated Content</td><td class="pass">PASS</td><td>0 duplicates</td></tr>
+        <tr><td>9</td><td>Energy Spike</td><td class="pass">PASS</td><td>0 spikes</td></tr>
+        <tr><td>10</td><td>Speech Rate</td><td class="pass">PASS</td><td>0 rushes</td></tr>
+        <tr><td>11</td><td>Silence Integrity</td><td class="pass">PASS</td><td>0/22 failed</td></tr>
+        <tr><td>12</td><td>Duration Accuracy</td><td class="pass">PASS</td><td>9.5 min (4.6%)</td></tr>
+        <tr><td>13</td><td>Ambient Continuity</td><td class="pass">PASS</td><td>0.9 dB range</td></tr>
+        <tr><td>14</td><td>Opening Quality</td><td class="pass">PASS</td><td>0 flags</td></tr>
+    </table>
+
+    <div class="note">
+        <strong>Listen for:</strong> Echo on the word "something" in chunk 1 (first ~14 seconds).
+        Play both versions, focus on that word. The repaired version uses a regenerated chunk (v4 of 10 candidates)
+        spliced with 100ms cosine crossfade. The splice occurs at the speech-to-silence boundary around 14s.
+        Use headphones at high volume for best artifact detection.
+    </div>
+
+    <script>
+        const orig = document.getElementById('original');
+        const repair = document.getElementById('repaired');
+        let looping = false;
+
+        function playBoth() {
+            orig.currentTime = 0;
+            repair.currentTime = 0;
+            orig.play();
+            repair.play();
+        }
+
+        function stopBoth() {
+            orig.pause();
+            repair.pause();
+            orig.currentTime = 0;
+            repair.currentTime = 0;
+        }
+
+        function syncPlay(which) {
+            orig.pause();
+            repair.pause();
+            orig.currentTime = 0;
+            repair.currentTime = 0;
+            if (which === 'original') orig.play();
+            else repair.play();
+        }
+
+        function toggleLoop() {
+            looping = !looping;
+            orig.loop = looping;
+            repair.loop = looping;
+            const btn = document.getElementById('loopBtn');
+            btn.textContent = looping ? 'Loop: ON' : 'Loop: OFF';
+            btn.classList.toggle('active', looping);
+        }
+    </script>
+</body>
+</html>
