@@ -702,16 +702,33 @@
   .sound-card[data-sound="library"]    { --card-accent: var(--accent-indigo); }
   .sound-card[data-sound="keyboard"]   { --card-accent: var(--accent-rose); }
   .sound-card[data-sound="night"]      { --card-accent: var(--accent); }
-  .sound-card[data-sound="temple"]     { --card-accent: var(--accent-rose); }
   .sound-card[data-sound="waterfall"]  { --card-accent: var(--accent-sky); }
-  .sound-card[data-sound="whitenoise"] { --card-accent: var(--text-mid); }
+  .sound-card[data-sound="wind"]       { --card-accent: var(--accent-sky); }
+  .sound-card[data-sound="train"]      { --card-accent: var(--accent-warm); }
+  .sound-card[data-sound="waves"]      { --card-accent: var(--accent-teal); }
+  .sound-card[data-sound="chimes"]     { --card-accent: var(--accent-amber); }
+  .sound-card[data-sound="fountain"]   { --card-accent: var(--accent-teal); }
+  .sound-card[data-sound="snowfall"]   { --card-accent: var(--text-mid); }
+  .sound-card[data-sound="harbor"]     { --card-accent: var(--accent-indigo); }
+  .sound-card[data-sound="cabin"]      { --card-accent: var(--accent-warm); }
+  .sound-card[data-sound="bowls"]      { --card-accent: var(--accent-amber); }
+  .sound-card[data-sound="leaves"]     { --card-accent: var(--accent-emerald); }
+  .sound-card[data-sound="fan"]        { --card-accent: var(--text-mid); }
+  .sound-card[data-sound="rain-tent"]  { --card-accent: var(--accent-sky); }
+  .sound-card[data-sound="river"]      { --card-accent: var(--accent-teal); }
+  .sound-card[data-sound="cave"]       { --card-accent: var(--accent-indigo); }
+  .sound-card[data-sound="meadow"]     { --card-accent: var(--accent-emerald); }
+
+  /* Coming soon badge */
+  .sound-card.coming-soon { opacity: 0.5; pointer-events: none; position: relative; }
+  .sound-card.coming-soon .sound-card__slider-row { display: none; }
+  .sound-card__badge { position: absolute; top: 8px; right: 8px; font-size: 0.6rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-muted); background: rgba(240,238,252,0.06); border: 1px solid rgba(240,238,252,0.08); border-radius: 4px; padding: 2px 6px; }
 
   .sound-card[data-sound="rain"]::before       { background: radial-gradient(ellipse at 20% 50%, rgba(56,189,248,0.06), transparent 70%); }
   .sound-card[data-sound="ocean"]::before      { background: radial-gradient(ellipse at 20% 50%, rgba(78,205,196,0.06), transparent 70%); }
   .sound-card[data-sound="forest"]::before     { background: radial-gradient(ellipse at 20% 50%, rgba(52,211,153,0.06), transparent 70%); }
   .sound-card[data-sound="thunder"]::before    { background: radial-gradient(ellipse at 20% 50%, rgba(129,140,248,0.06), transparent 70%); }
   .sound-card[data-sound="fire"]::before       { background: radial-gradient(ellipse at 20% 50%, rgba(247,160,114,0.06), transparent 70%); }
-  .sound-card[data-sound="temple"]::before     { background: radial-gradient(ellipse at 20% 50%, rgba(244,114,182,0.05), transparent 70%); }
   .sound-card[data-sound="night"]::before      { background: radial-gradient(ellipse at 20% 50%, rgba(124,108,240,0.06), transparent 70%); }
 
   /* Icon BG tints */
@@ -727,9 +744,7 @@
   .sound-card[data-sound="library"] .sound-card__icon    { background: rgba(129,140,248,0.08); }
   .sound-card[data-sound="keyboard"] .sound-card__icon   { background: rgba(244,114,182,0.08); }
   .sound-card[data-sound="night"] .sound-card__icon      { background: rgba(124,108,240,0.1); }
-  .sound-card[data-sound="temple"] .sound-card__icon     { background: rgba(244,114,182,0.08); }
   .sound-card[data-sound="waterfall"] .sound-card__icon  { background: rgba(56,189,248,0.08); }
-  .sound-card[data-sound="whitenoise"] .sound-card__icon { background: rgba(240,238,252,0.06); }
 
   @media (max-width: 600px) {
     .sound-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -1009,10 +1024,23 @@
       { id: 'garden',     name: 'Garden',      icon: '\u{1F33F}', category: 'nature',  src: 'https://media.salus-mind.com/content/sounds/garden.mp3' },
       { id: 'library',    name: 'Library',     icon: '\u{1F4DA}', category: 'spaces',  src: 'https://media.salus-mind.com/content/sounds/library.mp3' },
       { id: 'night',      name: 'Night',       icon: '\u{1F319}', category: 'ambient', src: 'https://media.salus-mind.com/content/sounds/night.mp3' },
-      { id: 'temple',     name: 'Temple',      icon: '\u{1F514}', category: 'spaces',  src: 'https://media.salus-mind.com/content/sounds/temple.mp3' },
       { id: 'waterfall',  name: 'Waterfall',   icon: '\u{1F4A6}', category: 'nature',  src: 'https://media.salus-mind.com/content/sounds/waterfall.mp3' },
       { id: 'keyboard',   name: 'Keyboard',    icon: '\u2328',    category: 'spaces',  src: 'https://media.salus-mind.com/content/sounds/keyboard.mp3' },
-      { id: 'whitenoise', name: 'White Noise', icon: '\u3030',    category: 'ambient', src: 'https://media.salus-mind.com/content/sounds/white-noise.mp3' },
+      { id: 'wind',       name: 'Wind',        icon: '\u{1F4A8}', category: 'weather', comingSoon: true },
+      { id: 'train',      name: 'Train',       icon: '\u{1F682}', category: 'spaces',  comingSoon: true },
+      { id: 'waves',      name: 'Waves',       icon: '\u{1F3D6}', category: 'nature',  comingSoon: true },
+      { id: 'chimes',     name: 'Wind Chimes', icon: '\u{1F390}', category: 'ambient', comingSoon: true },
+      { id: 'fountain',   name: 'Fountain',    icon: '\u26F2',    category: 'nature',  comingSoon: true },
+      { id: 'snowfall',   name: 'Snowfall',    icon: '\u2744',    category: 'weather', comingSoon: true },
+      { id: 'harbor',     name: 'Harbour',     icon: '\u2693',    category: 'nature',  comingSoon: true },
+      { id: 'cabin',      name: 'Cabin',       icon: '\u{1F3E0}', category: 'spaces',  comingSoon: true },
+      { id: 'bowls',      name: 'Singing Bowls', icon: '\u{1F514}', category: 'ambient', comingSoon: true },
+      { id: 'leaves',     name: 'Rustling Leaves', icon: '\u{1F342}', category: 'nature', comingSoon: true },
+      { id: 'fan',        name: 'Fan',         icon: '\u{1F300}', category: 'ambient', comingSoon: true },
+      { id: 'rain-tent',  name: 'Rain on Tent', icon: '\u26FA',   category: 'weather', comingSoon: true },
+      { id: 'river',      name: 'River',       icon: '\u{1F6F6}', category: 'nature',  comingSoon: true },
+      { id: 'cave',       name: 'Cave',        icon: '\u{1F573}', category: 'nature',  comingSoon: true },
+      { id: 'meadow',     name: 'Meadow',      icon: '\u{1F33B}', category: 'nature',  comingSoon: true },
     ];
 
     const audioElements = {};
@@ -1020,12 +1048,13 @@
 
     soundDefs.forEach((s, i) => {
       const card = document.createElement('div');
-      card.className = 'sound-card';
+      card.className = 'sound-card' + (s.comingSoon ? ' coming-soon' : '');
       card.dataset.sound = s.id;
       card.dataset.category = s.category;
       card.style.animationDelay = (i * 0.05) + 's';
 
       card.innerHTML = `
+        ${s.comingSoon ? '<span class="sound-card__badge">Coming soon</span>' : ''}
         <div class="sound-card__top">
           <div class="sound-card__icon">
             ${s.icon}
