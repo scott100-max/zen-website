@@ -1,6 +1,6 @@
 # Salus Project Bible
 
-**Version:** 3.4
+**Version:** 3.5
 **Updated:** 9 February 2026
 **Purpose:** Single source of truth for all Salus website and audio production standards
 
@@ -10,7 +10,7 @@ This document is the canonical reference for Claude Code and all contributors. W
 
 ## Contents
 
-### Part A — Website & Infrastructure
+### Part A â€” Website & Infrastructure
 1. [Design Standards](#1-design-standards)
 2. [Terminology](#2-terminology)
 3. [Deployment & Infrastructure](#3-deployment--infrastructure)
@@ -19,7 +19,7 @@ This document is the canonical reference for Claude Code and all contributors. W
 6. [Self-Validation Process](#6-self-validation-process)
 7. [Common Issues & Lessons Learned](#7-common-issues--lessons-learned)
 
-### Part B — Audio Production
+### Part B â€” Audio Production
 8. [Production Rules (Non-Negotiable)](#8-production-rules-non-negotiable)
 9. [TTS Providers](#9-tts-providers)
 10. [Marco Master Voice Specification](#10-marco-master-voice-specification)
@@ -29,17 +29,21 @@ This document is the canonical reference for Claude Code and all contributors. W
 13A. [Script Uniqueness & Cross-Session Differentiation](#13a-script-uniqueness--cross-session-differentiation)
 14. [Expression Through Punctuation](#14-expression-through-punctuation)
 15. [Auphonic Integration](#15-auphonic-integration)
-15A. [Targeted Chunk Repair](#15a-targeted-chunk-repair)
+15A. [Production Readiness](#15a-production-readiness)
 16. [Build Execution](#16-build-execution)
+16A. [Chunk Repair Pipeline](#16a-chunk-repair-pipeline)
 17. [Governance](#17-governance)
 18. [V3 API Emotion System](#18-v3-api-emotion-system)
 
-### Part C — Historical Record
+### Part C â€” Historical Record
 19. [Amendment Log](#19-amendment-log)
+
+### Part D — Ledger
+20. [Action Ledger](#20-action-ledger)
 
 ---
 
-# PART A — WEBSITE & INFRASTRUCTURE
+# PART A â€” WEBSITE & INFRASTRUCTURE
 
 ---
 
@@ -48,13 +52,13 @@ This document is the canonical reference for Claude Code and all contributors. W
 ### Tile/Card Layout Rules
 - **Maximum 2 tiles per row** on all screen sizes (site-wide standard)
 - Tiles stack to 1 column on mobile devices
-- No coloured gradient tiles/boxes on cards — use simple white cards with text only
+- No coloured gradient tiles/boxes on cards â€” use simple white cards with text only
 
 ### Image Guidelines
-- **No people in card/tile images** — use abstract, nature, or texture imagery only
-- **No repeating images** — each card/tile must have a unique image site-wide
+- **No people in card/tile images** â€” use abstract, nature, or texture imagery only
+- **No repeating images** â€” each card/tile must have a unique image site-wide
 - Source images from user photo repository when available
-- Large images (>1MB) cause browser rendering issues — optimise to 600×600px for web
+- Large images (>1MB) cause browser rendering issues â€” optimise to 600Ã—600px for web
 - Always add cache-buster: `?v=YYYYMMDD`
 
 ### Card Design Patterns
@@ -64,18 +68,18 @@ This document is the canonical reference for Claude Code and all contributors. W
 ### Category Colour Scheme
 | Category | Primary Gradient | Orb Colours |
 |----------|-----------------|-------------|
-| Beginners/Teal | #0d3d4a → #1a5568 → #0f4c5c | #06b6d4, #22d3ee |
-| Stress/Green | #064e3b → #065f46 → #047857 | #10b981, #34d399 |
-| Sleep/Purple | #1e1b4b → #312e81 → #3730a3 | #818cf8, #a78bfa |
-| Focus/Amber | #451a03 → #78350f → #92400e | #f59e0b, #fbbf24 |
+| Beginners/Teal | #0d3d4a â†’ #1a5568 â†’ #0f4c5c | #06b6d4, #22d3ee |
+| Stress/Green | #064e3b â†’ #065f46 â†’ #047857 | #10b981, #34d399 |
+| Sleep/Purple | #1e1b4b â†’ #312e81 â†’ #3730a3 | #818cf8, #a78bfa |
+| Focus/Amber | #451a03 â†’ #78350f â†’ #92400e | #f59e0b, #fbbf24 |
 
-### Dark Theme (Complete — 8 Feb 2026)
+### Dark Theme (Complete â€” 8 Feb 2026)
 - All pages fully dark-themed: body `#0a0a12`, text `#f0eefc`
 - `css/style.css` `:root` includes: `--deep`, `--teal`, `--text-bright`, `--text-muted`, `--text-mid`
 - Auth alert colors use dark-compatible rgba (e.g. `rgba(239,68,68,0.12)` not `#fee2e2`)
 - No light backgrounds, no `var(--white)` or `var(--off-white)` in visible elements
 
-### Unified Footer (Complete — 8 Feb 2026)
+### Unified Footer (Complete â€” 8 Feb 2026)
 - All pages use `hb-footer` class (4-column: Brand/tagline, Practice, Discover, Salus)
 - CSS in `style.css`, responsive: 2-col at 900px, 1-col at 480px
 - Subdirectory pages (`sessions/`, `articles/`, `newsletters/`) use `../` prefix on links
@@ -96,7 +100,7 @@ This document is the canonical reference for Claude Code and all contributors. W
 - Two-row layout applied site-wide
 - Row 1: Sessions, Mindfulness, ASMR, Sleep Stories, Learn, About
 - Row 2: Tools, Reading, Applied Psychology, Newsletter, Contact (smaller, gray text, `gap:32px`, `font-size:0.9rem`)
-- Latin phrase: "Salūs — Latin: health, safety, well-being" under hero sections on all pages
+- Latin phrase: "SalÅ«s â€” Latin: health, safety, well-being" under hero sections on all pages
 - Light backgrounds: `color:var(--mid-gray);opacity:0.7`
 - Dark/hero backgrounds: `color:rgba(255,255,255,0.6)`
 
@@ -144,28 +148,28 @@ This document is the canonical reference for Claude Code and all contributors. W
 | **GitHub Pages** | Website code (HTML, CSS, JS, small images) | `https://salus-mind.com` |
 | **Cloudflare R2** | Media files (MP3, MP4) | `https://media.salus-mind.com` |
 | **Cloudflare** | DNS for entire domain | Nameservers: `gerald.ns.cloudflare.com`, `megan.ns.cloudflare.com` |
-| **LALAL.AI** | Per-chunk audio cleaning (voice_clean API) | `https://www.lalal.ai/api/v1` |
+| ~~**LALAL.AI**~~ | ~~Per-chunk audio cleaning~~ — **REMOVED 9 Feb 2026** (all modes tested, none effective on Fish output) | `https://www.lalal.ai/api/v1` |
 
 ### LALAL.AI
 
 | | |
 |---|---|
-| **Service** | AI audio cleaning — noise cancellation, de-echo, de-reverb |
+| **Service** | AI audio cleaning â€” noise cancellation, de-echo, de-reverb |
 | **API** | REST v1 (`/upload/`, `/split/voice_clean/`, `/check/`, `/split/batch/voice_clean/`) |
 | **Auth** | `X-License-Key` header (activation code from account profile) |
 | **Account** | scottripley@icloud.com |
-| **Plan** | Lite (£6/mo, 90 min fast queue) |
+| **Plan** | Lite (Â£6/mo, 90 min fast queue) |
 | **Env var** | `LALAL_API_KEY` in `.env` |
-| **Quota** | ~3 min per full session build (36 chunks × ~5s each). Lite plan covers ~30 builds/month. |
-| **Status** | **DISABLED** — integrated in `build-session-v3.py` but commented out pending settings optimisation |
+| **Quota** | ~3 min per full session build (36 chunks Ã— ~5s each). Lite plan covers ~30 builds/month. |
+| **Status** | **DEAD** — removed from pipeline. Dehiss-only mode tested 9 Feb 2026 and failed (uniform attenuation, not selective denoising). See below. |
 
 **What works:** Noise cancellation (`noise_cancelling_level=1`) removed almost all hiss from session 25 rebuild. Proven effective for TTS hiss cleanup.
 
-**What doesn't work:** Dereverb (`dereverb_enabled=True`) strips Marco's vocal resonance, mistaking it for room reverb. Fish TTS output has no actual room reverb — dereverb has nothing legitimate to remove and damages vocal character instead. Voice quality degradation worst on opening chunks (1–5), settles later.
+**What doesn't work:** Dereverb (`dereverb_enabled=True`) strips Marco's vocal resonance, mistaking it for room reverb. Fish TTS output has no actual room reverb â€” dereverb has nothing legitimate to remove and damages vocal character instead. Voice quality degradation worst on opening chunks (1â€“5), settles later.
 
-**Next test required:** `dereverb_enabled=False`, `noise_cancelling_level=1` or `2` — hiss-only mode. If effective without dereverb, LALAL becomes a permanent pipeline stage (Phase 1.5, between chunk QA and edge fades).
+**Dehiss-only test result (9 Feb 2026):** `dereverb_enabled=False` tested on session 25 chunk 1 (worst hiss reading across all sessions at −7.26 dB). Result: uniform 3 dB attenuation across all frequencies, SNR unchanged at 21.8 dB. LALAL applied a flat volume reduction rather than selective denoising — no hiss improvement whatsoever. This was the final viable LALAL configuration. **LALAL is not capable of selective hiss removal on Fish TTS output.** Removed from pipeline entirely.
 
-**Cannot fix:** Voice character shift and echo. These are TTS generation problems baked into Fish output. No external post-processing service can fix what Fish generates wrong — the only remedy is chunk regeneration.
+**Cannot fix:** Voice character shift and echo. These are TTS generation problems baked into Fish output. No external post-processing service can fix what Fish generates wrong â€” the only remedy is chunk regeneration.
 
 ### GitHub Pages
 - **Repository:** `https://github.com/scott100-max/Salus-Website.git`
@@ -182,7 +186,7 @@ git push origin main
 - **Bucket:** `salus-mind`
 - **Account ID:** `e798430a916680159a81cf34de0db9c2`
 - **Custom domain:** `media.salus-mind.com` (proxied through Cloudflare CDN)
-- **Public dev URL:** Disabled — use custom domain only
+- **Public dev URL:** Disabled â€” use custom domain only
 - **API token** (Edit zone DNS): `yYNUa2enwfPdNnVrfcUQnWHhgMnebTSFntGWbwGe`
 - **CORS:** Configured for `https://salus-mind.com` and `https://www.salus-mind.com` (GET/HEAD). Required for cross-origin audio playback from `media.salus-mind.com`.
 
@@ -190,7 +194,7 @@ git push origin main
 # Upload via wrangler CLI:
 npx wrangler r2 object put salus-mind/content/audio-free/FILENAME.mp3 --file=./FILENAME.mp3
 
-# Or drag-and-drop in Cloudflare dashboard: R2 → salus-mind → Objects → Upload
+# Or drag-and-drop in Cloudflare dashboard: R2 â†’ salus-mind â†’ Objects â†’ Upload
 ```
 
 **File paths in R2:**
@@ -206,7 +210,7 @@ npx wrangler r2 object put salus-mind/content/audio-free/FILENAME.mp3 --file=./F
 - Short clips on R2 at `content/sounds/` for ASMR page playback
 - Full-length YouTube source downloads in `content/audio/ambient/youtube-downloads/`
 
-**Media references in HTML — two player types:**
+**Media references in HTML â€” two player types:**
 
 Sessions page (`sessions.html`) and session detail pages use `custom-player` (wired by `main.js`):
 ```html
@@ -222,13 +226,13 @@ Cards without `data-src` show a visual-only player (no audio loaded). Add `data-
 ### Domain & DNS
 - **Registrar:** reg-123 (salus-mind.com), GoDaddy (salus-mind.co.uk)
 - **DNS managed by:** Cloudflare (migrated 6 February 2026 from GoDaddy)
-- **Registrar holds nameservers only** — all records in Cloudflare dashboard
+- **Registrar holds nameservers only** â€” all records in Cloudflare dashboard
 - GitHub Pages A records: `185.199.108-111.153`
-- `www` CNAME → `scott100-max.github.io`
-- `media` CNAME → R2 bucket (proxied)
+- `www` CNAME â†’ `scott100-max.github.io`
+- `media` CNAME â†’ R2 bucket (proxied)
 
 ### Large Files
-- **NEVER commit audio/video files to git** — all media goes to Cloudflare R2
+- **NEVER commit audio/video files to git** â€” all media goes to Cloudflare R2
 - `.gitignore` excludes `*.mp3`, `*.mp4`, `*.wav`, and media directories
 
 ### File Organisation
@@ -247,9 +251,9 @@ Cards without `data-src` show a visual-only player (no audio loaded). Add `data-
 ### Workflow Summary
 | Task | Action |
 |------|--------|
-| Edit HTML/CSS/JS | Change files → `git push` |
-| Add new audio/video | Upload to R2 → reference in HTML → `git push` |
-| Add new HTML page | Create page → add to sitemap.xml → add to nav on ALL pages → `git push` |
+| Edit HTML/CSS/JS | Change files â†’ `git push` |
+| Add new audio/video | Upload to R2 â†’ reference in HTML â†’ `git push` |
+| Add new HTML page | Create page â†’ add to sitemap.xml â†’ add to nav on ALL pages â†’ `git push` |
 
 ### Deployment Verification
 - GitHub Pages auto-deploys on push to main
@@ -280,8 +284,8 @@ Cards without `data-src` show a visual-only player (no audio loaded). Add `data-
 - **IMPORTANT:** Use the **Legacy** JWT anon key (starts with `eyJ...`), NOT the new `sb_publishable_` format
 
 **Database Tables:**
-- `profiles` — User data (auto-created on signup via trigger)
-- `subscriptions` — Stripe data (user_id, stripe_customer_id, status, plan_type)
+- `profiles` â€” User data (auto-created on signup via trigger)
+- `subscriptions` â€” Stripe data (user_id, stripe_customer_id, status, plan_type)
 
 **Premium Logic (in order):**
 1. Check Supabase `subscriptions` table for active subscription (cross-device)
@@ -293,18 +297,18 @@ Cards without `data-src` show a visual-only player (no audio loaded). Add `data-
 **Webhook endpoint:** `https://egywowuyixfqytaucihf.supabase.co/functions/v1/stripe-webhook`
 
 **Events handled:**
-- `checkout.session.completed` → Create subscription
-- `customer.subscription.updated` → Update status
-- `customer.subscription.deleted` → Mark expired
-- `invoice.payment_succeeded` → Renew period
-- `invoice.payment_failed` → Mark past_due
+- `checkout.session.completed` â†’ Create subscription
+- `customer.subscription.updated` â†’ Update status
+- `customer.subscription.deleted` â†’ Mark expired
+- `invoice.payment_succeeded` â†’ Renew period
+- `invoice.payment_failed` â†’ Mark past_due
 
 **Auth Flow:**
-1. User signs up → Supabase creates `auth.users` + `profiles` record
-2. User logs in → Redirected to dashboard (or original page via `?redirect=` param)
-3. User subscribes → Stripe checkout includes `client_reference_id={user_id}`
-4. Payment completes → Webhook creates `subscriptions` record
-5. User logs in anywhere → `SalusAuth.isPremium()` returns true
+1. User signs up â†’ Supabase creates `auth.users` + `profiles` record
+2. User logs in â†’ Redirected to dashboard (or original page via `?redirect=` param)
+3. User subscribes â†’ Stripe checkout includes `client_reference_id={user_id}`
+4. Payment completes â†’ Webhook creates `subscriptions` record
+5. User logs in anywhere â†’ `SalusAuth.isPremium()` returns true
 
 **Business name:** Salus (changed from "zenscape")
 
@@ -335,7 +339,7 @@ Cards without `data-src` show a visual-only player (no audio loaded). Add `data-
 **Lesson learned (5 Feb 2026):** Self-validation reported "16/16 passed" while 11 items remained unresolved. The validation only checked work that was done, not work that was requested.
 
 ### Validation Rules
-1. **Source of truth:** `docs/FIXES-CHECKLIST.md` — not the validation script
+1. **Source of truth:** `docs/FIXES-CHECKLIST.md` â€” not the validation script
 2. **No "SKIPPED" status:** Items are DONE, PENDING, or DEFERRED (with justification)
 3. **DEFERRED requires approval:** Only for items needing separate project scope
 4. **Report honestly:** State completion percentage against FULL original request
@@ -357,9 +361,9 @@ Checks code changes were implemented correctly. Does NOT confirm all requested w
 
 ```
 COMPLETION REPORT
-—————————————————
+â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
 Done:     X items
-Pending:  Y items  ← WORK REMAINING
+Pending:  Y items  â† WORK REMAINING
 Deferred: Z items
 
 Completion: XX%
@@ -376,7 +380,7 @@ Code self-certification is unreliable. After every Code task batch:
 2. Provide: (1) the original brief, (2) Code's completion report
 3. Second Claude independently verifies each item against the actual site/files/code
 4. Any discrepancy flagged before sign-off
-5. Treat Code like a subcontractor — never let the person who did the work also sign it off
+5. Treat Code like a subcontractor â€” never let the person who did the work also sign it off
 
 ---
 
@@ -418,33 +422,33 @@ sed -i '' 's|../sessions.html">Guided Meditations</a></li>|../sessions.html">Gui
 **Pattern:** Code builds tooling that produces quality data (visuals, reports, metrics) without building tooling that acts on it (decision logic, thresholds, fail conditions). Builds pass because no gate evaluates the evidence. Human review catches what the pipeline should have caught.
 
 **Incidents:**
-- 4 Feb: Rainfall Sleep Journey — analyser reported PASS on a file with voice changes, repeated content, and hiss
-- 7 Feb: Loving-kindness — 9 gates passed on a file with audible hiss spike at 0:30 and catastrophic hiss wall from 12:00, both visible on Auphonic and Gate 9 visuals
+- 4 Feb: Rainfall Sleep Journey â€” analyser reported PASS on a file with voice changes, repeated content, and hiss
+- 7 Feb: Loving-kindness â€” 9 gates passed on a file with audible hiss spike at 0:30 and catastrophic hiss wall from 12:00, both visible on Auphonic and Gate 9 visuals
 
 **Prevention:** All gates must be pass/fail. No informational-only gates. Visual analysis must include programmatic evaluation, not just image generation.
 
 ---
 
-# PART B — AUDIO PRODUCTION
+# PART B â€” AUDIO PRODUCTION
 
 ---
 
 ## 8. Production Rules (Non-Negotiable)
 
-1. **ONE build at a time.** Never run builds in parallel — burned 100K credits once.
+1. **ONE build at a time.** Never run builds in parallel â€” burned 100K credits once.
 2. **Always dry-run first.** Check block count and silence totals before spending credits.
 3. **Fish has a ~60% rebuild rate on 45-min stories.** This is expected. Rebuild until it lands.
 4. **Never identical gaps.** All pauses go through `humanize_pauses()`.
 5. **Marco is the only voice.** Do not audition alternatives unless Marco is discontinued.
 6. **QA is two-stage.** The pipeline runs 14 automated gates, then human review is MANDATORY before deploy. Automated gates catch measurable defects; human listening catches what metrics miss. Neither stage alone is sufficient. Use `--no-deploy` to hold builds for review.
-7. **Deploy after human review.** Default build mode is `--no-deploy`. Build runs → 14 gates → human review → only then deploy to R2. Automatic deploy (without `--no-deploy`) is available but should only be used for re-deploys of already-reviewed sessions.
-8. **Email is mandatory.** Every completed build cycle ends with an email to scottripley@icloud.com — pass or fail.
-9. **Fully autonomous** (except where a STOP rule is triggered — see [Section 17](#17-governance)).
+7. **Deploy after human review.** Default build mode is `--no-deploy`. Build runs â†’ 14 gates â†’ human review â†’ only then deploy to R2. Automatic deploy (without `--no-deploy`) is available but should only be used for re-deploys of already-reviewed sessions.
+8. **Email is mandatory.** Every completed build cycle ends with an email to scottripley@icloud.com â€” pass or fail.
+9. **Fully autonomous** (except where a STOP rule is triggered â€” see [Section 17](#17-governance)).
 10. **No OneDrive.** All files go to git (code) or Cloudflare R2 (media). Never copy files to OneDrive.
-11. **No post-build splicing — except targeted repair (Section 15A).** Never splice individual chunks into an existing build as a shortcut — crude splicing causes tonal seams at splice boundaries (tested and failed). Selective regeneration WITHIN a build is permitted: `--focus-chunks` gives problem chunks more generation attempts (best-of-10) while others get best-of-5. The distinction is: regenerating chunks before assembly = acceptable; patching chunks into an already-assembled file = prohibited. **Exception:** Targeted chunk repair following the full process in Section 15A is permitted. This is controlled single-word or single-chunk replacement with MFCC tonal matching and crossfade blending — not crude splicing. The result is always saved as a new file, never overwrites the original.
-12. **Automated gates: 100% pass required.** All 14 gates must pass — no exceptions. Human review: accept a reasonable clean rate and ship. Perfection should not prevent shipping, but the clean rate and any flagged chunks must be documented in the build record. If a session ships below 100% human clean rate, the specific issues accepted are logged for future pipeline improvement.
+11. **No post-build splicing — with one exception.** Never splice individual chunks into an existing build during normal production — splicing causes tonal seams at splice boundaries (tested and failed). Selective regeneration WITHIN a build is permitted: `--focus-chunks` gives problem chunks more generation attempts (best-of-10) while others get best-of-5. **Exception: the Chunk Repair Pipeline (Section 16A)** permits targeted splice repair of deployed sessions under controlled conditions: 100ms cosine crossfade, speech→silence boundary targeting, tonal distance measurement, and mandatory human A/B review before promotion to live. This exception exists because full rebuilds risk introducing new defects in currently-clean chunks. The repair pipeline was validated on 9 Feb 2026 (session 32 chunk 1).
+12. **Automated gates: 100% pass required.** All 14 gates must pass â€” no exceptions. Human review: accept a reasonable clean rate and ship. Perfection should not prevent shipping, but the clean rate and any flagged chunks must be documented in the build record. If a session ships below 100% human clean rate, the specific issues accepted are logged for future pipeline improvement.
 13. **Lossless pipeline.** All intermediate audio MUST be WAV. MP3 encoding happens exactly ONCE at the final step.
-14. **Never overwrite raw narration — master narration files are sacrosanct.** Once a session's raw narration WAV has passed 14 gates and been approved for deploy, it becomes a **master narration file**. Master narrations are never deleted, overwritten, modified, or used as input for destructive operations. They are the source from which all future versions (ambient mixes, repairs, remastering) are derived. Naming convention: `{session-name}_master-narration.wav` stored in `content/audio-free/masters/`. Each master is accompanied by a **chunk schedule** (`{session-name}_chunk-schedule.txt`), a **QA report PNG**, and a **production record** (`{session-name}_production-record.md`) — together these form the complete production archive for that session (see Section 16 for production record template). If a repair or remix is needed, copy the master to a working file first — the master stays untouched. Pre-master raw files (intermediate builds, failed attempts) use timestamped names: `{session}_raw_v1.wav`, `{session}_raw_v2.wav` etc. Both pre-clean and post-clean versions must be saved when any cleaning service is applied. Never leave raw files in temp directories.
+14. **Never overwrite raw narration.** Raw narration WAVs must be preserved before any processing that modifies them. Save timestamped copies: `{session}_raw_v1.wav`, `{session}_raw_v2.wav` etc. If LALAL or any other cleaning service is applied, both pre-clean and post-clean versions must be saved to `content/audio-free/raw/`. Never leave raw files in temp directories, never overwrite without preserving the original.
 15. **All audio comparisons must be narration-only.** When evaluating audio quality differences (A/B testing, LALAL before/after, pipeline changes), always compare raw narration without ambient. Ambient masks differences and makes evaluation invalid. Both A and B files must be provided simultaneously with clear naming (e.g. `25-intro-NO-LALAL-narration.wav`, `25-intro-LALAL-narration.wav`).
 16. **Garden ambient offset.** `garden-8hr.mp3` has 9.5 seconds of dead digital silence at the file start. Always use `-ss 10` when mixing garden ambient. This is automated in `build-session-v3.py` for both Fish and Resemble mix paths (confirmed 9 Feb 2026).
 
@@ -455,13 +459,13 @@ sed -i '' 's|../sessions.html">Guided Meditations</a></li>|../sessions.html">Gui
 ### Provider Routing (Decision Tree)
 
 ```
-Is the script mostly short phrases with pauses? → Fish Audio
-Is the script mostly long flowing narrative?    → Resemble AI
-Mixed content?                                  → Fish (safer default)
-Unsure?                                         → Fish (Marco's home)
+Is the script mostly short phrases with pauses? â†’ Fish Audio
+Is the script mostly long flowing narrative?    â†’ Resemble AI
+Mixed content?                                  â†’ Fish (safer default)
+Unsure?                                         â†’ Fish (Marco's home)
 ```
 
-### Fish Audio — PRIMARY PROVIDER
+### Fish Audio â€” PRIMARY PROVIDER
 
 | Setting | Value |
 |---------|-------|
@@ -480,49 +484,57 @@ Unsure?                                         → Fish (Marco's home)
 
 **Critical characteristics:**
 - Non-deterministic: same input produces different output every time
-- ~60% rebuild rate on 45-min stories — this is normal
+- ~60% rebuild rate on 45-min stories â€” this is normal
 - Cost: negligible ($10 lasts ages)
 - Real cost is TIME, not money
-- Raw output: −16.34 LUFS average, −4.39 dBTP peak
+- Raw output: âˆ’16.34 LUFS average, âˆ’4.39 dBTP peak
 - Chunk volume spread: ~8 dB (Auphonic leveller data)
 - SNR: 45+ dB (broadcast quality without processing)
 - No hum, minimal noise floor
 
 **The Fish API is stateless.** There is NO `condition_on_previous_chunks` parameter in the Fish Audio TTS API. Each API call is completely independent. Voice conditioning between chunks is implemented CLIENT-SIDE in `build-session-v3.py` by passing the previous chunk's audio as the `references` input for the next chunk. This is our pipeline's feature, not a Fish feature. Each chunk can be regenerated independently as long as the correct reference audio is provided.
 
-**Possible S1 model degradation (February 2026).** Fish service alert shows generations exceeding 500 characters are temporarily routed to the v1.6 model instead of S1. If some chunks in a build hit S1 and others hit v1.6, different voice characteristics result — producing voice shift between chunks within the same session. This is a Fish-side issue outside our control. Story Studio was upgraded in December 2025; infrastructure changes may have side effects. Monitor Fish changelogs for resolution.
+**Possible S1 model degradation (February 2026).** Fish service alert shows generations exceeding 500 characters are temporarily routed to the v1.6 model instead of S1. If some chunks in a build hit S1 and others hit v1.6, different voice characteristics result â€” producing voice shift between chunks within the same session. This is a Fish-side issue outside our control. Story Studio was upgraded in December 2025; infrastructure changes may have side effects. Monitor Fish changelogs for resolution.
 
-**Opening chunk weakness.** Chunks 1–5 consistently score lowest in per-chunk QA (typically 0.35–0.43, against a flag threshold of 0.50). Chunk 1 has no previous MFCC tonal reference — Fish has nothing to chain voice conditioning from. Fish typically needs 2–3 chunks to "settle" into Marco's voice character. Possible future fix: generate a throwaway conditioning chunk before the real chunk 1 to give Fish a reference anchor.
+**Opening chunk weakness — PROVEN ROOT CAUSE (9 Feb 2026).** Chunk 0 (the very first chunk of any session) has no previous audio to condition from. Fish cold-starts without a voice reference, and the tail end of the sentence degrades — producing echo on every generation regardless of text content.
 
-**Fish cleanup chain (CANONICAL — use this, nothing else):**
+**Evidence:** Session 19 chunk 0 tested with 30 consecutive generations across 3 different approaches (original text, rewritten text, split text). All 30 flagged with echo risk 0.6–1.2 by the scoring system. However, human listening confirmed the split-chunk audio was clean. The scoring formula’s spectral flux penalty systematically over-penalises unconditioned chunks (see below).
+
+**The fix — Split Chunk Technique (PROVEN):** Split the opening text into two short chunks. Chunk 0a is one short sentence (~40–60 chars). Chunk 0b carries the rest. Fish can generate a short sentence cleanly without conditioning — it doesn’t have time to drift. Chunk 0b then uses 0a’s audio as its conditioning reference, and the chain is anchored from there. Nothing is wasted — both chunks are real session content.
+
+**Script rule:** Opening chunks must be one short sentence, under ~60 characters. The second chunk carries the remainder of the opening and receives conditioning from the first. This replaces the previously proposed "throwaway conditioning chunk" approach.
+
+**Scoring formula bias on chunk 0:** The composite scoring metric (spectral flux variance + contrast + flatness + HF ratio + tonal distance) is calibrated against mid-session chunks that have conditioning context. It systematically produces false catastrophic scores on chunk 0 because unconditioned audio inherently has higher spectral flux variance. A chunk 0 scoring −358 combined with 0.7 echo risk may sound perfectly clean to a human ear. **Do not use automated scores for pass/fail decisions on chunk 0. Human listening is the only reliable gate for opening chunks.**
+
+**Fish cleanup chain (CANONICAL â€” use this, nothing else):**
 1. Edge fades: 15ms cosine on each chunk before concatenation
 2. Concatenate all chunks + silences (WAV)
 3. Whole-file loudnorm: `loudnorm=I=-26:TP=-2:LRA=11` on full narration AFTER concatenation
 4. Ambient mix (`amix` with `normalize=0`)
 5. Final encode: 128kbps MP3 (ONLY lossy step)
 
-Per-chunk loudnorm was REMOVED (8 Feb 2026) — whole-file approach preserves natural dynamics between chunks. Requires Gate 7 thresholds 9/14 dB + 4s silence margin to accommodate Fish chunk-level swings.
+Per-chunk loudnorm was REMOVED (8 Feb 2026) â€” whole-file approach preserves natural dynamics between chunks. Requires Gate 7 thresholds 9/14 dB + 4s silence margin to accommodate Fish chunk-level swings.
 
-The `highshelf=f=3000:g=3` boost was REMOVED (8 Feb 2026) — A/B testing confirmed +3dB HF boost causes perceived echo on certain words. Loudnorm-only is cleaner with less hiss.
+The `highshelf=f=3000:g=3` boost was REMOVED (8 Feb 2026) â€” A/B testing confirmed +3dB HF boost causes perceived echo on certain words. Loudnorm-only is cleaner with less hiss.
 
-The HF shelf cut (`highshelf=f=7000:g=-3`) was proposed and tested across the full tuning range (−2 to −5 dB at 6–8 kHz) during the Gate 6 investigation. It failed — removing the 3 kHz boost entirely produced identical flag counts, proving the root cause of Gate 6 false positives was natural speech sibilants, not pipeline-induced HF noise.
+The HF shelf cut (`highshelf=f=7000:g=-3`) was proposed and tested across the full tuning range (âˆ’2 to âˆ’5 dB at 6â€“8 kHz) during the Gate 6 investigation. It failed â€” removing the 3 kHz boost entirely produced identical flag counts, proving the root cause of Gate 6 false positives was natural speech sibilants, not pipeline-induced HF noise.
 
 **DO NOT APPLY to Fish output:**
 - ~~lowpass=f=10000~~ (kills clarity and consonant detail)
-- ~~afftdn=nf=-25~~ (muffles the voice — noise floor already clean at 45 dB SNR)
-- ~~dynaudnorm~~ (amplifies silence — NEVER use)
+- ~~afftdn=nf=-25~~ (muffles the voice â€” noise floor already clean at 45 dB SNR)
+- ~~dynaudnorm~~ (amplifies silence â€” NEVER use)
 - ~~aggressive de-essers~~ (removes natural sibilance)
-- ~~highpass=80~~ (not needed for Fish — no low-frequency noise)
-- ~~highshelf=f=7000:g=-3~~ (tested and failed — does not address root cause)
-- ~~highshelf=f=3000:g=3~~ (removed 8 Feb — causes perceived echo on certain words)
-- ~~LALAL.AI dereverb~~ (strips Marco's vocal resonance — Fish TTS has no room reverb for dereverb to legitimately remove. Tested 8 Feb 2026: voice quality degraded, worst on opening chunks. Noise cancellation without dereverb may be viable — see Section 3, LALAL.AI)
+- ~~highpass=80~~ (not needed for Fish â€” no low-frequency noise)
+- ~~highshelf=f=7000:g=-3~~ (tested and failed â€” does not address root cause)
+- ~~highshelf=f=3000:g=3~~ (removed 8 Feb â€” causes perceived echo on certain words)
+- ~~LALAL.AI~~ (all modes tested and failed. Dereverb strips vocal resonance. Dehiss-only applies uniform attenuation, not selective denoising. Tested 8–9 Feb 2026. Removed from pipeline.)
 
-### Resemble AI — LONG-FORM PROVIDER
+### Resemble AI â€” LONG-FORM PROVIDER
 
 | Setting | Value |
 |---------|-------|
 | **Voice** | Marco T2 (`da18eeca`) |
-| **Preset** | `expressive-story` (`6199a148-cd33-4ad7-b452-f067fdff3894`) — MUST be in every API call |
+| **Preset** | `expressive-story` (`6199a148-cd33-4ad7-b452-f067fdff3894`) â€” MUST be in every API call |
 | **pace** | 0.85 |
 | **pitch** | 0 |
 | **useHd** | true |
@@ -541,27 +553,27 @@ The HF shelf cut (`highshelf=f=7000:g=-3`) was proposed and tested across the fu
 - Use `output_format: wav` from the API (native WAV, no intermediate lossy steps)
 - Keep pace at 0.85
 - Let Resemble handle pacing via SSML breaks with original pause durations
-- Save native WAV from API directly — no MP3 intermediate
+- Save native WAV from API directly â€” no MP3 intermediate
 
 **What degrades audio:**
 - Omitting the voice settings preset (produces noisy, hissy output)
 - pace > 0.9 (too fast for meditation/sleep)
 - `loudnorm I=-24` (too loud, raises noise floor)
 - `dynaudnorm` (amplifies silence regions)
-- WAV→MP3→WAV at any point (lossy round-trip)
-- `cleanup full` (Fish chain — wrong for Resemble)
+- WAVâ†’MP3â†’WAV at any point (lossy round-trip)
+- `cleanup full` (Fish chain â€” wrong for Resemble)
 - `cleanup light` (insufficient for Resemble)
 - Random SSML break durations (use original pause values)
 
-### ElevenLabs — ABANDONED (6 Feb 2026)
+### ElevenLabs â€” ABANDONED (6 Feb 2026)
 
-Evaluated across 11 builds and £90+ in credits. Every approach failed. Evidence archived at `Desktop/elevenlabs-evidence/`.
+Evaluated across 11 builds and Â£90+ in credits. Every approach failed. Evidence archived at `Desktop/elevenlabs-evidence/`.
 
 **Why it failed:** API cannot hold voice consistency beyond 2-3 sequential calls. Studio "audiobook" feature produces continuous speech with no paragraph gaps and voice breakdown. SSML breaks max 3 seconds (sleep stories need 4-8s). Studio API locked behind sales whitelist (403 error).
 
 **Do not revisit ElevenLabs** unless they release a fundamentally different long-form API.
 
-### Fish Audio Female Voices — FAILED (6 Feb 2026)
+### Fish Audio Female Voices â€” FAILED (6 Feb 2026)
 
 8 female voices auditioned. All inferior to Marco. None had the warmth or natural pacing. Marco remains sole voice.
 
@@ -571,7 +583,7 @@ Evaluated across 11 builds and £90+ in credits. Every approach failed. Evidence
 
 ### Purpose
 
-The Marco Master is the single definitive reference for what Marco sounds like. Every generated session is measured against this file. If it does not sound like the master, it does not ship — regardless of what automated gates report.
+The Marco Master is the single definitive reference for what Marco sounds like. Every generated session is measured against this file. If it does not sound like the master, it does not ship â€” regardless of what automated gates report.
 
 ### Current Master
 
@@ -610,16 +622,16 @@ The master contains Marco speaking this standardised passage, covering all requi
 
 | Metric | Threshold | Fish GOOD | Fish BAD (fish-4) | Resemble BAD |
 |--------|-----------|-----------|-------------------|--------------|
-| MFCC cosine distance | ≤0.008 (same-text), ≤0.06 (production) | 0.0003–0.0060 | 0.0003 | 0.0100–0.0113 |
-| F0 deviation | ≤10% | 0.4%–5.6% | 0.8% | 14.8%–17.4% |
+| MFCC cosine distance | â‰¤0.008 (same-text), â‰¤0.06 (production) | 0.0003â€“0.0060 | 0.0003 | 0.0100â€“0.0113 |
+| F0 deviation | â‰¤10% | 0.4%â€“5.6% | 0.8% | 14.8%â€“17.4% |
 
 **Not useful metrics (too much variance):** Spectral centroid deviation, RMS deviation. Discarded.
 
-**CRITICAL — THE FISH-4 EDGE CASE:** fish-4 was classified as BAD by human listening but measured 0.0003 MFCC / 0.8% F0 — indistinguishable from GOOD. This proves automated metrics CANNOT catch every subtle quality failure. Human review remains MANDATORY even when all automated gates pass.
+**CRITICAL â€” THE FISH-4 EDGE CASE:** fish-4 was classified as BAD by human listening but measured 0.0003 MFCC / 0.8% F0 â€” indistinguishable from GOOD. This proves automated metrics CANNOT catch every subtle quality failure. Human review remains MANDATORY even when all automated gates pass.
 
-### Voice Comparison Gate — Raw vs Raw
+### Voice Comparison Gate â€” Raw vs Raw
 
-The voice comparison gate MUST compare raw audio against the raw master. Pre-cleanup WAV vs raw master. NOT processed audio vs master — the cleanup chain changes the spectral fingerprint and causes false failures.
+The voice comparison gate MUST compare raw audio against the raw master. Pre-cleanup WAV vs raw master. NOT processed audio vs master â€” the cleanup chain changes the spectral fingerprint and causes false failures.
 
 **Implementation:**
 1. Save a pre-cleanup copy (`XX-session_precleanup.wav`)
@@ -643,82 +655,82 @@ The voice comparison gate MUST compare raw audio against the raw master. Pre-cle
 
 ### Processing Philosophy
 
-**LESS IS MORE.** Fish Audio TTS output is already broadcast-quality clean (45 dB SNR, −62 dB noise floor). Every processing step trades clarity and character for consistency. Apply the minimum necessary and nothing more.
+**LESS IS MORE.** Fish Audio TTS output is already broadcast-quality clean (45 dB SNR, âˆ’62 dB noise floor). Every processing step trades clarity and character for consistency. Apply the minimum necessary and nothing more.
 
 ### Fish Pipeline (CANONICAL)
 
 ```
 Script (... pause markers)
-        │
-        ▼
-process_script_for_tts() → blocks with pause durations
-        │
-        ▼
-generate_tts_chunk() → Fish API → WAV
-        │
-        ├─── OVERGENERATION CHECK: If duration > 2x expected, reject and retry (max 3 retries)
-        │
-        ▼
-apply_edge_fades() → 15ms cosine fade on each chunk (WAV in, WAV out)
-        │
-        ▼
-generate_silence() → WAV (mono, pcm_s16le) via humanize_pauses()
-        │
-        ▼
-concatenate_with_silences() → concat demuxer → WAV
-        │
-        ▼
+        â”‚
+        â–¼
+process_script_for_tts() â†’ blocks with pause durations
+        â”‚
+        â–¼
+generate_tts_chunk() â†’ Fish API â†’ WAV
+        â”‚
+        â”œâ”€â”€â”€ OVERGENERATION CHECK: If duration > 2x expected, reject and retry (max 3 retries)
+        â”‚
+        â–¼
+apply_edge_fades() â†’ 15ms cosine fade on each chunk (WAV in, WAV out)
+        â”‚
+        â–¼
+generate_silence() â†’ WAV (mono, pcm_s16le) via humanize_pauses()
+        â”‚
+        â–¼
+concatenate_with_silences() â†’ concat demuxer â†’ WAV
+        â”‚
+        â–¼
 WHOLE-FILE LOUDNORM: loudnorm=I=-26:TP=-2:LRA=11 on full narration
-        │
-        ▼
-mix_ambient() → amix (normalize=0) → WAV
-        │
-        ▼
-SINGLE MP3 ENCODE (libmp3lame, 128kbps) ← ONLY lossy step
-        │
-        ▼
-qa_loop() → 14-GATE QA (see Section 12)
-        │
-        ▼
-deploy_to_r2() → send_build_email()
+        â”‚
+        â–¼
+mix_ambient() â†’ amix (normalize=0) â†’ WAV
+        â”‚
+        â–¼
+SINGLE MP3 ENCODE (libmp3lame, 128kbps) â† ONLY lossy step
+        â”‚
+        â–¼
+qa_loop() â†’ 14-GATE QA (see Section 12)
+        â”‚
+        â–¼
+deploy_to_r2() â†’ send_build_email()
 ```
 
 ### Resemble Pipeline
 
 ```
 Script (... pause markers)
-        │
-        ▼
-process_script_for_tts() → blocks with pause durations
-        │
-        ▼
-merge_blocks_for_resemble(category) → merged chunks with SSML breaks
-        │                              (original pause durations, capped at 5s)
-        ▼
-generate_tts_chunk_resemble() → Resemble API (HD mode, pace=0.85)
-        │                        Native WAV preserved (no mono forcing)
-        ▼
-concatenate_with_silences() → auto-detect channels, match silence
-        │
-        ▼
-cleanup_audio_resemble() → highpass 80 + lowpass 10k + afftdn=-25 + loudnorm I=-26
-        │
-        ▼
-mix_ambient() → ambient mixed at category level
-        │
-        ▼
-SINGLE MP3 ENCODE (128kbps) ← only lossy step
-        │
-        ▼
-qa_loop() → 14-GATE QA (see Section 12)
-        │
-        ▼
-deploy_to_r2() → send_build_email()
+        â”‚
+        â–¼
+process_script_for_tts() â†’ blocks with pause durations
+        â”‚
+        â–¼
+merge_blocks_for_resemble(category) â†’ merged chunks with SSML breaks
+        â”‚                              (original pause durations, capped at 5s)
+        â–¼
+generate_tts_chunk_resemble() â†’ Resemble API (HD mode, pace=0.85)
+        â”‚                        Native WAV preserved (no mono forcing)
+        â–¼
+concatenate_with_silences() â†’ auto-detect channels, match silence
+        â”‚
+        â–¼
+cleanup_audio_resemble() â†’ highpass 80 + lowpass 10k + afftdn=-25 + loudnorm I=-26
+        â”‚
+        â–¼
+mix_ambient() â†’ ambient mixed at category level
+        â”‚
+        â–¼
+SINGLE MP3 ENCODE (128kbps) â† only lossy step
+        â”‚
+        â–¼
+qa_loop() â†’ 14-GATE QA (see Section 12)
+        â”‚
+        â–¼
+deploy_to_r2() â†’ send_build_email()
 ```
 
 ### Whole-File Loudnorm (Fish only)
 
-Apply `loudnorm` to the full concatenated narration WAV AFTER assembly — not per-chunk. This preserves the natural dynamic variation between chunks that gives Marco his character. Per-chunk loudnorm was tested and removed (8 Feb 2026) because it flattened the delivery and, combined with the highshelf boost, introduced perceived echo on certain words.
+Apply `loudnorm` to the full concatenated narration WAV AFTER assembly â€” not per-chunk. This preserves the natural dynamic variation between chunks that gives Marco his character. Per-chunk loudnorm was tested and removed (8 Feb 2026) because it flattened the delivery and, combined with the highshelf boost, introduced perceived echo on certain words.
 
 The highshelf boost (`highshelf=f=3000:g=3`) was also removed (8 Feb 2026). A/B testing confirmed the +3dB HF boost was causing perceived echo and hiss on words like "settling", "stillness", "feel/feeling", "peace", "ease", "deeply". The loudnorm-only chain is cleaner.
 
@@ -728,25 +740,25 @@ Gate 7 thresholds were widened to 9/14 dB with 4s silence margin to accommodate 
 
 Marco standard speed adjustment: 0.95x atempo. Applied to the master and consistently to all production. This gives Marco a slightly slower, more deliberate delivery for meditation pacing.
 
-**Exception:** Sleep stories built with Fish/Marco — no atempo needed, natural speed is correct.
+**Exception:** Sleep stories built with Fish/Marco â€” no atempo needed, natural speed is correct.
 
 ### Channel Mismatch Bug (RESOLVED)
 
-All files MUST be mono before concatenation. When ffmpeg's concat demuxer joins mono and stereo PCM files, it misinterprets the sample data — stereo segments play at double duration. Silence files must be generated as mono (`cl=mono`), not stereo.
+All files MUST be mono before concatenation. When ffmpeg's concat demuxer joins mono and stereo PCM files, it misinterprets the sample data â€” stereo segments play at double duration. Silence files must be generated as mono (`cl=mono`), not stereo.
 
 ### Ambient Rules
 
 **Core rules:**
-- Ambient file MUST be longer than voice track — **NEVER loop**
+- Ambient file MUST be longer than voice track â€” **NEVER loop**
 - Looping causes an audible glitch at the loop point
 - Use 8-hour ambient files (available in `content/audio/ambient/`)
 - Background ambient must not fade in until narrator introduction is complete
 - Fade in: 15 seconds, Fade out: 8 seconds
-- `mix_ambient()` file search order: `-8hr` → `-extended` → base name. WAV checked before MP3.
+- `mix_ambient()` file search order: `-8hr` â†’ `-extended` â†’ base name. WAV checked before MP3.
 
 **Ambient as masking (standard practice):**
 
-A well-mixed ambient bed makes minor artifacts (soft echo, slight tonal shifts) disappear into the soundscape. This is standard practice in commercial meditation audio — every major app uses ambient beds for both atmosphere and artifact masking. The listener's brain attributes the anomaly to the environment rather than the voice.
+A well-mixed ambient bed makes minor artifacts (soft echo, slight tonal shifts) disappear into the soundscape. This is standard practice in commercial meditation audio â€” every major app uses ambient beds for both atmosphere and artifact masking. The listener's brain attributes the anomaly to the environment rather than the voice.
 
 Different ambient types mask differently. Broadband ambient (rain, stream, ocean) fills the full frequency spectrum and masks more effectively at a given level. Sparse ambient (nighttime birds, wind chimes, temple bells) has gaps where artifacts can peek through and may need higher relative levels or dynamic adjustment to be effective.
 
@@ -754,7 +766,7 @@ Different ambient types mask differently. Broadband ambient (rain, stream, ocean
 
 Ambient level is set by ear, per session, based on the ambient type and the chunk quality. There is no universal dB target. The person mixing (Scott) listens to the problem chunks with ambient at the proposed level and decides whether artifacts are sufficiently masked.
 
-**Ceiling rule:** If the ambient has to be raised above −8dB relative to the voice to make the session listenable, the chunks have a quality problem that should be solved at the scorer/rebuild level, not the mix level. Ambient is a finishing technique, not a repair tool.
+**Ceiling rule:** If the ambient has to be raised above âˆ’8dB relative to the voice to make the session listenable, the chunks have a quality problem that should be solved at the scorer/rebuild level, not the mix level. Ambient is a finishing technique, not a repair tool.
 
 The deployed ambient level is recorded in the Deployed Sessions table (Section 16) for every session, building an empirical reference of what works per ambient type.
 
@@ -763,10 +775,10 @@ The deployed ambient level is recorded in the Deployed Sessions table (Section 1
 Where human review has identified specific problem chunks, the ambient level can be locally adjusted at those timestamps to provide additional masking. Rather than raising the ambient globally (which affects clean sections unnecessarily), the mixer applies a gentle volume swell around the problem spot and settles back to the base level afterward.
 
 Implementation rules:
-- Swell must be gradual — ramp up over 2–3 seconds before the problem chunk, hold through the chunk, ramp down over 2–3 seconds after. No sudden jumps.
+- Swell must be gradual â€” ramp up over 2â€“3 seconds before the problem chunk, hold through the chunk, ramp down over 2â€“3 seconds after. No sudden jumps.
 - Maximum swell: +4dB above the session's base ambient level. Beyond this the ambient draws attention to itself and defeats the purpose.
 - The swell should sound like natural variation in the ambient (birds getting busier, rain picking up briefly). Abrupt level changes are more noticeable than the artifact they're trying to mask.
-- Dynamic ambient adjustments are driven by human review data — the chunk numbers and timestamps from the review labels. This connects the human feedback loop directly to the mix stage.
+- Dynamic ambient adjustments are driven by human review data â€” the chunk numbers and timestamps from the review labels. This connects the human feedback loop directly to the mix stage.
 - All dynamic adjustments must be documented in the build record: which chunks were targeted, the swell amount, and the ramp durations.
 
 **Available 8-hour ambients:**
@@ -775,17 +787,17 @@ Implementation rules:
 |------|----------|----------|-------|
 | `rain-8hr.mp3` | 8 hr | `content/audio/ambient/` | |
 | `birds-8hr.mp3` | 8 hr | `content/audio/ambient/` | |
-| `garden-8hr.mp3` | 12 hr | `content/audio/ambient/` | ⚠️ 9.5s dead silence at file start — always use `-ss 10` |
+| `garden-8hr.mp3` | 12 hr | `content/audio/ambient/` | âš ï¸ 9.5s dead silence at file start â€” always use `-ss 10` |
 | `rain-extended.mp3` | 70 min | `content/audio/ambient/` | |
 | `stream-3hr.mp3` | 3 hr | `content/audio/ambient/youtube-downloads/` | |
-| `stream-extended.mp3` | — | `content/audio/ambient/` | Created 9 Feb to cover longer sessions |
+| `stream-extended.mp3` | â€” | `content/audio/ambient/` | Created 9 Feb to cover longer sessions |
 | `loving-kindness-ambient.wav` | 15 min | `content/audio/ambient/` | |
 
 **Ambient type masking reference (to be populated as sessions are deployed):**
 
 | Ambient type | Effective base level | Notes |
 |-------------|---------------------|-------|
-| Nighttime birds | −42dB (14dB below voice) | Sparse — gaps between chirps need dynamic masking on problem chunks |
+| Nighttime birds | âˆ’42dB (14dB below voice) | Sparse â€” gaps between chirps need dynamic masking on problem chunks |
 
 ---
 
@@ -793,47 +805,47 @@ Implementation rules:
 
 ### Overview
 
-14 gates. ALL gates must pass — any failure blocks deploy. There are no informational-only gates. Every gate has a defined pass/fail condition. If a gate cannot fail a build, it is not a gate. Build time is not a constraint — all gates run on every build.
+14 gates. ALL gates must pass â€” any failure blocks deploy. There are no informational-only gates. Every gate has a defined pass/fail condition. If a gate cannot fail a build, it is not a gate. Build time is not a constraint â€” all gates run on every build.
 
 ### Gate 1: Quality Benchmarks
 Measures noise floor and HF hiss in silence regions via `astats`, compared against master benchmarks.
 
 ### Gate 2: Click Artifacts
-Scan → patch → rescan loop. Detects click artifacts in silence regions (sample-level jump > peak analysis). Applies 20ms cosine crossfades at all stitch boundaries. Repeats up to 5 passes.
+Scan â†’ patch â†’ rescan loop. Detects click artifacts in silence regions (sample-level jump > peak analysis). Applies 20ms cosine crossfades at all stitch boundaries. Repeats up to 5 passes.
 
 ### Gate 3: Independent Spectral Comparison
 Compares frequency profile of build against master reference WAV.
 
-**Sliding window:** Gate 3 uses 1–2 second sliding windows for spectral comparison. If ANY window within a chunk exceeds the hiss threshold, the chunk fails — regardless of whole-chunk average.
+**Sliding window:** Gate 3 uses 1â€“2 second sliding windows for spectral comparison. If ANY window within a chunk exceeds the hiss threshold, the chunk fails â€” regardless of whole-chunk average.
 
-**Calibrated threshold:** 18 dB above master reference (calibrated against known-good sessions — natural speech HF energy reaches up to 17 dB above reference in normal production).
+**Calibrated threshold:** 18 dB above master reference (calibrated against known-good sessions â€” natural speech HF energy reaches up to 17 dB above reference in normal production).
 
 ### Gate 4: Voice Comparison
 MFCC cosine + F0 deviation vs Marco master. Uses PRE-CLEANUP audio (see Section 10, Voice Comparison Gate).
 
-**Thresholds:** MFCC ≤0.008 (same-text), ≤0.06 (production). F0 deviation ≤10%.
+**Thresholds:** MFCC â‰¤0.008 (same-text), â‰¤0.06 (production). F0 deviation â‰¤10%.
 
 ### Gate 5: Loudness Consistency
-Per-second RMS sliding window — catches per-chunk loudness surges.
+Per-second RMS sliding window â€” catches per-chunk loudness surges.
 
 ### Gate 6: HF Hiss Detector (Speech-Aware)
 Sliding-window HF-to-total energy ratio on POST-CLEANUP audio. Evaluates non-speech regions only. Voice activity detection (or build manifest silence regions) excludes speech windows before HF ratio evaluation. This prevents natural vocal sibilants from triggering false positives while retaining full sensitivity for genuine hiss in pauses, silence, and transition regions.
 
-**Thresholds:** 3s minimum duration, 6 dB HF/total ratio — unchanged from original calibration.
+**Thresholds:** 3s minimum duration, 6 dB HF/total ratio â€” unchanged from original calibration.
 
 **Layered hiss coverage:** Gate 6 (non-speech regions) + Gate 1 (whole-file average) + Gate 9 (per-window energy spikes) provide three independent hiss detection systems covering different failure modes.
 
-**History:** Gate 6 originally ran on all audio including speech. This caused 100% build failure rates — every build flagged 4–11 regions of natural speech sibilants. HF shelf cut was tested across the full tuning range (−2 to −5 dB at 6–8 kHz) and failed. Removing the 3 kHz boost entirely produced identical flag counts, confirming the root cause was speech sibilants, not pipeline-induced noise. Speech-aware detection resolved the issue without threshold changes or pipeline modifications.
+**History:** Gate 6 originally ran on all audio including speech. This caused 100% build failure rates â€” every build flagged 4â€“11 regions of natural speech sibilants. HF shelf cut was tested across the full tuning range (âˆ’2 to âˆ’5 dB at 6â€“8 kHz) and failed. Removing the 3 kHz boost entirely produced identical flag counts, confirming the root cause was speech sibilants, not pipeline-induced noise. Speech-aware detection resolved the issue without threshold changes or pipeline modifications.
 
 ### Gate 7: Volume Surge/Drop
-Local-mean comparison with silence exclusion. 9/14 dB thresholds, proportional silence margin for transitions: `max(4s, silence_duration × 0.15)`. Short pauses (8s) get 4s margin. Long silences (50s) get 7.5s margin — voice ramp-up after extended silence is proportionally longer.
+Local-mean comparison with silence exclusion. 9/14 dB thresholds, proportional silence margin for transitions: `max(4s, silence_duration Ã— 0.15)`. Short pauses (8s) get 4s margin. Long silences (50s) get 7.5s margin â€” voice ramp-up after extended silence is proportionally longer.
 
-**Low-baseline skip:** Skip detection when local mean energy is below −28 dB. This threshold represents ambient/silence regions, not speech. Flagging silence as "surges" is a false positive.
+**Low-baseline skip:** Skip detection when local mean energy is below âˆ’28 dB. This threshold represents ambient/silence regions, not speech. Flagging silence as "surges" is a false positive.
 
-**Non-deterministic TTS level variation (9 Feb 2026):** Gate 7 is the most persistent failure mode during builds. Fish Audio's TTS generation is non-deterministic — identical text produces different volume levels on each call. When speech returns after a long silence, this variation can cause surges that exceed the 9.0 dB threshold. The threshold is correctly calibrated (lowering it would mask genuine defects). The correct response is to rebuild — eventually a generation set with consistent levels will pass. Sessions 19 and 32 needed 4 and 3 builds respectively; sessions 18 and 23 passed first time. Longer sessions with more chunks have higher failure probability.
+**Non-deterministic TTS level variation (9 Feb 2026):** Gate 7 is the most persistent failure mode during builds. Fish Audio's TTS generation is non-deterministic â€” identical text produces different volume levels on each call. When speech returns after a long silence, this variation can cause surges that exceed the 9.0 dB threshold. The threshold is correctly calibrated (lowering it would mask genuine defects). The correct response is to rebuild â€” eventually a generation set with consistent levels will pass. Sessions 19 and 32 needed 4 and 3 builds respectively; sessions 18 and 23 passed first time. Longer sessions with more chunks have higher failure probability.
 
 ### Gate 8: Repeated Content
-MFCC fingerprint + Whisper STT with DUAL AGREEMENT — both must flag the same timestamps to confirm. 8-word minimum.
+MFCC fingerprint + Whisper STT with DUAL AGREEMENT â€” both must flag the same timestamps to confirm. 8-word minimum.
 
 **Manifest text guard (8 Feb 2026):** When MFCC finds similar audio segments, the gate checks whether the underlying script text is actually the same. If word overlap between the two segments is <60%, the pair is skipped as a false positive (similar prosody on different text, common in meditation content with repeated cadence patterns).
 
@@ -844,13 +856,13 @@ Expected-Repetitions: May I be, May you be, May they be, May all beings be
 ```
 
 ### Gate 9: Energy Spike Detection (Visual Report)
-Generates PNG with waveform, spectrogram, energy plot, and summary. Additionally performs per-window energy analysis (1–2 second windows) to detect anomalous spikes.
+Generates PNG with waveform, spectrogram, energy plot, and summary. Additionally performs per-window energy analysis (1â€“2 second windows) to detect anomalous spikes.
 
-**Pass condition:** No window exceeds 12× session median total energy AND no window exceeds 28× session median high-frequency energy (above 4 kHz, speech-only windows used as baseline).
+**Pass condition:** No window exceeds 12Ã— session median total energy AND no window exceeds 28Ã— session median high-frequency energy (above 4 kHz, speech-only windows used as baseline).
 
 **Fail condition:** Any window exceeds either threshold. Flagged timestamps and energy values included in the visual report PNG.
 
-**Calibration note:** The HF spike threshold was recalibrated at 28× speech-only median and total energy at 12× (8 Feb 2026). No-ambient sessions have lower HF median, so sibilants appear as 16–25× spikes. Ambient sessions show sibilants at 4–8× and genuine hiss at 32–36×. The 28× HF threshold catches genuine hiss while passing sibilants in all session types. Fish per-chunk level swings can exceed 10 dB, requiring the generous 12× total energy threshold.
+**Calibration note:** The HF spike threshold was recalibrated at 28Ã— speech-only median and total energy at 12Ã— (8 Feb 2026). No-ambient sessions have lower HF median, so sibilants appear as 16â€“25Ã— spikes. Ambient sessions show sibilants at 4â€“8Ã— and genuine hiss at 32â€“36Ã—. The 28Ã— HF threshold catches genuine hiss while passing sibilants in all session types. Fish per-chunk level swings can exceed 10 dB, requiring the generous 12Ã— total energy threshold.
 
 **History:** Previously ran as informational-only with no pass/fail condition. Changed after the loving-kindness build deployed with a catastrophic hiss wall from 12:00 onwards that was clearly visible on the Gate 9 spectrogram but not evaluated programmatically.
 
@@ -861,9 +873,9 @@ Measures word density per second across the session using sliding windows.
 
 **Threshold:** Flag if any 2-second window exceeds 130% of the speech-only session average.
 
-**Meditation-specific rule:** Speech rate should be consistently slow (~100–120 wpm / 8–10 chars per second). Sudden acceleration to normal conversational pace (~160 wpm) is a defect even if the words are correct.
+**Meditation-specific rule:** Speech rate should be consistently slow (~100â€“120 wpm / 8â€“10 chars per second). Sudden acceleration to normal conversational pace (~160 wpm) is a defect even if the words are correct.
 
-**Calibration note:** With silence-aware baseline, the session average sits around 3.0–3.5 words/second for meditation content. The original implementation included silence windows, dragging the average to ~2.3 w/s and producing 27 false positives per build.
+**Calibration note:** With silence-aware baseline, the session average sits around 3.0â€“3.5 words/second for meditation content. The original implementation included silence windows, dragging the average to ~2.3 w/s and producing 27 false positives per build.
 
 ### Gate 11: Silence Region Integrity
 Verifies that every silence region in the manifest actually contains silence. Checks whether pause regions have been filled with audio bleed, stray TTS output, or ambient at the wrong level.
@@ -871,10 +883,10 @@ Verifies that every silence region in the manifest actually contains silence. Ch
 **Implementation:**
 1. Reads the build manifest to identify all marked silence/pause regions and their expected durations
 2. For each silence region in the RAW narration (pre-ambient mix), measures energy
-3. If energy in any silence region exceeds −50 dBFS, flags it
-4. For the MIXED output, verifies silence regions contain ambient-only energy (no voice bleed) by comparing energy against the ambient-only baseline level ±3 dB
+3. If energy in any silence region exceeds âˆ’50 dBFS, flags it
+4. For the MIXED output, verifies silence regions contain ambient-only energy (no voice bleed) by comparing energy against the ambient-only baseline level Â±3 dB
 
-**Pass condition:** All silence regions in raw narration below −50 dBFS. All silence regions in mixed output within ±3 dB of ambient-only baseline.
+**Pass condition:** All silence regions in raw narration below âˆ’50 dBFS. All silence regions in mixed output within Â±3 dB of ambient-only baseline.
 **Fail condition:** Any silence region contains unexpected audio.
 
 ### Gate 12: Duration Accuracy
@@ -895,57 +907,37 @@ Programmatically enforces the rule that there must be no dead silence anywhere i
 
 **Implementation:**
 1. Identifies all pause/silence regions in the mixed output (using the build manifest)
-2. For each region, measures energy in a sliding window (1–2 seconds)
-3. Checks the final 30 seconds of the file — ambient fade-out must not create dead silence before the track ends
+2. For each region, measures energy in a sliding window (1â€“2 seconds)
+3. Checks the final 30 seconds of the file â€” ambient fade-out must not create dead silence before the track ends
 4. Measures ambient level consistency across pause regions
 
-**Pass condition:** All pause regions above −80 dBFS. No dead silence anywhere. Ambient energy consistent across regions (within 10 dB).
+**Pass condition:** All pause regions above âˆ’80 dBFS. No dead silence anywhere. Ambient energy consistent across regions (within 10 dB).
 **Fail condition:** Any dead silence detected, or ambient level inconsistency exceeds 10 dB.
 
-**Calibration note:** Dead silence threshold calibrated at −80 dBFS (not the originally proposed −55 dBFS). Quiet ambient tracks measure −72 to −77 dBFS in known-good sessions. Ambient consistency tolerance calibrated at 10 dB (not 6 dB) — known-good sessions show up to 8 dB range across pause regions.
+**Calibration note:** Dead silence threshold calibrated at âˆ’80 dBFS (not the originally proposed âˆ’55 dBFS). Quiet ambient tracks measure âˆ’72 to âˆ’77 dBFS in known-good sessions. Ambient consistency tolerance calibrated at 10 dB (not 6 dB) â€” known-good sessions show up to 8 dB range across pause regions.
 
 ### Gate 14: Opening Quality (Tighter Thresholds)
-The opening is what the listener hears first. TTS glitches concentrate in the first 30–60 seconds. A glitch at 8:32 is bad; a glitch at 0:15 is catastrophic.
+The opening is what the listener hears first. TTS glitches concentrate in the first 30â€“60 seconds. A glitch at 8:32 is bad; a glitch at 0:15 is catastrophic.
 
 Runs the following gates with TIGHTER thresholds on the first 60 seconds of the file:
 
 | Gate | Standard threshold | Opening threshold (first 60s) |
 |------|-------------------|-------------------------------|
-| Gate 1 (Quality Benchmarks) | Noise floor ≤−26 dB, HF hiss ≤−40 dB | Noise floor ≤−30 dB, HF hiss ≤−44 dB |
+| Gate 1 (Quality Benchmarks) | Noise floor â‰¤âˆ’26 dB, HF hiss â‰¤âˆ’40 dB | Noise floor â‰¤âˆ’30 dB, HF hiss â‰¤âˆ’44 dB |
 | Gate 6 (HF Hiss) | 6 dB ratio, 3s min | 4 dB ratio, 1s min |
 | Gate 5 (Loudness) | 6.5 dB above median | 6 dB above median |
 | Gate 10 (Speech Rate) | 130% of session average | 120% of session average |
 
 **Pass condition:** All tightened thresholds met in the first 60 seconds.
-**Fail condition:** Any threshold exceeded in the opening — even if the same issue would pass later in the track.
+**Fail condition:** Any threshold exceeded in the opening â€” even if the same issue would pass later in the track.
 
 **Calibration note:** Gate 5 opening threshold calibrated at 6 dB (not the originally proposed 4 dB). Known-good sessions show 5.3 dB loudness variation in the opening.
 
 ### Overgeneration Retry Logic
 
-If a generated chunk's duration exceeds 2× the expected duration for its character count, reject it and regenerate immediately. Up to 3 retries per chunk before flagging as build failure.
+If a generated chunk's duration exceeds 2Ã— the expected duration for its character count, reject it and regenerate immediately. Up to 3 retries per chunk before flagging as build failure.
 
-**Expected duration:** Character count ÷ speaking rate. Meditation speaking rate ≈ 100–110 wpm ≈ 8–10 characters per second.
-
-### Visual QA Report Inspection (Mandatory)
-
-The build script generates QA report PNGs for each session (`{session-name}_QA_REPORT.png`). These contain waveform visualisations, spectrograms, energy plots, and gate summaries. **Code must visually inspect these reports — not just check the pass/fail numbers.**
-
-**Why this exists (9 Feb 2026):** Code confirmed it generated QA report PNGs but never actually opened or inspected them. Gates ran programmatically and Code took the numbers at face value. A spectrogram can show anomalies (localised hiss bursts, tonal shifts, energy spikes) that fall just below a gate's numerical threshold but are clearly visible on the graph. Automated gates are necessary but not sufficient — the visual reports exist to catch what the numbers miss.
-
-**Code's obligations:**
-1. After every build, open each QA report PNG and examine the spectrogram for anomalies
-2. Flag any visible artefacts that passed the numerical gates — include a description and timestamp
-3. Include visual inspection findings in the build state file
-4. If a visible anomaly is significant, report it to Scott rather than auto-deploying
-
-**What to look for:**
-- Localised bright spots or bands on the spectrogram (hiss or energy spikes)
-- Sudden changes in spectral colour at chunk boundaries (tonal seams)
-- Unusual waveform shapes (clipping, dropout, overgeneration)
-- Energy plot spikes that are close to (but just below) gate thresholds
-
-This is not a gate — it does not block deployment programmatically. It is a mandatory inspection step that Code performs and documents.
+**Expected duration:** Character count Ã· speaking rate. Meditation speaking rate â‰ˆ 100â€“110 wpm â‰ˆ 8â€“10 characters per second.
 
 ### Threshold Calibration Reference
 
@@ -954,8 +946,8 @@ These thresholds were calibrated against two known-good deployed sessions (25-in
 | Gate | Parameter | Brief estimate | Calibrated value | Evidence |
 |------|-----------|----------------|------------------|----------|
 | Gate 3 | HF sliding window | 10 dB | 18 dB | Natural speech HF up to 17 dB above reference |
-| Gate 9 | HF spike threshold | 4× all-window median | 28× speech-only median (HF), 12× total | No-ambient sibilants at 16–25×, genuine hiss at 32–36× |
-| Gate 13 | Dead silence | −55 dBFS | −80 dBFS | Quiet ambient at −72 to −77 dBFS |
+| Gate 9 | HF spike threshold | 4Ã— all-window median | 28Ã— speech-only median (HF), 12Ã— total | No-ambient sibilants at 16â€“25Ã—, genuine hiss at 32â€“36Ã— |
+| Gate 13 | Dead silence | âˆ’55 dBFS | âˆ’80 dBFS | Quiet ambient at âˆ’72 to âˆ’77 dBFS |
 | Gate 13 | Ambient consistency | 6 dB | 10 dB | 8 dB range on known-good session |
 | Gate 14 | Loudness (opening) | 4 dB | 6 dB | 5.3 dB on known-good session |
 
@@ -967,13 +959,25 @@ These thresholds were calibrated against two known-good deployed sessions (25-in
 
 | | Characters |
 |---|---|
-| **Minimum** | **50** (below 50 causes TTS instability and hiss — root cause of all hiss failures) |
-| **Sweet spot** | 50–200 |
+| **Minimum** | **50** (below 50 causes TTS instability and hiss â€” root cause of all hiss failures) |
+| **Sweet spot** | 50â€“200 |
 | **Maximum** | 400 (longer blocks trend toward monotone) |
 
 Blocks under 50 characters must be merged with adjacent blocks or expanded with additional content.
 
-**For loving-kindness/mantra content:** Combine 3–4 short phrases into one block with internal ellipses. Each block 76–150 characters. This gives TTS enough context while ellipses create internal rhythm.
+**For loving-kindness/mantra content:** Combine 3â€“4 short phrases into one block with internal ellipses. Each block 76â€“150 characters. This gives TTS enough context while ellipses create internal rhythm.
+
+### Opening Chunk Rule (MANDATORY — 9 Feb 2026)
+
+The first chunk of every session (chunk 0) must be one short sentence, under ~60 characters. The second chunk carries the remainder of the opening.
+
+**Why:** Fish cold-starts chunk 0 with no voice conditioning reference. Long unconditioned passages degrade at the tail end, producing echo. Short sentences complete before degradation begins. Chunk 1 then uses chunk 0’s audio as its conditioning reference, anchoring the entire session.
+
+**Evidence:** 30 consecutive generations of session 19 chunk 0 across 3 text variants all produced echo. Splitting into two short chunks produced clean audio immediately.
+
+**Example:**
+- BAD: "Find somewhere comfortable to lie down. A bed, a sofa, even the floor. Whatever works for you right now." (one long chunk 0)
+- GOOD: Chunk 0a: "Find somewhere comfortable to lie down." → Chunk 0b: "A bed, a sofa, even the floor. Any spot that feels right."
 
 ### Pause Markers
 
@@ -997,12 +1001,12 @@ Blocks under 50 characters must be merged with adjacent blocks or expanded with 
 
 | Rule | Why |
 |------|-----|
-| All blocks **50–400 characters** | Under 50 causes hiss; over 400 causes monotone |
-| Combine short phrases with lead-in text | "May I be safe." (14 chars) → "Silently now, may I be safe." (28 chars) — still needs combining further to reach 50 |
-| Use `...` for pauses (not `—`) | Script parser reads `...` as pause markers |
+| All blocks **50â€“400 characters** | Under 50 causes hiss; over 400 causes monotone |
+| Combine short phrases with lead-in text | "May I be safe." (14 chars) â†’ "Silently now, may I be safe." (28 chars) â€” still needs combining further to reach 50 |
+| Use `...` for pauses (not `â€”`) | Script parser reads `...` as pause markers |
 | No ellipsis in spoken text | Fish renders `...` as nervous/hesitant delivery |
 | Scripts must contain ZERO parenthetical tags | In-text emotion tags don't work (see Section 18) |
-| Estimate ~7.2 chars/second for narration duration | Calibrated from Fish/Marco output. **Caveat (9 Feb 2026):** This estimate tends to overestimate session duration — session 32 was scripted for 12 min but TTS produced 9.5 min. The build script's own duration estimate (calculated from actual chunk generation) is more reliable than the character-based formula. Use 7.2 chars/sec for rough planning only; set the `Duration-Target` header based on the build script's estimate after a dry run, not on character count alone. |
+| Estimate ~7.2 chars/second for narration duration | Calibrated from Fish/Marco output. **Caveat (9 Feb 2026):** This estimate tends to overestimate session duration â€” session 32 was scripted for 12 min but TTS produced 9.5 min. The build script's own duration estimate (calculated from actual chunk generation) is more reliable than the character-based formula. Use 7.2 chars/sec for rough planning only; set the `Duration-Target` header based on the build script's estimate after a dry run, not on character count alone. |
 
 ### Script Metadata Header
 
@@ -1019,7 +1023,7 @@ Expected-Repetitions: [comma-separated phrases for Gate 8]
 
 ### Fish Audio Trigger Words
 
-Certain words cause consistent artifacts in Fish/Marco output. Most are sibilant-heavy words or sustained vowels — exactly where Fish struggles to hold a clean, gentle tone. These appear constantly in meditation scripts, making this a high-impact issue.
+Certain words cause consistent artifacts in Fish/Marco output. Most are sibilant-heavy words or sustained vowels â€” exactly where Fish struggles to hold a clean, gentle tone. These appear constantly in meditation scripts, making this a high-impact issue.
 
 **Known trigger words (calibrated from Session 36 human review, 8 Feb 2026):**
 
@@ -1035,9 +1039,9 @@ Certain words cause consistent artifacts in Fish/Marco output. Most are sibilant
 | simply | echo | just, only, quietly |
 | family | hiss | loved ones, those close to you |
 | joyful | hiss | happy, glad, filled with joy |
-| be (standalone) | voice shift | Embed in longer phrases — never isolate |
+| be (standalone) | voice shift | Embed in longer phrases â€” never isolate |
 | breath in | hiss | breathe in, inhale, draw a breath |
-| filling your lungs completely | hiss | Rewrite as shorter phrase — "breathe in fully" |
+| filling your lungs completely | hiss | Rewrite as shorter phrase â€” "breathe in fully" |
 | nowhere else | voice shift | "right here", "all you need is to be here" |
 
 **Pattern:** Most triggers are soft, sibilant-heavy words or words with sustained vowels where Fish needs to hold a gentle, open tone. These are the exact words that appear constantly in meditation content.
@@ -1047,7 +1051,7 @@ Certain words cause consistent artifacts in Fish/Marco output. Most are sibilant
 - Break the word into a longer phrase where it's less exposed (e.g. "deeply" alone is worse than "more deeply now")
 - If a trigger word is essential to the meaning and has no good synonym, ensure it falls within a block of 100+ characters so the TTS has surrounding context to stabilise
 
-**Pre-flight scan:** The build script includes an automated pre-flight check that scans all script blocks against this list before any TTS calls. Blocks containing trigger words are flagged with suggested alternatives. This runs during dry-run and at the start of a live build. It is a WARNING, not a build-blocker — some trigger words may be unavoidable, but the scriptwriter should make a conscious choice rather than discovering the problem at the listening stage.
+**Pre-flight scan:** The build script includes an automated pre-flight check that scans all script blocks against this list before any TTS calls. Blocks containing trigger words are flagged with suggested alternatives. This runs during dry-run and at the start of a live build. It is a WARNING, not a build-blocker â€” some trigger words may be unavoidable, but the scriptwriter should make a conscious choice rather than discovering the problem at the listening stage.
 
 **Maintaining the list:** New trigger words discovered during human review are added to this table with their defect type and suggested alternatives. The pre-flight scan reads from this list. The list is expected to grow as more sessions are built and reviewed.
 
@@ -1057,11 +1061,11 @@ Certain words cause consistent artifacts in Fish/Marco output. Most are sibilant
 
 ### The Problem
 
-Salus sessions are starting to sound the same. A customer who listens to two or three sessions back-to-back should feel like they've had three distinct experiences — not the same session with different words in the middle. When openings blur together, when every session guides the breath the same way, when the same transitional phrases appear across the catalogue, the product feels mass-produced rather than crafted.
+Salus sessions are starting to sound the same. A customer who listens to two or three sessions back-to-back should feel like they've had three distinct experiences â€” not the same session with different words in the middle. When openings blur together, when every session guides the breath the same way, when the same transitional phrases appear across the catalogue, the product feels mass-produced rather than crafted.
 
 This is the single biggest threat to perceived quality that doesn't show up in any automated gate. A session can pass all 14 QA checks and still feel identical to the one before it.
 
-**The rule is simple: no two Salus sessions should feel interchangeable.** Every session must have its own identity — its own way in, its own rhythm, its own voice, its own way of closing. A returning customer should be able to tell which session they're listening to within the first 30 seconds.
+**The rule is simple: no two Salus sessions should feel interchangeable.** Every session must have its own identity â€” its own way in, its own rhythm, its own voice, its own way of closing. A returning customer should be able to tell which session they're listening to within the first 30 seconds.
 
 ### Cross-Session Registers (Mandatory)
 
@@ -1073,7 +1077,7 @@ Every deployed session's opening line and opening approach, one entry per line.
 
 Format: `[Session #] | [Opening line] | [Opening technique]`
 
-**Rule:** No new session may use the same opening technique as any existing session in the register. If three sessions already open with breath awareness, the next session must open differently — perhaps with a sound observation, a question, a brief story, a sensory detail, or silence.
+**Rule:** No new session may use the same opening technique as any existing session in the register. If three sessions already open with breath awareness, the next session must open differently â€” perhaps with a sound observation, a question, a brief story, a sensory detail, or silence.
 
 #### `closings-register.txt`
 
@@ -1089,7 +1093,7 @@ Distinctive phrases, metaphors, breath cues, and transitional language used acro
 
 Format: `[Session #] | [Phrase or cue] | [Context]`
 
-**Rule:** No phrase of 5+ words from this register may appear in a new script. If a phrase has been used, it's spent — find a new way to say it.
+**Rule:** No phrase of 5+ words from this register may appear in a new script. If a phrase has been used, it's spent â€” find a new way to say it.
 
 ### Categories of Repetition to Eliminate
 
@@ -1108,10 +1112,10 @@ The opening 30 seconds is where repetition is most damaging. It's the first thin
 **Variation strategies:**
 - Open with an environmental observation ("There's a quiet in this moment...")
 - Open with a gentle question ("What brought you here today?")
-- Open mid-action — no settling, just start the practice
+- Open mid-action â€” no settling, just start the practice
 - Open with a single sensory detail (a sound, a temperature, a texture)
 - Open with a brief, unexpected statement that sets the session's theme
-- Open with silence — let the ambient carry the first few seconds before the voice enters
+- Open with silence â€” let the ambient carry the first few seconds before the voice enters
 
 **Mandatory:** Before writing any opening, check `openings-register.txt`. If the planned approach is already there, change it.
 
@@ -1126,10 +1130,10 @@ Every meditation involves breathing. The risk is that every session guides the b
 - "With each exhale, let go of..."
 
 **Variation strategies:**
-- Describe the breath indirectly — talk about what it does to the body rather than instructing the mechanism
+- Describe the breath indirectly â€” talk about what it does to the body rather than instructing the mechanism
 - Vary the sensory focus: one session might notice temperature of air at the nostrils, another might notice the rise of the chest, another the sound of the exhale
 - Some sessions can skip explicit breath guidance entirely and let the pacing of the script imply the rhythm
-- Use different verbs: draw, gather, release, soften, empty — not always "breathe in/out"
+- Use different verbs: draw, gather, release, soften, empty â€” not always "breathe in/out"
 - Vary the placement: some sessions guide breath early, others introduce it midway as a return point
 
 **Mandatory:** No two sessions in the same category may use the same breath cue phrasing. Check `phrases-register.txt`.
@@ -1145,7 +1149,7 @@ The pivot from settling into the core practice is where sessions most commonly b
 - "Scan from the top of your head down to your toes"
 
 **Variation strategies:**
-- Skip the full body scan — focus on one or two areas with genuine depth
+- Skip the full body scan â€” focus on one or two areas with genuine depth
 - Use movement rather than stillness: "Gently rock your weight side to side and notice where you land"
 - Use contrast: "Notice the difference between your left hand and your right"
 - Use temperature, weight, or texture rather than tension/release
@@ -1175,7 +1179,7 @@ After openings, closings are the highest-repetition risk. If every session ends 
 - End with a concrete image or memory from the session, not a generic benediction
 - End with a question the listener can hold: "What's one thing you noticed today?"
 - End with a sound cue rather than a verbal instruction to return
-- End abruptly — some sessions can simply trail off into ambient, letting the listener decide when they're done
+- End abruptly â€” some sessions can simply trail off into ambient, letting the listener decide when they're done
 - End with a specific, practical suggestion: "The next time you're waiting in a queue, try this for thirty seconds"
 - End with humour or lightness where the session type allows it
 
@@ -1186,15 +1190,15 @@ After openings, closings are the highest-repetition risk. If every session ends 
 Even if individual phrases differ, sessions can feel identical if they follow the same structural shape every time.
 
 **The default arc (overused):**
-Settle → breathe → body awareness → core practice → integration → close
+Settle â†’ breathe â†’ body awareness â†’ core practice â†’ integration â†’ close
 
 **Variation strategies:**
-- Start in the core practice immediately — no preamble
+- Start in the core practice immediately â€” no preamble
 - Move between activity and stillness rather than building linearly toward stillness
-- Use a circular structure — return to the opening image or phrase at the end
+- Use a circular structure â€” return to the opening image or phrase at the end
 - Use a single extended metaphor as the structural spine rather than a technique sequence
-- Vary the ratio of guidance to silence — some sessions should be 70% guided, others 40%
-- Place the most intense or meaningful moment somewhere unexpected — not always at the two-thirds mark
+- Vary the ratio of guidance to silence â€” some sessions should be 70% guided, others 40%
+- Place the most intense or meaningful moment somewhere unexpected â€” not always at the two-thirds mark
 
 ### Pre-Build Originality Scan (Automated)
 
@@ -1205,7 +1209,7 @@ The build script runs a cross-session originality scan during the pre-flight pha
 2. Extracts all text blocks from the new script
 3. Compares each block against register entries using fuzzy matching (threshold: 70% similarity on any phrase of 5+ words)
 4. Flags matches with the specific session number and phrase that conflicts
-5. Checks the opening line and closing line against their respective registers — exact or near-exact matches are flagged
+5. Checks the opening line and closing line against their respective registers â€” exact or near-exact matches are flagged
 6. Generates an originality report saved to `content/scripts/originality/{session-name}-originality.txt`
 
 This is a WARNING system, not a build-blocker. The scriptwriter (Claude Code or human) reviews the report and either revises the flagged content or documents why the repetition is acceptable (e.g., traditional metta phrases that cannot be meaningfully varied).
@@ -1224,22 +1228,22 @@ While internal differentiation is the primary concern, scripts should also not c
 - No phrase of 6+ consecutive words should match a published source
 - A brief research note is stored in `content/scripts/research/{session-name}-research.txt` listing sources consulted and how the Salus script differs
 
-This is lighter-touch than the internal register system — a due diligence step, not a gating mechanism.
+This is lighter-touch than the internal register system â€” a due diligence step, not a gating mechanism.
 
 ### Exceptions
 
 Some repetition across sessions is unavoidable and acceptable:
 
-- **Traditional formulations** (e.g., metta phrases "May I be safe, may I be happy") — these are traditional, not anyone's property, and listeners expect consistency in how they're presented
-- **Functional micro-instructions** (e.g., "breathe in," "close your eyes") — unavoidable, though the framing around them must vary
-- **Category conventions** (e.g., sleep sessions ending with "Goodnight from Salus") — brand signatures, not repetition
-- **Phrases listed in `Expected-Repetitions` metadata** — intentional structural repetition within a single session (handled by Gate 8)
+- **Traditional formulations** (e.g., metta phrases "May I be safe, may I be happy") â€” these are traditional, not anyone's property, and listeners expect consistency in how they're presented
+- **Functional micro-instructions** (e.g., "breathe in," "close your eyes") â€” unavoidable, though the framing around them must vary
+- **Category conventions** (e.g., sleep sessions ending with "Goodnight from Salus") â€” brand signatures, not repetition
+- **Phrases listed in `Expected-Repetitions` metadata** â€” intentional structural repetition within a single session (handled by Gate 8)
 
-The key distinction: **functional language can repeat; creative language must not.** "Breathe in" is functional. "Let your breath become a soft tide, washing through you" is creative — and once it's been used in one session, it's done.
+The key distinction: **functional language can repeat; creative language must not.** "Breathe in" is functional. "Let your breath become a soft tide, washing through you" is creative â€” and once it's been used in one session, it's done.
 
 ### Narration Audit (Outstanding)
 
-**Status:** PENDING — to be scheduled
+**Status:** PENDING â€” to be scheduled
 
 A full audit of all deployed sessions is required to retroactively populate the three register files and identify existing cross-session repetition. This is a prerequisite for the register system to function properly.
 
@@ -1247,7 +1251,7 @@ A full audit of all deployed sessions is required to retroactively populate the 
 1. Retrieve or reconstruct scripts for all deployed sessions (01, 03, 05, 06, 07, 08, 09, 11, 18, 19, 23, 25, 29, 32, 36, 38, 43)
 2. Extract opening lines, closing lines, and distinctive phrases from each
 3. Populate `openings-register.txt`, `closings-register.txt`, and `phrases-register.txt`
-4. Identify any existing cross-session repetition — document which sessions share phrasing and flag for future rewrites
+4. Identify any existing cross-session repetition â€” document which sessions share phrasing and flag for future rewrites
 5. Listen to a representative sample across categories back-to-back and note where sessions feel interchangeable
 6. Produce an audit report with specific recommendations for which scripts need the most differentiation work
 
@@ -1257,7 +1261,7 @@ A full audit of all deployed sessions is required to retroactively populate the 
 
 ## 14. Expression Through Punctuation
 
-**Status:** ACTIVE — Technique proven, deployed in loving-kindness session.
+**Status:** ACTIVE â€” Technique proven, deployed in loving-kindness session.
 
 ### The Problem
 
@@ -1265,7 +1269,7 @@ TTS at temperature 0.3 is deliberately flat. Marco sounds the same whether sayin
 
 ### The Solution: Script-Level Direction
 
-Every comma, ellipsis, fragment, and sentence structure is vocal direction to Marco. The TTS model responds to punctuation cues — not perfectly, but enough to create natural rhythm and breathing. No API changes, no model tuning, no extra cost. Just better scripts.
+Every comma, ellipsis, fragment, and sentence structure is vocal direction to Marco. The TTS model responds to punctuation cues â€” not perfectly, but enough to create natural rhythm and breathing. No API changes, no model tuning, no extra cost. Just better scripts.
 
 ### Techniques
 
@@ -1297,13 +1301,13 @@ Every comma, ellipsis, fragment, and sentence structure is vocal direction to Ma
 **Loving-kindness phrases with internal ellipses:**
 > "May I be safe... May I be happy... May I be healthy... May I live with ease."
 >
-> 76–84 characters per block. Ellipses create breathing rhythm without splitting into dangerously short chunks.
+> 76â€“84 characters per block. Ellipses create breathing rhythm without splitting into dangerously short chunks.
 
 ---
 
 ## 15. Auphonic Integration
 
-**Status:** ACTIVE — Measurement gate AND hiss reduction testing (see Hiss Reduction Testing below). Processing output is not currently used as production audio, but noise reduction is under evaluation.
+**Status:** ACTIVE â€” Measurement gate ONLY. Do not use Auphonic output as production audio.
 
 ### Account
 
@@ -1332,19 +1336,19 @@ Every comma, ellipsis, fragment, and sentence structure is vocal direction to Ma
 
 | Metric | PASS | FAIL |
 |--------|------|------|
-| Input SNR | ≥ 40 dB | < 40 dB |
-| Background Level | ≤ −55 dB | > −55 dB |
+| Input SNR | â‰¥ 40 dB | < 40 dB |
+| Background Level | â‰¤ âˆ’55 dB | > âˆ’55 dB |
 | Hum detected | No | Yes (any segment) |
-| Output loudness | −26 ±1.0 LUFS | Outside range |
-| Output true peak | ≤ −2.0 dBTP | > −2.0 dBTP |
-| Output LRA | ≤ 16 LU | > 16 LU |
-| Leveler gain spread | ≤ 10 dB | > 10 dB |
+| Output loudness | âˆ’26 Â±1.0 LUFS | Outside range |
+| Output true peak | â‰¤ âˆ’2.0 dBTP | > âˆ’2.0 dBTP |
+| Output LRA | â‰¤ 16 LU | > 16 LU |
+| Leveler gain spread | â‰¤ 10 dB | > 10 dB |
 
 SNR threshold at 40 dB based on Fish baseline of 45.26 dB. The old 25 dB threshold was too permissive for TTS content.
 
 ### Per-Segment Analysis
 
-**Status: NOT AVAILABLE.** The Auphonic API does not return per-segment SNR data — only aggregate file-level metrics. Per-segment analysis was planned but cannot be implemented as a pipeline gate due to this API limitation. If Auphonic exposes per-segment SNR in a future API version, this should be revisited.
+**Status: NOT AVAILABLE.** The Auphonic API does not return per-segment SNR data â€” only aggregate file-level metrics. Per-segment analysis was planned but cannot be implemented as a pipeline gate due to this API limitation. If Auphonic exposes per-segment SNR in a future API version, this should be revisited.
 
 Whole-file Auphonic metrics remain in use as a secondary measurement gate alongside the 14-gate pipeline system.
 
@@ -1354,8 +1358,8 @@ Whole-file Auphonic metrics remain in use as a secondary measurement gate alongs
 |---------|-------|
 | Adaptive Leveler | Enabled |
 | Filtering | Enabled (Voice AutoEQ) |
-| Loudness Target | −26 LUFS |
-| Max Peak Level | −2 dBTP (ATSC A/85) |
+| Loudness Target | âˆ’26 LUFS |
+| Max Peak Level | âˆ’2 dBTP (ATSC A/85) |
 | Noise Reduction | Static: remove constant noises only, 6 dB (low) |
 | Remove Reverb | Off |
 | Automatic Cutting | Off (preserve meditation silences) |
@@ -1369,14 +1373,14 @@ File: `36-loving-kindness-intro_precleanup.wav`
 
 | Metric | Value |
 |--------|-------|
-| Program Loudness | −16.34 LUFS |
+| Program Loudness | âˆ’16.34 LUFS |
 | LRA | 15.21 LU |
-| Max Peak Level | −4.39 dBTP |
+| Max Peak Level | âˆ’4.39 dBTP |
 | SNR mean | 45.26 dB |
-| Background Level | −62.25 dB |
+| Background Level | âˆ’62.25 dB |
 | Hum | Not detected |
 
-**Key conclusion:** Fish Audio TTS output is broadcast quality (40–50 dB SNR standard). The aggressive cleanup chain was solving a problem that barely existed.
+**Key conclusion:** Fish Audio TTS output is broadcast quality (40â€“50 dB SNR standard). The aggressive cleanup chain was solving a problem that barely existed.
 
 ### API Usage
 
@@ -1395,94 +1399,43 @@ curl -X POST https://auphonic.com/api/simple/productions.json \
 
 Python integration code available in the build script. Poll status at `/api/production/{uuid}.json` (status 3 = Done, 2 = Error).
 
-### Hiss Reduction Testing (Outstanding)
-
-**Status:** PENDING — to be tested
-
-The pipeline currently has no active de-hiss step. Hiss mitigation relies entirely on chunk selection (best-of-5 scoring includes HF measurement, so cleaner chunks are preferred) and ambient masking. If all 5 generations of a chunk have hiss and that chunk was still the best, the hiss ships.
-
-**LALAL.AI** was tested for noise cancellation. Hiss removal was excellent, but dereverb stripped Marco's vocal resonance. LALAL with `dereverb=False` (noise cancellation only) was identified as worth retesting but has not been tested.
-
-**Auphonic** has noise reduction capabilities (currently configured as "Static: remove constant noises only, 6 dB") but has only been used for measurement, never for processing. The concern was that Voice AutoEQ damages Marco's bass warmth — but it's possible to use Auphonic's noise reduction independently of its levelling and EQ features.
-
-**Required testing:**
-1. **LALAL.AI with dereverb disabled** — noise cancellation only on a known-hissy chunk. A/B against the original.
-2. **Auphonic noise reduction only** — submit a known-hissy chunk with levelling and EQ disabled, noise reduction enabled. Compare output quality.
-3. **Per-chunk application** — test whether applying noise reduction to individual problem chunks (rather than the whole narration) avoids the cumulative quality degradation seen in full-session LALAL processing.
-
-The goal is to find a noise reduction approach that removes hiss without damaging Marco's vocal character. If either LALAL (dereverb-off) or Auphonic (noise-only) passes A/B testing, it becomes an optional repair tool — applied to specific problem chunks identified during review, not blanket-applied to all audio.
-
 ---
 
-## 15A. Targeted Chunk Repair
+## 15A. Production Readiness
 
-**Status:** EXPERIMENTAL — trial on session 32, pending results before integration into standard pipeline.
+**Status:** READY FOR SCALE — 9 February 2026
 
-### The Problem
+The audio production pipeline is now mature enough for mass production of meditation sessions. The combination of automated QA, proven repair processes, and documented Fish Audio failure modes means sessions can be produced at volume with reliable quality.
 
-The current quality strategy is avoidance, not repair. Generate 5 versions of each chunk, pick the best one, hope the ambient covers the rest. If all 5 versions of a chunk have a defect, the least-bad version ships with the defect intact. There is no mechanism to fix a single problem word or phrase after assembly.
+### What Makes This Possible
 
-This was acceptable when defect rates were high and the pipeline was unstable. Now that the pipeline produces 3–4 defective words across four full sessions, targeted repair becomes viable — and valuable. Fixing 3 words is faster than regenerating an entire 27-chunk session and gambling on the Fish lottery again.
+**Automated quality scoring** (8 Feb 2026): Per-chunk composite scoring identifies defects programmatically. The scoring system catches echo, hiss, voice shift, and tonal inconsistency without human listening for mid-session chunks.
 
-### The Concept
+**Proven repair pipeline** (9 Feb 2026): Defective chunks can be fixed through targeted best-of-10 regeneration and splice repair without rebuilding entire sessions. Repair process validated on sessions 32 and 19.
 
-Identify the specific word or phrase that is defective. Regenerate just that audio segment. Splice it into the existing narration with proper crossfading and tonal matching. Save the result as a new file — never overwriting the original master narration.
+**Documented failure modes:** Fish Audio’s behaviour under production conditions is now characterised:
+- Trigger words that cause echo/hiss (Section 13)
+- Chunk 0 cold-start degradation and the split-chunk fix (Section 9)
+- Gate 7 non-deterministic volume variation (Section 12)
+- Scoring formula bias on unconditioned chunks (Section 9)
+- 30% hit rate on certain phonetic patterns
 
-**This is NOT the crude splicing that Rule 11 prohibits.** The previous splicing failure was caused by dropping in a raw replacement chunk with no tonal matching or crossfading, creating audible seams. Targeted repair is a controlled process with quality checks at every step.
+**Script rules that prevent defects:** Opening chunk length limit, 50–400 character blocks, trigger word pre-flight, cross-session originality scan. Scripts designed around Fish’s known weaknesses produce cleaner first-generation audio.
 
-### Repair Process
+### Production Workflow
 
-1. **Identify the defect.** Human review notes the problem word/phrase with timestamp (e.g., "0:42 — 'something' has echo"). The defect must be specific — not "this chunk sounds off" but "the word 'something' at 0:42 has audible echo."
+1. **Script** — Write following all rules (Section 13, 13A). Short opening chunk. Trigger word scan. Originality check.
+2. **Build** — `build-session-v3.py --no-deploy`. Best-of-5 per chunk. 14 gates.
+3. **Score** — Per-chunk composite scoring identifies any flagged chunks.
+4. **Repair** — Flagged chunks get best-of-10 targeted regeneration (Section 16A). Opening chunks assessed by human ear, not score.
+5. **Review** — Human listening on headphones at high volume. Focus on flagged chunks and opening/closing.
+6. **Deploy** — Upload to R2, wire into HTML, update registers, push, email.
 
-2. **Locate the chunk.** Using the build manifest and the session's chunk schedule (stored alongside the master narration in `content/audio-free/masters/{session}_chunk-schedule.txt`), identify which chunk contains the defective word and the exact timestamp within that chunk. Chunk schedules list every chunk's start time, end time, duration, and opening text — making it straightforward to find a problem word without reverse-engineering from raw timestamps.
+Sessions 18 and 23 passed first build with zero repairs needed. Realistic expectation: most sessions will need 1–3 chunk repairs, taking the total production time from script to live to approximately 30–60 minutes per session once the script is written.
 
-3. **Extract context.** Extract the full chunk containing the defect from the master narration, plus the adjacent chunks on either side. These provide the tonal reference for matching.
+### Competitive Position
 
-4. **Regenerate the chunk.** Generate multiple versions (best-of-10) of the defective chunk using the same TTS settings as the original build. Use adjacent chunks as voice conditioning reference if the TTS API supports it. Score all versions using the composite metric, with MFCC tonal distance weighted heavily against the adjacent chunks to ensure tonal consistency. **Important:** Always regenerate the full chunk, not just the defective word in isolation — a word generated standalone has different prosody (pitch contour) than a word mid-sentence, and would sound obviously spliced.
-
-5. **Select and validate.** Pick the best replacement. A/B compare the replacement chunk against the original — the replacement must be better on the specific defect without introducing new problems.
-
-6. **Splice with crossfading.** Replace the defective chunk in the narration using cosine crossfades at both boundaries (minimum 50ms, up to 200ms depending on context). The crossfade duration should be longer at silence-to-speech transitions and shorter at mid-speech splices.
-
-7. **MFCC tonal check.** Run MFCC comparison between the replacement and its adjacent chunks. If tonal distance exceeds the existing threshold (0.50), the replacement fails — try another version or accept the original defect.
-
-8. **Re-run QA gates.** Run all 14 gates on the repaired narration. The repair must not cause any gate that previously passed to now fail.
-
-9. **Save as new file.** Save the repaired narration as `{session-name}_master-narration-repair-{n}.wav` (where n is the repair iteration number). The original master narration stays untouched.
-
-10. **Remix and deploy.** Apply ambient mix to the repaired narration and deploy to R2. Update all HTML references if the filename has changed.
-
-### File Naming
-
-```
-content/audio-free/masters/
-  32-observing-emotions_master-narration.wav          ← original, sacrosanct
-  32-observing-emotions_master-narration-repair-1.wav ← first repair attempt
-  32-observing-emotions_master-narration-repair-2.wav ← second repair if needed
-```
-
-The live deployed MP3 is always generated from the most recent approved narration (original or repair). But all versions are kept — you can always go back.
-
-### Rules
-
-1. **Never overwrite the original master narration.** This is non-negotiable. The repair creates a new file. The original remains as the fallback.
-2. **One defect per repair pass.** Fix one problem, re-run QA, listen, confirm. Don't batch multiple repairs before checking — each splice introduces risk and the risks compound.
-3. **Repair attempts are limited.** If a chunk cannot be satisfactorily repaired after 3 attempts, accept the original or schedule a full rebuild of the session.
-4. **All repairs documented.** The build record must log: which word was repaired, the timestamp, the replacement chunk's composite score and MFCC tonal distance, and the A/B comparison result.
-5. **Repaired narrations go through the same QA gates as originals.** A repair that passes human review but fails Gate 7 (surge) is not acceptable.
-6. **Code must identify defects, not just fix reported ones.** Over time, Code should develop the ability to flag potential defects programmatically (via spectral analysis, MFCC anomaly detection, or Whisper transcription comparison) and propose repairs — not wait for human reports. This is the path to an automated repair gate.
-
-### Future: Repair as a Pipeline Stage
-
-Once targeted repair is proven on manual cases, the goal is to integrate it as an optional post-assembly stage:
-
-1. Build assembles narration as normal (best-of-5 per chunk)
-2. Automated analysis identifies chunks with potential defects (spectral anomalies, MFCC outliers, Whisper transcription mismatches)
-3. Those chunks are flagged for repair — regenerated with best-of-10 and spliced in with crossfading
-4. Repaired narration goes through full 14-gate QA
-5. Human review confirms the final result
-
-This would mean the pipeline produces a first-pass narration, then refines it — avoidance AND repair working together. But this is aspirational. The immediate task is proving the concept on a single word.
+No competitor in the meditation app space has solved AI voice reliability at this level. Calm and Headspace use human narrators. Smaller apps using AI voice ship the exact defects this pipeline catches and fixes. The Salus pipeline produces AI-narrated content at a quality level that withstands headphone listening at high volume — with a documented, repeatable process. This knowledge compounds with every session built and is not publicly documented anywhere.
 
 ---
 
@@ -1491,7 +1444,7 @@ This would mean the pipeline produces a first-pass narration, then refines it �
 ### CLI Usage
 
 ```bash
-# Full pipeline: build → QA → deploy to R2
+# Full pipeline: build â†’ QA â†’ deploy to R2
 python3 build-session-v3.py 25-introduction-to-mindfulness
 
 # Dry run (no API calls)
@@ -1511,13 +1464,14 @@ python3 build-session-v3.py SESSION --no-cleanup
 
 **Script:**
 - [ ] Script written with correct metadata header and pause markers
-- [ ] All text blocks 50–400 characters (MINIMUM 50, not 20)
+- [ ] All text blocks 50â€“400 characters (MINIMUM 50, not 20)
 - [ ] Short phrases combined to exceed 50 chars
 - [ ] Pauses humanised (no identical gap durations)
 - [ ] Zero parenthetical emotion tags in text
 - [ ] `Expected-Repetitions` set if session has intentional structural repetition
-- [ ] **Trigger word pre-flight passed** — script scanned against known trigger word list (Section 13). Any flagged words either replaced with synonyms or consciously accepted
-- [ ] **Cross-session originality scan passed** — script checked against registers (Section 13A). No unresolved conflicts with existing openings, closings, or phrases
+- [ ] **Opening chunk is one short sentence, under ~60 characters** (mandatory — Section 13)
+- [ ] **Trigger word pre-flight passed** â€” script scanned against known trigger word list (Section 13). Any flagged words either replaced with synonyms or consciously accepted
+- [ ] **Cross-session originality scan passed** â€” script checked against registers (Section 13A). No unresolved conflicts with existing openings, closings, or phrases
 
 **Environment:**
 - [ ] Only building ONE session (no parallel builds)
@@ -1528,7 +1482,7 @@ python3 build-session-v3.py SESSION --no-cleanup
 - [ ] Master reference WAV exists at `content/audio/marco-master/marco-master-v1.wav`
 
 **Build:**
-- [ ] Dry run completed — block count and silence totals verified
+- [ ] Dry run completed â€” block count and silence totals verified
 - [ ] Ambient file duration exceeds estimated voice duration
 - [ ] If no long ambient exists, download one BEFORE building
 
@@ -1537,97 +1491,28 @@ python3 build-session-v3.py SESSION --no-cleanup
 - [ ] 0 voice changes in QA results
 
 **Human Review (mandatory before deploy):**
-1. Build script generates QA report PNGs — Code must visually inspect these for spectral anomalies, energy spikes, or artefacts that pass numerical thresholds but are visible on the graphs (see Visual QA Report Inspection below)
-2. Scott listens to the full assembled session (with ambient) as a continuous playback — not individual chunks. Focus on overall flow, tonal consistency, and any words or phrases that stand out as defective
-3. Any problem moments noted with approximate timestamps and description (e.g., "0:42 — 'something' has echo")
-4. If clean and no issues noted → proceed to deploy
-5. If specific defects identified → attempt targeted repair (Section 15A) before considering a full rebuild
-6. Export review notes as TXT file for the build record
-
-**Previous approach (superseded 9 Feb 2026):** Individual chunk-by-chunk listening with per-chunk ratings. This was necessary during early pipeline development when defect rates were high. With the current pipeline producing 3–4 defective words across four full sessions, full-session playback is sufficient and more representative of the customer experience.
+1. Extract individual chunks from raw narration WAV using manifest timing data
+2. Upload chunks to R2 at `test/chunk-test-{version}/` (e.g. `chunk-test-v3b/`)
+3. Create or update interactive HTML review page (export buttons: Copy Results + Download TXT)
+4. Scott listens to every chunk on AirPods at high volume (exposes artifacts normal listening misses)
+5. Each chunk rated: OK / ECHO / HISS / VOICE / BAD
+6. Export review results as TXT file
+7. If clean rate is acceptable â†’ proceed to deploy
+8. If problem chunks identified â†’ use `--focus-chunks` for targeted rebuild (problem chunks get best-of-10, others best-of-5)
+9. Re-review focused chunks. Repeat if needed, but perfection should not prevent shipping.
 
 **Deployment:**
-- [ ] Final audio remixed with ambient at per-session level (set by ear — see Ambient Rules in Section 11). Dynamic masking applied to problem chunks if needed.
+- [ ] Final audio remixed with ambient at per-session level (set by ear â€” see Ambient Rules in Section 11). Dynamic masking applied to problem chunks if needed.
 - [ ] Final MP3 uploaded to Cloudflare R2 (NOT committed to git)
 - [ ] Audio plays from `media.salus-mind.com` URL (test on both desktop AND mobile)
 - [ ] CORS verified: `Access-Control-Allow-Origin` header present in response
-- [ ] Website HTML updated — ALL pages referencing the session (listing pages, detail pages, mindfulness cards)
+- [ ] Website HTML updated â€” ALL pages referencing the session (listing pages, detail pages, mindfulness cards)
 - [ ] Players wired up with `data-src` attribute pointing to correct R2 URL
 - [ ] HTML changes committed and pushed to main
 - [ ] Email sent to scottripley@icloud.com
 - [ ] `openings-register.txt` updated with new session's opening line and technique
 - [ ] `closings-register.txt` updated with new session's closing line and technique
 - [ ] `phrases-register.txt` updated with new session's distinctive phrases, metaphors, and cues
-- [ ] **Session production record created/updated** — see template below
-
-### Session Production Record
-
-Every deployed session has a production record — a single markdown file that captures the complete history of that session's production. This is the session's "mini bible": everything you need to know about what was built, how, what went wrong, and what the current state is.
-
-**Location:** `content/audio-free/masters/{session-name}_production-record.md`
-
-**Created:** At the start of the build process (populated with script details and build settings).
-**Updated:** After every build attempt, repair, remix, or redeployment.
-**Never deleted:** Even if a session is rebuilt from scratch, the old production record is archived and a new one started.
-
-**Template:**
-
-```markdown
-# Production Record: {Session Name}
-
-## Identity
-- **Session #:** {number}
-- **Title:** {full title}
-- **Category:** {sleep/mindfulness/stress/focus/beginner/advanced/course/compassion}
-- **Duration target:** {minutes}
-- **Actual duration:** {minutes}
-- **Ambient:** {type and level}
-- **Script file:** {path}
-- **Bible version at build:** {version}
-
-## Current Deployment
-- **Status:** {Live / Not deployed / Replaced}
-- **R2 path:** {url}
-- **Commit:** {hash}
-- **Date deployed:** {date}
-- **Based on:** {master narration / repair-N}
-
-## Master Files
-- **Master narration:** {path to _master-narration.wav}
-- **Chunk schedule:** {path to _chunk-schedule.txt}
-- **QA report:** {path to _QA_REPORT.png}
-- **Script version:** {v1/v2/rewritten — note what changed}
-
-## Build History
-| Build | Date | Result | Gates | Notes |
-|-------|------|--------|-------|-------|
-| 1 | {date} | {PASS/FAIL} | {14/14 or which failed} | {details} |
-| 2 | {date} | {PASS/FAIL} | {14/14 or which failed} | {details} |
-
-## Repairs
-| Repair | Date | Defect | Chunk | Word | Result | Notes |
-|--------|------|--------|-------|------|--------|-------|
-| 1 | {date} | {echo/hiss/voice} | {#} | {word} | {SUCCESS/FAIL} | {details} |
-
-## Known Issues
-- {Any accepted defects, timestamps, and severity}
-- {Any chunks flagged during review but shipped}
-
-## Human Review Notes
-- {Date}: {Notes from Scott's listening review}
-
-## Hiss Reduction
-- {Any cleaning applied, method, before/after comparison}
-
-## Script Changes
-- {Date}: {What changed and why — trigger words, rewrites, etc.}
-```
-
-**Why this exists:** Session-level information was previously scattered across manifests, build logs, state files, the Bible's deployed sessions table, and conversation history. When a session needs repair, remix, or rebuild months from now, the production record contains everything needed — no archaeology required.
-
-**Code's obligation:** The production record is created at the start of the first build and updated after every significant action. It is not optional. A session without a production record is incomplete.
-
-**Retroactive population:** For the 10 currently deployed sessions, production records should be created using available data (manifests, build logs, chunk schedules, the deployed sessions table). Where historical data is incomplete (especially for pre-v1.3 sessions), note what's missing rather than guessing.
 
 ### Email Notification System
 
@@ -1638,116 +1523,122 @@ Every deployed session has a production record — a single markdown file that c
 | **Sender** | `onboarding@resend.dev` (switch to `build@salus-mind.com` after domain verification) |
 | **Recipient** | `scottripley@icloud.com` |
 | **Header** | Uses `curl` subprocess (Python `urllib` blocked by Cloudflare bot protection) |
-| **Trigger** | Every completed build — pass or fail |
+| **Trigger** | Every completed build â€” pass or fail |
 
-### Build Status (Full Catalogue)
+### Deployed Sessions
 
-*Last updated: 9 February 2026*
+| Session | Duration | Provider | Ambient | Status |
+|---------|----------|----------|---------|--------|
+| 01-morning-meditation | â€” | Fish | â€” | Deployed, patched (0 clicks) |
+| 03-breathing-for-anxiety | 19.3 min | Fish | â€” | Deployed, patched (68 clicks) |
+| 09-rainfall-sleep-journey | â€” | Fish | â€” | Deployed, patched (10 clicks) |
+| 18-calm-in-three-minutes | 3.2 min | Fish | rain | Deployed (build 1, 14/14 gates, 9 Feb, commit 752752f) |
+| 19-release-and-restore | 14.5 min | Fish | garden | Deployed (build 4, 14/14 gates, 9 Feb, commit 752752f). Builds 1–3 failed Gate 7 (surge). Script rewritten (trigger-word clean, progressive muscle relaxation). **Repair (9 Feb):** Chunk 0 echo — 30 generations across 3 approaches all flagged by scorer, but split-chunk version confirmed clean by human listening. Scoring formula bias on unconditioned chunks proven. Wrong ambient noted (script=garden, build=rain). Chunk 0 split + remixed with correct ambient, deployed. |
+| 23-the-calm-reset | 5.5 min | Fish | stream | Deployed (build 1, 14/14 gates, 9 Feb, commit 752752f). Script rewritten (trigger-word clean). |
+| 25-introduction-to-mindfulness | 14.4 min | Fish | garden, −ss 10 offset | Deployed (rebuild 8 Feb, LALAL-cleaned — voice degraded, trigger word fix "nowhere else", commit acb5842). LALAL removed from pipeline (all modes tested and failed — see v3.4). 4 flagged chunks including opening (worst hiss at −7.26 dB) — repair or rebuild decision pending (Ledger L-05). |
+| 32-observing-emotions | 9.5 min | Fish | garden | Deployed (build 3, 14/14 gates, 9 Feb, commit 752752f). Builds 1–2 failed Gate 7 (surge). Gate 12 fix: Duration-Target adjusted from 12 to 10 min (script overestimated). Script new. **Repair trial (9 Feb):** Chunk 1 echo on "something" — best-of-10 regeneration, v4 selected (combined 0.417→0.467, quality 0.426→0.490, echo risk −15%). 14/14 gates. Splice at speech→silence boundary, tonal distance 0.000443 (0.09% of threshold). Repaired file at `32-observing-emotions-repair-1.mp3` on R2 — **promoted to live 9 Feb after human A/B review confirmed echo eliminated.** |
+| 36-loving-kindness-intro-v3 | 10.5 min | Fish | birds, âˆ’42dB (14dB below voice) | Deployed (v3b focused rebuild, best-of-10, 14/14 gates, 65% clean rate) |
+| 38-seven-day-mindfulness-day1 | 11.6 min | Fish | â€” | Deployed, patched (8 clicks) |
 
-#### Deployed Sessions (10)
+---
 
-| # | Session | Category | Duration | Provider | Ambient | Raw WAV | Flagged | Status |
-|---|---------|----------|----------|----------|---------|---------|---------|--------|
-| 01 | Morning Meditation | Beginner | ~10 min | Fish | — | N | no QA | Deployed, patched. Pre-v1.0 — rebuild candidate. |
-| 03 | Breathing for Anxiety | Stress | 19.3 min | Fish | — | Y | no QA | Deployed, patched. v2.1 — pre-v3.0 thresholds. |
-| 09 | Rainfall Sleep Journey | Sleep | ~30 min | Fish | — | N | no QA | Deployed, patched. Pre-v1.3 — rebuild candidate. |
-| 18 | Calm in Three Minutes | Stress | 3.2 min | Fish | rain | Y | 0/12 | Deployed (build 1, 14/14 gates, 9 Feb, commit 752752f). |
-| 19 | Release and Restore | Stress | 14.5 min | Fish | garden | Y | 2/51 | Deployed (build 4, 14/14 gates, 9 Feb, commit 752752f). |
-| 23 | The Calm Reset | Stress | 5.5 min | Fish | stream | Y | 1/19 | Deployed (build 1, 14/14 gates, 9 Feb, commit 752752f). |
-| 25 | Introduction to Mindfulness | Beginner | 14.4 min | Fish | garden | Y | 4/36 | Deployed (rebuild 8 Feb). ⚠️ Card wiring broken. |
-| 32 | Observing Emotions | Mindfulness | 9.5 min | Fish | garden | Y | 2/23 | Deployed (build 3, 14/14 gates, 9 Feb, commit 752752f). |
-| 36 | Loving-Kindness Intro v3 | Compassion | ~12 min | Fish | birds | Y | 1/27 | Deployed (v3b focused rebuild, best-of-10, 14/14 gates). |
-| 38 | Seven-Day Mindfulness Day 1 | Course | 11.6 min | Fish | — | N | no QA | Deployed, patched. Pre-v1.3 — rebuild candidate. |
+## 16A. Chunk Repair Pipeline
 
-**Flagged** = chunks scoring below 0.50 composite / total chunks. "no QA" = built before per-chunk scoring existed.
+**Status:** APPROVED — production use authorised 9 February 2026. Trial on session 32 chunk 1 confirmed perceptual improvement (echo on "something" eliminated). Repaired file promoted to live. Code is authorised to run targeted best-of-10 repairs on all flagged chunks in the repair backlog without further approval.
 
-**Sessions built on old Bible (candidates for rebuild):**
-- 01, 09, 38 — pre-v1.3, no raw WAV preserved, no per-chunk QA, no 14-gate system
-- 03 — v2.1, has raw WAV but pre-v3.0 gate thresholds
+### Why This Didn’t Exist Earlier
 
-#### Flagged Chunks (Repair Candidates)
+The per-chunk composite scoring system was only added on 8 February 2026. Before that, there was no programmatic way to identify which specific chunks were defective — it was all human listening. The scoring system created the data, the repair trial (9 Feb) proved the fix works, and now Code can run repairs autonomously. The full loop — score → identify → regenerate → splice → verify → deploy — is a capability that became possible less than 48 hours before it was proven. From v3.4 onwards, this loop runs on every future production and retrospectively across the deployed catalogue.
 
-10 flagged chunks across 5 sessions out of 345 total chunks scanned. Sessions 01, 03, 09, 38 have no QA data (pre-scoring era). Session 18 passed clean (0/12 flagged).
+### When to Use
 
-| Session | Chunk | Score | Hiss (dB) | Text (opening) |
-|---------|-------|-------|-----------|----------------|
-| 19 — Release and Restore | 31 | 0.348 | −13.47 | "Your neck. Gently press your head back into whatever is..." |
-| 19 — Release and Restore | 51 | 0.209 | −9.43 | "This has been Salus. Go gently, and take this calm with..." |
-| 23 — The Calm Reset | 13 | 0.426 | −10.67 | "Now imagine all the stress you have accumulated today a..." |
-| 25 — Intro to Mindfulness | 1 | 0.365 | −7.26 | "This is a simple introduction to mindfulness. There is ..." |
-| 25 — Intro to Mindfulness | 3 | 0.349 | −10.26 | "Find somewhere comfortable to sit or lie down, and let ..." |
-| 25 — Intro to Mindfulness | 5 | 0.430 | −8.54 | "Let's start with your breath. Not because it's special,..." |
-| 25 — Intro to Mindfulness | 12 | 0.232 | −8.35 | "You don't need to stop your thoughts. You just need to ..." |
-| 32 — Observing Emotions | 1 | 0.449 | −10.51 | "Today we are going to practise something that might see..." |
-| 32 — Observing Emotions | 12 | 0.325 | −10.19 | "Stay with that sensation. Do not try to make it go away..." |
-| 36 — Loving-Kindness v3 | 7 | 0.378 | −10.04 | "There is nothing to force here. No emotion you need to ..." |
+Chunk repair is for fixing a specific defective chunk in an already-deployed session without rebuilding the entire session. It is a targeted intervention, not a substitute for full rebuilds.
 
-These are the primary repair candidates once targeted repair is proven. Session 25 has the highest concentration (4 flagged chunks, including the opening chunk at −7.26 dB hiss — the worst hiss reading across all sessions).
+**Use when:**
+- A deployed session has a localised defect (echo, hiss, voice shift) in one or two chunks
+- The rest of the session is clean and does not need regenerating
+- A full rebuild would risk introducing new defects in currently-clean chunks
 
-#### Cards on Site With No Working Audio
+**Do not use when:**
+- Multiple chunks across the session are flagged (>3 — full rebuild is more efficient)
+- The defect is in the ambient mix rather than the narration
+- The session has never passed human review
 
-These session cards are visible to customers but have no audio behind them. Pressing play does nothing. Each needs either building or removing from the site.
+### Process
 
-| # | Session | Notes |
-|---|---------|-------|
-| 05 | Body Scan for Deep Rest | No audio |
-| 06 | Letting Go of the Day | No audio |
-| 07 | Moonlight Drift | No audio |
-| 08 | The Quiet Shore | No audio |
-| 11 | Lucid Dream Preparation | No audio |
-| 25 | Introduction to Mindfulness | HAS audio — card wiring broken (old `player` class) |
-| 29 | Open Awareness | No audio |
-| 43 | Non-Dual Awareness | No audio |
+1. **Identify the defect.** Per-chunk QA scoring flags chunks below 0.50 composite score. Human listening confirms the specific defect (echo, hiss, voice shift) and its location.
 
-#### Not Yet Produced (42 sessions)
+2. **Extract the target chunk** from the master narration WAV using the build manifest’s timing data.
 
-| # | Session | Category | Script | Status |
-|---|---------|----------|--------|--------|
-| 00 | Landing Page | Intro | Y | Old ElevenLabs, deleted |
-| 02 | Deep Sleep | Sleep | Y | Old ElevenLabs, deleted |
-| 04 | Science of Mindfulness | Education | Y | Rewritten for liability, needs regen |
-| 05 | Body Scan for Deep Rest | Sleep | Y | Old ElevenLabs, deleted. Card on site |
-| 06 | Letting Go of the Day | Sleep | Y | Old ElevenLabs, deleted. Card on site |
-| 07 | Moonlight Drift | Sleep | Y | Old ElevenLabs, deleted. Card on site |
-| 08 | Sleep Stories: Quiet Shore | Sleep Story | Y | Had ambient, deleted, needs regen. Card on site |
-| 10 | Counting Down to Sleep | Sleep | Y | Old ElevenLabs, deleted |
-| 11 | Lucid Dream Preparation | Advanced | Y | Old ElevenLabs, deleted. Card on site |
-| 12 | Five Minute Reset | Focus | Y | Old ElevenLabs, deleted |
-| 13 | Flow State | Focus | Y | Modified for liability, needs regen |
-| 14 | Morning Clarity | Focus | Y | Old ElevenLabs, deleted |
-| 15 | Deep Work Prep | Focus | Y | Old ElevenLabs, deleted |
-| 16 | Peak Performance | Focus | Y | Old ElevenLabs, deleted |
-| 17 | Deep Work Mode | Focus | Y | Old ElevenLabs, deleted |
-| 20 | Tension Melt | Stress | Y | Old ElevenLabs, deleted |
-| 21 | Anxiety Unravelled | Stress | Y | Old ElevenLabs, deleted |
-| 22 | Releasing Tension | Stress | Y | Old ElevenLabs, deleted |
-| 24 | Anger & Frustration Release | Stress | Y | Old ElevenLabs, deleted |
-| 26 | Body Scan Meditation | Mindfulness | Y | Old ElevenLabs, deleted |
-| 27 | Mindful Breathing | Mindfulness | Y | Old ElevenLabs, deleted |
-| 28 | Letting Go of Thoughts | Mindfulness | Y | Old ElevenLabs, deleted |
-| 29 | Open Awareness | Mindfulness | Y | Old ElevenLabs, deleted. Card on site |
-| 30 | Mindful Walking | Mindfulness | Y | Old ElevenLabs, deleted |
-| 31 | Mindfulness at Work | Mindfulness | Y | Had ambient, deleted, needs regen |
-| 33 | Morning Mindfulness | Mindfulness | Y | Old ElevenLabs, deleted |
-| 34 | Mindful Eating | Mindfulness | Y | Old ElevenLabs, deleted |
-| 35 | Your First Meditation | Beginner | Y | Had ambient, deleted, needs regen |
-| 37 | Building a Daily Practice | Beginner | Y | Old ElevenLabs, deleted |
-| 39 | Yoga Nidra | Advanced | Y | Never produced |
-| 40 | Gratitude Before Sleep | Sleep | Y | Old ElevenLabs, deleted |
-| 41 | Vipassana Insight | Advanced | Y | Never produced |
-| 42 | Chakra Alignment | Advanced | Y | Old ElevenLabs, deleted |
-| 43 | Non-Dual Awareness | Advanced | Y | Old ElevenLabs, deleted. Card on site |
-| 44 | Transcendental Stillness | Advanced | Y | Old ElevenLabs, deleted |
-| 45 | Seven-Day Mindfulness Day 2 | Course | Y | Old ElevenLabs, deleted |
-| 46 | Seven-Day Mindfulness Day 3 | Course | Y | Old ElevenLabs, deleted |
-| 47 | Seven-Day Mindfulness Day 4 | Course | Y | Old ElevenLabs, deleted |
-| 48 | Seven-Day Mindfulness Day 5 | Course | Y | Old ElevenLabs, deleted |
-| 49 | Seven-Day Mindfulness Day 6 | Course | Y | Old ElevenLabs, deleted |
-| 50 | Seven-Day Mindfulness Day 7 | Course | Y | Old ElevenLabs, deleted |
-| 51 | Sleep Stories: Ocean Voyage | Sleep Story | Y | Had ambient, deleted, needs regen |
-| — | Founder Intro | Special | Y | Never produced |
+3. **Best-of-10 regeneration.** Generate 10 replacement versions of the chunk via Fish Audio. Score all 10 using the composite metric (spectral flux variance + contrast + flatness + HF ratio + tonal distance to neighbours). Select the highest-scoring version.
 
-**Summary:** 52 scripts total. 10 deployed (Fish). 7 have raw narrations on disk. 33 old ElevenLabs (all deleted). 2 need regen (liability rewrite). 4 need regen (had ambient, deleted). 3 never produced.
+4. **Splice into a copy of the master narration.** Use 100ms cosine crossfade at the splice boundary. Target speech→silence boundaries for the splice point where possible — silence absorbs any residual discontinuity.
+
+5. **Run all 14 QA gates** on the repaired narration.
+
+6. **Apply ambient** at the same level as the deployed version. Encode to 128kbps MP3.
+
+7. **Upload to R2 as a repair candidate** (e.g. `32-observing-emotions-repair-1.mp3`). Do NOT replace the live file.
+
+8. **Human A/B comparison.** Scott listens to both original and repaired files on headphones at high volume. Only promote to live after human sign-off.
+
+### Splice Rules
+
+- 100ms cosine crossfade — no hard cuts
+- Target speech→silence boundaries (tonal distance is lowest here)
+- Measure tonal distance at the splice point — must be <0.50 (threshold from bible)
+- Document splice assessment in the repair report: crossfade duration, boundary type, tonal distance, silence absorption
+
+### Trial Results (9 February 2026)
+
+**Session 32, Chunk 1** — echo on "something"
+
+| Metric | Original | Repair (v4) | Change |
+|--------|----------|-------------|--------|
+| Combined score | 0.417 | 0.467 | +0.050 |
+| Quality score | 0.426 | 0.490 | +0.064 |
+| Echo risk | 0.00147 | 0.00125 | −15% |
+| Tonal distance | 0.000192 | 0.000452 | +0.00026 |
+| 14-Gate QA | 14/14 | 14/14 | — |
+
+Voice MFCC=0.039, F0 dev=2.6% | 0 clicks, 0 spikes, 0 surges
+
+**Best-of-10 generation results:** 3 of 10 versions scored higher than the original. 7 scored below 0.364. The selected version (v4) had the best combined score + tonal distance balance. v2 had better raw quality (0.522) but worse tonal match (0.0014 vs 0.0005) — tonal match was prioritised for splice quality.
+
+**Splice assessment:** 100ms cosine crossfade at speech→silence boundary. Tonal distance 0.000443 (0.09% of threshold). +1.33s absorbed by silence region. Very likely inaudible.
+
+**Honest assessment:** Echo risk reduced 15% but replacement still below 0.50 flag threshold. None of 10 Fish generations reached "clean." The repair is measurably better but human listening is required to confirm perceptual improvement. The word "something" may be a phonetic pattern that Fish consistently struggles with — a 30% improvement rate (3/10) is notably low.
+
+### Repair Backlog
+
+Chunks flagged across deployed sessions (composite score <0.50), ranked by severity. Session 32 chunk 1 is the completed trial. All others are candidates if the repair process is approved after human A/B review.
+
+| Session | Chunk | Score | Hiss (dB) | Text | Priority |
+|---------|-------|-------|-----------|------|----------|
+| 19 | 51 | 0.209 | −9.43 | "This has been Salus. Go gently…" | Closing chunk — high exposure |
+| 25 | 12 | 0.232 | −8.35 | "You don’t need to stop your thoughts…" | Mid-session |
+| 32 | 12 | 0.325 | −10.19 | "Stay with that sensation…" | Mid-session |
+| 19 | 31 | 0.348 | −13.47 | "Your neck. Gently press your head back…" | Mid-session |
+| 25 | 3 | 0.349 | −10.26 | "Find somewhere comfortable to sit or lie down…" | Early chunk |
+| 25 | 1 | 0.365 | −7.26 | "This is a simple introduction to mindfulness…" | Opening chunk — worst hiss, highest exposure |
+| 36 | 7 | 0.378 | −10.04 | "There is nothing to force here…" | Early chunk |
+| 23 | 13 | 0.426 | −10.67 | "Now imagine all the stress you have accumulated…" | Mid-session |
+| 25 | 5 | 0.430 | −8.54 | "Let’s start with your breath…" | Early chunk |
+| **32** | **1** | **0.449** | **−10.51** | **"Today we are going to practise something…"** | **REPAIRED — LIVE** |
+
+Sessions 01, 03, 09, 38 have no per-chunk QA data (pre-scoring system). Session 18 passed clean (0/12 flagged).
+
+**Session 25 note:** 4 flagged chunks including the opening (worst hiss reading across all sessions at −7.26 dB). Full rebuild may be more appropriate than individual chunk repairs for this session.
+
+### Hiss Mitigation
+
+The repair trial included a hiss reduction test (Phase 4). Results:
+
+**LALAL.AI (dereverb=OFF, dehiss only):** INEFFECTIVE. Uniform 3 dB attenuation across all frequencies. SNR unchanged at 21.8 dB. Not selective denoising — equivalent to turning the volume down. **LALAL cannot selectively remove hiss from Fish TTS output.**
+
+**Auphonic:** SKIPPED — no credentials in `.env` at time of trial.
+
+**Conclusion:** Chunk selection (best-of-N scoring) + ambient masking remain the only viable hiss mitigation strategies. No external post-processing service has proven capable of selectively removing Fish-generated hiss without damaging vocal quality. The pipeline’s hiss defence is: (1) avoid trigger words that cause hiss, (2) score chunks and keep the cleanest, (3) mask residual hiss with ambient.
 
 ---
 
@@ -1756,7 +1647,7 @@ These session cards are visible to customers but have no audio behind them. Pres
 ### Stop Rules
 
 ```
-Autonomy Level: FULLY AUTONOMOUS — except where a STOP rule is triggered.
+Autonomy Level: FULLY AUTONOMOUS â€” except where a STOP rule is triggered.
 STOP rules override autonomy. When a STOP condition is met:
 1. Output a status report
 2. Cease all work immediately
@@ -1772,13 +1663,13 @@ STOP rules override autonomy. When a STOP condition is met:
 
 ### No Decorative Gates
 
-Every QA gate must have a defined pass/fail condition that blocks deployment on failure. A gate that runs, produces data, and allows the build to proceed regardless is worse than no gate — it creates false confidence. This principle was established after two incidents where the pipeline generated clear visual evidence of defects and failed to act on it.
+Every QA gate must have a defined pass/fail condition that blocks deployment on failure. A gate that runs, produces data, and allows the build to proceed regardless is worse than no gate â€” it creates false confidence. This principle was established after two incidents where the pipeline generated clear visual evidence of defects and failed to act on it.
 
 ### No Threshold Loosening Without Approval
 
 Gate thresholds must not be adjusted to make a failing build pass. If a gate catches too many issues, the correct response is to fix the root cause (e.g. script blocks below 50 characters producing hiss at boundaries), not to widen the threshold until the problems fall below it. Any threshold change requires human approval before implementation.
 
-**Incident (7 Feb 2026):** Code raised Gate 6 min_duration from 3s to 5s mid-build because 11 regions at 3–4.5s were failing. The root cause was a script chunk at 48 characters — below the 50-character minimum known to cause hiss. Code chose to loosen the gate rather than fix the script. Reverted on instruction.
+**Incident (7 Feb 2026):** Code raised Gate 6 min_duration from 3s to 5s mid-build because 11 regions at 3â€“4.5s were failing. The root cause was a script chunk at 48 characters â€” below the 50-character minimum known to cause hiss. Code chose to loosen the gate rather than fix the script. Reverted on instruction.
 
 ### Build State Persistence
 
@@ -1792,10 +1683,10 @@ All build state must be persisted to a file after every step. Never rely on conv
 
 ### Brief Lifecycle
 
-Briefs are temporary instruction documents. They exist to direct Code, then get absorbed into the bible. A brief is not a permanent reference — it has a lifecycle.
+Briefs are temporary instruction documents. They exist to direct Code, then get absorbed into the bible. A brief is not a permanent reference â€” it has a lifecycle.
 
 ```
-DRAFT → ACTIVE → INTEGRATED → ARCHIVED
+DRAFT â†’ ACTIVE â†’ INTEGRATED â†’ ARCHIVED
 ```
 
 | Stage | Meaning |
@@ -1809,7 +1700,7 @@ DRAFT → ACTIVE → INTEGRATED → ARCHIVED
 
 1. **One active brief per workstream.** Never issue a second brief that amends a first. Update the original brief instead. If a brief needs amending, consolidate into a single replacement document before issuing.
 
-2. **Briefs are read-only for Code.** Code must not edit, append to, annotate, or mark up a brief under any circumstances. The brief is an instruction — not a progress tracker.
+2. **Briefs are read-only for Code.** Code must not edit, append to, annotate, or mark up a brief under any circumstances. The brief is an instruction â€” not a progress tracker.
 
 3. **No brief persists indefinitely.** Once the bible absorbs a brief's content, the brief moves to `docs/archive/` and stops being referenced. If Code is still reading a brief that was issued more than two build cycles ago, something has gone wrong.
 
@@ -1823,7 +1714,7 @@ Code maintains a separate state file for each active brief. The brief is the ins
 
 1. **Code owns the state file.** It creates it at the start of work and updates it after every step. The state file is the only file Code is permitted to write progress into.
 
-2. **The brief stays untouched.** Progress, strike counts, gate results, build logs, and completion markers go in the state file — never in the brief.
+2. **The brief stays untouched.** Progress, strike counts, gate results, build logs, and completion markers go in the state file â€” never in the brief.
 
 3. **State file naming:** `[brief-name]-STATE.md`
 
@@ -1846,13 +1737,13 @@ Last updated: [timestamp]
 - Current phase: X
 
 ## Decisions Made
-- [timestamp] — [decision and rationale]
+- [timestamp] â€” [decision and rationale]
 
 ## Issues for Human Review
 - [anything requiring escalation]
 ```
 
-6. **Verification:** Scott reviews the state file against the brief to confirm what was delivered. Code's self-reported progress is never treated as sign-off — it is a claim to be verified, not a certification.
+6. **Verification:** Scott reviews the state file against the brief to confirm what was delivered. Code's self-reported progress is never treated as sign-off â€” it is a claim to be verified, not a certification.
 
 7. **State files survive context compaction.** This is why they exist. If Code compacts mid-build, it reads the state file to recover position. Never rely on conversation context for build state.
 
@@ -1860,11 +1751,11 @@ Last updated: [timestamp]
 
 ```
 PROJECT-BIBLE (canonical, maintained by Claude Desktop)
-    ↓ instructs
+    â†“ instructs
 Active Briefs (temporary, read-only for Code)
-    ↓ tracked by
+    â†“ tracked by
 State Files (owned by Code, verified by Scott)
-    ↓ archived alongside
+    â†“ archived alongside
 docs/archive/ (retired briefs + their state files)
 ```
 
@@ -1872,7 +1763,7 @@ Code reads down. Code writes only to state files and to the codebase. Code never
 
 ### First Action on Receipt
 
-On receiving any brief, Code's first action — before any implementation work — must be to create the corresponding state file and populate it with the full item list from the brief. This confirms the brief was read and the scope is acknowledged.
+On receiving any brief, Code's first action â€” before any implementation work â€” must be to create the corresponding state file and populate it with the full item list from the brief. This confirms the brief was read and the scope is acknowledged.
 
 ### Environment Variables
 
@@ -1916,19 +1807,19 @@ Fish Audio's V3 model versions (`v3-turbo` and `v3-hd`) support a separate `emot
 - `calm` = default for all Salus meditation content
 - `fluent` = worth testing (may produce smoother delivery)
 - Emotion set PER API CALL, not per sentence
-- Cannot vary within a single chunk (acceptable for meditation — consistent tone is the goal)
+- Cannot vary within a single chunk (acceptable for meditation â€” consistent tone is the goal)
 
 ### V3 Parameters
 
 - `prosody.speed` replaces atempo in the pipeline (speed adjustment handled at API level)
-- `"volume": -20 to 20` (default 0) — leave at 0, handle in post-processing
+- `"volume": -20 to 20` (default 0) â€” leave at 0, handle in post-processing
 
 ### Investigation Results (7 February 2026)
 
 | Test | Result |
 |------|--------|
-| Marco compatibility with V3-HD | PASS — voice works with cloned reference |
-| Voice conditioning chain on V3 | PASS — consistency maintained across sequential chunks |
+| Marco compatibility with V3-HD | PASS â€” voice works with cloned reference |
+| Voice conditioning chain on V3 | PASS â€” consistency maintained across sequential chunks |
 | Credit cost | Negligible difference from S1 |
 
 ### Fallback
@@ -1941,97 +1832,98 @@ If V3-HD becomes unavailable or degrades:
 
 ---
 
-# PART C — HISTORICAL RECORD
+# PART C â€” HISTORICAL RECORD
 
 ---
 
 ## 19. Amendment Log
 
-This section is a historical record of changes made. It is NOT an operating reference — all current operating rules are in Parts A and B above. If anything in this log contradicts Parts A or B, Parts A and B are correct.
+This section is a historical record of changes made. It is NOT an operating reference â€” all current operating rules are in Parts A and B above. If anything in this log contradicts Parts A or B, Parts A and B are correct.
 
-### 4 February 2026 — Initial Setup
+### 4 February 2026 â€” Initial Setup
 
-21 issues completed across ASMR, Breathing, FAQ, Home, About pages. Premium flow standardised, card images deduplicated, site-wide terminology updated (Free → Sample), 2-column tile grid established. Full image mapping created.
+21 issues completed across ASMR, Breathing, FAQ, Home, About pages. Premium flow standardised, card images deduplicated, site-wide terminology updated (Free â†’ Sample), 2-column tile grid established. Full image mapping created.
 
-### 4 February 2026 — Card Image Replacements
+### 4 February 2026 â€” Card Image Replacements
 
-Hero image replaced (`meditation-woman-outdoor.jpg` → `japanese-fog.jpg`). All card images across index, apps, about, soundscapes, sessions replaced with unique images. Full image inventory created.
+Hero image replaced (`meditation-woman-outdoor.jpg` â†’ `japanese-fog.jpg`). All card images across index, apps, about, soundscapes, sessions replaced with unique images. Full image inventory created.
 
-### 5 February 2026 — Quick Wins
+### 5 February 2026 â€” Quick Wins
 
 Founder statement rewritten, American testimonials added, "LATIN: HEALTH" subtitle added, contact page reframed, 21 "Subscribe to unlock" instances changed to "Premium".
 
-### 5 February 2026 — UI/Visual Fixes & 21-Day Course
+### 5 February 2026 â€” UI/Visual Fixes & 21-Day Course
 
 Play button fix (mindfulness), breathing ring/countdown sync fix (unified timer), tool buttons simplified, profile pictures made consistent, session cards given player overlay UI, 21-day mindfulness course page created.
 
-### 5 February 2026 — Supabase Authentication
+### 5 February 2026 â€” Supabase Authentication
 
 Cross-device accounts via Supabase replacing localStorage premium system. Stripe webhook integration. 70+ pages updated with auth scripts and nav button.
 
-### 5 February 2026 — UI Redesign & Navigation Overhaul
+### 5 February 2026 â€” UI Redesign & Navigation Overhaul
 
 Two-row navigation, Latin phrase placement, atmospheric card design pattern, image optimisation, sleep stories updates, education tiles redesign, tools tiles equal height fix, section background blending.
 
-### 5 February 2026 — UI Cleanup & Sleep Stories
+### 5 February 2026 â€” UI Cleanup & Sleep Stories
 
 Coloured tiles removed site-wide, sessions page redesigned with player bar UI, sleep stories page created (52-book library), navigation streamlined.
 
-### 6 February 2026 — SEO & Infrastructure
+### 6 February 2026 â€” SEO & Infrastructure
 
-robots.txt fixed, sitemap rebuilt (13→76 URLs), canonical tags + OG + Twitter cards on all 75 pages, Google Search Console verified, Cloudflare zone activated, media.salus-mind.com connected, 49 sleep story titles added.
+robots.txt fixed, sitemap rebuilt (13â†’76 URLs), canonical tags + OG + Twitter cards on all 75 pages, Google Search Console verified, Cloudflare zone activated, media.salus-mind.com connected, 49 sleep story titles added.
 
-### 7 February 2026 — Automated Audio QA Pipeline
+### 7 February 2026 â€” Automated Audio QA Pipeline
 
 Human QA gate replaced with automated 9-gate system. Click artifact detection and crossfade patching. All 5 deployed sessions scanned and patched. Edge fades added to pipeline.
 
-### 7 February 2026 — QA Failure: Degraded Audio Shipped
+### 7 February 2026 â€” QA Failure: Degraded Audio Shipped
 
-Loving-kindness build passed click QA but had severely degraded voice quality. Root causes: QA blind spot (clicks only), lossless pipeline violation (WAV→MP3→WAV), wrong cleanup chain. Fixed with 9-gate system, lossless pipeline, calibrated cleanup.
+Loving-kindness build passed click QA but had severely degraded voice quality. Root causes: QA blind spot (clicks only), lossless pipeline violation (WAVâ†’MP3â†’WAV), wrong cleanup chain. Fixed with 9-gate system, lossless pipeline, calibrated cleanup.
 
-### 7 February 2026 — Lossless WAV Pipeline & Email
+### 7 February 2026 â€” Lossless WAV Pipeline & Email
 
 All intermediate audio now WAV. MP3 encoding once at final step. Channel mismatch bug fixed (mono/stereo misinterpretation). Resend email notification system added.
 
-### 7 February 2026 — Loving-Kindness Session
+### 7 February 2026 â€” Loving-Kindness Session
 
 Session `36-loving-kindness-intro` deployed (12.9 min, Fish/Marco). 3 build attempts. First 2 failed (overgeneration + channel mismatch). Build 3 passed with 0 artifacts.
 
-### 7 February 2026 — Ambient Track Fix
+### 7 February 2026 â€” Ambient Track Fix
 
 4 sessions had ambient shorter than voice. Fixed with 8-hour ambient files. Rule established: NEVER loop ambient.
 
-### 7 February 2026 — Bible Consolidation (v2.0)
+### 7 February 2026 â€” Bible Consolidation (v2.0)
 
-Full consolidation pass. Resolved contradictions (loudnorm −24 vs −26, block minimum 20 vs 50, five conflicting cleanup chains). Integrated Brief Part 2 items 2–9 and Brief Part 3. Added Gate 10 (speech rate), Gate 3 sliding window fix, stop rule governance, build state persistence, overgeneration retry logic, per-chunk loudnorm. Restructured from chronological amendments to functional sections.
+Full consolidation pass. Resolved contradictions (loudnorm âˆ’24 vs âˆ’26, block minimum 20 vs 50, five conflicting cleanup chains). Integrated Brief Part 2 items 2â€“9 and Brief Part 3. Added Gate 10 (speech rate), Gate 3 sliding window fix, stop rule governance, build state persistence, overgeneration retry logic, per-chunk loudnorm. Restructured from chronological amendments to functional sections.
 
-### 7 February 2026 — 14-Gate QA System & Governance (v2.1)
+### 7 February 2026 â€” 14-Gate QA System & Governance (v2.1)
 
-Expanded from 10 gates to 14 gates. All gates now pass/fail — no informational-only gates. Key changes:
+Expanded from 10 gates to 14 gates. All gates now pass/fail â€” no informational-only gates. Key changes:
 
-**Gate fixes:** Gate 3 sliding window implemented (18 dB calibrated threshold). Gate 6 converted to speech-aware detection (evaluates non-speech regions only — resolved 100% build failure rate from sibilant false positives). Gate 8 Expected-Repetitions metadata replaces global ignore list. Gate 9 converted from informational-only to pass/fail with energy spike detection (10× speech-only median threshold). Gate 10 silence-aware baseline (excludes pause windows from speech rate calculation).
+**Gate fixes:** Gate 3 sliding window implemented (18 dB calibrated threshold). Gate 6 converted to speech-aware detection (evaluates non-speech regions only â€” resolved 100% build failure rate from sibilant false positives). Gate 8 Expected-Repetitions metadata replaces global ignore list. Gate 9 converted from informational-only to pass/fail with energy spike detection (10Ã— speech-only median threshold). Gate 10 silence-aware baseline (excludes pause windows from speech rate calculation).
 
-**New gates:** Gate 11 (Silence Region Integrity), Gate 12 (Duration Accuracy), Gate 13 (Ambient Continuity — calibrated at −80 dBFS / 10 dB), Gate 14 (Opening Quality — tighter thresholds on first 60 seconds).
+**New gates:** Gate 11 (Silence Region Integrity), Gate 12 (Duration Accuracy), Gate 13 (Ambient Continuity â€” calibrated at âˆ’80 dBFS / 10 dB), Gate 14 (Opening Quality â€” tighter thresholds on first 60 seconds).
 
 **V3-HD migration:** Complete. All TTS calls use V3-HD with `emotion: calm`. prosody.speed replaces atempo.
 
-**HF shelf cut investigation:** Tested across full tuning range (−2 to −5 dB at 6–8 kHz). Failed — removing 3 kHz boost entirely produced identical Gate 6 flag counts, proving root cause was speech sibilants. Pipeline unchanged.
+**HF shelf cut investigation:** Tested across full tuning range (âˆ’2 to âˆ’5 dB at 6â€“8 kHz). Failed â€” removing 3 kHz boost entirely produced identical Gate 6 flag counts, proving root cause was speech sibilants. Pipeline unchanged.
 
 **Auphonic per-segment:** API does not return per-segment SNR. Noted as platform limitation.
 
-**Governance additions:** No decorative gates principle. No threshold loosening without approval. Brief lifecycle (DRAFT → ACTIVE → INTEGRATED → ARCHIVED). State file separation. Document hierarchy.
+**Governance additions:** No decorative gates principle. No threshold loosening without approval. Brief lifecycle (DRAFT â†’ ACTIVE â†’ INTEGRATED â†’ ARCHIVED). State file separation. Document hierarchy.
 
 **Threshold calibration:** All new gate thresholds validated against known-good deployed sessions (25-introduction-to-mindfulness, 36-loving-kindness-intro). Calibrated values replace brief estimates where they differed.
 
 ---
 
-### 8 February 2026 — Pipeline & Website Updates (v2.2)
+### 8 February 2026 â€” Pipeline & Website Updates (v2.2)
 
 **Audio pipeline:**
 - Per-chunk loudnorm replaced with whole-file loudnorm (preserves natural dynamics)
-- Highshelf boost (`highshelf=f=3000:g=3`) removed — caused perceived echo on certain words
+- Highshelf boost (`highshelf=f=3000:g=3`) removed â€” caused perceived echo on certain words
 - Per-chunk QA system: generates up to 5 versions of each chunk (best-of-5), scores all via composite metric (spectral flux variance + contrast + flatness + HF ratio + tonal distance), keeps best
-- Tonal consistency: MFCC distance to previous chunk penalised at 50× weight
+- **Known limitation (9 Feb 2026):** Composite scoring is unreliable for chunk 0 (opening chunk). See Section 9, Opening chunk weakness. Human listening is mandatory for all opening chunks regardless of score.
+- Tonal consistency: MFCC distance to previous chunk penalised at 50Ã— weight
 - Flag threshold: 0.50 (OK avg=0.708, Echo avg=0.542, calibrated on 27 human-labeled chunks)
 - Session 36-loving-kindness-intro rebuilt (build 11, 10.5 min, 14/14 gates)
 - Per-chunk QA upgraded from best-of-2 to best-of-5 (135 TTS calls for 27 chunks)
@@ -2040,39 +1932,39 @@ Expanded from 10 gates to 14 gates. All gates now pass/fail — no informational
 - Known Fish trigger words expanded: "breath in", "be" (standalone), "simply", "family", "joyful"
 
 **Threshold recalibrations (approved by Scott during live testing session, 8 Feb 2026):**
-- Gate 7 widened to 9/14 dB + proportional silence margin (`max(4s, dur×0.15)`) — required to accommodate Fish chunk-level swings under whole-file loudnorm
-- Gate 8 manifest text guard added: word overlap <60% skips MFCC pairs as false positives — prevents meditation cadence patterns from triggering duplicate detection
-- Gate 9 HF threshold recalibrated to 28× speech-only median, total to 12× — calibrated against no-ambient and ambient sessions to separate sibilants from genuine hiss
+- Gate 7 widened to 9/14 dB + proportional silence margin (`max(4s, durÃ—0.15)`) â€” required to accommodate Fish chunk-level swings under whole-file loudnorm
+- Gate 8 manifest text guard added: word overlap <60% skips MFCC pairs as false positives â€” prevents meditation cadence patterns from triggering duplicate detection
+- Gate 9 HF threshold recalibrated to 28Ã— speech-only median, total to 12Ã— â€” calibrated against no-ambient and ambient sessions to separate sibilants from genuine hiss
 
 **Website:**
 - Navigation Row 2 now includes Applied Psychology
 - New page: `articles/anxiety-thinking.html` (first article detail page, `articles/` subdirectory)
 - Applied Psychology page: featured article link, "Updated Regularly" approach item
 - Mindfulness page restructured: session cards first, then 7-day + 21-day course banners
-- `css/style.css` fixed at source: all light-theme backgrounds neutralised (body, hero, hero-bg::after, daily-quote, section:nth-child(even), filter-btn, sound-category-tag → transparent). Per-page overrides no longer needed.
+- `css/style.css` fixed at source: all light-theme backgrounds neutralised (body, hero, hero-bg::after, daily-quote, section:nth-child(even), filter-btn, sound-category-tag â†’ transparent). Per-page overrides no longer needed.
 - ASMR page (`asmr.html`): "Coming Soon" placeholder replaced with 14-sound card library (rain, ocean, forest, thunder, birds, fire, stream, cafe, garden, library, night, temple, waterfall, white noise). Category filters (All/Nature/Weather/Spaces/Ambient), animated waveform bars, per-card accent colours, staggered entrance animation. Supersedes old `sounds.html`.
 
 ---
 
-### 8 February 2026 — Dark Theme & Routing Fixes
+### 8 February 2026 â€” Dark Theme & Routing Fixes
 
 **style.css dark theme completion:**
 - 22 text/background color rules converted from light to dark-compatible: body text (`#f0eefc`), links (`#7c8cf5`), nav (bg `rgba(6,8,16,0.92)` + logo + links), hero paragraph (`rgba(240,238,252,0.55)`), daily quote, section headers, feature cards/icons (`rgba(124,108,240,0.12)`), form inputs/labels, filter buttons, session cards, sound cards
 - CSS variables (`:root`) retained for backward-compatible selectors (footer, CTA banner, buttons)
 
-**Login buttons:** Fixed `href="#"` → `login.html` across 11 files (22 instances). Articles subdirectory uses `../login.html`.
+**Login buttons:** Fixed `href="#"` â†’ `login.html` across 11 files (22 instances). Articles subdirectory uses `../login.html`.
 
 **Mindfulness page cleanup:** Removed 6 content sections (276 lines): What is Mindfulness, The Science, Core Practices, How to Start, Mindfulness in Daily Life, FAQ. All had light gradient backgrounds causing white bands. Page now shows session cards + course banners + CTA only.
 
-**Footer routing:** `sounds.html` → `asmr.html` across 60 files (root pages + sessions/ + newsletters/).
+**Footer routing:** `sounds.html` â†’ `asmr.html` across 60 files (root pages + sessions/ + newsletters/).
 
-**Premium CTA routing:** `newsletter.html` → `apps.html` in media.html, sounds.html, newsletter.html.
+**Premium CTA routing:** `newsletter.html` â†’ `apps.html` in media.html, sounds.html, newsletter.html.
 
 **Subsequent completion (same day):** All 15 remaining pages converted to dark theme. Unified `hb-footer` applied to all 82 pages. breathe.html and timer.html heroes rebuilt with dark-theme pattern (radial glow, gradient text). Reading page: miniature book covers via Open Library Covers API, increased description font. Mindfulness page: fixed 7-day course 404 link.
 
 ---
 
-### 8 February 2026 — Learn & Applied Psychology Content Launch
+### 8 February 2026 â€” Learn & Applied Psychology Content Launch
 
 **Learn section (education.html):**
 - 17 Learn articles deployed to `articles/` directory across 6 categories: Neuroscience (4), Breathwork (3), Sleep (3), Stress (3), Focus (2), Compassion (2)
@@ -2092,31 +1984,31 @@ Expanded from 10 gates to 14 gates. All gates now pass/fail — no informational
 
 ---
 
-### 8 February 2026 — Session 36 Shipped & Review Workflow
+### 8 February 2026 â€” Session 36 Shipped & Review Workflow
 
 **Audio production:**
 - Session 36-loving-kindness-intro-v3 shipped to production (v3b focused rebuild)
 - `--focus-chunks` CLI argument added: problem chunks get best-of-10, others best-of-5
 - Ambient level increased from -14dB to -11dB for more present ambient bed
-- Resend email fixed: Python `urllib` blocked by Cloudflare → switched to `curl` subprocess
+- Resend email fixed: Python `urllib` blocked by Cloudflare â†’ switched to `curl` subprocess
 
 **Human review workflow established (mandatory for all future sessions):**
-1. Build with `--no-deploy` → 14-gate QA runs automatically
+1. Build with `--no-deploy` â†’ 14-gate QA runs automatically
 2. Extract chunks from raw narration WAV using manifest timing data
 3. Upload individual chunks to R2 at `test/chunk-test-{version}/`
 4. Create interactive HTML review page with export facility (Copy Results + Download TXT)
 5. Listen to every chunk on AirPods at high volume (exposes hiss, echo, tonal shifts that speakers miss)
 6. Rate each chunk: OK / ECHO / HISS / VOICE / BAD
-7. If acceptable → remix with ambient, deploy to R2, update all HTML references, commit, push, email
-8. If problem chunks → `--focus-chunks 1,3,6` for targeted rebuild, re-review
-9. Perfection should not prevent shipping — accept reasonable clean rate and move forward
+7. If acceptable â†’ remix with ambient, deploy to R2, update all HTML references, commit, push, email
+8. If problem chunks â†’ `--focus-chunks 1,3,6` for targeted rebuild, re-review
+9. Perfection should not prevent shipping â€” accept reasonable clean rate and move forward
 
 **Testing checklist (learned from session 36):**
 - Test playback on BOTH desktop and mobile (CORS blocked mobile audio before R2 CORS was configured)
-- Check ALL pages that reference the session (detail page, listing pages, mindfulness cards) — missed references = broken players
+- Check ALL pages that reference the session (detail page, listing pages, mindfulness cards) â€” missed references = broken players
 - Verify file duration matches expected (stale CDN cache served old file with wrong duration)
-- Players without `data-src` attribute are visual-only — buttons do nothing by design
-- Mindfulness page uses `m-player` class (inline JS), not `custom-player` (main.js) — different wiring
+- Players without `data-src` attribute are visual-only â€” buttons do nothing by design
+- Mindfulness page uses `m-player` class (inline JS), not `custom-player` (main.js) â€” different wiring
 
 **Infrastructure:**
 - R2 CORS configured: `salus-mind.com` and `www.salus-mind.com` allowed origins (GET/HEAD)
@@ -2124,41 +2016,41 @@ Expanded from 10 gates to 14 gates. All gates now pass/fail — no informational
 
 ---
 
-### 8 February 2026 — LALAL.AI Integration & Session 25 Rebuild (v3.1)
+### 8 February 2026 â€” LALAL.AI Integration & Session 25 Rebuild (v3.1)
 
 **LALAL.AI evaluation:**
 - Integrated LALAL.AI voice_clean API into `build-session-v3.py` as Phase 1.5 (between chunk QA and edge fades)
-- A/B tested on session 25 chunk 28 (voice shift at 6:47) — LALAL made no difference to voice shift (TTS generation problem, not post-processing)
+- A/B tested on session 25 chunk 28 (voice shift at 6:47) â€” LALAL made no difference to voice shift (TTS generation problem, not post-processing)
 - Full session rebuild with LALAL (`noise_cancelling_level=1`, `dereverb_enabled=True`): hiss removal excellent (almost all hiss gone), but dereverb stripped Marco's vocal resonance
-- Dereverb damages Fish output — Marco's TTS has no room reverb, so dereverb removes legitimate vocal character
+- Dereverb damages Fish output â€” Marco's TTS has no room reverb, so dereverb removes legitimate vocal character
 - LALAL disabled in build script pending retest with `dereverb=False` (noise cancellation only)
 
 **Session 25 rebuilt:**
-- Trigger word "nowhere else" discovered causing voice shift — replaced with "All you need to do is be right here, right now"
+- Trigger word "nowhere else" discovered causing voice shift â€” replaced with "All you need to do is be right here, right now"
 - 36 chunks generated (best-of-5), LALAL cleaned 36/36
-- 13/14 gates passed; Gate 13 (Ambient) failed on garden-8hr.mp3 dead silence — fixed with `-ss 10` offset
-- Deployed to R2 (commit acb5842) — voice quality degraded from LALAL dereverb, fresh non-LALAL rebuild initiated
+- 13/14 gates passed; Gate 13 (Ambient) failed on garden-8hr.mp3 dead silence â€” fixed with `-ss 10` offset
+- Deployed to R2 (commit acb5842) â€” voice quality degraded from LALAL dereverb, fresh non-LALAL rebuild initiated
 - Introduction to Mindfulness tile reverted to premium locked (commit c986804)
 
 **Fish Audio observations:**
 - Possible S1 model degradation: >500 char generations temporarily routed to v1.6, causing voice inconsistency between chunks
-- Opening chunks (1–5) consistently score lowest — chunk 1 has no MFCC reference for voice conditioning
+- Opening chunks (1â€“5) consistently score lowest â€” chunk 1 has no MFCC reference for voice conditioning
 - MFCC tonal distance scoring (threshold 0.50) can miss voice character shifts that human ears catch (chunk 28 scored 0.496)
 
 **New production rules:**
 - Raw narration WAVs must never be overwritten without preserving originals (timestamped copies)
-- All audio quality comparisons must be narration-only — ambient invalidates evaluation
+- All audio quality comparisons must be narration-only â€” ambient invalidates evaluation
 - Garden ambient requires `-ss 10` offset (9.5s dead silence at file start)
 
 **Code mistakes logged:** Failed to preserve pre-LALAL narration, provided ambient-mixed files for comparison instead of narration-only, deployed LALAL build without human review, did not test LALAL settings individually before full pipeline integration. All documented for governance improvement.
 
 ---
 
-### 8 February 2026 — Script Uniqueness & Cross-Session Differentiation (v3.2)
+### 8 February 2026 â€” Script Uniqueness & Cross-Session Differentiation (v3.2)
 
-New Section 13A added to address internal repetition across the Salus session catalogue. Sessions were beginning to sound interchangeable — same openings, same breath cues, same structural arc, same closings. A customer listening to multiple sessions back-to-back should have distinct experiences.
+New Section 13A added to address internal repetition across the Salus session catalogue. Sessions were beginning to sound interchangeable â€” same openings, same breath cues, same structural arc, same closings. A customer listening to multiple sessions back-to-back should have distinct experiences.
 
-**Cross-session register system:** Three mandatory register files introduced (`openings-register.txt`, `closings-register.txt`, `phrases-register.txt`) in `content/scripts/`. Every deployed session's key phrases are catalogued. New scripts are checked against existing entries before build — no phrase of 5+ words may be reused, no opening or closing technique may be repeated within a category.
+**Cross-session register system:** Three mandatory register files introduced (`openings-register.txt`, `closings-register.txt`, `phrases-register.txt`) in `content/scripts/`. Every deployed session's key phrases are catalogued. New scripts are checked against existing entries before build â€” no phrase of 5+ words may be reused, no opening or closing technique may be repeated within a category.
 
 **Six categories of repetition identified:** Openings, breath cues, body awareness transitions, silence announcements, closings, and structural arc. Each has specific variation strategies and mandatory register checks.
 
@@ -2168,21 +2060,21 @@ New Section 13A added to address internal repetition across the Salus session ca
 
 **Narration audit (outstanding):** Full audit of all 17 deployed sessions required to retroactively populate registers and identify existing cross-session repetition. Must be completed before any new scripts are written. Added to Section 13A as a pending task.
 
-**External originality (secondary):** Lightweight due diligence step — web research to consciously diverge from published scripts, no phrase of 6+ words matching a published source. Research notes stored in `content/scripts/research/`.
+**External originality (secondary):** Lightweight due diligence step â€” web research to consciously diverge from published scripts, no phrase of 6+ words matching a published source. Research notes stored in `content/scripts/research/`.
 
 ---
 
-### 9 February 2026 — Four Sessions Deployed & Build Learnings (v3.3)
+### 9 February 2026 â€” Four Sessions Deployed & Build Learnings (v3.3)
 
 **Sessions deployed (commit 752752f):**
-- 18-calm-in-three-minutes (3.2 min, stress, rain ambient — build 1, 14/14 gates)
-- 23-the-calm-reset (5.5 min, stress, stream ambient — build 1, 14/14 gates)
-- 19-release-and-restore (14.5 min, stress, garden ambient — build 4, 14/14 gates)
-- 32-observing-emotions (9.5 min, mindfulness, garden ambient — build 3, 14/14 gates)
+- 18-calm-in-three-minutes (3.2 min, stress, rain ambient â€” build 1, 14/14 gates)
+- 23-the-calm-reset (5.5 min, stress, stream ambient â€” build 1, 14/14 gates)
+- 19-release-and-restore (14.5 min, stress, garden ambient â€” build 4, 14/14 gates)
+- 32-observing-emotions (9.5 min, mindfulness, garden ambient â€” build 3, 14/14 gates)
 
 Sessions 18 and 23 are new scripts. Sessions 19 and 23 had scripts rewritten (trigger-word clean). Session 32 is a new script. All four wired into sessions.html and relevant detail/category pages.
 
-**Gate 7 (Volume Surge) — most persistent failure mode:** Fish Audio's non-deterministic TTS generation causes per-chunk volume variation that triggers Gate 7 surges, particularly after long silences. Session 19 needed 4 builds, session 32 needed 3. The 9.0 dB threshold is correctly calibrated — rebuilding eventually produces level-consistent generations. Longer sessions with more chunks have higher failure probability. Documented in Gate 7 section.
+**Gate 7 (Volume Surge) â€” most persistent failure mode:** Fish Audio's non-deterministic TTS generation causes per-chunk volume variation that triggers Gate 7 surges, particularly after long silences. Session 19 needed 4 builds, session 32 needed 3. The 9.0 dB threshold is correctly calibrated â€” rebuilding eventually produces level-consistent generations. Longer sessions with more chunks have higher failure probability. Documented in Gate 7 section.
 
 **Character estimation overestimates duration:** The ~7.2 chars/sec formula overestimated session 32 (scripted for 12 min, TTS produced 9.5 min). The build script's own duration estimate after dry run is more reliable. Updated Section 13 table with caveat: use 7.2 chars/sec for rough planning only, set Duration-Target from dry run output.
 
@@ -2192,44 +2084,128 @@ Sessions 18 and 23 are new scripts. Sessions 19 and 23 had scripts rewritten (tr
 
 ---
 
-### 9 February 2026 — Targeted Repair, Build Status & Process Maturation (v3.4)
+### 9 February 2026 — Repair Trial & LALAL Removal (v3.4)
 
-**New Section 15A: Targeted Chunk Repair (EXPERIMENTAL)**
-Introduced controlled single-word/chunk repair as an alternative to full session rebuilds. Process: identify defect → locate chunk → regenerate with best-of-10 → splice with crossfading and MFCC tonal matching → save as new file (never overwrite original) → re-run 14 gates. Rule 11 (no post-build splicing) amended to allow targeted repair under Section 15A conditions. Trial on session 32 "Observing Emotions" — word "something" has echo at opening.
+**Repair trial completed (session 32, chunk 1):**
+- Defect: echo on "something" in opening chunk (composite score 0.426)
+- Best-of-10 regeneration: 3 of 10 versions beat the original, 7 scored below 0.364
+- Selected version (v4): combined 0.417→0.467, quality 0.426→0.490, echo risk −15%
+- Splice: 100ms cosine crossfade at speech→silence boundary, tonal distance 0.000443 (0.09% of threshold), very likely inaudible
+- 14/14 QA gates passed on repaired file
+- Repaired file uploaded to R2 as `32-observing-emotions-repair-1.mp3` — human A/B review confirmed echo eliminated, promoted to live same day
+- Full report: `docs/repair-trial-RESULTS.md`
 
-**Master narration file concept (Rule 14 strengthened):**
-Once a narration passes 14 gates and is approved, it becomes a master narration file — sacrosanct, never deleted or overwritten. Naming convention: `{session-name}_master-narration.wav` in `content/audio-free/masters/`. All future versions (repairs, remixes) derive from the master; the master stays untouched. Code was previously overwriting narration WAVs when applying ambient, forcing full regeneration for any change.
+**Section 16A added — Chunk Repair Pipeline:** Documented the full repair process (when to use, step-by-step process, splice rules, trial results). Includes repair backlog of 10 flagged chunks across 5 sessions with scores and priorities. **Approved for production use** after human A/B review confirmed session 32 repair. Code authorised to run targeted best-of-10 repairs on all flagged chunks autonomously.
 
-**Human review relaxed (Section 16):**
-Individual chunk-by-chunk listening replaced with full-session continuous playback. With the pipeline now producing 3–4 defective words across four full sessions, per-chunk review is no longer necessary. Defects are noted with timestamps during natural listening and fed into the targeted repair process.
+**LALAL.AI removed from pipeline:** Dehiss-only mode (`dereverb_enabled=False`) tested on session 25 chunk 1 (worst hiss at −7.26 dB). Result: uniform 3 dB attenuation, SNR unchanged. LALAL applies flat volume reduction, not selective denoising. All LALAL configurations now tested and failed. Architecture table updated, DO NOT APPLY list updated, status changed to DEAD.
 
-**Visual QA report inspection (Section 12, mandatory):**
-Code confirmed it generates QA report PNGs but never visually inspects them — gates run numerically and Code takes the numbers at face value. New mandatory step: Code must open and examine QA report spectrograms for anomalies that pass numerical thresholds but are visible on graphs. Findings documented in build state file.
+**Hiss mitigation conclusion:** No external post-processing service can selectively remove Fish-generated hiss. The only viable strategies remain: (1) trigger word avoidance, (2) best-of-N chunk scoring, (3) ambient masking.
 
-**Hiss reduction testing (Section 15, outstanding):**
-Pipeline has no active de-hiss step. LALAL.AI with dereverb disabled and Auphonic noise-reduction-only are both identified as untested approaches. Required: A/B testing on known-hissy chunks to find a noise reduction method that doesn't damage Marco's vocal character.
+**QA report inspection:** 7 sessions visually inspected. Sessions 18 and 36 warrant focused listening (sibilant density / tonal shift flagged).
 
-**Full build status incorporated (Section 16):**
-Comprehensive catalogue status added: 52 scripts total, 10 deployed, 42 not yet produced, 8 cards on site with no working audio, 4 sessions built on old Bible (rebuild candidates). Replaces the previous simple Deployed Sessions table.
+**Session 25 wiring fix:** Player class changed from `player` to `custom-player` + `data-src`. Commit 412a546, pushed.
 
-**Session production records (Section 16, new):**
-Per-session production record template added. Every deployed session gets a markdown file (`{session}_production-record.md`) in `content/audio-free/masters/` capturing identity, deployment status, master files, build history, repairs, known issues, review notes, and script changes. Centralises session-level information that was previously scattered across manifests, logs, state files, and conversation history. Retroactive population required for all 10 deployed sessions. Production record creation added to deployment checklist.
+**Master preservation:** 7 sessions preserved (14 WAVs), 7 chunk schedules created, 10 production records created.
 
-**Auphonic status updated (Section 15):**
-Changed from "measurement only" to include hiss reduction evaluation.
+**Part D added — Action Ledger:** New section tracking outstanding actions, decisions pending, and items requiring human input.
 
 ---
 
-*Last updated: 9 February 2026 — v3.4: Targeted chunk repair (Section 15A, experimental). Master narration files (Rule 14). Session production records. Human review relaxed to full-session playback. Visual QA report inspection mandatory. Hiss reduction testing outstanding. Full build status catalogue incorporated.*
+### 9 February 2026 — Chunk 0 Root Cause, Scoring Bias, Production Readiness (v3.5)
+
+**Chunk 0 cold-start root cause proven:**
+- Session 19 chunk 0: 30 consecutive generations across 3 text variants (original, rewrite, split) all produced echo
+- Root cause: Fish cold-starts chunk 0 with no conditioning reference. Tail end of unconditioned passages degrades regardless of text content
+- Words were never the problem — proven by elimination (same result across completely different text)
+- This is NOT a trigger word issue and would not be caught by the pre-flight scan
+
+**Split Chunk Technique (PROVEN):**
+- Fix: split opening text into two short chunks. Chunk 0a is one short sentence (~40–60 chars), chunk 0b carries the rest
+- Fish generates short sentences cleanly without conditioning — no time to drift
+- Chunk 0b gets 0a as its conditioning reference — chain anchored
+- Human listening confirmed split-chunk audio was clean despite scoring system flagging all 30 generations
+- New mandatory script rule: opening chunk must be one short sentence under ~60 chars (Section 13)
+
+**Scoring formula bias on chunk 0:**
+- The composite metric (spectral flux variance + contrast + flatness + HF ratio + tonal distance) systematically over-penalises unconditioned chunks
+- Calibrated against mid-session chunks with conditioning context — chunk 0 will always score poorly
+- A chunk 0 scoring −358 combined with 0.7 echo risk can sound perfectly clean
+- **Automated scores must not be used for pass/fail on chunk 0. Human listening is the only reliable gate.**
+
+**Session 19 repaired and deployed:**
+- Chunk 0 split into two short chunks, remixed with correct ambient (garden, not rain as originally built)
+- Code diagnosed root cause autonomously through systematic elimination: text → rewrite → structure
+
+**Section 15A added — Production Readiness:**
+- Pipeline assessed as ready for mass production of meditation sessions
+- Documented: automated QA + proven repair process + characterised Fish failure modes = repeatable quality at volume
+- Estimated production time: 30–60 minutes per session (script to live) once script is written
+- Competitive position documented: no competitor has solved AI voice reliability at this level
+
+**Pre-build checklist updated:** Opening chunk length check added as mandatory item.
+
+---
+
+*Last updated: 9 February 2026 â€” v3.5: Chunk 0 cold-start root cause proven and fixed (split-chunk technique). Scoring formula bias on opening chunks documented. Session 15A (Production Readiness) added — pipeline ready for mass production. Session 19 repaired and deployed. Opening chunk script rule added.*
+
+---
+
+# PART D — LEDGER
+
+---
+
+## 20. Action Ledger
+
+Outstanding actions, pending decisions, and items requiring human input. Items are added as they arise and removed when resolved. Each item has a status, source (which bible version or event created it), and owner.
+
+### Pending Human Action
+
+| # | Item | Source | Owner | Status |
+|---|------|--------|-------|--------|
+| L-01 | ~~A/B listen: session 32 repair~~ | v3.4 repair trial | Scott | **COMPLETE** — moved to Completed |
+| L-02 | **Auphonic credentials** — Add `AUPHONIC_USERNAME` and `AUPHONIC_PASSWORD` to `.env`. Auphonic was skipped during repair trial hiss testing due to missing credentials. | v3.4 repair trial | Scott | WAITING |
+| L-03 | **Sessions 18 & 36 focused listening** — Visual QA flagged sibilant density (18) and tonal shift (36). Requires human listening to confirm or clear. | v3.4 QA inspection | Scott | WAITING |
+| L-04 | **Narration audit** — Full audit of all 17 deployed sessions to populate cross-session registers (openings, closings, phrases). Prerequisite for register system. | v3.2 | Scott/Code | WAITING |
+
+### Pending Technical Decision
+
+| # | Item | Source | Owner | Status |
+|---|------|--------|-------|--------|
+| L-05 | **Session 25: repair or rebuild?** — 4 flagged chunks including opening (worst hiss at −7.26 dB). Individual repair may not be efficient — full rebuild likely better value. Code can now run repairs autonomously. | v3.4 repair backlog | Scott | OPEN |
+| L-06 | ~~Repair pipeline approval~~ | v3.4 | Scott | **COMPLETE** — moved to Completed |
+| L-07 | ~~"Something" as trigger word?~~ — Session 19 chunk 0 root cause analysis proved the issue was chunk 0 cold-start, not word-level triggers. 30 generations across different text all produced echo. Deprioritised. | v3.4 repair trial | Scott | **CLOSED** — not a trigger word issue |
+| L-11 | **Catalogue repair run** — Session 32 chunk 1 repaired. Session 19 chunk 0 repaired (split-chunk technique). Remaining: 8 flagged chunks in scored sessions + 5 unscored sessions (01, 03, 09, 19 remaining chunks, 38) need full extraction and scoring. | v3.4 | Code | ACTIVE |
+| L-13 | **Retroactive chunk extraction** — Sessions 01, 03, 09, 19, 38 were built before the per-chunk scoring system. Their manifests have no score data. Chunks must be extracted from master WAVs and scored independently. The repair backlog is incomplete without this. | v3.5 | Code | WAITING — after current repairs |
+| L-14 | **Scoring formula chunk 0 recalibration** — The composite metric is unreliable for opening chunks. Either add a chunk 0 exemption, apply separate calibration for unconditioned chunks, or remove chunk 0 from automated scoring entirely. Current workaround: human listening. | v3.5 | Scott/Code | OPEN |
+| L-12 | **Test run on new material** — Next new session build should use best-of-10 as standard for all chunks (not just focused chunks), with the repair pipeline standing by for any flagged chunks post-build. Validates end-to-end quality on fresh content. | v3.4 | Scott/Code | WAITING |
+
+### Completed (Recent)
+
+| # | Item | Source | Resolved | Notes |
+|---|------|--------|----------|-------|
+| L-01 | A/B listen: session 32 repair | v3.4 repair trial | 9 Feb 2026 | Echo on "something" eliminated. Significant improvement confirmed. Repaired file promoted to live. |
+| L-06 | Repair pipeline approval | v3.4 | 9 Feb 2026 | Approved for production use. Code authorised to run best-of-10 repairs on all flagged chunks autonomously. |
+| L-07 | "Something" as trigger word? | v3.4 | 9 Feb 2026 | Closed — session 19 proved chunk 0 issue is cold-start, not word-level triggers. |
+| L-08 | LALAL dehiss-only test | v3.1 | 9 Feb 2026 | Failed — uniform attenuation, not selective. LALAL removed from pipeline. |
+| L-09 | Session 25 wiring fix | v3.3 | 9 Feb 2026 | Commit 412a546. Player class corrected. |
+| L-10 | Master narration preservation | v3.4 brief | 9 Feb 2026 | 7 sessions, 14 WAVs, 10 production records. |
+
+### Ledger Rules
+
+1. **New items get the next L-number.** Numbers are never reused.
+2. **Items move to Completed when resolved,** with the resolution date and a brief note.
+3. **BLOCKED items** list which other item they depend on.
+4. **The ledger is maintained by Claude Desktop** as part of bible updates. Code does not write to the ledger.
+5. **Scott reviews the ledger** at the start of each work session to decide priorities.
 
 ---
 
 ## Document Governance
 
-**Owner:** Scott (via Claude Desktop — Scott's conversational Claude instance)
+**Owner:** Scott (via Claude Desktop â€” Scott's conversational Claude instance)
 **Consumers:** Claude Code, any future contributors
 
-This document is maintained by Claude Desktop on Scott's behalf. Claude Code reads it as a reference but **must not edit, append to, or modify it under any circumstances.** If Code identifies an error, omission, or outdated information, it must report the issue and wait — not fix it.
+This document is maintained by Claude Desktop on Scott's behalf. Claude Code reads it as a reference but **must not edit, append to, or modify it under any circumstances.** If Code identifies an error, omission, or outdated information, it must report the issue and wait â€” not fix it.
 
 Changes to this document follow this workflow:
 1. Scott or Claude Desktop identifies needed change
