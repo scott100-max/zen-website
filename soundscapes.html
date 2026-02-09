@@ -770,13 +770,44 @@
         // Play/pause
         var topRow = card.querySelector('.mx-card__top');
         topRow.addEventListener('click', function() {
-          var isPlaying = card.classList.toggle('playing');
-          if (!audioElements[s.id]) {
-            audioElements[s.id] = new Audio(s.src);
-            audioElements[s.id].loop = true;
-            audioElements[s.id].volume = card.querySelector('.mx-card__slider').value / 100;
+          if (card.classList.contains('playing')) {
+            card.classList.remove('playing');
+            if (audioElements[s.id]) audioElements[s.id].pause();
+            updateMixer();
+            return;
           }
-          if (isPlaying) { audioElements[s.id].play(); } else { audioElements[s.id].pause(); }
+          if (!audioElements[s.id]) {
+            var localSrc = s.src.replace('https://media.salus-mind.com/', '');
+            var audio = new Audio();
+            audio.loop = true;
+            audio.volume = card.querySelector('.mx-card__slider').value / 100;
+            audio.preload = 'auto';
+            var triedLocal = false;
+            audio.addEventListener('error', function() {
+              if (!triedLocal) {
+                triedLocal = true;
+                audio.src = localSrc;
+                if (card.classList.contains('playing')) {
+                  audio.play().catch(function() {
+                    card.classList.remove('playing');
+                    updateMixer();
+                  });
+                }
+              } else {
+                card.classList.remove('playing');
+                updateMixer();
+              }
+            });
+            audioElements[s.id] = audio;
+            audio.src = s.src;
+          }
+          card.classList.add('playing');
+          audioElements[s.id].play().then(function() {
+            updateMixer();
+          }).catch(function() {
+            card.classList.remove('playing');
+            updateMixer();
+          });
           updateMixer();
         });
 
