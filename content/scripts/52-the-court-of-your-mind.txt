@@ -1,7 +1,7 @@
 The Court of Your Mind
 Duration-Target: 22
 Category: stress
-Ambient: rain
+Ambient: none
 API-Emotion: calm
 Expected-Repetitions: Where is your evidence
 ---
