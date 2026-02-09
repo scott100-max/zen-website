@@ -1,7 +1,7 @@
 # Salus Project Bible
 
-**Version:** 3.0
-**Updated:** 8 February 2026
+**Version:** 3.4
+**Updated:** 9 February 2026
 **Purpose:** Single source of truth for all Salus website and audio production standards
 
 This document is the canonical reference for Claude Code and all contributors. Where this document conflicts with earlier briefs, amendment logs, or conversation history, **this document wins**.
@@ -26,8 +26,10 @@ This document is the canonical reference for Claude Code and all contributors. W
 11. [Audio Processing Pipeline](#11-audio-processing-pipeline)
 12. [QA Gate System](#12-qa-gate-system)
 13. [Script Writing Rules](#13-script-writing-rules)
+13A. [Script Uniqueness & Cross-Session Differentiation](#13a-script-uniqueness--cross-session-differentiation)
 14. [Expression Through Punctuation](#14-expression-through-punctuation)
 15. [Auphonic Integration](#15-auphonic-integration)
+15A. [Targeted Chunk Repair](#15a-targeted-chunk-repair)
 16. [Build Execution](#16-build-execution)
 17. [Governance](#17-governance)
 18. [V3 API Emotion System](#18-v3-api-emotion-system)
@@ -142,6 +144,28 @@ This document is the canonical reference for Claude Code and all contributors. W
 | **GitHub Pages** | Website code (HTML, CSS, JS, small images) | `https://salus-mind.com` |
 | **Cloudflare R2** | Media files (MP3, MP4) | `https://media.salus-mind.com` |
 | **Cloudflare** | DNS for entire domain | Nameservers: `gerald.ns.cloudflare.com`, `megan.ns.cloudflare.com` |
+| **LALAL.AI** | Per-chunk audio cleaning (voice_clean API) | `https://www.lalal.ai/api/v1` |
+
+### LALAL.AI
+
+| | |
+|---|---|
+| **Service** | AI audio cleaning — noise cancellation, de-echo, de-reverb |
+| **API** | REST v1 (`/upload/`, `/split/voice_clean/`, `/check/`, `/split/batch/voice_clean/`) |
+| **Auth** | `X-License-Key` header (activation code from account profile) |
+| **Account** | scottripley@icloud.com |
+| **Plan** | Lite (£6/mo, 90 min fast queue) |
+| **Env var** | `LALAL_API_KEY` in `.env` |
+| **Quota** | ~3 min per full session build (36 chunks × ~5s each). Lite plan covers ~30 builds/month. |
+| **Status** | **DISABLED** — integrated in `build-session-v3.py` but commented out pending settings optimisation |
+
+**What works:** Noise cancellation (`noise_cancelling_level=1`) removed almost all hiss from session 25 rebuild. Proven effective for TTS hiss cleanup.
+
+**What doesn't work:** Dereverb (`dereverb_enabled=True`) strips Marco's vocal resonance, mistaking it for room reverb. Fish TTS output has no actual room reverb — dereverb has nothing legitimate to remove and damages vocal character instead. Voice quality degradation worst on opening chunks (1–5), settles later.
+
+**Next test required:** `dereverb_enabled=False`, `noise_cancelling_level=1` or `2` — hiss-only mode. If effective without dereverb, LALAL becomes a permanent pipeline stage (Phase 1.5, between chunk QA and edge fades).
+
+**Cannot fix:** Voice character shift and echo. These are TTS generation problems baked into Fish output. No external post-processing service can fix what Fish generates wrong — the only remedy is chunk regeneration.
 
 ### GitHub Pages
 - **Repository:** `https://github.com/scott100-max/Salus-Website.git`
@@ -417,9 +441,12 @@ sed -i '' 's|../sessions.html">Guided Meditations</a></li>|../sessions.html">Gui
 8. **Email is mandatory.** Every completed build cycle ends with an email to scottripley@icloud.com — pass or fail.
 9. **Fully autonomous** (except where a STOP rule is triggered — see [Section 17](#17-governance)).
 10. **No OneDrive.** All files go to git (code) or Cloudflare R2 (media). Never copy files to OneDrive.
-11. **No post-build splicing.** Never splice individual chunks into an existing build — splicing causes tonal seams at splice boundaries (tested and failed). Selective regeneration WITHIN a build is permitted: `--focus-chunks` gives problem chunks more generation attempts (best-of-10) while others get best-of-5. The distinction is: regenerating chunks before assembly = acceptable; patching chunks into an already-assembled file = prohibited.
+11. **No post-build splicing — except targeted repair (Section 15A).** Never splice individual chunks into an existing build as a shortcut — crude splicing causes tonal seams at splice boundaries (tested and failed). Selective regeneration WITHIN a build is permitted: `--focus-chunks` gives problem chunks more generation attempts (best-of-10) while others get best-of-5. The distinction is: regenerating chunks before assembly = acceptable; patching chunks into an already-assembled file = prohibited. **Exception:** Targeted chunk repair following the full process in Section 15A is permitted. This is controlled single-word or single-chunk replacement with MFCC tonal matching and crossfade blending — not crude splicing. The result is always saved as a new file, never overwrites the original.
 12. **Automated gates: 100% pass required.** All 14 gates must pass — no exceptions. Human review: accept a reasonable clean rate and ship. Perfection should not prevent shipping, but the clean rate and any flagged chunks must be documented in the build record. If a session ships below 100% human clean rate, the specific issues accepted are logged for future pipeline improvement.
 13. **Lossless pipeline.** All intermediate audio MUST be WAV. MP3 encoding happens exactly ONCE at the final step.
+14. **Never overwrite raw narration — master narration files are sacrosanct.** Once a session's raw narration WAV has passed 14 gates and been approved for deploy, it becomes a **master narration file**. Master narrations are never deleted, overwritten, modified, or used as input for destructive operations. They are the source from which all future versions (ambient mixes, repairs, remastering) are derived. Naming convention: `{session-name}_master-narration.wav` stored in `content/audio-free/masters/`. Each master is accompanied by a **chunk schedule** (`{session-name}_chunk-schedule.txt`), a **QA report PNG**, and a **production record** (`{session-name}_production-record.md`) — together these form the complete production archive for that session (see Section 16 for production record template). If a repair or remix is needed, copy the master to a working file first — the master stays untouched. Pre-master raw files (intermediate builds, failed attempts) use timestamped names: `{session}_raw_v1.wav`, `{session}_raw_v2.wav` etc. Both pre-clean and post-clean versions must be saved when any cleaning service is applied. Never leave raw files in temp directories.
+15. **All audio comparisons must be narration-only.** When evaluating audio quality differences (A/B testing, LALAL before/after, pipeline changes), always compare raw narration without ambient. Ambient masks differences and makes evaluation invalid. Both A and B files must be provided simultaneously with clear naming (e.g. `25-intro-NO-LALAL-narration.wav`, `25-intro-LALAL-narration.wav`).
+16. **Garden ambient offset.** `garden-8hr.mp3` has 9.5 seconds of dead digital silence at the file start. Always use `-ss 10` when mixing garden ambient. This is automated in `build-session-v3.py` for both Fish and Resemble mix paths (confirmed 9 Feb 2026).
 
 ---
 
@@ -463,6 +490,10 @@ Unsure?                                         → Fish (Marco's home)
 
 **The Fish API is stateless.** There is NO `condition_on_previous_chunks` parameter in the Fish Audio TTS API. Each API call is completely independent. Voice conditioning between chunks is implemented CLIENT-SIDE in `build-session-v3.py` by passing the previous chunk's audio as the `references` input for the next chunk. This is our pipeline's feature, not a Fish feature. Each chunk can be regenerated independently as long as the correct reference audio is provided.
 
+**Possible S1 model degradation (February 2026).** Fish service alert shows generations exceeding 500 characters are temporarily routed to the v1.6 model instead of S1. If some chunks in a build hit S1 and others hit v1.6, different voice characteristics result — producing voice shift between chunks within the same session. This is a Fish-side issue outside our control. Story Studio was upgraded in December 2025; infrastructure changes may have side effects. Monitor Fish changelogs for resolution.
+
+**Opening chunk weakness.** Chunks 1–5 consistently score lowest in per-chunk QA (typically 0.35–0.43, against a flag threshold of 0.50). Chunk 1 has no previous MFCC tonal reference — Fish has nothing to chain voice conditioning from. Fish typically needs 2–3 chunks to "settle" into Marco's voice character. Possible future fix: generate a throwaway conditioning chunk before the real chunk 1 to give Fish a reference anchor.
+
 **Fish cleanup chain (CANONICAL — use this, nothing else):**
 1. Edge fades: 15ms cosine on each chunk before concatenation
 2. Concatenate all chunks + silences (WAV)
@@ -484,6 +515,7 @@ The HF shelf cut (`highshelf=f=7000:g=-3`) was proposed and tested across the fu
 - ~~highpass=80~~ (not needed for Fish — no low-frequency noise)
 - ~~highshelf=f=7000:g=-3~~ (tested and failed — does not address root cause)
 - ~~highshelf=f=3000:g=3~~ (removed 8 Feb — causes perceived echo on certain words)
+- ~~LALAL.AI dereverb~~ (strips Marco's vocal resonance — Fish TTS has no room reverb for dereverb to legitimately remove. Tested 8 Feb 2026: voice quality degraded, worst on opening chunks. Noise cancellation without dereverb may be viable — see Section 3, LALAL.AI)
 
 ### Resemble AI — LONG-FORM PROVIDER
 
@@ -739,14 +771,15 @@ Implementation rules:
 
 **Available 8-hour ambients:**
 
-| File | Duration | Location |
-|------|----------|----------|
-| `rain-8hr.mp3` | 8 hr | `content/audio/ambient/` |
-| `birds-8hr.mp3` | 8 hr | `content/audio/ambient/` |
-| `garden-8hr.mp3` | 12 hr | `content/audio/ambient/` |
-| `rain-extended.mp3` | 70 min | `content/audio/ambient/` |
-| `stream-3hr.mp3` | 3 hr | `content/audio/ambient/youtube-downloads/` |
-| `loving-kindness-ambient.wav` | 15 min | `content/audio/ambient/` |
+| File | Duration | Location | Notes |
+|------|----------|----------|-------|
+| `rain-8hr.mp3` | 8 hr | `content/audio/ambient/` | |
+| `birds-8hr.mp3` | 8 hr | `content/audio/ambient/` | |
+| `garden-8hr.mp3` | 12 hr | `content/audio/ambient/` | ⚠️ 9.5s dead silence at file start — always use `-ss 10` |
+| `rain-extended.mp3` | 70 min | `content/audio/ambient/` | |
+| `stream-3hr.mp3` | 3 hr | `content/audio/ambient/youtube-downloads/` | |
+| `stream-extended.mp3` | — | `content/audio/ambient/` | Created 9 Feb to cover longer sessions |
+| `loving-kindness-ambient.wav` | 15 min | `content/audio/ambient/` | |
 
 **Ambient type masking reference (to be populated as sessions are deployed):**
 
@@ -796,6 +829,8 @@ Sliding-window HF-to-total energy ratio on POST-CLEANUP audio. Evaluates non-spe
 Local-mean comparison with silence exclusion. 9/14 dB thresholds, proportional silence margin for transitions: `max(4s, silence_duration × 0.15)`. Short pauses (8s) get 4s margin. Long silences (50s) get 7.5s margin — voice ramp-up after extended silence is proportionally longer.
 
 **Low-baseline skip:** Skip detection when local mean energy is below −28 dB. This threshold represents ambient/silence regions, not speech. Flagging silence as "surges" is a false positive.
+
+**Non-deterministic TTS level variation (9 Feb 2026):** Gate 7 is the most persistent failure mode during builds. Fish Audio's TTS generation is non-deterministic — identical text produces different volume levels on each call. When speech returns after a long silence, this variation can cause surges that exceed the 9.0 dB threshold. The threshold is correctly calibrated (lowering it would mask genuine defects). The correct response is to rebuild — eventually a generation set with consistent levels will pass. Sessions 19 and 32 needed 4 and 3 builds respectively; sessions 18 and 23 passed first time. Longer sessions with more chunks have higher failure probability.
 
 ### Gate 8: Repeated Content
 MFCC fingerprint + Whisper STT with DUAL AGREEMENT — both must flag the same timestamps to confirm. 8-word minimum.
@@ -892,6 +927,26 @@ If a generated chunk's duration exceeds 2× the expected duration for its charac
 
 **Expected duration:** Character count ÷ speaking rate. Meditation speaking rate ≈ 100–110 wpm ≈ 8–10 characters per second.
 
+### Visual QA Report Inspection (Mandatory)
+
+The build script generates QA report PNGs for each session (`{session-name}_QA_REPORT.png`). These contain waveform visualisations, spectrograms, energy plots, and gate summaries. **Code must visually inspect these reports — not just check the pass/fail numbers.**
+
+**Why this exists (9 Feb 2026):** Code confirmed it generated QA report PNGs but never actually opened or inspected them. Gates ran programmatically and Code took the numbers at face value. A spectrogram can show anomalies (localised hiss bursts, tonal shifts, energy spikes) that fall just below a gate's numerical threshold but are clearly visible on the graph. Automated gates are necessary but not sufficient — the visual reports exist to catch what the numbers miss.
+
+**Code's obligations:**
+1. After every build, open each QA report PNG and examine the spectrogram for anomalies
+2. Flag any visible artefacts that passed the numerical gates — include a description and timestamp
+3. Include visual inspection findings in the build state file
+4. If a visible anomaly is significant, report it to Scott rather than auto-deploying
+
+**What to look for:**
+- Localised bright spots or bands on the spectrogram (hiss or energy spikes)
+- Sudden changes in spectral colour at chunk boundaries (tonal seams)
+- Unusual waveform shapes (clipping, dropout, overgeneration)
+- Energy plot spikes that are close to (but just below) gate thresholds
+
+This is not a gate — it does not block deployment programmatically. It is a mandatory inspection step that Code performs and documents.
+
 ### Threshold Calibration Reference
 
 These thresholds were calibrated against two known-good deployed sessions (25-introduction-to-mindfulness, 36-loving-kindness-intro) on 7 February 2026. They represent production-validated values, not theoretical estimates.
@@ -947,7 +1002,7 @@ Blocks under 50 characters must be merged with adjacent blocks or expanded with 
 | Use `...` for pauses (not `—`) | Script parser reads `...` as pause markers |
 | No ellipsis in spoken text | Fish renders `...` as nervous/hesitant delivery |
 | Scripts must contain ZERO parenthetical tags | In-text emotion tags don't work (see Section 18) |
-| Estimate ~7.2 chars/second for narration duration | Calibrated from Fish/Marco output |
+| Estimate ~7.2 chars/second for narration duration | Calibrated from Fish/Marco output. **Caveat (9 Feb 2026):** This estimate tends to overestimate session duration — session 32 was scripted for 12 min but TTS produced 9.5 min. The build script's own duration estimate (calculated from actual chunk generation) is more reliable than the character-based formula. Use 7.2 chars/sec for rough planning only; set the `Duration-Target` header based on the build script's estimate after a dry run, not on character count alone. |
 
 ### Script Metadata Header
 
@@ -995,6 +1050,208 @@ Certain words cause consistent artifacts in Fish/Marco output. Most are sibilant
 **Pre-flight scan:** The build script includes an automated pre-flight check that scans all script blocks against this list before any TTS calls. Blocks containing trigger words are flagged with suggested alternatives. This runs during dry-run and at the start of a live build. It is a WARNING, not a build-blocker — some trigger words may be unavoidable, but the scriptwriter should make a conscious choice rather than discovering the problem at the listening stage.
 
 **Maintaining the list:** New trigger words discovered during human review are added to this table with their defect type and suggested alternatives. The pre-flight scan reads from this list. The list is expected to grow as more sessions are built and reviewed.
+
+---
+
+## 13A. Script Uniqueness & Cross-Session Differentiation
+
+### The Problem
+
+Salus sessions are starting to sound the same. A customer who listens to two or three sessions back-to-back should feel like they've had three distinct experiences — not the same session with different words in the middle. When openings blur together, when every session guides the breath the same way, when the same transitional phrases appear across the catalogue, the product feels mass-produced rather than crafted.
+
+This is the single biggest threat to perceived quality that doesn't show up in any automated gate. A session can pass all 14 QA checks and still feel identical to the one before it.
+
+**The rule is simple: no two Salus sessions should feel interchangeable.** Every session must have its own identity — its own way in, its own rhythm, its own voice, its own way of closing. A returning customer should be able to tell which session they're listening to within the first 30 seconds.
+
+### Cross-Session Registers (Mandatory)
+
+Three register files track what has already been used across the catalogue. These are the primary tool for preventing internal repetition. They live in `content/scripts/` and are checked before every new script enters the build pipeline.
+
+#### `openings-register.txt`
+
+Every deployed session's opening line and opening approach, one entry per line.
+
+Format: `[Session #] | [Opening line] | [Opening technique]`
+
+**Rule:** No new session may use the same opening technique as any existing session in the register. If three sessions already open with breath awareness, the next session must open differently — perhaps with a sound observation, a question, a brief story, a sensory detail, or silence.
+
+#### `closings-register.txt`
+
+Every deployed session's closing line and closing approach.
+
+Format: `[Session #] | [Closing line] | [Closing technique]`
+
+**Rule:** No new session may use the same closing technique as any session in the same category. Across categories, closings should still vary as much as possible. Sleep sessions all end with "Goodnight from Salus" (per existing rules), but the lead-in to that line must differ every time.
+
+#### `phrases-register.txt`
+
+Distinctive phrases, metaphors, breath cues, and transitional language used across all deployed sessions.
+
+Format: `[Session #] | [Phrase or cue] | [Context]`
+
+**Rule:** No phrase of 5+ words from this register may appear in a new script. If a phrase has been used, it's spent — find a new way to say it.
+
+### Categories of Repetition to Eliminate
+
+These are the specific areas where "same same" creeps in. Each one needs active variation across every new script.
+
+#### 1. Openings
+
+The opening 30 seconds is where repetition is most damaging. It's the first thing the listener hears, and if it sounds familiar from their last session, they've already mentally checked out.
+
+**What tends to repeat:**
+- "Get comfortable" / "Find a comfortable position" / positional setup
+- Immediate breath instruction ("Take a deep breath in...")
+- "Close your eyes"
+- Body settling cues ("Let your shoulders drop...")
+
+**Variation strategies:**
+- Open with an environmental observation ("There's a quiet in this moment...")
+- Open with a gentle question ("What brought you here today?")
+- Open mid-action — no settling, just start the practice
+- Open with a single sensory detail (a sound, a temperature, a texture)
+- Open with a brief, unexpected statement that sets the session's theme
+- Open with silence — let the ambient carry the first few seconds before the voice enters
+
+**Mandatory:** Before writing any opening, check `openings-register.txt`. If the planned approach is already there, change it.
+
+#### 2. Breath Cues
+
+Every meditation involves breathing. The risk is that every session guides the breath using identical language.
+
+**What tends to repeat:**
+- "Breathe in... breathe out"
+- "Notice your breath" / "Bring your attention to your breathing"
+- "Take a deep breath in through your nose"
+- "With each exhale, let go of..."
+
+**Variation strategies:**
+- Describe the breath indirectly — talk about what it does to the body rather than instructing the mechanism
+- Vary the sensory focus: one session might notice temperature of air at the nostrils, another might notice the rise of the chest, another the sound of the exhale
+- Some sessions can skip explicit breath guidance entirely and let the pacing of the script imply the rhythm
+- Use different verbs: draw, gather, release, soften, empty — not always "breathe in/out"
+- Vary the placement: some sessions guide breath early, others introduce it midway as a return point
+
+**Mandatory:** No two sessions in the same category may use the same breath cue phrasing. Check `phrases-register.txt`.
+
+#### 3. Body Awareness Transitions
+
+The pivot from settling into the core practice is where sessions most commonly blur together.
+
+**What tends to repeat:**
+- "Now bring your attention to..." (sequential body-part tour)
+- "Notice any tension in your [body part]"
+- "Allow that area to soften / release / let go"
+- "Scan from the top of your head down to your toes"
+
+**Variation strategies:**
+- Skip the full body scan — focus on one or two areas with genuine depth
+- Use movement rather than stillness: "Gently rock your weight side to side and notice where you land"
+- Use contrast: "Notice the difference between your left hand and your right"
+- Use temperature, weight, or texture rather than tension/release
+- Approach the body from the outside in (what the air feels like on skin) rather than inside out
+
+#### 4. Silence Announcements
+
+The Bible requires narrator announcements before extended silences (Section 4.3 of the v1 Bible). The approved phrases are templates, not scripts. Each session must adapt them into something specific to that session's context and theme. The adapted version goes into `phrases-register.txt` so it isn't reused.
+
+Examples of session-specific adaptations:
+- Loving-kindness: "Stay with this warmth for a while. I'll be here when you're ready."
+- Sleep: "Let the rain hold you now. I'll come back gently."
+- Stress: "There's nothing to fix right now. Just be here. I'll return shortly."
+- Mindfulness: "Keep noticing. That's all. I'll rejoin you in a moment."
+
+#### 5. Closings
+
+After openings, closings are the highest-repetition risk. If every session ends with "carry this feeling with you," the catalogue sounds formulaic.
+
+**What tends to repeat:**
+- "Wiggle your fingers and toes"
+- "When you're ready, slowly open your eyes"
+- "Carry this sense of [calm/peace/warmth] with you"
+- "Take this feeling into the rest of your day"
+
+**Variation strategies:**
+- End with a concrete image or memory from the session, not a generic benediction
+- End with a question the listener can hold: "What's one thing you noticed today?"
+- End with a sound cue rather than a verbal instruction to return
+- End abruptly — some sessions can simply trail off into ambient, letting the listener decide when they're done
+- End with a specific, practical suggestion: "The next time you're waiting in a queue, try this for thirty seconds"
+- End with humour or lightness where the session type allows it
+
+**Mandatory:** Before writing any closing, check `closings-register.txt`. If the planned approach is already there, change it.
+
+#### 6. Structural Arc
+
+Even if individual phrases differ, sessions can feel identical if they follow the same structural shape every time.
+
+**The default arc (overused):**
+Settle → breathe → body awareness → core practice → integration → close
+
+**Variation strategies:**
+- Start in the core practice immediately — no preamble
+- Move between activity and stillness rather than building linearly toward stillness
+- Use a circular structure — return to the opening image or phrase at the end
+- Use a single extended metaphor as the structural spine rather than a technique sequence
+- Vary the ratio of guidance to silence — some sessions should be 70% guided, others 40%
+- Place the most intense or meaningful moment somewhere unexpected — not always at the two-thirds mark
+
+### Pre-Build Originality Scan (Automated)
+
+The build script runs a cross-session originality scan during the pre-flight phase, alongside the existing trigger word check and block-size validation.
+
+**The scan:**
+1. Loads all three register files (`openings-register.txt`, `closings-register.txt`, `phrases-register.txt`)
+2. Extracts all text blocks from the new script
+3. Compares each block against register entries using fuzzy matching (threshold: 70% similarity on any phrase of 5+ words)
+4. Flags matches with the specific session number and phrase that conflicts
+5. Checks the opening line and closing line against their respective registers — exact or near-exact matches are flagged
+6. Generates an originality report saved to `content/scripts/originality/{session-name}-originality.txt`
+
+This is a WARNING system, not a build-blocker. The scriptwriter (Claude Code or human) reviews the report and either revises the flagged content or documents why the repetition is acceptable (e.g., traditional metta phrases that cannot be meaningfully varied).
+
+### Post-Build Register Update (Mandatory)
+
+After a session is deployed, the three register files must be updated with the new session's entries. This is part of the deployment checklist (Section 16). A build is not considered complete until the registers are current.
+
+### External Originality (Secondary)
+
+While internal differentiation is the primary concern, scripts should also not closely resemble widely published meditation scripts from other platforms or teachers. This is both a legal and a quality concern.
+
+**Process:**
+- When writing a new script, Claude Code performs web research on the session topic to understand what already exists
+- The purpose of this research is to consciously diverge, not to find material to adapt
+- No phrase of 6+ consecutive words should match a published source
+- A brief research note is stored in `content/scripts/research/{session-name}-research.txt` listing sources consulted and how the Salus script differs
+
+This is lighter-touch than the internal register system — a due diligence step, not a gating mechanism.
+
+### Exceptions
+
+Some repetition across sessions is unavoidable and acceptable:
+
+- **Traditional formulations** (e.g., metta phrases "May I be safe, may I be happy") — these are traditional, not anyone's property, and listeners expect consistency in how they're presented
+- **Functional micro-instructions** (e.g., "breathe in," "close your eyes") — unavoidable, though the framing around them must vary
+- **Category conventions** (e.g., sleep sessions ending with "Goodnight from Salus") — brand signatures, not repetition
+- **Phrases listed in `Expected-Repetitions` metadata** — intentional structural repetition within a single session (handled by Gate 8)
+
+The key distinction: **functional language can repeat; creative language must not.** "Breathe in" is functional. "Let your breath become a soft tide, washing through you" is creative — and once it's been used in one session, it's done.
+
+### Narration Audit (Outstanding)
+
+**Status:** PENDING — to be scheduled
+
+A full audit of all deployed sessions is required to retroactively populate the three register files and identify existing cross-session repetition. This is a prerequisite for the register system to function properly.
+
+**Scope:**
+1. Retrieve or reconstruct scripts for all deployed sessions (01, 03, 05, 06, 07, 08, 09, 11, 18, 19, 23, 25, 29, 32, 36, 38, 43)
+2. Extract opening lines, closing lines, and distinctive phrases from each
+3. Populate `openings-register.txt`, `closings-register.txt`, and `phrases-register.txt`
+4. Identify any existing cross-session repetition — document which sessions share phrasing and flag for future rewrites
+5. Listen to a representative sample across categories back-to-back and note where sessions feel interchangeable
+6. Produce an audit report with specific recommendations for which scripts need the most differentiation work
+
+**Priority:** Must be completed before any new scripts are written. The registers are worthless if they don't include existing content.
 
 ---
 
@@ -1046,7 +1303,7 @@ Every comma, ellipsis, fragment, and sentence structure is vocal direction to Ma
 
 ## 15. Auphonic Integration
 
-**Status:** ACTIVE — Measurement gate ONLY. Do not use Auphonic output as production audio.
+**Status:** ACTIVE — Measurement gate AND hiss reduction testing (see Hiss Reduction Testing below). Processing output is not currently used as production audio, but noise reduction is under evaluation.
 
 ### Account
 
@@ -1138,6 +1395,95 @@ curl -X POST https://auphonic.com/api/simple/productions.json \
 
 Python integration code available in the build script. Poll status at `/api/production/{uuid}.json` (status 3 = Done, 2 = Error).
 
+### Hiss Reduction Testing (Outstanding)
+
+**Status:** PENDING — to be tested
+
+The pipeline currently has no active de-hiss step. Hiss mitigation relies entirely on chunk selection (best-of-5 scoring includes HF measurement, so cleaner chunks are preferred) and ambient masking. If all 5 generations of a chunk have hiss and that chunk was still the best, the hiss ships.
+
+**LALAL.AI** was tested for noise cancellation. Hiss removal was excellent, but dereverb stripped Marco's vocal resonance. LALAL with `dereverb=False` (noise cancellation only) was identified as worth retesting but has not been tested.
+
+**Auphonic** has noise reduction capabilities (currently configured as "Static: remove constant noises only, 6 dB") but has only been used for measurement, never for processing. The concern was that Voice AutoEQ damages Marco's bass warmth — but it's possible to use Auphonic's noise reduction independently of its levelling and EQ features.
+
+**Required testing:**
+1. **LALAL.AI with dereverb disabled** — noise cancellation only on a known-hissy chunk. A/B against the original.
+2. **Auphonic noise reduction only** — submit a known-hissy chunk with levelling and EQ disabled, noise reduction enabled. Compare output quality.
+3. **Per-chunk application** — test whether applying noise reduction to individual problem chunks (rather than the whole narration) avoids the cumulative quality degradation seen in full-session LALAL processing.
+
+The goal is to find a noise reduction approach that removes hiss without damaging Marco's vocal character. If either LALAL (dereverb-off) or Auphonic (noise-only) passes A/B testing, it becomes an optional repair tool — applied to specific problem chunks identified during review, not blanket-applied to all audio.
+
+---
+
+## 15A. Targeted Chunk Repair
+
+**Status:** EXPERIMENTAL — trial on session 32, pending results before integration into standard pipeline.
+
+### The Problem
+
+The current quality strategy is avoidance, not repair. Generate 5 versions of each chunk, pick the best one, hope the ambient covers the rest. If all 5 versions of a chunk have a defect, the least-bad version ships with the defect intact. There is no mechanism to fix a single problem word or phrase after assembly.
+
+This was acceptable when defect rates were high and the pipeline was unstable. Now that the pipeline produces 3–4 defective words across four full sessions, targeted repair becomes viable — and valuable. Fixing 3 words is faster than regenerating an entire 27-chunk session and gambling on the Fish lottery again.
+
+### The Concept
+
+Identify the specific word or phrase that is defective. Regenerate just that audio segment. Splice it into the existing narration with proper crossfading and tonal matching. Save the result as a new file — never overwriting the original master narration.
+
+**This is NOT the crude splicing that Rule 11 prohibits.** The previous splicing failure was caused by dropping in a raw replacement chunk with no tonal matching or crossfading, creating audible seams. Targeted repair is a controlled process with quality checks at every step.
+
+### Repair Process
+
+1. **Identify the defect.** Human review notes the problem word/phrase with timestamp (e.g., "0:42 — 'something' has echo"). The defect must be specific — not "this chunk sounds off" but "the word 'something' at 0:42 has audible echo."
+
+2. **Locate the chunk.** Using the build manifest and the session's chunk schedule (stored alongside the master narration in `content/audio-free/masters/{session}_chunk-schedule.txt`), identify which chunk contains the defective word and the exact timestamp within that chunk. Chunk schedules list every chunk's start time, end time, duration, and opening text — making it straightforward to find a problem word without reverse-engineering from raw timestamps.
+
+3. **Extract context.** Extract the full chunk containing the defect from the master narration, plus the adjacent chunks on either side. These provide the tonal reference for matching.
+
+4. **Regenerate the chunk.** Generate multiple versions (best-of-10) of the defective chunk using the same TTS settings as the original build. Use adjacent chunks as voice conditioning reference if the TTS API supports it. Score all versions using the composite metric, with MFCC tonal distance weighted heavily against the adjacent chunks to ensure tonal consistency. **Important:** Always regenerate the full chunk, not just the defective word in isolation — a word generated standalone has different prosody (pitch contour) than a word mid-sentence, and would sound obviously spliced.
+
+5. **Select and validate.** Pick the best replacement. A/B compare the replacement chunk against the original — the replacement must be better on the specific defect without introducing new problems.
+
+6. **Splice with crossfading.** Replace the defective chunk in the narration using cosine crossfades at both boundaries (minimum 50ms, up to 200ms depending on context). The crossfade duration should be longer at silence-to-speech transitions and shorter at mid-speech splices.
+
+7. **MFCC tonal check.** Run MFCC comparison between the replacement and its adjacent chunks. If tonal distance exceeds the existing threshold (0.50), the replacement fails — try another version or accept the original defect.
+
+8. **Re-run QA gates.** Run all 14 gates on the repaired narration. The repair must not cause any gate that previously passed to now fail.
+
+9. **Save as new file.** Save the repaired narration as `{session-name}_master-narration-repair-{n}.wav` (where n is the repair iteration number). The original master narration stays untouched.
+
+10. **Remix and deploy.** Apply ambient mix to the repaired narration and deploy to R2. Update all HTML references if the filename has changed.
+
+### File Naming
+
+```
+content/audio-free/masters/
+  32-observing-emotions_master-narration.wav          ← original, sacrosanct
+  32-observing-emotions_master-narration-repair-1.wav ← first repair attempt
+  32-observing-emotions_master-narration-repair-2.wav ← second repair if needed
+```
+
+The live deployed MP3 is always generated from the most recent approved narration (original or repair). But all versions are kept — you can always go back.
+
+### Rules
+
+1. **Never overwrite the original master narration.** This is non-negotiable. The repair creates a new file. The original remains as the fallback.
+2. **One defect per repair pass.** Fix one problem, re-run QA, listen, confirm. Don't batch multiple repairs before checking — each splice introduces risk and the risks compound.
+3. **Repair attempts are limited.** If a chunk cannot be satisfactorily repaired after 3 attempts, accept the original or schedule a full rebuild of the session.
+4. **All repairs documented.** The build record must log: which word was repaired, the timestamp, the replacement chunk's composite score and MFCC tonal distance, and the A/B comparison result.
+5. **Repaired narrations go through the same QA gates as originals.** A repair that passes human review but fails Gate 7 (surge) is not acceptable.
+6. **Code must identify defects, not just fix reported ones.** Over time, Code should develop the ability to flag potential defects programmatically (via spectral analysis, MFCC anomaly detection, or Whisper transcription comparison) and propose repairs — not wait for human reports. This is the path to an automated repair gate.
+
+### Future: Repair as a Pipeline Stage
+
+Once targeted repair is proven on manual cases, the goal is to integrate it as an optional post-assembly stage:
+
+1. Build assembles narration as normal (best-of-5 per chunk)
+2. Automated analysis identifies chunks with potential defects (spectral anomalies, MFCC outliers, Whisper transcription mismatches)
+3. Those chunks are flagged for repair — regenerated with best-of-10 and spliced in with crossfading
+4. Repaired narration goes through full 14-gate QA
+5. Human review confirms the final result
+
+This would mean the pipeline produces a first-pass narration, then refines it — avoidance AND repair working together. But this is aspirational. The immediate task is proving the concept on a single word.
+
 ---
 
 ## 16. Build Execution
@@ -1171,6 +1517,7 @@ python3 build-session-v3.py SESSION --no-cleanup
 - [ ] Zero parenthetical emotion tags in text
 - [ ] `Expected-Repetitions` set if session has intentional structural repetition
 - [ ] **Trigger word pre-flight passed** — script scanned against known trigger word list (Section 13). Any flagged words either replaced with synonyms or consciously accepted
+- [ ] **Cross-session originality scan passed** — script checked against registers (Section 13A). No unresolved conflicts with existing openings, closings, or phrases
 
 **Environment:**
 - [ ] Only building ONE session (no parallel builds)
@@ -1190,15 +1537,14 @@ python3 build-session-v3.py SESSION --no-cleanup
 - [ ] 0 voice changes in QA results
 
 **Human Review (mandatory before deploy):**
-1. Extract individual chunks from raw narration WAV using manifest timing data
-2. Upload chunks to R2 at `test/chunk-test-{version}/` (e.g. `chunk-test-v3b/`)
-3. Create or update interactive HTML review page (export buttons: Copy Results + Download TXT)
-4. Scott listens to every chunk on AirPods at high volume (exposes artifacts normal listening misses)
-5. Each chunk rated: OK / ECHO / HISS / VOICE / BAD
-6. Export review results as TXT file
-7. If clean rate is acceptable → proceed to deploy
-8. If problem chunks identified → use `--focus-chunks` for targeted rebuild (problem chunks get best-of-10, others best-of-5)
-9. Re-review focused chunks. Repeat if needed, but perfection should not prevent shipping.
+1. Build script generates QA report PNGs — Code must visually inspect these for spectral anomalies, energy spikes, or artefacts that pass numerical thresholds but are visible on the graphs (see Visual QA Report Inspection below)
+2. Scott listens to the full assembled session (with ambient) as a continuous playback — not individual chunks. Focus on overall flow, tonal consistency, and any words or phrases that stand out as defective
+3. Any problem moments noted with approximate timestamps and description (e.g., "0:42 — 'something' has echo")
+4. If clean and no issues noted → proceed to deploy
+5. If specific defects identified → attempt targeted repair (Section 15A) before considering a full rebuild
+6. Export review notes as TXT file for the build record
+
+**Previous approach (superseded 9 Feb 2026):** Individual chunk-by-chunk listening with per-chunk ratings. This was necessary during early pipeline development when defect rates were high. With the current pipeline producing 3–4 defective words across four full sessions, full-session playback is sufficient and more representative of the customer experience.
 
 **Deployment:**
 - [ ] Final audio remixed with ambient at per-session level (set by ear — see Ambient Rules in Section 11). Dynamic masking applied to problem chunks if needed.
@@ -1209,6 +1555,79 @@ python3 build-session-v3.py SESSION --no-cleanup
 - [ ] Players wired up with `data-src` attribute pointing to correct R2 URL
 - [ ] HTML changes committed and pushed to main
 - [ ] Email sent to scottripley@icloud.com
+- [ ] `openings-register.txt` updated with new session's opening line and technique
+- [ ] `closings-register.txt` updated with new session's closing line and technique
+- [ ] `phrases-register.txt` updated with new session's distinctive phrases, metaphors, and cues
+- [ ] **Session production record created/updated** — see template below
+
+### Session Production Record
+
+Every deployed session has a production record — a single markdown file that captures the complete history of that session's production. This is the session's "mini bible": everything you need to know about what was built, how, what went wrong, and what the current state is.
+
+**Location:** `content/audio-free/masters/{session-name}_production-record.md`
+
+**Created:** At the start of the build process (populated with script details and build settings).
+**Updated:** After every build attempt, repair, remix, or redeployment.
+**Never deleted:** Even if a session is rebuilt from scratch, the old production record is archived and a new one started.
+
+**Template:**
+
+```markdown
+# Production Record: {Session Name}
+
+## Identity
+- **Session #:** {number}
+- **Title:** {full title}
+- **Category:** {sleep/mindfulness/stress/focus/beginner/advanced/course/compassion}
+- **Duration target:** {minutes}
+- **Actual duration:** {minutes}
+- **Ambient:** {type and level}
+- **Script file:** {path}
+- **Bible version at build:** {version}
+
+## Current Deployment
+- **Status:** {Live / Not deployed / Replaced}
+- **R2 path:** {url}
+- **Commit:** {hash}
+- **Date deployed:** {date}
+- **Based on:** {master narration / repair-N}
+
+## Master Files
+- **Master narration:** {path to _master-narration.wav}
+- **Chunk schedule:** {path to _chunk-schedule.txt}
+- **QA report:** {path to _QA_REPORT.png}
+- **Script version:** {v1/v2/rewritten — note what changed}
+
+## Build History
+| Build | Date | Result | Gates | Notes |
+|-------|------|--------|-------|-------|
+| 1 | {date} | {PASS/FAIL} | {14/14 or which failed} | {details} |
+| 2 | {date} | {PASS/FAIL} | {14/14 or which failed} | {details} |
+
+## Repairs
+| Repair | Date | Defect | Chunk | Word | Result | Notes |
+|--------|------|--------|-------|------|--------|-------|
+| 1 | {date} | {echo/hiss/voice} | {#} | {word} | {SUCCESS/FAIL} | {details} |
+
+## Known Issues
+- {Any accepted defects, timestamps, and severity}
+- {Any chunks flagged during review but shipped}
+
+## Human Review Notes
+- {Date}: {Notes from Scott's listening review}
+
+## Hiss Reduction
+- {Any cleaning applied, method, before/after comparison}
+
+## Script Changes
+- {Date}: {What changed and why — trigger words, rewrites, etc.}
+```
+
+**Why this exists:** Session-level information was previously scattered across manifests, build logs, state files, the Bible's deployed sessions table, and conversation history. When a session needs repair, remix, or rebuild months from now, the production record contains everything needed — no archaeology required.
+
+**Code's obligation:** The production record is created at the start of the first build and updated after every significant action. It is not optional. A session without a production record is incomplete.
+
+**Retroactive population:** For the 10 currently deployed sessions, production records should be created using available data (manifests, build logs, chunk schedules, the deployed sessions table). Where historical data is incomplete (especially for pre-v1.3 sessions), note what's missing rather than guessing.
 
 ### Email Notification System
 
@@ -1221,16 +1640,114 @@ python3 build-session-v3.py SESSION --no-cleanup
 | **Header** | Uses `curl` subprocess (Python `urllib` blocked by Cloudflare bot protection) |
 | **Trigger** | Every completed build — pass or fail |
 
-### Deployed Sessions
+### Build Status (Full Catalogue)
 
-| Session | Duration | Provider | Ambient | Status |
-|---------|----------|----------|---------|--------|
-| 01-morning-meditation | — | Fish | — | Deployed, patched (0 clicks) |
-| 03-breathing-for-anxiety | 19.3 min | Fish | — | Deployed, patched (68 clicks) |
-| 09-rainfall-sleep-journey | — | Fish | — | Deployed, patched (10 clicks) |
-| 25-introduction-to-mindfulness | 14.4 min | Fish | — | Deployed, patched (83 stitch points) |
-| 36-loving-kindness-intro-v3 | 10.5 min | Fish | birds, −42dB (14dB below voice) | Deployed (v3b focused rebuild, best-of-10, 14/14 gates, 65% clean rate) |
-| 38-seven-day-mindfulness-day1 | 11.6 min | Fish | — | Deployed, patched (8 clicks) |
+*Last updated: 9 February 2026*
+
+#### Deployed Sessions (10)
+
+| # | Session | Category | Duration | Provider | Ambient | Raw WAV | Flagged | Status |
+|---|---------|----------|----------|----------|---------|---------|---------|--------|
+| 01 | Morning Meditation | Beginner | ~10 min | Fish | — | N | no QA | Deployed, patched. Pre-v1.0 — rebuild candidate. |
+| 03 | Breathing for Anxiety | Stress | 19.3 min | Fish | — | Y | no QA | Deployed, patched. v2.1 — pre-v3.0 thresholds. |
+| 09 | Rainfall Sleep Journey | Sleep | ~30 min | Fish | — | N | no QA | Deployed, patched. Pre-v1.3 — rebuild candidate. |
+| 18 | Calm in Three Minutes | Stress | 3.2 min | Fish | rain | Y | 0/12 | Deployed (build 1, 14/14 gates, 9 Feb, commit 752752f). |
+| 19 | Release and Restore | Stress | 14.5 min | Fish | garden | Y | 2/51 | Deployed (build 4, 14/14 gates, 9 Feb, commit 752752f). |
+| 23 | The Calm Reset | Stress | 5.5 min | Fish | stream | Y | 1/19 | Deployed (build 1, 14/14 gates, 9 Feb, commit 752752f). |
+| 25 | Introduction to Mindfulness | Beginner | 14.4 min | Fish | garden | Y | 4/36 | Deployed (rebuild 8 Feb). ⚠️ Card wiring broken. |
+| 32 | Observing Emotions | Mindfulness | 9.5 min | Fish | garden | Y | 2/23 | Deployed (build 3, 14/14 gates, 9 Feb, commit 752752f). |
+| 36 | Loving-Kindness Intro v3 | Compassion | ~12 min | Fish | birds | Y | 1/27 | Deployed (v3b focused rebuild, best-of-10, 14/14 gates). |
+| 38 | Seven-Day Mindfulness Day 1 | Course | 11.6 min | Fish | — | N | no QA | Deployed, patched. Pre-v1.3 — rebuild candidate. |
+
+**Flagged** = chunks scoring below 0.50 composite / total chunks. "no QA" = built before per-chunk scoring existed.
+
+**Sessions built on old Bible (candidates for rebuild):**
+- 01, 09, 38 — pre-v1.3, no raw WAV preserved, no per-chunk QA, no 14-gate system
+- 03 — v2.1, has raw WAV but pre-v3.0 gate thresholds
+
+#### Flagged Chunks (Repair Candidates)
+
+10 flagged chunks across 5 sessions out of 345 total chunks scanned. Sessions 01, 03, 09, 38 have no QA data (pre-scoring era). Session 18 passed clean (0/12 flagged).
+
+| Session | Chunk | Score | Hiss (dB) | Text (opening) |
+|---------|-------|-------|-----------|----------------|
+| 19 — Release and Restore | 31 | 0.348 | −13.47 | "Your neck. Gently press your head back into whatever is..." |
+| 19 — Release and Restore | 51 | 0.209 | −9.43 | "This has been Salus. Go gently, and take this calm with..." |
+| 23 — The Calm Reset | 13 | 0.426 | −10.67 | "Now imagine all the stress you have accumulated today a..." |
+| 25 — Intro to Mindfulness | 1 | 0.365 | −7.26 | "This is a simple introduction to mindfulness. There is ..." |
+| 25 — Intro to Mindfulness | 3 | 0.349 | −10.26 | "Find somewhere comfortable to sit or lie down, and let ..." |
+| 25 — Intro to Mindfulness | 5 | 0.430 | −8.54 | "Let's start with your breath. Not because it's special,..." |
+| 25 — Intro to Mindfulness | 12 | 0.232 | −8.35 | "You don't need to stop your thoughts. You just need to ..." |
+| 32 — Observing Emotions | 1 | 0.449 | −10.51 | "Today we are going to practise something that might see..." |
+| 32 — Observing Emotions | 12 | 0.325 | −10.19 | "Stay with that sensation. Do not try to make it go away..." |
+| 36 — Loving-Kindness v3 | 7 | 0.378 | −10.04 | "There is nothing to force here. No emotion you need to ..." |
+
+These are the primary repair candidates once targeted repair is proven. Session 25 has the highest concentration (4 flagged chunks, including the opening chunk at −7.26 dB hiss — the worst hiss reading across all sessions).
+
+#### Cards on Site With No Working Audio
+
+These session cards are visible to customers but have no audio behind them. Pressing play does nothing. Each needs either building or removing from the site.
+
+| # | Session | Notes |
+|---|---------|-------|
+| 05 | Body Scan for Deep Rest | No audio |
+| 06 | Letting Go of the Day | No audio |
+| 07 | Moonlight Drift | No audio |
+| 08 | The Quiet Shore | No audio |
+| 11 | Lucid Dream Preparation | No audio |
+| 25 | Introduction to Mindfulness | HAS audio — card wiring broken (old `player` class) |
+| 29 | Open Awareness | No audio |
+| 43 | Non-Dual Awareness | No audio |
+
+#### Not Yet Produced (42 sessions)
+
+| # | Session | Category | Script | Status |
+|---|---------|----------|--------|--------|
+| 00 | Landing Page | Intro | Y | Old ElevenLabs, deleted |
+| 02 | Deep Sleep | Sleep | Y | Old ElevenLabs, deleted |
+| 04 | Science of Mindfulness | Education | Y | Rewritten for liability, needs regen |
+| 05 | Body Scan for Deep Rest | Sleep | Y | Old ElevenLabs, deleted. Card on site |
+| 06 | Letting Go of the Day | Sleep | Y | Old ElevenLabs, deleted. Card on site |
+| 07 | Moonlight Drift | Sleep | Y | Old ElevenLabs, deleted. Card on site |
+| 08 | Sleep Stories: Quiet Shore | Sleep Story | Y | Had ambient, deleted, needs regen. Card on site |
+| 10 | Counting Down to Sleep | Sleep | Y | Old ElevenLabs, deleted |
+| 11 | Lucid Dream Preparation | Advanced | Y | Old ElevenLabs, deleted. Card on site |
+| 12 | Five Minute Reset | Focus | Y | Old ElevenLabs, deleted |
+| 13 | Flow State | Focus | Y | Modified for liability, needs regen |
+| 14 | Morning Clarity | Focus | Y | Old ElevenLabs, deleted |
+| 15 | Deep Work Prep | Focus | Y | Old ElevenLabs, deleted |
+| 16 | Peak Performance | Focus | Y | Old ElevenLabs, deleted |
+| 17 | Deep Work Mode | Focus | Y | Old ElevenLabs, deleted |
+| 20 | Tension Melt | Stress | Y | Old ElevenLabs, deleted |
+| 21 | Anxiety Unravelled | Stress | Y | Old ElevenLabs, deleted |
+| 22 | Releasing Tension | Stress | Y | Old ElevenLabs, deleted |
+| 24 | Anger & Frustration Release | Stress | Y | Old ElevenLabs, deleted |
+| 26 | Body Scan Meditation | Mindfulness | Y | Old ElevenLabs, deleted |
+| 27 | Mindful Breathing | Mindfulness | Y | Old ElevenLabs, deleted |
+| 28 | Letting Go of Thoughts | Mindfulness | Y | Old ElevenLabs, deleted |
+| 29 | Open Awareness | Mindfulness | Y | Old ElevenLabs, deleted. Card on site |
+| 30 | Mindful Walking | Mindfulness | Y | Old ElevenLabs, deleted |
+| 31 | Mindfulness at Work | Mindfulness | Y | Had ambient, deleted, needs regen |
+| 33 | Morning Mindfulness | Mindfulness | Y | Old ElevenLabs, deleted |
+| 34 | Mindful Eating | Mindfulness | Y | Old ElevenLabs, deleted |
+| 35 | Your First Meditation | Beginner | Y | Had ambient, deleted, needs regen |
+| 37 | Building a Daily Practice | Beginner | Y | Old ElevenLabs, deleted |
+| 39 | Yoga Nidra | Advanced | Y | Never produced |
+| 40 | Gratitude Before Sleep | Sleep | Y | Old ElevenLabs, deleted |
+| 41 | Vipassana Insight | Advanced | Y | Never produced |
+| 42 | Chakra Alignment | Advanced | Y | Old ElevenLabs, deleted |
+| 43 | Non-Dual Awareness | Advanced | Y | Old ElevenLabs, deleted. Card on site |
+| 44 | Transcendental Stillness | Advanced | Y | Old ElevenLabs, deleted |
+| 45 | Seven-Day Mindfulness Day 2 | Course | Y | Old ElevenLabs, deleted |
+| 46 | Seven-Day Mindfulness Day 3 | Course | Y | Old ElevenLabs, deleted |
+| 47 | Seven-Day Mindfulness Day 4 | Course | Y | Old ElevenLabs, deleted |
+| 48 | Seven-Day Mindfulness Day 5 | Course | Y | Old ElevenLabs, deleted |
+| 49 | Seven-Day Mindfulness Day 6 | Course | Y | Old ElevenLabs, deleted |
+| 50 | Seven-Day Mindfulness Day 7 | Course | Y | Old ElevenLabs, deleted |
+| 51 | Sleep Stories: Ocean Voyage | Sleep Story | Y | Had ambient, deleted, needs regen |
+| — | Founder Intro | Special | Y | Never produced |
+
+**Summary:** 52 scripts total. 10 deployed (Fish). 7 have raw narrations on disk. 33 old ElevenLabs (all deleted). 2 need regen (liability rewrite). 4 need regen (had ambient, deleted). 3 never produced.
 
 ---
 
@@ -1365,6 +1882,7 @@ RESEMBLE_API_KEY=your_resemble_api_key
 RESEND_API_KEY=your_resend_api_key
 AUPHONIC_USERNAME=your_auphonic_username
 AUPHONIC_PASSWORD=your_auphonic_password
+LALAL_API_KEY=your_lalal_api_key
 STRIPE_SECRET_KEY=your_stripe_secret
 STRIPE_WEBHOOK_SECRET=your_webhook_secret
 ```
@@ -1606,7 +2124,103 @@ Expanded from 10 gates to 14 gates. All gates now pass/fail — no informational
 
 ---
 
-*Last updated: 8 February 2026 — v3.0: Learn section launched (17 articles across 6 categories), education.html rebuilt with interactive topic-card grid, Applied Psychology articles deployed (9 articles), ASMR audio clarified as user-provided (not procedural), sleep story ambient labels removed, Introduction to Mindfulness locked as premium on mindfulness page, "Growing by the Week" added to session stat labels.*
+### 8 February 2026 — LALAL.AI Integration & Session 25 Rebuild (v3.1)
+
+**LALAL.AI evaluation:**
+- Integrated LALAL.AI voice_clean API into `build-session-v3.py` as Phase 1.5 (between chunk QA and edge fades)
+- A/B tested on session 25 chunk 28 (voice shift at 6:47) — LALAL made no difference to voice shift (TTS generation problem, not post-processing)
+- Full session rebuild with LALAL (`noise_cancelling_level=1`, `dereverb_enabled=True`): hiss removal excellent (almost all hiss gone), but dereverb stripped Marco's vocal resonance
+- Dereverb damages Fish output — Marco's TTS has no room reverb, so dereverb removes legitimate vocal character
+- LALAL disabled in build script pending retest with `dereverb=False` (noise cancellation only)
+
+**Session 25 rebuilt:**
+- Trigger word "nowhere else" discovered causing voice shift — replaced with "All you need to do is be right here, right now"
+- 36 chunks generated (best-of-5), LALAL cleaned 36/36
+- 13/14 gates passed; Gate 13 (Ambient) failed on garden-8hr.mp3 dead silence — fixed with `-ss 10` offset
+- Deployed to R2 (commit acb5842) — voice quality degraded from LALAL dereverb, fresh non-LALAL rebuild initiated
+- Introduction to Mindfulness tile reverted to premium locked (commit c986804)
+
+**Fish Audio observations:**
+- Possible S1 model degradation: >500 char generations temporarily routed to v1.6, causing voice inconsistency between chunks
+- Opening chunks (1–5) consistently score lowest — chunk 1 has no MFCC reference for voice conditioning
+- MFCC tonal distance scoring (threshold 0.50) can miss voice character shifts that human ears catch (chunk 28 scored 0.496)
+
+**New production rules:**
+- Raw narration WAVs must never be overwritten without preserving originals (timestamped copies)
+- All audio quality comparisons must be narration-only — ambient invalidates evaluation
+- Garden ambient requires `-ss 10` offset (9.5s dead silence at file start)
+
+**Code mistakes logged:** Failed to preserve pre-LALAL narration, provided ambient-mixed files for comparison instead of narration-only, deployed LALAL build without human review, did not test LALAL settings individually before full pipeline integration. All documented for governance improvement.
+
+---
+
+### 8 February 2026 — Script Uniqueness & Cross-Session Differentiation (v3.2)
+
+New Section 13A added to address internal repetition across the Salus session catalogue. Sessions were beginning to sound interchangeable — same openings, same breath cues, same structural arc, same closings. A customer listening to multiple sessions back-to-back should have distinct experiences.
+
+**Cross-session register system:** Three mandatory register files introduced (`openings-register.txt`, `closings-register.txt`, `phrases-register.txt`) in `content/scripts/`. Every deployed session's key phrases are catalogued. New scripts are checked against existing entries before build — no phrase of 5+ words may be reused, no opening or closing technique may be repeated within a category.
+
+**Six categories of repetition identified:** Openings, breath cues, body awareness transitions, silence announcements, closings, and structural arc. Each has specific variation strategies and mandatory register checks.
+
+**Automated pre-build originality scan:** Runs alongside trigger word check during pre-flight. Fuzzy-matches new script blocks against register entries (70% threshold on 5+ word phrases). WARNING system, not a build-blocker.
+
+**Checklist updates:** Pre-Build Checklist now includes originality scan. Deployment Checklist now requires register file updates after every session deploy.
+
+**Narration audit (outstanding):** Full audit of all 17 deployed sessions required to retroactively populate registers and identify existing cross-session repetition. Must be completed before any new scripts are written. Added to Section 13A as a pending task.
+
+**External originality (secondary):** Lightweight due diligence step — web research to consciously diverge from published scripts, no phrase of 6+ words matching a published source. Research notes stored in `content/scripts/research/`.
+
+---
+
+### 9 February 2026 — Four Sessions Deployed & Build Learnings (v3.3)
+
+**Sessions deployed (commit 752752f):**
+- 18-calm-in-three-minutes (3.2 min, stress, rain ambient — build 1, 14/14 gates)
+- 23-the-calm-reset (5.5 min, stress, stream ambient — build 1, 14/14 gates)
+- 19-release-and-restore (14.5 min, stress, garden ambient — build 4, 14/14 gates)
+- 32-observing-emotions (9.5 min, mindfulness, garden ambient — build 3, 14/14 gates)
+
+Sessions 18 and 23 are new scripts. Sessions 19 and 23 had scripts rewritten (trigger-word clean). Session 32 is a new script. All four wired into sessions.html and relevant detail/category pages.
+
+**Gate 7 (Volume Surge) — most persistent failure mode:** Fish Audio's non-deterministic TTS generation causes per-chunk volume variation that triggers Gate 7 surges, particularly after long silences. Session 19 needed 4 builds, session 32 needed 3. The 9.0 dB threshold is correctly calibrated — rebuilding eventually produces level-consistent generations. Longer sessions with more chunks have higher failure probability. Documented in Gate 7 section.
+
+**Character estimation overestimates duration:** The ~7.2 chars/sec formula overestimated session 32 (scripted for 12 min, TTS produced 9.5 min). The build script's own duration estimate after dry run is more reliable. Updated Section 13 table with caveat: use 7.2 chars/sec for rough planning only, set Duration-Target from dry run output.
+
+**Garden ambient offset confirmed automated:** `-ss 10` offset now applied in both Fish and Resemble mix paths in `build-session-v3.py`. Updated non-negotiable rule 16 to reflect confirmed implementation.
+
+**New ambient file:** `stream-extended.mp3` created for longer sessions using stream ambient.
+
+---
+
+### 9 February 2026 — Targeted Repair, Build Status & Process Maturation (v3.4)
+
+**New Section 15A: Targeted Chunk Repair (EXPERIMENTAL)**
+Introduced controlled single-word/chunk repair as an alternative to full session rebuilds. Process: identify defect → locate chunk → regenerate with best-of-10 → splice with crossfading and MFCC tonal matching → save as new file (never overwrite original) → re-run 14 gates. Rule 11 (no post-build splicing) amended to allow targeted repair under Section 15A conditions. Trial on session 32 "Observing Emotions" — word "something" has echo at opening.
+
+**Master narration file concept (Rule 14 strengthened):**
+Once a narration passes 14 gates and is approved, it becomes a master narration file — sacrosanct, never deleted or overwritten. Naming convention: `{session-name}_master-narration.wav` in `content/audio-free/masters/`. All future versions (repairs, remixes) derive from the master; the master stays untouched. Code was previously overwriting narration WAVs when applying ambient, forcing full regeneration for any change.
+
+**Human review relaxed (Section 16):**
+Individual chunk-by-chunk listening replaced with full-session continuous playback. With the pipeline now producing 3–4 defective words across four full sessions, per-chunk review is no longer necessary. Defects are noted with timestamps during natural listening and fed into the targeted repair process.
+
+**Visual QA report inspection (Section 12, mandatory):**
+Code confirmed it generates QA report PNGs but never visually inspects them — gates run numerically and Code takes the numbers at face value. New mandatory step: Code must open and examine QA report spectrograms for anomalies that pass numerical thresholds but are visible on graphs. Findings documented in build state file.
+
+**Hiss reduction testing (Section 15, outstanding):**
+Pipeline has no active de-hiss step. LALAL.AI with dereverb disabled and Auphonic noise-reduction-only are both identified as untested approaches. Required: A/B testing on known-hissy chunks to find a noise reduction method that doesn't damage Marco's vocal character.
+
+**Full build status incorporated (Section 16):**
+Comprehensive catalogue status added: 52 scripts total, 10 deployed, 42 not yet produced, 8 cards on site with no working audio, 4 sessions built on old Bible (rebuild candidates). Replaces the previous simple Deployed Sessions table.
+
+**Session production records (Section 16, new):**
+Per-session production record template added. Every deployed session gets a markdown file (`{session}_production-record.md`) in `content/audio-free/masters/` capturing identity, deployment status, master files, build history, repairs, known issues, review notes, and script changes. Centralises session-level information that was previously scattered across manifests, logs, state files, and conversation history. Retroactive population required for all 10 deployed sessions. Production record creation added to deployment checklist.
+
+**Auphonic status updated (Section 15):**
+Changed from "measurement only" to include hiss reduction evaluation.
+
+---
+
+*Last updated: 9 February 2026 — v3.4: Targeted chunk repair (Section 15A, experimental). Master narration files (Rule 14). Session production records. Human review relaxed to full-session playback. Visual QA report inspection mandatory. Hiss reduction testing outstanding. Full build status catalogue incorporated.*
 
 ---
 
