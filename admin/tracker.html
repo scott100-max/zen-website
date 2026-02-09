@@ -58,14 +58,16 @@
 
     /* Stats bar */
     .stats-bar {
-      display: flex; gap: 16px; padding: 16px 24px; flex-wrap: wrap;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 16px 24px;
     }
+    @media (max-width: 900px) { .stats-bar { grid-template-columns: repeat(2, 1fr); } }
     .stat-card {
       background: #1a1d27; border: 1px solid #2a2d3a; border-radius: 10px;
-      padding: 16px 24px; min-width: 140px; flex: 1;
+      padding: 14px 20px;
     }
-    .stat-card .label { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
-    .stat-card .value { font-size: 1.8rem; font-weight: 700; color: #fff; margin-top: 4px; }
+    .stat-card .label { font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-card .value { font-size: 1.6rem; font-weight: 700; color: #fff; margin-top: 2px; }
+    .stat-card .sub { font-size: 0.7rem; color: #666; margin-top: 2px; }
 
     /* Filter bar */
     .filter-bar {
@@ -80,17 +82,36 @@
 
     /* Map */
     #map {
-      height: 50vh; margin: 0 24px; border-radius: 12px;
+      height: 45vh; margin: 0 24px; border-radius: 12px;
       border: 1px solid #2a2d3a; overflow: hidden;
+    }
+
+    /* Section heading */
+    .section-heading {
+      font-size: 0.9rem; font-weight: 600; color: #fff; padding: 20px 24px 12px;
+      border-top: 1px solid #1e2130; margin-top: 8px;
     }
 
     /* Tables section */
     .tables-section {
       display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 16px;
-      padding: 16px 24px;
+      padding: 0 24px 16px;
     }
-    @media (max-width: 1200px) { .tables-section { grid-template-columns: 1fr 1fr; } }
-    @media (max-width: 768px) { .tables-section { grid-template-columns: 1fr; } }
+    .tables-2col {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+      padding: 0 24px 16px;
+    }
+    .tables-3col {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+      padding: 0 24px 16px;
+    }
+    @media (max-width: 1200px) {
+      .tables-section { grid-template-columns: 1fr 1fr; }
+      .tables-3col { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .tables-section, .tables-2col, .tables-3col { grid-template-columns: 1fr; }
+    }
 
     .table-card {
       background: #1a1d27; border: 1px solid #2a2d3a; border-radius: 10px;
@@ -109,6 +130,18 @@
     .table-card tr:last-child td { border-bottom: none; }
     .table-card .rank { color: #6c63ff; font-weight: 600; }
     .table-card .count { color: #6c63ff; font-weight: 600; text-align: right; }
+    .table-card .dim { color: #666; }
+    .table-card .mono { font-family: monospace; font-size: 0.8rem; }
+    .table-card .badge {
+      display: inline-block; padding: 2px 8px; border-radius: 10px;
+      font-size: 0.7rem; font-weight: 600;
+    }
+    .badge-play { background: rgba(108,99,255,0.2); color: #6c63ff; }
+    .badge-pause { background: rgba(255,107,107,0.2); color: #ff6b6b; }
+    .badge-complete { background: rgba(72,199,142,0.2); color: #48c78e; }
+    .badge-cta { background: rgba(255,183,77,0.2); color: #ffb74d; }
+    .badge-scroll { background: rgba(100,181,246,0.2); color: #64b5f6; }
+    .badge-view { background: rgba(206,147,216,0.2); color: #ce93d8; }
 
     /* Loading spinner */
     .loading { text-align: center; padding: 40px; color: #888; }
@@ -120,6 +153,9 @@
 
     /* Dark map tiles */
     .leaflet-container { background: #1a1d27; }
+
+    /* No-data placeholder */
+    .no-data { color: #555; font-size: 0.85rem; padding: 16px 0; text-align: center; }
   </style>
 </head>
 <body>
@@ -128,7 +164,7 @@
   <div id="login-overlay">
     <div class="login-box">
       <h1>Salus Admin</h1>
-      <p>Visitor location tracker</p>
+      <p>Visitor analytics dashboard</p>
       <input type="email" id="login-email" placeholder="Email" autocomplete="email">
       <input type="password" id="login-password" placeholder="Password" autocomplete="current-password">
       <button id="login-btn" onclick="doLogin()">Sign In</button>
@@ -139,7 +175,7 @@
   <!-- Dashboard -->
   <div id="dashboard">
     <div class="dash-header">
-      <h1>Visitor Tracker</h1>
+      <h1>Visitor Analytics</h1>
       <div class="dash-header-right">
         <label class="auto-refresh-toggle">
           <input type="checkbox" id="auto-refresh"> Auto-refresh (30s)
@@ -148,11 +184,19 @@
       </div>
     </div>
 
+    <!-- Stats Row 1 -->
     <div class="stats-bar">
-      <div class="stat-card"><div class="label">Total</div><div class="value" id="stat-total">-</div></div>
-      <div class="stat-card"><div class="label">Today</div><div class="value" id="stat-today">-</div></div>
-      <div class="stat-card"><div class="label">7 Days</div><div class="value" id="stat-7d">-</div></div>
-      <div class="stat-card"><div class="label">30 Days</div><div class="value" id="stat-30d">-</div></div>
+      <div class="stat-card"><div class="label">Total Visitors</div><div class="value" id="stat-visitors">-</div></div>
+      <div class="stat-card"><div class="label">New (7d)</div><div class="value" id="stat-new7d">-</div></div>
+      <div class="stat-card"><div class="label">Returning</div><div class="value" id="stat-returning">-</div></div>
+      <div class="stat-card"><div class="label">Sessions Today</div><div class="value" id="stat-today">-</div></div>
+    </div>
+    <!-- Stats Row 2 -->
+    <div class="stats-bar" style="padding-top:0;">
+      <div class="stat-card"><div class="label">Page Views (7d)</div><div class="value" id="stat-pv7d">-</div></div>
+      <div class="stat-card"><div class="label">Avg Duration</div><div class="value" id="stat-duration">-</div><div class="sub">seconds</div></div>
+      <div class="stat-card"><div class="label">Top Page</div><div class="value" id="stat-toppage" style="font-size:1rem;word-break:break-all;">-</div></div>
+      <div class="stat-card"><div class="label">Audio Plays</div><div class="value" id="stat-plays">-</div><div class="sub" id="stat-plays-sub"></div></div>
     </div>
 
     <div class="filter-bar">
@@ -164,6 +208,8 @@
 
     <div id="map"></div>
 
+    <!-- Geo Tables (existing) -->
+    <div class="section-heading">Geography</div>
     <div class="tables-section">
       <div class="table-card">
         <h3>Top Countries</h3>
@@ -181,6 +227,94 @@
         </table>
       </div>
     </div>
+
+    <!-- Page Analytics -->
+    <div class="section-heading">Page Analytics</div>
+    <div class="tables-2col">
+      <div class="table-card">
+        <h3>Top Pages by Views</h3>
+        <table id="top-pages-table">
+          <thead><tr><th>#</th><th>Page</th><th>Views</th><th>Avg Duration</th><th>Avg Scroll</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="table-card">
+        <h3>Landing Pages</h3>
+        <table id="landing-pages-table">
+          <thead><tr><th>#</th><th>Page</th><th>Sessions</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Traffic Sources -->
+    <div class="section-heading">Traffic Sources</div>
+    <div class="tables-2col">
+      <div class="table-card">
+        <h3>Referrers</h3>
+        <table id="referrers-table">
+          <thead><tr><th>#</th><th>Source</th><th>Visits</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="table-card">
+        <h3>UTM Campaigns</h3>
+        <table id="utm-table">
+          <thead><tr><th>Source</th><th>Medium</th><th>Campaign</th><th>Visits</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Engagement -->
+    <div class="section-heading">Engagement</div>
+    <div class="tables-3col">
+      <div class="table-card">
+        <h3>Audio Activity</h3>
+        <table id="audio-table">
+          <thead><tr><th>Track</th><th>Plays</th><th>Completions</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="table-card">
+        <h3>CTA Clicks</h3>
+        <table id="cta-table">
+          <thead><tr><th>Target</th><th>Label</th><th>Clicks</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="table-card">
+        <h3>Scroll Depth Distribution</h3>
+        <table id="scroll-table">
+          <thead><tr><th>Milestone</th><th>Reached</th><th>% of Views</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Visitor Timeline -->
+    <div class="section-heading">Activity Feed</div>
+    <div style="padding:0 24px 16px;">
+      <div class="table-card">
+        <h3>Recent Page Views & Events</h3>
+        <table id="timeline-table">
+          <thead><tr><th>Time</th><th>Type</th><th>Detail</th><th>Page</th><th>Location</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Returning Visitors -->
+    <div class="section-heading">Returning Visitors</div>
+    <div style="padding:0 24px 24px;">
+      <div class="table-card">
+        <h3>Most Active Visitors</h3>
+        <table id="returning-table">
+          <thead><tr><th>Visitor</th><th>First Seen</th><th>Last Seen</th><th>Sessions</th><th>Location</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -194,9 +328,14 @@
 
     // ===== State =====
     var map, markerGroup;
-    var allData = [];
     var currentRange = 'all';
     var refreshTimer = null;
+
+    // Data stores
+    var pageViewsData = [];
+    var eventsData = [];
+    var visitorsData = [];
+    var legacyData = []; // visitor_logs for backward compat
 
     // ===== Login =====
     async function doLogin() {
@@ -220,12 +359,10 @@
       location.reload();
     }
 
-    // Allow enter key to submit
     document.getElementById('login-password').addEventListener('keydown', function(e) {
       if (e.key === 'Enter') doLogin();
     });
 
-    // Check existing session on load
     (async function() {
       var { data } = await sb.auth.getSession();
       if (data.session) {
@@ -238,7 +375,7 @@
     // ===== Dashboard =====
     async function initDashboard() {
       initMap();
-      await loadData();
+      await loadAllData();
       setupFilters();
       setupAutoRefresh();
     }
@@ -265,25 +402,44 @@
       map.addLayer(markerGroup);
     }
 
-    async function loadData() {
-      var { data, error } = await sb
-        .from('visitor_logs')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(5000);
+    async function loadAllData() {
+      // Load all tables in parallel
+      var [pvResult, evResult, visResult, legResult] = await Promise.all([
+        sb.from('page_views').select('*').order('created_at', { ascending: false }).limit(5000),
+        sb.from('events').select('*').order('created_at', { ascending: false }).limit(5000),
+        sb.from('visitors').select('*').order('last_seen', { ascending: false }).limit(2000),
+        sb.from('visitor_logs').select('*').order('created_at', { ascending: false }).limit(5000)
+      ]);
 
-      if (error) { console.error('Load error:', error); return; }
-      allData = data || [];
-      updateDisplay();
+      pageViewsData = pvResult.data || [];
+      eventsData = evResult.data || [];
+      visitorsData = visResult.data || [];
+      legacyData = legResult.data || [];
+
+      updateAllDisplays();
     }
 
-    function updateDisplay() {
-      var filtered = filterByRange(allData, currentRange);
-      updateStats();
-      updateMap(filtered);
-      updateCountries(filtered);
-      updateCities(filtered);
-      updateRecent(filtered);
+    function updateAllDisplays() {
+      var filtered = filterByRange(pageViewsData, currentRange);
+      var filteredEvents = filterByRange(eventsData, currentRange);
+      var filteredLegacy = filterByRange(legacyData, currentRange);
+
+      updateStats(filtered, filteredEvents);
+      // Map: use page_views if available, fall back to legacy
+      var mapSource = filtered.length > 0 ? filtered : filteredLegacy;
+      updateMap(mapSource);
+      updateCountries(mapSource);
+      updateCities(mapSource);
+      updateRecent(filtered, filteredLegacy);
+      updateTopPages(filtered);
+      updateLandingPages(filtered);
+      updateReferrers(filtered);
+      updateUTM(filtered);
+      updateAudio(filteredEvents);
+      updateCTA(filteredEvents);
+      updateScrollDepth(filteredEvents, filtered);
+      updateTimeline(filtered, filteredEvents);
+      updateReturning();
     }
 
     function filterByRange(data, range) {
@@ -295,23 +451,79 @@
     }
 
     // ===== Stats =====
-    function updateStats() {
+    function updateStats(pvFiltered, evFiltered) {
       var now = new Date();
       var todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       var d7 = new Date(); d7.setDate(d7.getDate() - 7);
-      var d30 = new Date(); d30.setDate(d30.getDate() - 30);
 
-      document.getElementById('stat-total').textContent = allData.length.toLocaleString();
-      document.getElementById('stat-today').textContent = allData.filter(function(r) { return new Date(r.created_at) >= todayStart; }).length.toLocaleString();
-      document.getElementById('stat-7d').textContent = allData.filter(function(r) { return new Date(r.created_at) >= d7; }).length.toLocaleString();
-      document.getElementById('stat-30d').textContent = allData.filter(function(r) { return new Date(r.created_at) >= d30; }).length.toLocaleString();
+      // Total unique visitors
+      document.getElementById('stat-visitors').textContent = visitorsData.length.toLocaleString();
+
+      // New visitors in last 7 days
+      var new7d = visitorsData.filter(function(v) { return new Date(v.first_seen) >= d7; }).length;
+      document.getElementById('stat-new7d').textContent = new7d.toLocaleString();
+
+      // Returning visitors (total_sessions > 1)
+      var returning = visitorsData.filter(function(v) { return v.total_sessions > 1; }).length;
+      document.getElementById('stat-returning').textContent = returning.toLocaleString();
+
+      // Sessions today (unique session_ids in page_views today)
+      var todaySessions = {};
+      pageViewsData.forEach(function(pv) {
+        if (new Date(pv.created_at) >= todayStart && pv.session_id) {
+          todaySessions[pv.session_id] = true;
+        }
+      });
+      // Fall back to legacy if no page_views yet
+      if (Object.keys(todaySessions).length === 0) {
+        legacyData.forEach(function(r) {
+          if (new Date(r.created_at) >= todayStart && r.session_id) {
+            todaySessions[r.session_id] = true;
+          }
+        });
+      }
+      document.getElementById('stat-today').textContent = Object.keys(todaySessions).length.toLocaleString();
+
+      // Page views (7d)
+      var pv7d = pageViewsData.filter(function(pv) { return new Date(pv.created_at) >= d7; }).length;
+      document.getElementById('stat-pv7d').textContent = pv7d.toLocaleString();
+
+      // Avg duration
+      var durations = pvFiltered.filter(function(pv) { return pv.duration_seconds > 0; });
+      if (durations.length > 0) {
+        var avg = Math.round(durations.reduce(function(s, pv) { return s + pv.duration_seconds; }, 0) / durations.length);
+        document.getElementById('stat-duration').textContent = avg;
+      } else {
+        document.getElementById('stat-duration').textContent = '-';
+      }
+
+      // Top page
+      var pageCounts = {};
+      pvFiltered.forEach(function(pv) {
+        var p = pv.page_path || '/';
+        pageCounts[p] = (pageCounts[p] || 0) + 1;
+      });
+      var topPage = Object.entries(pageCounts).sort(function(a, b) { return b[1] - a[1]; })[0];
+      document.getElementById('stat-toppage').textContent = topPage ? topPage[0] : '-';
+
+      // Audio plays
+      var plays = evFiltered.filter(function(e) { return e.event_type === 'audio_play'; }).length;
+      var completions = evFiltered.filter(function(e) { return e.event_type === 'audio_complete'; }).length;
+      document.getElementById('stat-plays').textContent = plays.toLocaleString();
+      document.getElementById('stat-plays-sub').textContent = completions > 0 ? completions + ' completed' : '';
     }
 
     // ===== Map =====
     function updateMap(data) {
       markerGroup.clearLayers();
+      // Deduplicate by session — show first page view per session
+      var seen = {};
       data.forEach(function(r) {
         if (!r.latitude || !r.longitude) return;
+        var key = r.session_id || r.id;
+        if (seen[key]) return;
+        seen[key] = true;
+
         var marker = L.circleMarker([r.latitude, r.longitude], {
           radius: 6, fillColor: '#6c63ff', color: '#6c63ff',
           weight: 1, opacity: 0.8, fillOpacity: 0.6
@@ -321,7 +533,7 @@
         marker.bindPopup(
           '<div style="font-size:13px;line-height:1.5;">' +
           '<strong>' + escHtml(location) + '</strong><br>' +
-          '<span style="color:#888;">Page:</span> ' + escHtml(r.landing_page || '/') + '<br>' +
+          '<span style="color:#888;">Page:</span> ' + escHtml(r.page_path || r.landing_page || '/') + '<br>' +
           '<span style="color:#888;">Time:</span> ' + time +
           '</div>'
         );
@@ -337,7 +549,7 @@
       var tbody = document.querySelector('#countries-table tbody');
       tbody.innerHTML = sorted.map(function(entry, i) {
         return '<tr><td class="rank">' + (i + 1) + '</td><td>' + escHtml(entry[0]) + '</td><td class="count">' + entry[1] + '</td></tr>';
-      }).join('') || '<tr><td colspan="3" style="color:#666;">No data</td></tr>';
+      }).join('') || '<tr><td colspan="3"><div class="no-data">No data</div></td></tr>';
     }
 
     // ===== City table =====
@@ -351,20 +563,227 @@
       var tbody = document.querySelector('#cities-table tbody');
       tbody.innerHTML = sorted.map(function(entry, i) {
         return '<tr><td class="rank">' + (i + 1) + '</td><td>' + escHtml(entry[0]) + '</td><td class="count">' + entry[1] + '</td></tr>';
-      }).join('') || '<tr><td colspan="3" style="color:#666;">No data</td></tr>';
+      }).join('') || '<tr><td colspan="3"><div class="no-data">No data</div></td></tr>';
     }
 
     // ===== Recent visitors table =====
-    function updateRecent(data) {
-      var recent = data.slice(0, 50);
+    function updateRecent(pvData, legData) {
+      // Merge page_views and legacy, sort by time
+      var combined = [];
+      pvData.slice(0, 50).forEach(function(r) {
+        combined.push({
+          time: r.created_at,
+          city: r.city, region: r.region, country: r.country,
+          page: r.page_path
+        });
+      });
+      // If no page_views, show legacy
+      if (combined.length === 0) {
+        legData.slice(0, 50).forEach(function(r) {
+          combined.push({
+            time: r.created_at,
+            city: r.city, region: r.region, country: r.country,
+            page: r.landing_page
+          });
+        });
+      }
+      combined.sort(function(a, b) { return new Date(b.time) - new Date(a.time); });
+
       var tbody = document.querySelector('#recent-table tbody');
-      tbody.innerHTML = recent.map(function(r) {
-        var t = new Date(r.created_at);
+      tbody.innerHTML = combined.slice(0, 50).map(function(r) {
+        var t = new Date(r.time);
         var timeStr = t.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ' ' + t.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
         return '<tr><td style="white-space:nowrap;">' + timeStr + '</td>' +
           '<td>' + escHtml((r.city || '?') + (r.region ? ', ' + r.region : '') + ', ' + (r.country || '?')) + '</td>' +
-          '<td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escHtml(r.landing_page || '/') + '</td></tr>';
-      }).join('') || '<tr><td colspan="3" style="color:#666;">No visitors yet</td></tr>';
+          '<td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escHtml(r.page || '/') + '</td></tr>';
+      }).join('') || '<tr><td colspan="3"><div class="no-data">No visitors yet</div></td></tr>';
+    }
+
+    // ===== Top Pages =====
+    function updateTopPages(pvData) {
+      var pages = {};
+      pvData.forEach(function(pv) {
+        var p = pv.page_path || '/';
+        if (!pages[p]) pages[p] = { views: 0, totalDur: 0, durCount: 0, totalScroll: 0, scrollCount: 0 };
+        pages[p].views++;
+        if (pv.duration_seconds > 0) { pages[p].totalDur += pv.duration_seconds; pages[p].durCount++; }
+        if (pv.scroll_depth_pct > 0) { pages[p].totalScroll += pv.scroll_depth_pct; pages[p].scrollCount++; }
+      });
+      var sorted = Object.entries(pages).sort(function(a, b) { return b[1].views - a[1].views; }).slice(0, 15);
+      var tbody = document.querySelector('#top-pages-table tbody');
+      tbody.innerHTML = sorted.map(function(entry, i) {
+        var d = entry[1];
+        var avgDur = d.durCount > 0 ? Math.round(d.totalDur / d.durCount) + 's' : '-';
+        var avgScroll = d.scrollCount > 0 ? Math.round(d.totalScroll / d.scrollCount) + '%' : '-';
+        return '<tr><td class="rank">' + (i + 1) + '</td><td class="mono">' + escHtml(entry[0]) + '</td><td class="count">' + d.views + '</td><td>' + avgDur + '</td><td>' + avgScroll + '</td></tr>';
+      }).join('') || '<tr><td colspan="5"><div class="no-data">No page view data yet</div></td></tr>';
+    }
+
+    // ===== Landing Pages =====
+    function updateLandingPages(pvData) {
+      // First page view per session
+      var sessions = {};
+      // Data is sorted newest-first, so walk backwards to get first per session
+      var sorted = pvData.slice().reverse();
+      sorted.forEach(function(pv) {
+        if (pv.session_id && !sessions[pv.session_id]) {
+          sessions[pv.session_id] = pv.page_path || '/';
+        }
+      });
+      var counts = {};
+      Object.values(sessions).forEach(function(p) { counts[p] = (counts[p] || 0) + 1; });
+      var top = Object.entries(counts).sort(function(a, b) { return b[1] - a[1]; }).slice(0, 10);
+      var tbody = document.querySelector('#landing-pages-table tbody');
+      tbody.innerHTML = top.map(function(entry, i) {
+        return '<tr><td class="rank">' + (i + 1) + '</td><td class="mono">' + escHtml(entry[0]) + '</td><td class="count">' + entry[1] + '</td></tr>';
+      }).join('') || '<tr><td colspan="3"><div class="no-data">No data yet</div></td></tr>';
+    }
+
+    // ===== Referrers =====
+    function updateReferrers(pvData) {
+      var counts = {};
+      pvData.forEach(function(pv) {
+        if (pv.referrer) {
+          var host;
+          try { host = new URL(pv.referrer).hostname; } catch(e) { host = pv.referrer; }
+          counts[host] = (counts[host] || 0) + 1;
+        }
+      });
+      var sorted = Object.entries(counts).sort(function(a, b) { return b[1] - a[1]; }).slice(0, 10);
+      var tbody = document.querySelector('#referrers-table tbody');
+      tbody.innerHTML = sorted.map(function(entry, i) {
+        return '<tr><td class="rank">' + (i + 1) + '</td><td>' + escHtml(entry[0]) + '</td><td class="count">' + entry[1] + '</td></tr>';
+      }).join('') || '<tr><td colspan="3"><div class="no-data">No external referrers yet</div></td></tr>';
+    }
+
+    // ===== UTM Campaigns =====
+    function updateUTM(pvData) {
+      var campaigns = {};
+      pvData.forEach(function(pv) {
+        if (pv.utm_source) {
+          var key = (pv.utm_source || '') + '|' + (pv.utm_medium || '') + '|' + (pv.utm_campaign || '');
+          if (!campaigns[key]) campaigns[key] = { source: pv.utm_source, medium: pv.utm_medium || '-', campaign: pv.utm_campaign || '-', count: 0 };
+          campaigns[key].count++;
+        }
+      });
+      var sorted = Object.values(campaigns).sort(function(a, b) { return b.count - a.count; }).slice(0, 10);
+      var tbody = document.querySelector('#utm-table tbody');
+      tbody.innerHTML = sorted.map(function(c) {
+        return '<tr><td>' + escHtml(c.source) + '</td><td>' + escHtml(c.medium) + '</td><td>' + escHtml(c.campaign) + '</td><td class="count">' + c.count + '</td></tr>';
+      }).join('') || '<tr><td colspan="4"><div class="no-data">No UTM data yet</div></td></tr>';
+    }
+
+    // ===== Audio Activity =====
+    function updateAudio(evData) {
+      var tracks = {};
+      evData.forEach(function(e) {
+        if (e.event_type === 'audio_play' || e.event_type === 'audio_complete') {
+          var name = e.event_target || 'Unknown';
+          if (!tracks[name]) tracks[name] = { plays: 0, completions: 0 };
+          if (e.event_type === 'audio_play') tracks[name].plays++;
+          if (e.event_type === 'audio_complete') tracks[name].completions++;
+        }
+      });
+      var sorted = Object.entries(tracks).sort(function(a, b) { return b[1].plays - a[1].plays; }).slice(0, 10);
+      var tbody = document.querySelector('#audio-table tbody');
+      tbody.innerHTML = sorted.map(function(entry) {
+        return '<tr><td>' + escHtml(entry[0]) + '</td><td class="count">' + entry[1].plays + '</td><td class="count">' + entry[1].completions + '</td></tr>';
+      }).join('') || '<tr><td colspan="3"><div class="no-data">No audio events yet</div></td></tr>';
+    }
+
+    // ===== CTA Clicks =====
+    function updateCTA(evData) {
+      var ctas = {};
+      evData.forEach(function(e) {
+        if (e.event_type === 'cta_click') {
+          var target = e.event_target || 'unknown';
+          if (!ctas[target]) ctas[target] = { label: e.event_value || '-', count: 0 };
+          ctas[target].count++;
+        }
+      });
+      var sorted = Object.entries(ctas).sort(function(a, b) { return b[1].count - a[1].count; }).slice(0, 10);
+      var tbody = document.querySelector('#cta-table tbody');
+      tbody.innerHTML = sorted.map(function(entry) {
+        return '<tr><td class="mono">' + escHtml(entry[0]) + '</td><td>' + escHtml(entry[1].label) + '</td><td class="count">' + entry[1].count + '</td></tr>';
+      }).join('') || '<tr><td colspan="3"><div class="no-data">No CTA clicks yet</div></td></tr>';
+    }
+
+    // ===== Scroll Depth =====
+    function updateScrollDepth(evData, pvData) {
+      var milestones = { '25%': 0, '50%': 0, '75%': 0, '100%': 0 };
+      evData.forEach(function(e) {
+        if (e.event_type === 'scroll_milestone' && milestones.hasOwnProperty(e.event_target)) {
+          milestones[e.event_target]++;
+        }
+      });
+      var totalViews = pvData.length || 1;
+      var tbody = document.querySelector('#scroll-table tbody');
+      tbody.innerHTML = ['25%', '50%', '75%', '100%'].map(function(m) {
+        var pct = Math.round(milestones[m] / totalViews * 100);
+        return '<tr><td><span class="badge badge-scroll">' + m + '</span></td><td class="count">' + milestones[m] + '</td><td>' + pct + '%</td></tr>';
+      }).join('');
+    }
+
+    // ===== Activity Feed (Timeline) =====
+    function updateTimeline(pvData, evData) {
+      var items = [];
+      pvData.slice(0, 30).forEach(function(pv) {
+        items.push({
+          time: pv.created_at,
+          type: 'page_view',
+          detail: pv.page_title || pv.page_path,
+          page: pv.page_path,
+          location: (pv.city || '') + (pv.country ? ', ' + pv.country : '')
+        });
+      });
+      evData.slice(0, 30).forEach(function(e) {
+        items.push({
+          time: e.created_at,
+          type: e.event_type,
+          detail: e.event_target || '-',
+          page: e.page_path,
+          location: ''
+        });
+      });
+      items.sort(function(a, b) { return new Date(b.time) - new Date(a.time); });
+
+      var tbody = document.querySelector('#timeline-table tbody');
+      tbody.innerHTML = items.slice(0, 50).map(function(item) {
+        var t = new Date(item.time);
+        var timeStr = t.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ' ' + t.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+        var badge = getBadge(item.type);
+        return '<tr><td style="white-space:nowrap;">' + timeStr + '</td>' +
+          '<td>' + badge + '</td>' +
+          '<td style="max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escHtml(item.detail || '-') + '</td>' +
+          '<td class="mono" style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escHtml(item.page || '/') + '</td>' +
+          '<td class="dim">' + escHtml(item.location) + '</td></tr>';
+      }).join('') || '<tr><td colspan="5"><div class="no-data">No activity yet</div></td></tr>';
+    }
+
+    function getBadge(type) {
+      var badges = {
+        'page_view': '<span class="badge badge-view">View</span>',
+        'audio_play': '<span class="badge badge-play">Play</span>',
+        'audio_pause': '<span class="badge badge-pause">Pause</span>',
+        'audio_complete': '<span class="badge badge-complete">Complete</span>',
+        'cta_click': '<span class="badge badge-cta">CTA</span>',
+        'scroll_milestone': '<span class="badge badge-scroll">Scroll</span>'
+      };
+      return badges[type] || '<span class="badge" style="background:rgba(255,255,255,0.1);color:#aaa;">' + escHtml(type) + '</span>';
+    }
+
+    // ===== Returning Visitors =====
+    function updateReturning() {
+      var returning = visitorsData.filter(function(v) { return v.total_sessions > 1; });
+      returning.sort(function(a, b) { return b.total_sessions - a.total_sessions; });
+      var tbody = document.querySelector('#returning-table tbody');
+      tbody.innerHTML = returning.slice(0, 20).map(function(v) {
+        var first = new Date(v.first_seen).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+        var last = new Date(v.last_seen).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+        var loc = (v.city || '?') + (v.country ? ', ' + v.country : '');
+        var shortId = v.id.substring(0, 8);
+        return '<tr><td class="mono dim">' + shortId + '</td><td>' + first + '</td><td>' + last + '</td><td class="count">' + v.total_sessions + '</td><td class="dim">' + escHtml(loc) + '</td></tr>';
+      }).join('') || '<tr><td colspan="5"><div class="no-data">No returning visitors yet</div></td></tr>';
     }
 
     // ===== Filters =====
@@ -374,7 +793,7 @@
           document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
           btn.classList.add('active');
           currentRange = btn.getAttribute('data-range');
-          updateDisplay();
+          updateAllDisplays();
         });
       });
     }
@@ -384,7 +803,7 @@
       var checkbox = document.getElementById('auto-refresh');
       checkbox.addEventListener('change', function() {
         if (checkbox.checked) {
-          refreshTimer = setInterval(loadData, 30000);
+          refreshTimer = setInterval(loadAllData, 30000);
         } else {
           clearInterval(refreshTimer);
           refreshTimer = null;
