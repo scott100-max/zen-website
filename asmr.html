@@ -1013,19 +1013,19 @@
   // ═══════════════════════════════════════════
   (function() {
     const soundDefs = [
-      { id: 'rain',       name: 'Rain',        icon: '\u{1F327}', category: 'weather', src: 'https://media.salus-mind.com/content/sounds/rain.mp3' },
-      { id: 'ocean',      name: 'Ocean',       icon: '\u{1F30A}', category: 'nature',  src: 'https://media.salus-mind.com/content/sounds/ocean.mp3' },
-      { id: 'forest',     name: 'Forest',      icon: '\u{1F332}', category: 'nature',  src: 'https://media.salus-mind.com/content/sounds/forest.mp3' },
-      { id: 'thunder',    name: 'Thunder',     icon: '\u26A1',    category: 'weather', src: 'https://media.salus-mind.com/content/sounds/thunder.mp3' },
-      { id: 'birds',      name: 'Birds',       icon: '\u{1F426}', category: 'nature',  src: 'https://media.salus-mind.com/content/sounds/birds.mp3' },
-      { id: 'fire',       name: 'Fire',        icon: '\u{1F525}', category: 'ambient', src: 'https://media.salus-mind.com/content/sounds/fire.mp3' },
-      { id: 'stream',     name: 'Stream',      icon: '\u{1F4A7}', category: 'nature',  src: 'https://media.salus-mind.com/content/sounds/stream.mp3' },
-      { id: 'cafe',       name: 'Caf\u00e9',   icon: '\u2615',    category: 'spaces',  src: 'https://media.salus-mind.com/content/sounds/cafe.mp3' },
-      { id: 'garden',     name: 'Garden',      icon: '\u{1F33F}', category: 'nature',  src: 'https://media.salus-mind.com/content/sounds/garden.mp3' },
-      { id: 'library',    name: 'Library',     icon: '\u{1F4DA}', category: 'spaces',  src: 'https://media.salus-mind.com/content/sounds/library.mp3' },
-      { id: 'night',      name: 'Night',       icon: '\u{1F319}', category: 'ambient', src: 'https://media.salus-mind.com/content/sounds/night.mp3' },
-      { id: 'waterfall',  name: 'Waterfall',   icon: '\u{1F4A6}', category: 'nature',  src: 'https://media.salus-mind.com/content/sounds/waterfall.mp3' },
-      { id: 'keyboard',   name: 'Keyboard',    icon: '\u2328',    category: 'spaces',  src: 'https://media.salus-mind.com/content/sounds/keyboard.mp3' },
+      { id: 'rain',       name: 'Rain',        icon: '\u{1F327}', category: 'weather', src: 'https://media.salus-mind.com/content/audio-free/asmr-rain.mp3' },
+      { id: 'ocean',      name: 'Ocean',       icon: '\u{1F30A}', category: 'nature',  src: 'https://media.salus-mind.com/content/audio-free/asmr-ocean.mp3' },
+      { id: 'forest',     name: 'Forest',      icon: '\u{1F332}', category: 'nature',  src: 'https://media.salus-mind.com/content/audio-free/asmr-forest.mp3' },
+      { id: 'thunder',    name: 'Thunder',     icon: '\u26A1',    category: 'weather', src: 'https://media.salus-mind.com/content/audio-free/asmr-thunder.mp3' },
+      { id: 'birds',      name: 'Birds',       icon: '\u{1F426}', category: 'nature',  src: 'https://media.salus-mind.com/content/audio-free/asmr-birds.mp3' },
+      { id: 'fire',       name: 'Fire',        icon: '\u{1F525}', category: 'ambient', src: 'https://media.salus-mind.com/content/audio-free/asmr-fire.mp3' },
+      { id: 'stream',     name: 'Stream',      icon: '\u{1F4A7}', category: 'nature',  src: 'https://media.salus-mind.com/content/audio-free/asmr-stream.mp3' },
+      { id: 'cafe',       name: 'Caf\u00e9',   icon: '\u2615',    category: 'spaces',  src: 'https://media.salus-mind.com/content/audio-free/asmr-cafe.mp3' },
+      { id: 'garden',     name: 'Garden',      icon: '\u{1F33F}', category: 'nature',  src: 'https://media.salus-mind.com/content/audio-free/asmr-garden.mp3' },
+      { id: 'library',    name: 'Library',     icon: '\u{1F4DA}', category: 'spaces',  src: 'https://media.salus-mind.com/content/audio-free/asmr-library.mp3' },
+      { id: 'night',      name: 'Night',       icon: '\u{1F319}', category: 'ambient', src: 'https://media.salus-mind.com/content/audio-free/asmr-night.mp3' },
+      { id: 'waterfall',  name: 'Waterfall',   icon: '\u{1F4A6}', category: 'nature',  src: 'https://media.salus-mind.com/content/audio-free/asmr-waterfall.mp3' },
+      { id: 'keyboard',   name: 'Keyboard',    icon: '\u2328',    category: 'spaces',  src: 'https://media.salus-mind.com/content/audio-free/asmr-keyboard.mp3' },
       { id: 'wind',       name: 'Wind',        icon: '\u{1F4A8}', category: 'weather', comingSoon: true },
       { id: 'train',      name: 'Train',       icon: '\u{1F682}', category: 'spaces',  comingSoon: true },
       { id: 'waves',      name: 'Waves',       icon: '\u{1F3D6}', category: 'nature',  comingSoon: true },
@@ -1066,6 +1066,7 @@
             <div class="sound-card__name">${s.name}</div>
             <div class="sound-card__meta">
               <span class="sound-card__tag">${s.category}</span>
+              ${!s.comingSoon ? '<span class="sound-card__dot"></span><span class="sound-card__duration">1 hr</span>' : ''}
             </div>
           </div>
           <div class="sound-card__toggle">
@@ -1080,14 +1081,55 @@
         </div>
       `;
 
-      // Play/pause on top row click
+      // Seamless crossfade loop — two Audio elements per sound
       const topRow = card.querySelector('.sound-card__top');
       topRow.addEventListener('click', () => {
         const isPlaying = card.classList.toggle('playing');
         if (!audioElements[s.id]) {
-          audioElements[s.id] = new Audio(s.src);
-          audioElements[s.id].loop = true;
-          audioElements[s.id].volume = card.querySelector('.sound-card__slider').value / 100;
+          const a = new Audio(s.src);
+          const b = new Audio(s.src);
+          a.preload = 'auto';
+          b.preload = 'auto';
+          const vol = card.querySelector('.sound-card__slider').value / 100;
+          a.volume = vol;
+          b.volume = 0;
+          let active = a, standby = b, fading = false;
+          const XFADE = 5; // crossfade seconds before end
+          function checkCrossfade() {
+            if (!fading && active.duration && active.currentTime > active.duration - XFADE) {
+              fading = true;
+              standby.currentTime = 0;
+              standby.volume = 0;
+              standby.play();
+              const steps = 50;
+              const interval = (XFADE * 1000) / steps;
+              const targetVol = parseFloat(card.querySelector('.sound-card__slider').value) / 100;
+              let step = 0;
+              const fade = setInterval(() => {
+                step++;
+                const t = step / steps;
+                active.volume = targetVol * (1 - t);
+                standby.volume = targetVol * t;
+                if (step >= steps) {
+                  clearInterval(fade);
+                  active.pause();
+                  active.currentTime = 0;
+                  const tmp = active;
+                  active = standby;
+                  standby = tmp;
+                  fading = false;
+                  audioElements[s.id].active = active;
+                  audioElements[s.id].standby = standby;
+                }
+              }, interval);
+            }
+          }
+          const timer = setInterval(checkCrossfade, 500);
+          audioElements[s.id] = { active: a, standby: b, timer: timer,
+            play() { this.active.play(); },
+            pause() { this.active.pause(); this.standby.pause(); },
+            setVolume(v) { if (!fading) this.active.volume = v; }
+          };
         }
         if (isPlaying) {
           audioElements[s.id].play();
@@ -1102,7 +1144,7 @@
       slider.addEventListener('input', (e) => {
         valLabel.textContent = e.target.value + '%';
         if (audioElements[s.id]) {
-          audioElements[s.id].volume = e.target.value / 100;
+          audioElements[s.id].setVolume(e.target.value / 100);
         }
       });
       slider.addEventListener('click', (e) => e.stopPropagation());
