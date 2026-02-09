@@ -511,6 +511,30 @@
   .nav-drawer__ctas .nav-cta{flex:1;text-align:center;padding:12px 20px;font-size:.88rem}
   @media(max-width:860px){.nav-primary,.nav-row-2,.nav-ctas{display:none}.nav-burger{display:flex}.nav-row-1{height:56px}}
 
+  /* ═══ THIS WEEK ═══ */
+  .hb-thisweek{padding:60px 24px 80px;position:relative;overflow:hidden}
+  .hb-thisweek::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 50% at 50% 40%,rgba(6,78,59,0.06) 0%,transparent 70%)}
+  .hb-thisweek__inner{max-width:640px;margin:0 auto;position:relative;z-index:2}
+  .hb-thisweek__label{display:inline-flex;align-items:center;gap:10px;font-weight:300;font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(52,211,153,0.6);margin-bottom:24px;width:100%;justify-content:center}
+  .hb-thisweek__label::before,.hb-thisweek__label::after{content:'';width:24px;height:1px;background:linear-gradient(90deg,transparent,rgba(52,211,153,0.35),transparent)}
+  .hb-thisweek__card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:18px;padding:36px 32px 28px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);text-decoration:none;display:block;transition:border-color .3s ease,box-shadow .3s ease}
+  .hb-thisweek__card:hover{border-color:rgba(255,255,255,0.12);box-shadow:0 8px 40px rgba(0,0,0,0.2)}
+  .hb-thisweek__meta{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+  .hb-thisweek__tag{font-weight:400;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:4px;background:rgba(52,211,153,0.1);color:#34d399;border:1px solid rgba(52,211,153,0.15)}
+  .hb-thisweek__dur{font-weight:300;font-size:.75rem;color:var(--text-muted)}
+  .hb-thisweek__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.6rem;line-height:1.25;color:var(--text-bright);margin-bottom:10px}
+  .hb-thisweek__desc{font-weight:200;font-size:.88rem;line-height:1.7;color:var(--text-mid);margin-bottom:20px}
+  .hb-thisweek__player{display:flex;align-items:center;gap:12px;padding-top:18px;border-top:1px solid rgba(255,255,255,0.06)}
+  .hb-thisweek__play{width:40px;height:40px;border-radius:50%;background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s ease;flex-shrink:0}
+  .hb-thisweek__play:hover{background:rgba(52,211,153,0.18);border-color:rgba(52,211,153,0.35);transform:scale(1.05)}
+  .hb-thisweek__play svg{width:16px;height:16px;fill:#34d399}
+  .hb-thisweek__seek{flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;cursor:pointer;-webkit-appearance:none;appearance:none}
+  .hb-thisweek__seek::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:#34d399;cursor:pointer}
+  .hb-thisweek__time{font-size:.72rem;color:var(--text-muted);min-width:70px;text-align:right;font-variant-numeric:tabular-nums}
+  .hb-thisweek__link{display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-weight:400;font-size:.78rem;letter-spacing:.03em;color:#34d399;text-decoration:none;transition:color .2s ease}
+  .hb-thisweek__link:hover{color:#5ae0c2}
+  .hb-thisweek__link svg{width:12px;height:12px;fill:currentColor}
+
   /* ═══ NARRATOR ═══ */
   .hb-narrator{padding:60px 24px 80px;position:relative;overflow:hidden}
   .hb-narrator::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 40% at 50% 50%,rgba(78,205,196,0.03) 0%,transparent 70%)}
@@ -798,6 +822,34 @@
     Explore the Library
     <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
   </a>
+</section>
+
+<!-- ═══ THIS WEEK'S RELEASE ═══ -->
+<section class="hb-thisweek">
+  <div class="hb-thisweek__inner">
+    <div class="hb-thisweek__label"><span></span>This Week's Release<span></span></div>
+    <a href="sessions/the-court-of-your-mind.html" class="hb-thisweek__card">
+      <div class="hb-thisweek__meta">
+        <span class="hb-thisweek__tag">Stress &middot; CBT</span>
+        <span class="hb-thisweek__dur">25 min &middot; Rain ambient</span>
+      </div>
+      <h3 class="hb-thisweek__title">The Court of Your Mind</h3>
+      <p class="hb-thisweek__desc">Your inner critic has been building a case against you for years. It speaks with absolute certainty, predicting failure and inadequacy. But it has never once been cross-examined. This session puts it on trial — and when the prosecution is asked for evidence, the case collapses.</p>
+      <div class="hb-thisweek__player" onclick="event.preventDefault();event.stopPropagation();">
+        <audio id="twAudio" preload="none" src="https://media.salus-mind.com/content/audio-free/52-the-court-of-your-mind.mp3"></audio>
+        <button class="hb-thisweek__play" id="twPlayBtn" aria-label="Play preview">
+          <svg class="tw-icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          <svg class="tw-icon-pause" viewBox="0 0 24 24" style="display:none"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+        </button>
+        <input type="range" class="hb-thisweek__seek" id="twSeek" min="0" max="100" value="0">
+        <span class="hb-thisweek__time" id="twTime">0:00 / 0:00</span>
+      </div>
+      <span class="hb-thisweek__link">
+        Full session details
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </span>
+    </a>
+  </div>
 </section>
 
 <!-- ═══ A WORD FROM OUR NARRATOR ═══ -->
@@ -1119,6 +1171,24 @@
     audio.addEventListener('ended',function(){iconPlay.style.display='block';iconPause.style.display='none';bar.style.width='0%'});
     audio.addEventListener('timeupdate',function(){if(audio.duration){bar.style.width=(audio.currentTime/audio.duration*100)+'%';time.textContent=fmt(audio.currentTime)}});
     progress.addEventListener('click',function(e){if(audio.duration){var rect=progress.getBoundingClientRect();audio.currentTime=(e.clientX-rect.left)/rect.width*audio.duration}});
+  })();
+
+  // This Week player
+  (function(){
+    const audio=document.getElementById('twAudio');
+    const btn=document.getElementById('twPlayBtn');
+    const seek=document.getElementById('twSeek');
+    const time=document.getElementById('twTime');
+    const iconPlay=btn.querySelector('.tw-icon-play');
+    const iconPause=btn.querySelector('.tw-icon-pause');
+    function fmt(s){const m=Math.floor(s/60);return m+':'+(('0'+Math.floor(s%60)).slice(-2));}
+    btn.addEventListener('click',function(){if(audio.paused){audio.play()}else{audio.pause()}});
+    audio.addEventListener('play',function(){iconPlay.style.display='none';iconPause.style.display='block'});
+    audio.addEventListener('pause',function(){iconPlay.style.display='block';iconPause.style.display='none'});
+    audio.addEventListener('ended',function(){iconPlay.style.display='block';iconPause.style.display='none';seek.value=0});
+    audio.addEventListener('timeupdate',function(){if(audio.duration){seek.value=audio.currentTime/audio.duration*100;time.textContent=fmt(audio.currentTime)+' / '+fmt(audio.duration)}});
+    audio.addEventListener('loadedmetadata',function(){time.textContent='0:00 / '+fmt(audio.duration)});
+    seek.addEventListener('input',function(){if(audio.duration){audio.currentTime=seek.value/100*audio.duration}});
   })();
 
   // Navigation
