@@ -1,0 +1,26 @@
+# Closings Register — Salus Session Catalogue
+# Format: [Session #] | [Closing line] | [Closing technique]
+# Updated: 10 February 2026
+
+01-morning-meditation | "You've given yourself a gift this morning." | Affirmation + forward projection
+03-breathing-for-anxiety | "When you're ready, open your eyes." | Simple re-emergence
+09-rainfall-sleep-journey | "And the only thing to do is sleep." | Permission to sleep
+18-calm-in-three-minutes | "You have given yourself three minutes, and that is enough." | Validation + closure
+19-release-and-restore | "You can always come back." | Open invitation to return
+23-the-calm-reset | "Step back into whatever comes next when you are ready. You have got this." | Encouragement + release
+25-introduction-to-mindfulness | "When you are ready, let your eyes open softly and take in the world around you." | Simple re-emergence
+32-observing-emotions | "What am I experiencing? Where is it in my body? What would I call it? That is the practice." | Homework / carry-forward
+36-loving-kindness-intro-v3 | "Carry whatever warmth you have found here with you into the rest of your day." | Re-emergence + carry-forward
+38-seven-day-mindfulness-day1 | "You showed up, and that is the foundation for everything that follows." | Course forward-look
+39-seven-day-mindfulness-day2 | "The breath will always be there waiting for you, no matter what else is happening." | Anchor reference
+40-seven-day-mindfulness-day3 | "Your body knows how to rest. You just reminded it." | Body awareness callback
+41-seven-day-mindfulness-day4 | "Thoughts are visitors, not residents. You get to choose which ones you invite to stay." | Insight summary
+42-seven-day-mindfulness-day5 | "The world is already speaking to you. All it asks is that you listen." | Sound observation
+43-seven-day-mindfulness-day6 | "What you allowed yourself to observe today took real courage. Most people never look this closely." | Emotional acknowledgement
+44-seven-day-mindfulness-day7 | "You built something real this week. Carry it forward." | Course completion
+43-non-dual-awareness | "It is the space in which your life happens. It is what your life is made of." | Philosophical carry-forward
+52-the-court-of-your-mind | "That record is long. It is growing with every day you get through. And it is yours." | Metaphor recap + empowerment
+53-the-gardeners-almanac | "Rest here. In the garden. Behind the wall." | Scene-sinking / permission to rest
+54-the-slow-train-north | "The train will be here all night. It knows where it is going. You do not have to." | Permission to surrender
+55-the-bookshop-at-the-end-of-the-lane | "Rest here. In the chair. In the bookshop." | Scene-sinking / permission to rest
+56-the-lighthouse-keepers-log | "The light will burn all night. The mechanism will turn. None of it needs you now." | Permission to surrender

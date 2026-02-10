@@ -1,648 +1,472 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sleep Stories — Salus</title>
-  <meta name="description" content="Drift off to sleep with calming bedtime stories. A new story unlocks every week for Salus Premium members.">
-  <link rel="canonical" href="https://salus-mind.com/sleep-stories.html">
-  <meta property="og:title" content="Sleep Stories — Salus">
-  <meta property="og:description" content="Drift off to sleep with calming bedtime stories. A new story unlocks every week for Salus Premium members.">
-  <meta property="og:url" content="https://salus-mind.com/sleep-stories.html">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="https://salus-mind.com/images/meditation-woman-outdoor.jpg">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=1770564391">
-  <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sleep Stories — Salus Mind</title>
+<meta name="description" content="Drift off to sleep with calming bedtime stories. A new story unlocks every week for Salus Premium members.">
+<link rel="canonical" href="https://salus-mind.com/sleep-stories.html">
+<meta property="og:title" content="Sleep Stories — Salus Mind">
+<meta property="og:description" content="Drift off to sleep with calming bedtime stories. A new story unlocks every week for Salus Premium members.">
+<meta property="og:url" content="https://salus-mind.com/sleep-stories.html">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://salus-mind.com/images/meditation-woman-outdoor.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Inter:wght@200;300;400;500;600&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=1770564391">
+<style>
   :root {
-    --deep: #08060f;
-    --ink: #0e0b1a;
-    --purple-dark: #1e1b4b;
-    --purple-mid: #312e81;
-    --purple-light: #3730a3;
-    --accent-soft: #818cf8;
-    --accent-bright: #a78bfa;
-    --moon-glow: #e0d5f5;
-    --star-white: #f0edff;
-    --text-bright: #f0edff;
-    --text-muted: rgba(240, 237, 255, 0.45);
-    --drift-duration: 60s;
+    --deep: #060810;
+    --teal: #4ecdc4;
+    --teal-hover: #5ed8d0;
+    --text-bright: #f2f0fa;
+    --text-muted: rgba(242, 240, 250, 0.45);
+    --text-mid: rgba(242, 240, 250, 0.65);
   }
 
-  /* ═══════════════════════════════════════════
-     HERO
-  ═══════════════════════════════════════════ */
-  .hero {
+  /* === HERO === */
+  .ss-hero {
     position: relative;
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    text-align: center;
+    padding: 140px 24px 70px;
     overflow: hidden;
   }
 
-  .hero::before {
-    content: '';
+  .ss-hero-bg {
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(ellipse 50% 50% at 65% 25%, rgba(167, 139, 250, 0.1) 0%, transparent 60%),
-      radial-gradient(ellipse 80% 60% at 35% 60%, rgba(49, 46, 129, 0.12) 0%, transparent 50%),
-      radial-gradient(ellipse 40% 40% at 50% 90%, rgba(129, 140, 248, 0.06) 0%, transparent 50%),
-      linear-gradient(180deg, #0a0814 0%, #100d22 30%, #0e0b1a 60%, #08060f 100%);
+      radial-gradient(ellipse 80% 60% at 50% 20%, rgba(30, 30, 70, 0.3) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 80% 15%, rgba(40, 30, 60, 0.2) 0%, transparent 70%),
+      var(--deep);
     z-index: 0;
   }
 
-  .hero::after {
-    content: '';
+  .ss-hero-stars {
     position: absolute;
     inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    opacity: 0.4;
     z-index: 1;
+    background-image:
+      radial-gradient(1.5px 1.5px at 10% 15%, rgba(255,255,255,0.3), transparent),
+      radial-gradient(1px 1px at 25% 8%, rgba(255,255,255,0.15), transparent),
+      radial-gradient(1px 1px at 40% 22%, rgba(255,255,255,0.2), transparent),
+      radial-gradient(1.5px 1.5px at 55% 5%, rgba(255,255,255,0.25), transparent),
+      radial-gradient(1px 1px at 70% 18%, rgba(255,255,255,0.12), transparent),
+      radial-gradient(1px 1px at 85% 10%, rgba(255,255,255,0.2), transparent),
+      radial-gradient(1px 1px at 15% 35%, rgba(255,255,255,0.08), transparent),
+      radial-gradient(1px 1px at 60% 30%, rgba(255,255,255,0.1), transparent),
+      radial-gradient(1.5px 1.5px at 90% 28%, rgba(255,255,255,0.15), transparent),
+      radial-gradient(1px 1px at 50% 42%, rgba(255,255,255,0.12), transparent);
     pointer-events: none;
   }
 
-  /* ═══════════════════════════════════════════
-     STARFIELD (canvas)
-  ═══════════════════════════════════════════ */
-  .starfield {
+  .ss-hero-moon {
     position: absolute;
-    inset: 0;
-    z-index: 1;
-  }
-
-  .starfield canvas {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
-
-  /* ═══════════════════════════════════════════
-     CRESCENT MOON
-  ═══════════════════════════════════════════ */
-  .moon {
-    position: absolute;
-    top: 12%;
-    right: 18%;
+    top: 80px;
+    right: 12%;
     width: 90px;
     height: 90px;
-    z-index: 3;
-    opacity: 0;
-    animation: moonRise 3s 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  }
-
-  @keyframes moonRise {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .moon__body {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 40%, var(--moon-glow) 0%, rgba(167, 139, 250, 0.4) 60%, transparent 70%);
-    box-shadow:
-      0 0 60px rgba(224, 213, 245, 0.15),
-      0 0 120px rgba(167, 139, 250, 0.1),
-      0 0 200px rgba(129, 140, 248, 0.06);
-    position: relative;
-  }
-
-  /* Crescent shadow */
-  .moon__shadow {
-    position: absolute;
-    top: -6px;
-    right: -14px;
-    width: 82px;
-    height: 82px;
-    border-radius: 50%;
-    background: var(--ink);
-    box-shadow: 0 0 20px var(--ink);
-  }
-
-  /* Moon shimmer */
-  .moon::after {
-    content: '';
-    position: absolute;
-    top: -30px;
-    left: -30px;
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(167, 139, 250, 0.06) 0%, transparent 60%);
-    animation: moonPulse 6s ease-in-out infinite;
-  }
-
-  @keyframes moonPulse {
-    0%, 100% { transform: scale(1); opacity: 0.5; }
-    50% { transform: scale(1.15); opacity: 1; }
-  }
-
-  /* ═══════════════════════════════════════════
-     SHOOTING STARS
-  ═══════════════════════════════════════════ */
-  .shooting-stars {
-    position: absolute;
-    inset: 0;
     z-index: 2;
     pointer-events: none;
-    overflow: hidden;
   }
 
-  .shooting-star {
-    position: absolute;
-    width: 80px;
-    height: 1px;
-    background: linear-gradient(90deg, rgba(167, 139, 250, 0.8), transparent);
-    opacity: 0;
-    transform: rotate(-35deg);
-    animation: shoot linear infinite;
-  }
-
-  .shooting-star:nth-child(1) {
-    top: 15%; left: 30%;
-    animation-duration: 1.2s;
-    animation-delay: 3s;
-  }
-  .shooting-star:nth-child(2) {
-    top: 35%; left: 55%;
-    width: 60px;
-    animation-duration: 1s;
-    animation-delay: 8s;
-  }
-  .shooting-star:nth-child(3) {
-    top: 20%; left: 70%;
-    width: 100px;
-    animation-duration: 1.4s;
-    animation-delay: 14s;
-    transform: rotate(-40deg);
-  }
-
-  @keyframes shoot {
-    0% { opacity: 0; transform: rotate(-35deg) translateX(0); }
-    5% { opacity: 1; }
-    30% { opacity: 0.8; }
-    60% { opacity: 0; }
-    100% { opacity: 0; transform: rotate(-35deg) translateX(300px); }
-  }
-
-  /* ═══════════════════════════════════════════
-     CLOUD WISPS (low-opacity drifting layers)
-  ═══════════════════════════════════════════ */
-  .cloud-layer {
-    position: absolute;
-    bottom: 0;
-    left: -20%;
-    width: 140%;
-    height: 45%;
-    z-index: 4;
-    pointer-events: none;
-    opacity: 0;
-    animation: cloudFadeIn 4s 1s ease-out forwards;
-  }
-
-  @keyframes cloudFadeIn {
-    to { opacity: 1; }
-  }
-
-  .cloud {
-    position: absolute;
+  .ss-moon-body {
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
-    filter: blur(60px);
-    animation: cloudDrift var(--drift-duration) linear infinite;
-  }
-
-  .cloud--1 {
-    width: 600px; height: 120px;
-    background: rgba(49, 46, 129, 0.2);
-    bottom: 8%; left: 5%;
-    animation-duration: 80s;
-  }
-  .cloud--2 {
-    width: 500px; height: 100px;
-    background: rgba(30, 27, 75, 0.25);
-    bottom: 15%; left: 40%;
-    animation-duration: 95s;
-    animation-delay: -20s;
-  }
-  .cloud--3 {
-    width: 700px; height: 90px;
-    background: rgba(55, 48, 163, 0.12);
-    bottom: 2%; left: -10%;
-    animation-duration: 110s;
-    animation-delay: -40s;
-  }
-  .cloud--4 {
-    width: 400px; height: 80px;
-    background: rgba(129, 140, 248, 0.06);
-    bottom: 22%; left: 60%;
-    animation-duration: 70s;
-    animation-delay: -10s;
-  }
-
-  @keyframes cloudDrift {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(120px); }
-  }
-
-  /* ═══════════════════════════════════════════
-     FIREFLY PARTICLES (dreamy warmth)
-  ═══════════════════════════════════════════ */
-  .fireflies {
-    position: absolute;
-    inset: 0;
-    z-index: 5;
-    pointer-events: none;
-  }
-
-  .firefly {
-    position: absolute;
-    border-radius: 50%;
-    opacity: 0;
-    animation: fireflyGlow ease-in-out infinite;
-  }
-
-  @keyframes fireflyGlow {
-    0%, 100% { opacity: 0; transform: translate(0, 0) scale(0.5); }
-    25% { opacity: 0.9; transform: translate(var(--fx), var(--fy)) scale(1); }
-    50% { opacity: 0.4; transform: translate(calc(var(--fx) * -0.5), calc(var(--fy) * 1.5)) scale(0.8); }
-    75% { opacity: 0.7; transform: translate(calc(var(--fx) * 0.8), calc(var(--fy) * -0.3)) scale(1.1); }
-  }
-
-  /* ═══════════════════════════════════════════
-     CONTENT
-  ═══════════════════════════════════════════ */
-  .hero-content {
+    background: radial-gradient(circle at 35% 35%, #e0ddd0, #c8c4b0 60%, #b0aca0);
+    box-shadow: 0 0 30px 10px rgba(200, 195, 170, 0.06), 0 0 80px 30px rgba(200, 195, 170, 0.03);
     position: relative;
-    z-index: 10;
-    text-align: center;
-    padding: 0 24px;
-    max-width: 780px;
-    opacity: 0;
-    transform: translateY(30px);
-    animation: contentReveal 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 
-  @keyframes contentReveal {
-    to { opacity: 1; transform: translateY(0); }
+  .ss-moon-shadow {
+    position: absolute;
+    top: -5px;
+    right: -15px;
+    width: 90px;
+    height: 100px;
+    border-radius: 50%;
+    background: var(--deep);
   }
 
-  .hero-label {
+  .ss-hero-content { position: relative; z-index: 3; }
+
+  .ss-hero-badge {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    font-family: 'Outfit', sans-serif;
-    font-weight: 300;
-    font-size: 0.75rem;
-    letter-spacing: 0.3em;
+    gap: 8px;
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--accent-soft);
-    margin-bottom: 24px;
-    opacity: 0;
-    animation: fadeUp 1s 0.6s ease-out forwards;
+    color: var(--text-muted);
+    margin-bottom: 28px;
   }
 
-  .hero-label::before,
-  .hero-label::after {
+  .ss-hero-badge::before, .ss-hero-badge::after {
     content: '';
     width: 28px;
     height: 1px;
-    background: linear-gradient(90deg, transparent, var(--accent-soft), transparent);
+    background: rgba(242, 240, 250, 0.15);
   }
 
-  .hero-label svg {
-    width: 14px;
-    height: 14px;
-    fill: var(--accent-bright);
-    opacity: 0.8;
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .hero-title {
+  .ss-hero-title {
     font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: clamp(3rem, 8.5vw, 6.5rem);
-    line-height: 1.05;
-    letter-spacing: -0.01em;
+    font-size: clamp(2.8rem, 7vw, 4.5rem);
+    font-weight: 400;
+    line-height: 1.1;
     margin-bottom: 22px;
-    opacity: 0;
-    animation: fadeUp 1.4s 0.4s ease-out forwards;
+    letter-spacing: -1px;
   }
 
-  .hero-title span {
-    display: inline-block;
-    background: linear-gradient(140deg, var(--text-bright) 15%, var(--accent-soft) 55%, var(--accent-bright) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
+  .ss-hero-title em { font-style: italic; color: var(--teal); }
 
-  .hero-subtitle {
-    font-family: 'Outfit', sans-serif;
-    font-weight: 200;
-    font-size: clamp(0.95rem, 2vw, 1.2rem);
-    line-height: 1.75;
+  .ss-hero-sub {
+    font-size: 0.9rem;
+    font-weight: 300;
     color: var(--text-muted);
-    max-width: 500px;
-    margin: 0 auto 20px;
-    opacity: 0;
-    animation: fadeUp 1.2s 0.8s ease-out forwards;
+    max-width: 480px;
+    margin: 0 auto 36px;
+    line-height: 1.7;
   }
 
-  /* Story count badge */
-  .story-count {
+  .ss-hero-stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .ss-hero-stat { font-size: 0.78rem; font-weight: 300; color: var(--text-mid); }
+  .ss-hero-stat strong { color: var(--teal); font-weight: 500; }
+  .ss-hero-stat-sep { width: 3px; height: 3px; border-radius: 50%; background: rgba(242, 240, 250, 0.2); }
+
+  .ss-hero-cta {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     font-family: 'Outfit', sans-serif;
-    font-weight: 300;
-    font-size: 0.78rem;
-    letter-spacing: 0.1em;
-    color: var(--accent-bright);
-    margin-bottom: 36px;
-    opacity: 0;
-    animation: fadeUp 1s 1s ease-out forwards;
-  }
-
-  .story-count__dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--accent-bright);
-    opacity: 0.6;
-    animation: countPulse 3s ease-in-out infinite;
-  }
-
-  @keyframes countPulse {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 1; }
-  }
-
-  /* CTA */
-  .hero-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    font-family: 'Outfit', sans-serif;
+    font-size: 0.82rem;
     font-weight: 400;
-    font-size: 0.9rem;
-    letter-spacing: 0.06em;
-    color: var(--text-bright);
-    background: rgba(129, 140, 248, 0.1);
-    border: 1px solid rgba(129, 140, 248, 0.25);
-    padding: 14px 34px;
-    border-radius: 60px;
+    letter-spacing: 0.04em;
+    color: var(--deep);
+    background: var(--teal);
+    border: 1px solid var(--teal);
+    border-radius: 40px;
+    padding: 11px 28px;
     cursor: pointer;
-    text-decoration: none;
-    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    opacity: 0;
-    animation: fadeUp 1s 1.2s ease-out forwards;
+    transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 4px 20px rgba(78, 205, 196, 0.2);
   }
 
-  .hero-cta:hover {
-    background: rgba(129, 140, 248, 0.22);
-    border-color: rgba(129, 140, 248, 0.5);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 40px rgba(129, 140, 248, 0.15);
-  }
+  .ss-hero-cta:hover { background: var(--teal-hover); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(78, 205, 196, 0.3); }
 
-  .hero-cta svg {
-    width: 16px;
-    height: 16px;
-    fill: var(--accent-bright);
-    transition: transform 0.3s ease;
-  }
-
-  .hero-cta:hover svg {
-    transform: scale(1.15);
-  }
-
-  /* Latin */
-  .latin-phrase {
+  .ss-hero-latin {
     font-family: 'Cormorant Garamond', serif;
     font-style: italic;
-    font-weight: 300;
-    font-size: 0.88rem;
-    color: rgba(255, 255, 255, 0.25);
-    margin-top: 44px;
-    letter-spacing: 0.04em;
-    opacity: 0;
-    animation: fadeUp 1s 1.5s ease-out forwards;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 20px;
+    opacity: 0.5;
   }
 
-  /* Bottom fade */
-  .hero-fade {
+  .ss-hero-content > * { opacity: 0; animation: ssRise 0.8s ease-out forwards; }
+  .ss-hero-content > *:nth-child(1) { animation-delay: 0.1s; }
+  .ss-hero-content > *:nth-child(2) { animation-delay: 0.2s; }
+  .ss-hero-content > *:nth-child(3) { animation-delay: 0.3s; }
+  .ss-hero-content > *:nth-child(4) { animation-delay: 0.4s; }
+  .ss-hero-content > *:nth-child(5) { animation-delay: 0.5s; }
+  .ss-hero-content > *:nth-child(6) { animation-delay: 0.6s; }
+
+  /* === SECTION === */
+  .ss-section { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  .ss-section-head { text-align: center; margin-bottom: 36px; padding-top: 60px; }
+
+  .ss-section-label { font-size: 0.62rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+
+  .ss-section-title { font-family: 'Cormorant Garamond', serif; font-weight: 500; font-style: italic; font-size: 1.8rem; color: var(--text-bright); }
+
+  .ss-section-sub { font-size: 0.82rem; font-weight: 300; color: var(--text-muted); margin-top: 8px; }
+
+  /* === FILTERS === */
+  .ss-filters { display: flex; justify-content: center; gap: 8px; margin-bottom: 44px; flex-wrap: wrap; padding: 0 24px; }
+
+  .ss-filter-btn {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.76rem;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    padding: 7px 18px;
+    border-radius: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: transparent;
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .ss-filter-btn:hover { border-color: rgba(255, 255, 255, 0.18); color: var(--text-bright); background: rgba(255, 255, 255, 0.04); }
+  .ss-filter-btn.active { background: rgba(78, 205, 196, 0.1); border-color: rgba(78, 205, 196, 0.25); color: var(--teal); }
+
+  .ss-filter-btn[data-cat]::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 7px; vertical-align: middle; }
+  .ss-filter-btn[data-cat="nature"]::before { background: #5aad6e; }
+  .ss-filter-btn[data-cat="journey"]::before { background: #5a8ec8; }
+  .ss-filter-btn[data-cat="comfort"]::before { background: #c49a5a; }
+  .ss-filter-btn[data-cat="fantasy"]::before { background: #9a7acc; }
+  .ss-filter-btn[data-cat="history"]::before { background: #c4785a; }
+
+  /* === BOOK GRID === */
+  .ss-book-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+    gap: 28px 20px;
+    padding-bottom: 60px;
+  }
+
+  /* === BOOK COVER === */
+  .ss-book {
+    position: relative;
+    aspect-ratio: 2 / 3;
+    border-radius: 4px 14px 14px 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    transform-origin: left center;
+  }
+
+  .ss-book:hover {
+    transform: translateY(-8px) rotateY(-3deg) scale(1.04);
+    box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.55), 3px 3px 12px rgba(0, 0, 0, 0.35);
+    z-index: 5;
+  }
+
+  /* Spine */
+  .ss-book::before {
+    content: '';
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 140px;
-    background: linear-gradient(to bottom, transparent, var(--deep));
+    top: 0; left: 0;
+    width: 16px;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(0,0,0,0.4), rgba(0,0,0,0.15) 35%, rgba(0,0,0,0.05) 60%, transparent);
     z-index: 8;
     pointer-events: none;
   }
 
-  /* Scroll */
-  .scroll-hint {
+  /* Light catch */
+  .ss-book::after {
+    content: '';
     position: absolute;
-    bottom: 28px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
+    top: -50%; right: -50%;
+    width: 100%; height: 100%;
+    background: linear-gradient(225deg, rgba(255,255,255,0.06), transparent 50%);
+    z-index: 7;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+
+  .ss-book:hover::after { opacity: 0.8; }
+
+  .ss-book-border {
+    position: absolute;
+    inset: 0;
+    border-radius: 4px 14px 14px 4px;
+    border: 1px solid rgba(255,255,255,0.08);
+    z-index: 9;
+    pointer-events: none;
+    transition: border-color 0.3s ease;
+  }
+
+  .ss-book:hover .ss-book-border { border-color: rgba(255,255,255,0.2); }
+
+  /* Cover background */
+  .ss-book-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  /* Motif layer */
+  .ss-book-motif {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .ss-book-motif svg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Ornamental frame */
+  .ss-book-frame {
+    position: absolute;
+    inset: 12px 10px 12px 18px;
+    z-index: 2;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 2px;
+    pointer-events: none;
+  }
+
+  .ss-book-frame::before {
+    content: '';
+    position: absolute;
+    top: 4px; left: 4px; right: 4px; bottom: 4px;
+    border: 1px solid rgba(255,255,255,0.03);
+    border-radius: 1px;
+  }
+
+  /* Content */
+  .ss-book-content {
+    position: relative;
+    z-index: 3;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    opacity: 0;
-    animation: fadeUp 1s 2.2s ease-out forwards;
+    padding: 22px 18px 16px 26px;
   }
 
-  .scroll-hint__text {
-    font-family: 'Outfit', sans-serif;
-    font-size: 0.62rem;
+  .ss-book-week {
+    font-size: 0.45rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+  }
+
+  .ss-book-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 600;
+    font-style: italic;
+    font-size: 1.25rem;
+    line-height: 1.18;
+    color: rgba(255,255,255,0.92);
+    text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+    margin-top: auto;
+    margin-bottom: 4px;
+  }
+
+  .ss-book-cat {
+    font-size: 0.48rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.28);
+  }
+
+  .ss-book-salus {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 0.4rem;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--text-muted);
+    color: rgba(255,255,255,0.12);
   }
 
-  .scroll-hint__line {
-    width: 1px;
-    height: 28px;
-    background: linear-gradient(to bottom, var(--accent-soft), transparent);
-    animation: scrollPulse 2.5s ease-in-out infinite;
+  /* Lock */
+  .ss-book-lock {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 6;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(6, 8, 16, 0.4);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
   }
 
-  @keyframes scrollPulse {
-    0%, 100% { opacity: 0.2; transform: scaleY(0.5); transform-origin: top; }
-    50% { opacity: 0.6; transform: scaleY(1); }
+  .ss-book.locked .ss-book-lock { opacity: 0.7; }
+  .ss-book.locked:hover .ss-book-lock { opacity: 0.4; }
+
+  .ss-book-lock svg { width: 14px; height: 14px; stroke: rgba(255,255,255,0.5); fill: none; stroke-width: 1.5; stroke-linecap: round; }
+
+  .ss-book.available .ss-book-week { color: rgba(78, 205, 196, 0.5); }
+
+  /* Noise */
+  .ss-book-noise {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    opacity: 0.12;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 128px 128px;
   }
 
-  /* ═══════════════════════════════════════════
-     RESPONSIVE
-  ═══════════════════════════════════════════ */
-  @media (max-width: 768px) {
-    .hero { min-height: 100svh; }
-    .moon { top: 8%; right: 10%; width: 65px; height: 65px; }
-    .moon__body { width: 65px; height: 65px; }
-    .moon__shadow { width: 60px; height: 60px; top: -4px; right: -10px; }
-    .cloud { filter: blur(40px); }
+  /* === PREMIUM === */
+  .ss-premium-bar { max-width: 1200px; margin: 0 auto 60px; padding: 0 24px; }
+
+  .ss-premium-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 22px 30px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
   }
 
-  @media (max-width: 480px) {
-    .moon { top: 6%; right: 8%; width: 50px; height: 50px; }
-    .moon__body { width: 50px; height: 50px; }
-    .moon__shadow { width: 46px; height: 46px; top: -3px; right: -8px; }
+  .ss-premium-text h3 { font-size: 0.88rem; font-weight: 500; color: var(--text-bright); margin-bottom: 4px; }
+  .ss-premium-text p { font-size: 0.78rem; font-weight: 300; color: var(--text-muted); }
+
+  .ss-premium-btn {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.78rem; font-weight: 400; letter-spacing: 0.04em;
+    color: var(--text-mid); background: transparent;
+    border: 1px solid rgba(255,255,255,0.12); border-radius: 40px;
+    padding: 9px 22px; cursor: pointer;
+    transition: all 0.3s ease; white-space: nowrap;
+    text-decoration: none;
   }
 
-  /* ═══════════════ NAVIGATION ═══════════════ */
-  .nav-wrap{position:fixed;top:0;left:0;right:0;z-index:1000;transition:background .4s ease,box-shadow .4s ease;background:rgba(6,8,16,0.5);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
-  .nav-wrap.scrolled{background:rgba(6,8,16,0.92);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);box-shadow:0 1px 0 rgba(255,255,255,0.06),0 12px 40px rgba(0,0,0,0.3)}
-  .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px}
-  .nav-row-1{display:flex;align-items:center;justify-content:space-between;height:60px}
-  .nav-brand{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.5rem;letter-spacing:.12em;text-decoration:none;color:#f0eefc;transition:opacity .3s ease;flex-shrink:0}
-  .nav-brand:hover{opacity:.8}
-  .nav-primary{display:flex;align-items:center;gap:4px;list-style:none}
-  .nav-primary a{font-weight:300;font-size:.82rem;letter-spacing:.02em;color:rgba(240,238,252,0.6);text-decoration:none;padding:6px 13px;border-radius:8px;transition:all .3s ease;position:relative;white-space:nowrap}
-  .nav-primary a:hover{color:#f0eefc;background:rgba(255,255,255,0.04)}
-  .nav-primary a.active{color:#f0eefc;background:rgba(255,255,255,0.06)}
-  .nav-primary a.active::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:16px;height:2px;border-radius:1px;background:#4ecdc4;opacity:.7}
-  .nav-ctas{display:flex;align-items:center;gap:8px;flex-shrink:0}
-  .nav-cta{font-family:'Outfit',sans-serif;font-weight:400;font-size:.78rem;letter-spacing:.04em;padding:7px 18px;border-radius:40px;cursor:pointer;text-decoration:none;transition:all .35s cubic-bezier(.22,1,.36,1);white-space:nowrap}
-  .nav-cta--subscribe{color:#060810;background:#4ecdc4;border:1px solid #4ecdc4}
-  .nav-cta--subscribe:hover{background:#5ed8d0;transform:translateY(-1px);box-shadow:0 4px 16px rgba(78,205,196,0.25)}
-  .nav-cta--login{color:rgba(240,238,252,0.6);background:transparent;border:1px solid rgba(255,255,255,0.1)}
-  .nav-cta--login:hover{color:#f0eefc;border-color:rgba(255,255,255,0.22);background:rgba(255,255,255,0.04)}
-  .nav-row-2{display:flex;align-items:center;justify-content:center;gap:32px;height:34px;border-top:1px solid rgba(255,255,255,0.06);transition:height .4s ease,opacity .3s ease,border-top-color .3s ease;overflow:hidden}
-  .nav-wrap.scrolled .nav-row-2{height:0;opacity:0;border-top-color:transparent}
-  .nav-row-2 a{font-weight:300;font-size:.72rem;letter-spacing:.03em;color:rgba(240,238,252,0.4);text-decoration:none;transition:color .3s ease;white-space:nowrap}
-  .nav-row-2 a:hover{color:rgba(240,238,252,0.6)}
-  .nav-burger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;transition:background .3s ease}
-  .nav-burger:hover{background:rgba(255,255,255,0.04)}
-  .nav-burger span{display:block;width:100%;height:1.5px;background:rgba(240,238,252,0.6);border-radius:1px;transition:all .3s ease;transform-origin:center}
-  .nav-burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
-  .nav-burger.open span:nth-child(2){opacity:0}
-  .nav-burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
-  .nav-drawer{display:none;position:fixed;top:56px;left:0;right:0;bottom:0;background:rgba(6,8,16,0.95);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);z-index:999;flex-direction:column;padding:32px 28px 40px;overflow-y:auto;opacity:0;transform:translateY(-8px);transition:opacity .3s ease,transform .3s ease}
-  .nav-drawer.open{display:flex;opacity:1;transform:translateY(0)}
-  .nav-drawer__section-label{font-weight:300;font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(240,238,252,0.4);margin-bottom:14px;margin-top:24px}
-  .nav-drawer__section-label:first-child{margin-top:0}
-  .nav-drawer__link{display:flex;align-items:center;gap:12px;font-weight:300;font-size:1.05rem;color:rgba(240,238,252,0.6);text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);transition:color .3s ease}
-  .nav-drawer__link:hover{color:#f0eefc}
-  .nav-drawer__link-dot{width:5px;height:5px;border-radius:50%;background:#4ecdc4;opacity:.5}
-  .nav-drawer__ctas{display:flex;gap:10px;margin-top:32px}
-  .nav-drawer__ctas .nav-cta{flex:1;text-align:center;padding:12px 20px;font-size:.88rem}
-  @media(max-width:860px){.nav-primary,.nav-row-2,.nav-ctas{display:none}.nav-burger{display:flex}.nav-row-1{height:56px}}
+  .ss-premium-btn:hover { color: var(--text-bright); border-color: rgba(255,255,255,0.25); background: rgba(255,255,255,0.04); }
 
-  /* ═══ SLEEP STORIES CARD SECTION ═══ */
-  .ss-section-header{text-align:center;margin-bottom:20px;padding:48px 24px 0}
-  .ss-section-header__label{display:inline-flex;align-items:center;gap:10px;font-weight:300;font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(167,139,250,0.7);margin-bottom:16px}
-  .ss-section-header__label::before,.ss-section-header__label::after{content:'';width:24px;height:1px;background:linear-gradient(90deg,transparent,rgba(167,139,250,0.4),transparent)}
-  .ss-section-header h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.8rem,4vw,2.4rem);margin-bottom:8px}
-  .ss-section-header p{font-weight:200;font-size:.85rem;color:var(--text-muted);max-width:480px;margin:0 auto;line-height:1.6}
-
-  .ss-how-strip{max-width:980px;margin:0 auto 36px;display:flex;justify-content:center;gap:40px;padding:20px 24px;border-top:1px solid rgba(167,139,250,0.06);border-bottom:1px solid rgba(167,139,250,0.06)}
-  .ss-how-strip__item{display:flex;align-items:center;gap:10px}
-  .ss-how-strip__num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:400;font-size:.68rem;color:var(--accent-bright);background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.15);flex-shrink:0}
-  .ss-how-strip__text{font-weight:200;font-size:.78rem;color:var(--text-muted)}
-
-  .ss-filters{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-bottom:36px;padding:0 24px}
-  .ss-filter-btn{font-family:'Outfit',sans-serif;font-weight:300;font-size:.72rem;letter-spacing:.04em;padding:7px 16px;border-radius:40px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text-muted);cursor:pointer;transition:all .3s ease;white-space:nowrap}
-  .ss-filter-btn:hover{border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.72)}
-  .ss-filter-btn.active{background:rgba(167,139,250,0.08);border-color:rgba(167,139,250,0.2);color:var(--accent-bright)}
-
-  .ss-section-divider{text-align:center;padding:44px 24px 28px;position:relative}
-  .ss-section-divider__line{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;height:1px;background:linear-gradient(90deg,transparent,rgba(167,139,250,0.08),transparent)}
-  .ss-section-divider__label{position:relative;z-index:1;display:inline-flex;flex-direction:column;align-items:center;font-weight:300;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text-muted);background:var(--deep);padding:0 16px}
-  .ss-section-divider__sub{display:block;font-weight:200;font-size:.78rem;letter-spacing:.02em;text-transform:none;color:rgba(255,255,255,0.35);margin-top:6px}
-
-  .ss-sub-hook{max-width:980px;margin:36px auto 0;display:flex;align-items:center;justify-content:space-between;gap:16px;background:linear-gradient(135deg,rgba(167,139,250,0.06) 0%,rgba(129,140,248,0.04) 100%);border:1px solid rgba(167,139,250,0.1);border-radius:14px;padding:16px 24px}
-  .ss-sub-hook__text{display:flex;flex-direction:column;gap:2px}
-  .ss-sub-hook__title{font-weight:400;font-size:.82rem;color:var(--text-bright);display:flex;align-items:center;gap:8px}
-  .ss-sub-hook__title svg{width:14px;height:14px;fill:rgba(167,139,250,0.8)}
-  .ss-sub-hook__desc{font-weight:200;font-size:.74rem;color:var(--text-muted)}
-  .ss-sub-hook__cta{font-family:'Outfit',sans-serif;font-weight:400;font-size:.74rem;letter-spacing:.04em;padding:8px 20px;border-radius:40px;color:#060810;background:linear-gradient(135deg,#a78bfa,#c4b5fd);border:none;cursor:pointer;text-decoration:none;white-space:nowrap;transition:all .35s cubic-bezier(.22,1,.36,1)}
-  .ss-sub-hook__cta:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(167,139,250,0.25)}
-
-  .ss-card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;max-width:980px;margin:0 auto;padding:0 24px}
-
-  .ss-card{position:relative;border-radius:18px;padding:30px 30px 24px;overflow:hidden;transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s ease;cursor:default;min-height:280px;display:flex;flex-direction:column;background:linear-gradient(145deg,#1e1b4b 0%,#312e81 35%,#3730a3 100%)}
-  .ss-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.35)}
-  .ss-card::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:.5;pointer-events:none;border-radius:inherit}
-  .ss-card__orb{position:absolute;border-radius:50%;filter:blur(40px);opacity:.35;pointer-events:none;transition:opacity .4s ease;background:#818cf8;width:140px;height:140px;top:-30px;right:-20px}
-  .ss-card__orb--2{position:absolute;border-radius:50%;filter:blur(40px);pointer-events:none;transition:opacity .4s ease;background:#a78bfa;width:100px;height:100px;bottom:-20px;left:-10px;opacity:.2}
-  .ss-card:hover .ss-card__orb{opacity:.5}
-
-  .ss-card__badge{position:absolute;top:18px;right:20px;z-index:4;font-weight:400;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
-  .ss-badge--week{color:var(--accent-bright);background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2)}
-  .ss-badge--premium{color:rgba(255,255,255,0.85);background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15)}
-
-  .ss-card__content{position:relative;z-index:3;flex:1;display:flex;flex-direction:column}
-  .ss-card__meta{display:flex;align-items:center;gap:6px;margin-bottom:10px;font-weight:300;font-size:.78rem;color:rgba(255,255,255,0.55)}
-  .ss-card__meta-dot{width:5px;height:5px;border-radius:50%;background:var(--accent-bright);flex-shrink:0}
-  .ss-card__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.6rem;line-height:1.2;color:#fff;margin-bottom:10px}
-  .ss-card__desc{font-weight:200;font-size:.84rem;line-height:1.65;color:rgba(255,255,255,0.6);margin-bottom:auto;padding-bottom:18px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-
-  .ss-player{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:10px 18px 10px 10px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);position:relative;z-index:3}
-  .ss-player__btn{width:40px;height:40px;border-radius:50%;flex-shrink:0;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s ease}
-  .ss-player__btn:hover{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.25);transform:scale(1.05)}
-  .ss-player__btn svg{width:14px;height:14px;fill:#fff;margin-left:2px}
-  .ss-player__track{flex:1;height:3px;background:rgba(255,255,255,0.12);border-radius:2px;overflow:hidden;cursor:pointer}
-  .ss-player__progress{height:100%;width:0%;border-radius:2px;background:var(--accent-bright);transition:width .1s linear}
-  .ss-player__time{font-weight:300;font-size:.7rem;color:rgba(255,255,255,0.45);white-space:nowrap;min-width:72px;text-align:right;font-variant-numeric:tabular-nums}
-
-
-  /* ═══ BOOK SPINE GRID — 6 columns ═══ */
-  .ss-book-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;max-width:980px;margin:0 auto;padding:0 24px}
-
-  .ss-book-spine{position:relative;border-radius:6px 12px 12px 6px;overflow:hidden;cursor:default;transition:transform .35s cubic-bezier(.22,1,.36,1);aspect-ratio:2/3;min-height:0}
-  .ss-book-spine:hover{transform:translateY(-4px) scale(1.02)}
-  .ss-book-spine__face{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:14px 12px;border-radius:inherit}
-  .ss-book-spine__face::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,transparent 30%,rgba(0,0,0,0.7) 100%)}
-  .ss-book-spine::after{content:'';position:absolute;top:0;left:0;bottom:0;width:6px;background:linear-gradient(90deg,rgba(0,0,0,0.3),rgba(255,255,255,0.05));border-radius:6px 0 0 6px}
-
-  .ss-book-spine__week{position:relative;z-index:2;font-weight:400;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:4px}
-  .ss-book-spine__title{position:relative;z-index:2;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:.82rem;line-height:1.2;color:#fff}
-  .ss-book-spine__mood{position:relative;z-index:2;font-weight:200;font-size:.52rem;color:rgba(255,255,255,0.4);margin-top:4px;text-transform:uppercase;letter-spacing:.08em}
-
-  .ss-book-spine--locked .ss-book-spine__face{filter:brightness(0.4)}
-  .ss-book-spine--locked::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5;width:22px;height:22px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.3)' stroke-width='1.5'%3E%3Crect x='3' y='11' width='18' height='11' rx='2'/%3E%3Cpath d='M7 11V7a5 5 0 0110 0v4'/%3E%3C/svg%3E") center/contain no-repeat}
-
-  .ss-book-cover--1{background:linear-gradient(145deg,#1e1b4b,#312e81)}
-  .ss-book-cover--2{background:linear-gradient(145deg,#1a1d3a,#2e3561)}
-  .ss-book-cover--3{background:linear-gradient(145deg,#1b2440,#293b5f)}
-  .ss-book-cover--4{background:linear-gradient(145deg,#1f1a3e,#3d2a6b)}
-  .ss-book-cover--5{background:linear-gradient(145deg,#1a2838,#2a4258)}
-  .ss-book-cover--6{background:linear-gradient(145deg,#211a3a,#382d5e)}
-
-  @media(max-width:768px){
-    .ss-card-grid{grid-template-columns:1fr}
-    .ss-card{padding:24px 24px 20px;min-height:auto}
-    .ss-card__title{font-size:1.4rem}
-    .ss-book-grid{grid-template-columns:repeat(3,1fr);gap:10px}
-    .ss-how-strip{flex-direction:column;gap:16px;align-items:center}
-    .ss-sub-hook{flex-direction:column;text-align:center;gap:12px}
+  @keyframes ssRise {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
   }
-  @media(max-width:480px){
-    .ss-card{padding:22px 20px 18px}
-    .ss-book-grid{grid-template-columns:repeat(2,1fr)}
+
+  @media (max-width: 900px) {
+    .ss-book-grid { grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 20px 16px; }
+    .ss-hero-moon { display: none; }
   }
-  </style>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-config.js"></script>
-  <script src="js/auth.js?v=1770564391"></script>
+
+  @media (max-width: 600px) {
+    .ss-book-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px 12px; }
+    .ss-hero { padding: 110px 18px 50px; }
+    .ss-premium-inner { flex-direction: column; text-align: center; }
+    .ss-book-title { font-size: 1.1rem; }
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth.js?v=1770564391"></script>
 </head>
 <body>
 
@@ -701,225 +525,53 @@
   </div>
 </div>
 
-
-<section class="hero">
-  <!-- Starfield -->
-  <div class="starfield">
-    <canvas id="starCanvas"></canvas>
-  </div>
-
-  <!-- Shooting stars -->
-  <div class="shooting-stars">
-    <div class="shooting-star"></div>
-    <div class="shooting-star"></div>
-    <div class="shooting-star"></div>
-  </div>
-
-  <!-- Moon -->
-  <div class="moon">
-    <div class="moon__body">
-      <div class="moon__shadow"></div>
+<section class="ss-hero">
+  <div class="ss-hero-bg"></div>
+  <div class="ss-hero-stars"></div>
+  <div class="ss-hero-moon"><div class="ss-moon-body"><div class="ss-moon-shadow"></div></div></div>
+  <div class="ss-hero-content">
+    <div class="ss-hero-badge">Drift Away</div>
+    <h1 class="ss-hero-title">Sleep <em>Stories</em></h1>
+    <p class="ss-hero-sub">Close your eyes and let go. Soothing narrations woven with gentle soundscapes to carry you softly into sleep.</p>
+    <div class="ss-hero-stats">
+      <span class="ss-hero-stat"><strong>52</strong> stories and growing</span>
+      <span class="ss-hero-stat-sep"></span>
+      <span class="ss-hero-stat"><strong>1</strong> new story each week</span>
+      <span class="ss-hero-stat-sep"></span>
+      <span class="ss-hero-stat"><strong>45</strong> min per story</span>
     </div>
-  </div>
-
-  <!-- Cloud wisps -->
-  <div class="cloud-layer">
-    <div class="cloud cloud--1"></div>
-    <div class="cloud cloud--2"></div>
-    <div class="cloud cloud--3"></div>
-    <div class="cloud cloud--4"></div>
-  </div>
-
-  <!-- Fireflies -->
-  <div class="fireflies" id="fireflies"></div>
-
-  <!-- Content -->
-  <div class="hero-content">
-    <div class="hero-label">
-      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-      Drift Away
-    </div>
-
-    <h1 class="hero-title"><span>Sleep Stories</span></h1>
-
-    <p class="hero-subtitle">
-      Close your eyes and let go. Soothing narrations woven with gentle soundscapes to carry you softly into sleep.
-    </p>
-
-    <div class="story-count">
-      <span class="story-count__dot"></span>
-      52 stories and growing
-    </div>
-
-    <a href="#library" class="hero-cta">
-      <svg viewBox="0 0 24 24"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/></svg>
-      Browse Library
-    </a>
-
-    <p class="latin-phrase">Salūs — Latin: health, safety, well-being</p>
-  </div>
-
-  <!-- Bottom fade -->
-  <div class="hero-fade"></div>
-
-  <!-- Scroll -->
-  <div class="scroll-hint">
-    <span class="scroll-hint__text">Explore</span>
-    <span class="scroll-hint__line"></span>
+    <button class="ss-hero-cta" onclick="document.getElementById('library').scrollIntoView({behavior:'smooth'})">Browse Library</button>
+    <p class="ss-hero-latin">Salus — Latin: health, safety, well-being</p>
   </div>
 </section>
 
-<!-- ═══ SLEEP STORIES CARD SECTION ═══ -->
-<div id="library" style="background:var(--deep);padding-bottom:80px;">
-
-<div class="ss-section-header">
-  <div class="ss-section-header__label"><span></span>Sleep Stories<span></span></div>
-  <h2>Close Your Eyes and Listen</h2>
-  <p>Gentle, meandering narratives designed to bore your brain to sleep. No cliffhangers. No tension. Just a voice fading into the dark.</p>
-</div>
-
-<div class="ss-how-strip">
-  <div class="ss-how-strip__item"><span class="ss-how-strip__num">1</span><span class="ss-how-strip__text">One new story each week</span></div>
-  <div class="ss-how-strip__item"><span class="ss-how-strip__num">52</span><span class="ss-how-strip__text">A full year of bedtime listening</span></div>
-  <div class="ss-how-strip__item"><span class="ss-how-strip__num">45</span><span class="ss-how-strip__text">Minutes per story, with ambient</span></div>
-</div>
-
-<div class="ss-filters">
-  <button class="ss-filter-btn active" data-filter="all">All Stories</button>
-  <button class="ss-filter-btn" data-filter="nature">Nature</button>
-  <button class="ss-filter-btn" data-filter="journey">Journey</button>
-  <button class="ss-filter-btn" data-filter="comfort">Comfort</button>
-  <button class="ss-filter-btn" data-filter="fantasy">Fantasy</button>
-  <button class="ss-filter-btn" data-filter="history">History</button>
-</div>
-
-<!-- Available — Weeks 1-4 -->
-<div class="ss-section-divider" id="ssAvailableDivider">
-  <div class="ss-section-divider__line"></div>
-  <div class="ss-section-divider__label">Now Available
-    <span class="ss-section-divider__sub">Press play and drift off</span>
+<div class="ss-section" id="library">
+  <div class="ss-section-head">
+    <div class="ss-section-label">The Collection</div>
+    <h2 class="ss-section-title">Close Your Eyes and Listen</h2>
+    <p class="ss-section-sub">Gentle, meandering narratives. No cliffhangers. No tension. Just a voice fading into the dark.</p>
   </div>
+
+  <div class="ss-filters" id="ssFilters">
+    <button class="ss-filter-btn active" data-filter="all">All Stories</button>
+    <button class="ss-filter-btn" data-cat="nature" data-filter="nature">Nature</button>
+    <button class="ss-filter-btn" data-cat="journey" data-filter="journey">Journey</button>
+    <button class="ss-filter-btn" data-cat="comfort" data-filter="comfort">Comfort</button>
+    <button class="ss-filter-btn" data-cat="fantasy" data-filter="fantasy">Fantasy</button>
+    <button class="ss-filter-btn" data-cat="history" data-filter="history">History</button>
+  </div>
+
+  <div class="ss-book-grid" id="ssGrid"></div>
 </div>
 
-<div class="ss-card-grid" id="ssAvailableGrid">
-
-  <div class="ss-card" data-mood="nature">
-    <div class="ss-card__orb"></div><div class="ss-card__orb ss-card__orb--2"></div>
-    <span class="ss-card__badge ss-badge--week">Week 1</span>
-    <div class="ss-card__content">
-      <div class="ss-card__meta"><span class="ss-card__meta-dot"></span>42 min &middot; Nature</div>
-      <h3 class="ss-card__title">The Gardener's Almanac</h3>
-      <p class="ss-card__desc">An old gardener tends his allotment through the seasons — seeds, soil, and the slow patience of things that grow in their own time.</p>
-      <div class="ss-player"><button class="ss-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="ss-player__track"><div class="ss-player__progress"></div></div><span class="ss-player__time">0:00 / 42:18</span></div>
+<div class="ss-premium-bar">
+  <div class="ss-premium-inner">
+    <div class="ss-premium-text">
+      <h3>New material unlocked each week</h3>
+      <p>52 sleep stories over 12 months — plus guided meditations, ASMR, tools, and more with Salus Premium.</p>
     </div>
+    <a href="apps.html" class="ss-premium-btn">Go Premium</a>
   </div>
-
-  <div class="ss-card" data-mood="journey">
-    <div class="ss-card__orb"></div><div class="ss-card__orb ss-card__orb--2"></div>
-    <span class="ss-card__badge ss-badge--week">Week 2</span>
-    <div class="ss-card__content">
-      <div class="ss-card__meta"><span class="ss-card__meta-dot"></span>45 min &middot; Journey</div>
-      <h3 class="ss-card__title">The Slow Train North</h3>
-      <p class="ss-card__desc">A night train winds through empty countryside. Fields blur past the window. The rhythm of the track becomes a lullaby.</p>
-      <div class="ss-player"><button class="ss-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="ss-player__track"><div class="ss-player__progress"></div></div><span class="ss-player__time">0:00 / 45:00</span></div>
-    </div>
-  </div>
-
-  <div class="ss-card" data-mood="comfort">
-    <div class="ss-card__orb"></div><div class="ss-card__orb ss-card__orb--2"></div>
-    <span class="ss-card__badge ss-badge--week">Week 3</span>
-    <div class="ss-card__content">
-      <div class="ss-card__meta"><span class="ss-card__meta-dot"></span>38 min &middot; Comfort</div>
-      <h3 class="ss-card__title">The Bookshop at the End of the Lane</h3>
-      <p class="ss-card__desc">A retired bookseller dusts shelves in a shop that time forgot. Each spine holds a memory, each page a quiet world.</p>
-      <div class="ss-player"><button class="ss-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="ss-player__track"><div class="ss-player__progress"></div></div><span class="ss-player__time">0:00 / 38:24</span></div>
-    </div>
-  </div>
-
-  <div class="ss-card" data-mood="nature">
-    <div class="ss-card__orb"></div><div class="ss-card__orb ss-card__orb--2"></div>
-    <span class="ss-card__badge ss-badge--week">Week 4</span>
-    <div class="ss-card__content">
-      <div class="ss-card__meta"><span class="ss-card__meta-dot"></span>44 min &middot; Nature</div>
-      <h3 class="ss-card__title">The Lighthouse Keeper's Log</h3>
-      <p class="ss-card__desc">A solitary keeper chronicles the tides, the birds, and the steady arc of the beam across dark water. Nothing happens. Everything does.</p>
-      <div class="ss-player"><button class="ss-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="ss-player__track"><div class="ss-player__progress"></div></div><span class="ss-player__time">0:00 / 44:12</span></div>
-    </div>
-  </div>
-
-</div>
-
-<!-- Subscription Hook -->
-<div class="ss-sub-hook" id="ssSubHook">
-  <div class="ss-sub-hook__text">
-    <div class="ss-sub-hook__title">
-      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-      New material unlocked each week
-    </div>
-    <div class="ss-sub-hook__desc">52 sleep stories over 12 months — plus guided meditations, ASMR, tools, and more with Salus Premium</div>
-  </div>
-  <a href="apps.html" class="ss-sub-hook__cta">Go Premium</a>
-</div>
-
-<!-- Coming Soon — Weeks 5-52 book spines -->
-<div class="ss-section-divider" id="ssComingDivider">
-  <div class="ss-section-divider__line"></div>
-  <div class="ss-section-divider__label">Coming Soon
-    <span class="ss-section-divider__sub">A new story unlocked each week</span>
-  </div>
-</div>
-
-<div class="ss-book-grid" id="ssBookGrid">
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="fantasy"><div class="ss-book-spine__face ss-book-cover--1"><span class="ss-book-spine__week">Week 5</span><span class="ss-book-spine__title">The Cloud Cartographer</span><span class="ss-book-spine__mood">Fantasy</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="journey"><div class="ss-book-spine__face ss-book-cover--2"><span class="ss-book-spine__week">Week 6</span><span class="ss-book-spine__title">Canals of Amsterdam</span><span class="ss-book-spine__mood">Journey</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--3"><span class="ss-book-spine__week">Week 7</span><span class="ss-book-spine__title">The Beekeeper's Summer</span><span class="ss-book-spine__mood">Nature</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="comfort"><div class="ss-book-spine__face ss-book-cover--4"><span class="ss-book-spine__week">Week 8</span><span class="ss-book-spine__title">Letters from a Cottage</span><span class="ss-book-spine__mood">Comfort</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="history"><div class="ss-book-spine__face ss-book-cover--5"><span class="ss-book-spine__week">Week 9</span><span class="ss-book-spine__title">The Map Maker's Table</span><span class="ss-book-spine__mood">History</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--6"><span class="ss-book-spine__week">Week 10</span><span class="ss-book-spine__title">Tides of the Severn</span><span class="ss-book-spine__mood">Nature</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="journey"><div class="ss-book-spine__face ss-book-cover--1"><span class="ss-book-spine__week">Week 11</span><span class="ss-book-spine__title">The Silk Road at Dusk</span><span class="ss-book-spine__mood">Journey</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="comfort"><div class="ss-book-spine__face ss-book-cover--2"><span class="ss-book-spine__week">Week 12</span><span class="ss-book-spine__title">The Tea Room</span><span class="ss-book-spine__mood">Comfort</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="fantasy"><div class="ss-book-spine__face ss-book-cover--3"><span class="ss-book-spine__week">Week 13</span><span class="ss-book-spine__title">The Moth and the Lantern</span><span class="ss-book-spine__mood">Fantasy</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--4"><span class="ss-book-spine__week">Week 14</span><span class="ss-book-spine__title">Snowfall on Dartmoor</span><span class="ss-book-spine__mood">Nature</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="history"><div class="ss-book-spine__face ss-book-cover--5"><span class="ss-book-spine__week">Week 15</span><span class="ss-book-spine__title">The Astronomer's Journal</span><span class="ss-book-spine__mood">History</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="journey"><div class="ss-book-spine__face ss-book-cover--6"><span class="ss-book-spine__week">Week 16</span><span class="ss-book-spine__title">The Harbour at Low Tide</span><span class="ss-book-spine__mood">Journey</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="comfort"><div class="ss-book-spine__face ss-book-cover--1"><span class="ss-book-spine__week">Week 17</span><span class="ss-book-spine__title">Grandma's Kitchen</span><span class="ss-book-spine__mood">Comfort</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--2"><span class="ss-book-spine__week">Week 18</span><span class="ss-book-spine__title">The River Warden</span><span class="ss-book-spine__mood">Nature</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="fantasy"><div class="ss-book-spine__face ss-book-cover--3"><span class="ss-book-spine__week">Week 19</span><span class="ss-book-spine__title">The Forgotten Library</span><span class="ss-book-spine__mood">Fantasy</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="journey"><div class="ss-book-spine__face ss-book-cover--4"><span class="ss-book-spine__week">Week 20</span><span class="ss-book-spine__title">Night Ferry to Bergen</span><span class="ss-book-spine__mood">Journey</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--5"><span class="ss-book-spine__week">Week 21</span><span class="ss-book-spine__title">The Orchard in Autumn</span><span class="ss-book-spine__mood">Nature</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="history"><div class="ss-book-spine__face ss-book-cover--6"><span class="ss-book-spine__week">Week 22</span><span class="ss-book-spine__title">The Watchmaker's Hands</span><span class="ss-book-spine__mood">History</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="comfort"><div class="ss-book-spine__face ss-book-cover--1"><span class="ss-book-spine__week">Week 23</span><span class="ss-book-spine__title">Sunday Morning Rain</span><span class="ss-book-spine__mood">Comfort</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="fantasy"><div class="ss-book-spine__face ss-book-cover--2"><span class="ss-book-spine__week">Week 24</span><span class="ss-book-spine__title">The Sleeping Mountain</span><span class="ss-book-spine__mood">Fantasy</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="journey"><div class="ss-book-spine__face ss-book-cover--3"><span class="ss-book-spine__week">Week 25</span><span class="ss-book-spine__title">A Walk Through Kyoto</span><span class="ss-book-spine__mood">Journey</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--4"><span class="ss-book-spine__week">Week 26</span><span class="ss-book-spine__title">The Meadow at Twilight</span><span class="ss-book-spine__mood">Nature</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="history"><div class="ss-book-spine__face ss-book-cover--5"><span class="ss-book-spine__week">Week 27</span><span class="ss-book-spine__title">The Glassblower's Fire</span><span class="ss-book-spine__mood">History</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="comfort"><div class="ss-book-spine__face ss-book-cover--6"><span class="ss-book-spine__week">Week 28</span><span class="ss-book-spine__title">The Dog-Eared Pages</span><span class="ss-book-spine__mood">Comfort</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--1"><span class="ss-book-spine__week">Week 29</span><span class="ss-book-spine__title">Mist Over the Loch</span><span class="ss-book-spine__mood">Nature</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="journey"><div class="ss-book-spine__face ss-book-cover--2"><span class="ss-book-spine__week">Week 30</span><span class="ss-book-spine__title">The Coastal Path</span><span class="ss-book-spine__mood">Journey</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="fantasy"><div class="ss-book-spine__face ss-book-cover--3"><span class="ss-book-spine__week">Week 31</span><span class="ss-book-spine__title">The Owl and the Hollow</span><span class="ss-book-spine__mood">Fantasy</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="comfort"><div class="ss-book-spine__face ss-book-cover--4"><span class="ss-book-spine__week">Week 32</span><span class="ss-book-spine__title">The Pottery Wheel</span><span class="ss-book-spine__mood">Comfort</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="history"><div class="ss-book-spine__face ss-book-cover--5"><span class="ss-book-spine__week">Week 33</span><span class="ss-book-spine__title">The Lamplighter's Round</span><span class="ss-book-spine__mood">History</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--6"><span class="ss-book-spine__week">Week 34</span><span class="ss-book-spine__title">The Chalk Downs</span><span class="ss-book-spine__mood">Nature</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="journey"><div class="ss-book-spine__face ss-book-cover--1"><span class="ss-book-spine__week">Week 35</span><span class="ss-book-spine__title">Ocean Voyage</span><span class="ss-book-spine__mood">Journey</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="fantasy"><div class="ss-book-spine__face ss-book-cover--2"><span class="ss-book-spine__week">Week 36</span><span class="ss-book-spine__title">The Weaver's Dream</span><span class="ss-book-spine__mood">Fantasy</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="comfort"><div class="ss-book-spine__face ss-book-cover--3"><span class="ss-book-spine__week">Week 37</span><span class="ss-book-spine__title">Fireside Letters</span><span class="ss-book-spine__mood">Comfort</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--4"><span class="ss-book-spine__week">Week 38</span><span class="ss-book-spine__title">The Fallen Leaves</span><span class="ss-book-spine__mood">Nature</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="history"><div class="ss-book-spine__face ss-book-cover--5"><span class="ss-book-spine__week">Week 39</span><span class="ss-book-spine__title">The Calligrapher</span><span class="ss-book-spine__mood">History</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="journey"><div class="ss-book-spine__face ss-book-cover--6"><span class="ss-book-spine__week">Week 40</span><span class="ss-book-spine__title">The Mountain Pass</span><span class="ss-book-spine__mood">Journey</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="comfort"><div class="ss-book-spine__face ss-book-cover--1"><span class="ss-book-spine__week">Week 41</span><span class="ss-book-spine__title">The Patchwork Quilt</span><span class="ss-book-spine__mood">Comfort</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--2"><span class="ss-book-spine__week">Week 42</span><span class="ss-book-spine__title">Birdsong at Dawn</span><span class="ss-book-spine__mood">Nature</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="fantasy"><div class="ss-book-spine__face ss-book-cover--3"><span class="ss-book-spine__week">Week 43</span><span class="ss-book-spine__title">The Stone Circle</span><span class="ss-book-spine__mood">Fantasy</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="history"><div class="ss-book-spine__face ss-book-cover--4"><span class="ss-book-spine__week">Week 44</span><span class="ss-book-spine__title">The Printing Press</span><span class="ss-book-spine__mood">History</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="journey"><div class="ss-book-spine__face ss-book-cover--5"><span class="ss-book-spine__week">Week 45</span><span class="ss-book-spine__title">The Canal Boat</span><span class="ss-book-spine__mood">Journey</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--6"><span class="ss-book-spine__week">Week 46</span><span class="ss-book-spine__title">The Shepherd's Year</span><span class="ss-book-spine__mood">Nature</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="comfort"><div class="ss-book-spine__face ss-book-cover--1"><span class="ss-book-spine__week">Week 47</span><span class="ss-book-spine__title">The Vinyl Collection</span><span class="ss-book-spine__mood">Comfort</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="fantasy"><div class="ss-book-spine__face ss-book-cover--2"><span class="ss-book-spine__week">Week 48</span><span class="ss-book-spine__title">The Tide Pool</span><span class="ss-book-spine__mood">Fantasy</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="history"><div class="ss-book-spine__face ss-book-cover--3"><span class="ss-book-spine__week">Week 49</span><span class="ss-book-spine__title">The Instrument Maker</span><span class="ss-book-spine__mood">History</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="journey"><div class="ss-book-spine__face ss-book-cover--4"><span class="ss-book-spine__week">Week 50</span><span class="ss-book-spine__title">Night Bus to Nowhere</span><span class="ss-book-spine__mood">Journey</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="nature"><div class="ss-book-spine__face ss-book-cover--5"><span class="ss-book-spine__week">Week 51</span><span class="ss-book-spine__title">The First Snow</span><span class="ss-book-spine__mood">Nature</span></div></div>
-  <div class="ss-book-spine ss-book-spine--locked" data-mood="comfort"><div class="ss-book-spine__face ss-book-cover--6"><span class="ss-book-spine__week">Week 52</span><span class="ss-book-spine__title">Home</span><span class="ss-book-spine__mood">Comfort</span></div></div>
-</div>
-
 </div>
 
   <!-- Footer -->
@@ -967,170 +619,370 @@
   </div>
 </footer>
 
-  <script src="js/main.js?v=1770564391"></script>
-  <script src="js/tracker.js"></script>
-  <script>
-  // ═══════════════════════════════════════════
-  // STARFIELD
-  // ═══════════════════════════════════════════
-  (function() {
-    const canvas = document.getElementById('starCanvas');
-    const ctx = canvas.getContext('2d');
-    let w, h, stars = [];
+<script src="js/main.js?v=1770564391"></script>
+<script src="js/tracker.js"></script>
+<script>
+const stories = [
+  { w:1,  t:"The Gardener's Almanac",       c:"nature",  free:true, m:"moon-garden" },
+  { w:2,  t:"The Slow Train North",         c:"journey", free:true, m:"horizon-lights" },
+  { w:3,  t:"The Bookshop at the End of the Lane", c:"comfort", free:true, m:"books" },
+  { w:4,  t:"The Lighthouse Keeper's Log",  c:"nature",  free:true, m:"lighthouse" },
+  { w:5,  t:"The Cloud Cartographer",       c:"fantasy", m:"clouds" },
+  { w:6,  t:"Canals of Amsterdam",          c:"journey", m:"water-lines" },
+  { w:7,  t:"The Beekeeper's Summer",       c:"nature",  m:"hexagons" },
+  { w:8,  t:"Letters from a Cottage",       c:"comfort", m:"window" },
+  { w:9,  t:"The Map Maker's Table",        c:"history", m:"compass" },
+  { w:10, t:"Tides of the Severn",          c:"nature",  m:"waves" },
+  { w:11, t:"The Silk Road at Dusk",        c:"journey", m:"path" },
+  { w:12, t:"The Tea Room",                 c:"comfort", m:"steam" },
+  { w:13, t:"The Moth and the Lantern",     c:"fantasy", m:"lantern" },
+  { w:14, t:"Snowfall on Dartmoor",         c:"nature",  m:"snow" },
+  { w:15, t:"The Astronomer's Journal",     c:"history", m:"constellation" },
+  { w:16, t:"The Harbour at Low Tide",      c:"journey", m:"water-lines" },
+  { w:17, t:"The Orchard in Winter",        c:"nature",  m:"tree" },
+  { w:18, t:"The Clockmaker's Workshop",    c:"history", m:"clock" },
+  { w:19, t:"The River Crossing",           c:"journey", m:"river" },
+  { w:20, t:"A Cabin in the Pines",         c:"comfort", m:"pines" },
+  { w:21, t:"The Star Collector",           c:"fantasy", m:"stars-cluster" },
+  { w:22, t:"The Windmill on the Hill",     c:"nature",  m:"windmill" },
+  { w:23, t:"Sunday Morning Rain",          c:"comfort", m:"rain" },
+  { w:24, t:"The Sleeping Mountain",        c:"fantasy", m:"mountain" },
+  { w:25, t:"A Walk Through Kyoto",         c:"journey", m:"torii" },
+  { w:26, t:"The Meadow at Twilight",       c:"nature",  m:"fireflies" },
+  { w:27, t:"The Glassblower's Fire",       c:"history", m:"flame" },
+  { w:28, t:"The Dog-Eared Pages",          c:"comfort", m:"books" },
+  { w:29, t:"Mist Over the Loch",           c:"nature",  m:"mist" },
+  { w:30, t:"The Coastal Path",             c:"journey", m:"path" },
+  { w:31, t:"The Owl and the Hollow",       c:"fantasy", m:"owl-eyes" },
+  { w:32, t:"The Pottery Wheel",            c:"comfort", m:"spiral" },
+  { w:33, t:"The Lamplighter's Round",      c:"history", m:"lantern" },
+  { w:34, t:"The Chalk Downs",              c:"nature",  m:"hills" },
+  { w:35, t:"Ocean Voyage",                 c:"journey", m:"waves" },
+  { w:36, t:"The Weaver's Dream",           c:"fantasy", m:"weave" },
+  { w:37, t:"Fireside Letters",             c:"comfort", m:"flame" },
+  { w:38, t:"The Fallen Leaves",            c:"nature",  m:"leaves" },
+  { w:39, t:"The Calligrapher",             c:"history", m:"quill" },
+  { w:40, t:"The Mountain Pass",            c:"journey", m:"mountain" },
+  { w:41, t:"The Patchwork Quilt",          c:"comfort", m:"quilt" },
+  { w:42, t:"Birdsong at Dawn",             c:"nature",  m:"bird" },
+  { w:43, t:"The Stone Circle",             c:"fantasy", m:"stone-circle" },
+  { w:44, t:"The Printing Press",           c:"history", m:"press" },
+  { w:45, t:"The Canal Boat",               c:"journey", m:"water-lines" },
+  { w:46, t:"The Shepherd's Year",          c:"nature",  m:"hills" },
+  { w:47, t:"The Vinyl Collection",         c:"comfort", m:"vinyl" },
+  { w:48, t:"The Tide Pool",                c:"fantasy", m:"tide-pool" },
+  { w:49, t:"The Instrument Maker",         c:"history", m:"strings" },
+  { w:50, t:"Night Bus to Nowhere",         c:"journey", m:"horizon-lights" },
+  { w:51, t:"The First Snow",               c:"nature",  m:"snow" },
+  { w:52, t:"Home",                         c:"comfort", m:"window" }
+];
 
-    function resize() {
-      const dpr = window.devicePixelRatio || 1;
-      const rect = canvas.parentElement.getBoundingClientRect();
-      w = canvas.width = rect.width * dpr;
-      h = canvas.height = rect.height * dpr;
-      canvas.style.width = rect.width + 'px';
-      canvas.style.height = rect.height + 'px';
-      ctx.scale(dpr, dpr);
-      createStars();
-    }
+// Colour palettes per category
+const catPalettes = {
+  nature:  { bgs:[[12,28,16],[10,24,18],[14,26,12],[8,22,14]], accents:['90,170,100','100,180,120','80,160,90','110,175,95'], glow:'rgba(90,170,110,0.06)' },
+  journey: { bgs:[[10,14,32],[12,16,28],[8,12,30],[14,18,34]], accents:['80,130,210','90,145,220','70,120,195','100,150,215'], glow:'rgba(80,140,210,0.06)' },
+  comfort: { bgs:[[30,18,12],[26,16,10],[28,20,14],[24,14,8]],  accents:['210,160,85','200,150,75','215,170,95','195,145,70'], glow:'rgba(210,160,90,0.06)' },
+  fantasy: { bgs:[[20,12,32],[18,14,28],[22,10,30],[16,12,26]], accents:['165,125,210','155,115,200','175,135,220','150,110,195'], glow:'rgba(160,120,210,0.06)' },
+  history: { bgs:[[28,20,10],[24,18,8],[26,22,14],[22,16,10]],  accents:['200,155,80','190,145,70','210,165,90','185,140,75'], glow:'rgba(200,155,85,0.06)' }
+};
 
-    function createStars() {
-      const rw = w / (window.devicePixelRatio || 1);
-      const rh = h / (window.devicePixelRatio || 1);
-      stars = [];
-      const count = Math.floor((rw * rh) / 2800);
+function hash(s) { let h=0; for(let i=0;i<s.length;i++){h=((h<<5)-h+s.charCodeAt(i))|0;} return Math.abs(h); }
 
-      for (let i = 0; i < count; i++) {
-        stars.push({
-          x: Math.random() * rw,
-          y: Math.random() * rh,
-          r: 0.3 + Math.random() * 1.4,
-          baseAlpha: 0.15 + Math.random() * 0.6,
-          twinkleSpeed: 0.005 + Math.random() * 0.02,
-          twinkleOffset: Math.random() * Math.PI * 2,
-          colour: Math.random() > 0.85
-            ? `rgba(167, 139, 250, VAR)`
-            : Math.random() > 0.7
-              ? `rgba(129, 140, 248, VAR)`
-              : `rgba(240, 237, 255, VAR)`
-        });
-      }
-    }
+// SVG motif generators
+const motifs = {
+  'moon-garden': (a) => `<circle cx="72%" cy="22%" r="28" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.3"/>
+    <circle cx="72%" cy="22%" r="18" fill="${a}" opacity="0.04"/>
+    <circle cx="78%" cy="18%" r="22" fill="rgb(6,8,16)" opacity="0.8"/>
+    <line x1="25%" y1="85%" x2="25%" y2="55%" stroke="${a}" stroke-width="0.3" opacity="0.15"/>
+    <line x1="35%" y1="85%" x2="35%" y2="60%" stroke="${a}" stroke-width="0.3" opacity="0.12"/>
+    <line x1="45%" y1="85%" x2="45%" y2="52%" stroke="${a}" stroke-width="0.3" opacity="0.1"/>`,
 
-    let time = 0;
+  'lighthouse': (a) => `<line x1="70%" y1="25%" x2="70%" y2="70%" stroke="${a}" stroke-width="1" opacity="0.15"/>
+    <circle cx="70%" cy="24%" r="5" fill="${a}" opacity="0.08"/>
+    <circle cx="70%" cy="24%" r="14" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.12"/>
+    <circle cx="70%" cy="24%" r="25" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.06"/>
+    <line x1="0" y1="72%" x2="100%" y2="72%" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <line x1="0" y1="76%" x2="100%" y2="76%" stroke="${a}" stroke-width="0.3" opacity="0.05"/>`,
 
-    function draw() {
-      const rw = w / (window.devicePixelRatio || 1);
-      const rh = h / (window.devicePixelRatio || 1);
-      ctx.clearRect(0, 0, rw, rh);
+  'horizon-lights': (a) => `<line x1="0" y1="48%" x2="100%" y2="48%" stroke="${a}" stroke-width="0.4" opacity="0.1"/>
+    <circle cx="15%" cy="47%" r="1.5" fill="${a}" opacity="0.25"/><circle cx="28%" cy="48%" r="1" fill="${a}" opacity="0.18"/>
+    <circle cx="45%" cy="47%" r="1.5" fill="${a}" opacity="0.22"/><circle cx="62%" cy="48%" r="1" fill="${a}" opacity="0.15"/>
+    <circle cx="78%" cy="47%" r="1.5" fill="${a}" opacity="0.2"/><circle cx="90%" cy="48%" r="1" fill="${a}" opacity="0.12"/>`,
 
-      stars.forEach(s => {
-        const twinkle = Math.sin(time * s.twinkleSpeed + s.twinkleOffset);
-        const alpha = s.baseAlpha + twinkle * 0.25;
-        const clampedAlpha = Math.max(0.05, Math.min(1, alpha));
+  'books': (a) => `<rect x="30%" y="38%" width="6%" height="28%" rx="1" fill="${a}" opacity="0.08"/>
+    <rect x="38%" y="35%" width="5%" height="31%" rx="1" fill="${a}" opacity="0.1"/>
+    <rect x="45%" y="40%" width="7%" height="26%" rx="1" fill="${a}" opacity="0.06"/>
+    <rect x="54%" y="36%" width="4.5%" height="30%" rx="1" fill="${a}" opacity="0.09"/>
+    <rect x="60%" y="42%" width="6%" height="24%" rx="1" fill="${a}" opacity="0.07"/>
+    <line x1="28%" y1="66%" x2="68%" y2="66%" stroke="${a}" stroke-width="0.5" opacity="0.08"/>`,
 
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        ctx.fillStyle = s.colour.replace('VAR', clampedAlpha.toFixed(2));
-        ctx.fill();
+  'clouds': (a) => `<circle cx="35%" cy="32%" r="20" fill="${a}" opacity="0.04"/><circle cx="45%" cy="30%" r="25" fill="${a}" opacity="0.03"/>
+    <circle cx="55%" cy="33%" r="18" fill="${a}" opacity="0.035"/><circle cx="40%" cy="55%" r="22" fill="${a}" opacity="0.025"/>
+    <circle cx="60%" cy="57%" r="16" fill="${a}" opacity="0.03"/>`,
 
-        // Soft glow on brighter stars
-        if (s.r > 1 && clampedAlpha > 0.5) {
-          ctx.beginPath();
-          ctx.arc(s.x, s.y, s.r * 3, 0, Math.PI * 2);
-          ctx.fillStyle = s.colour.replace('VAR', (clampedAlpha * 0.08).toFixed(3));
-          ctx.fill();
-        }
-      });
+  'water-lines': (a) => `<path d="M0,45 Q25,40 50,45 T100,45" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.12" vector-effect="non-scaling-stroke"/>
+    <path d="M0,52 Q25,47 50,52 T100,52" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.08" vector-effect="non-scaling-stroke"/>
+    <path d="M0,59 Q25,54 50,59 T100,59" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.06" vector-effect="non-scaling-stroke"/>`,
 
-      time++;
-      requestAnimationFrame(draw);
-    }
+  'hexagons': (a) => `<polygon points="50,22 58,27 58,37 50,42 42,37 42,27" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.12"/>
+    <polygon points="64,32 72,37 72,47 64,52 56,47 56,37" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <polygon points="36,34 44,39 44,49 36,54 28,49 28,39" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.1"/>
+    <polygon points="50,44 58,49 58,59 50,64 42,59 42,49" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.06"/>`,
 
-    window.addEventListener('resize', resize);
-    resize();
-    draw();
-  })();
+  'window': (a) => `<rect x="32%" y="28%" width="36%" height="40%" rx="2" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.12"/>
+    <line x1="50%" y1="28%" x2="50%" y2="68%" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <line x1="32%" y1="48%" x2="68%" y2="48%" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <rect x="35%" y="31%" width="13%" height="15%" fill="${a}" opacity="0.03"/>
+    <rect x="52%" y="31%" width="13%" height="15%" fill="${a}" opacity="0.025"/>`,
 
-  // ═══════════════════════════════════════════
-  // FIREFLIES
-  // ═══════════════════════════════════════════
-  (function() {
-    const container = document.getElementById('fireflies');
-    const count = 18;
-    const colours = [
-      'rgba(167, 139, 250, 0.7)',
-      'rgba(129, 140, 248, 0.5)',
-      'rgba(224, 213, 245, 0.4)',
-      'rgba(167, 139, 250, 0.35)'
-    ];
+  'compass': (a) => `<circle cx="50%" cy="45%" r="28" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.12"/>
+    <circle cx="50%" cy="45%" r="20" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.08"/>
+    <line x1="50%" y1="17%" x2="50%" y2="73%" stroke="${a}" stroke-width="0.3" opacity="0.1"/>
+    <line x1="22%" y1="45%" x2="78%" y2="45%" stroke="${a}" stroke-width="0.3" opacity="0.1"/>
+    <circle cx="50%" cy="45%" r="2.5" fill="${a}" opacity="0.12"/>`,
 
-    for (let i = 0; i < count; i++) {
-      const f = document.createElement('div');
-      f.classList.add('firefly');
+  'waves': (a) => `<path d="M0,35 Q15,28 30,35 T60,35 T90,35 T120,35" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.15" vector-effect="non-scaling-stroke"/>
+    <path d="M-10,45 Q15,38 30,45 T60,45 T90,45 T120,45" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.1" vector-effect="non-scaling-stroke"/>
+    <path d="M-5,55 Q15,48 30,55 T60,55 T90,55 T120,55" fill="none" stroke="${a}" stroke-width="0.35" opacity="0.07" vector-effect="non-scaling-stroke"/>
+    <path d="M0,65 Q15,58 30,65 T60,65 T90,65" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.05" vector-effect="non-scaling-stroke"/>`,
 
-      const size = 2 + Math.random() * 3;
-      const fx = (Math.random() - 0.5) * 40;
-      const fy = (Math.random() - 0.5) * 40;
-      const col = colours[Math.floor(Math.random() * colours.length)];
+  'path': (a) => `<path d="M50,85 Q48,60 42,45 Q36,30 45,20 Q54,10 58,18" fill="none" stroke="${a}" stroke-width="0.6" opacity="0.12" stroke-dasharray="2,3"/>
+    <circle cx="58%" cy="18%" r="2" fill="${a}" opacity="0.1"/>`,
 
-      f.style.width = size + 'px';
-      f.style.height = size + 'px';
-      f.style.left = (10 + Math.random() * 80) + '%';
-      f.style.top = (10 + Math.random() * 75) + '%';
-      f.style.background = col;
-      f.style.boxShadow = `0 0 ${size * 4}px ${col}`;
-      f.style.setProperty('--fx', fx + 'px');
-      f.style.setProperty('--fy', fy + 'px');
-      f.style.animationDuration = (6 + Math.random() * 10) + 's';
-      f.style.animationDelay = (Math.random() * 8) + 's';
+  'steam': (a) => `<path d="M42,65 Q40,50 44,42 Q48,34 42,26" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.1"/>
+    <path d="M50,68 Q48,52 52,44 Q56,36 50,28" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <path d="M58,65 Q56,50 60,42 Q64,34 58,26" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.1"/>
+    <ellipse cx="50%" cy="72%" rx="14%" ry="4%" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.08"/>`,
 
-      container.appendChild(f);
-    }
-  })();
+  'lantern': (a) => `<rect x="44%" y="30%" width="12%" height="22%" rx="2" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.15"/>
+    <line x1="50%" y1="28%" x2="50%" y2="22%" stroke="${a}" stroke-width="0.4" opacity="0.12"/>
+    <circle cx="50%" cy="41%" r="4" fill="${a}" opacity="0.06"/>
+    <circle cx="50%" cy="41%" r="12" fill="${a}" opacity="0.025"/>
+    <circle cx="50%" cy="41%" r="22" fill="${a}" opacity="0.012"/>`,
 
+  'snow': (a) => `<circle cx="20%" cy="18%" r="1.5" fill="${a}" opacity="0.2"/><circle cx="45%" cy="12%" r="1" fill="${a}" opacity="0.15"/>
+    <circle cx="70%" cy="20%" r="1.5" fill="${a}" opacity="0.18"/><circle cx="30%" cy="32%" r="1" fill="${a}" opacity="0.12"/>
+    <circle cx="55%" cy="28%" r="1.5" fill="${a}" opacity="0.16"/><circle cx="80%" cy="35%" r="1" fill="${a}" opacity="0.1"/>
+    <circle cx="15%" cy="45%" r="1.5" fill="${a}" opacity="0.14"/><circle cx="40%" cy="42%" r="1" fill="${a}" opacity="0.12"/>
+    <circle cx="65%" cy="48%" r="1.5" fill="${a}" opacity="0.15"/><circle cx="88%" cy="52%" r="1" fill="${a}" opacity="0.1"/>
+    <circle cx="25%" cy="58%" r="1" fill="${a}" opacity="0.12"/><circle cx="50%" cy="55%" r="1.5" fill="${a}" opacity="0.14"/>
+    <circle cx="75%" cy="62%" r="1" fill="${a}" opacity="0.1"/>`,
 
-  // Sleep Stories Filters
-  (function(){
-    const filterBtns=document.querySelectorAll('.ss-filter-btn');
-    const storyCards=document.querySelectorAll('#ssAvailableGrid .ss-card');
-    const bookSpines=document.querySelectorAll('#ssBookGrid .ss-book-spine');
-    const availableDivider=document.getElementById('ssAvailableDivider');
-    const availableGrid=document.getElementById('ssAvailableGrid');
-    const comingDivider=document.getElementById('ssComingDivider');
-    const bookGrid=document.getElementById('ssBookGrid');
-    const subHook=document.getElementById('ssSubHook');
+  'constellation': (a) => `<circle cx="30%" cy="25%" r="2" fill="${a}" opacity="0.25"/><circle cx="55%" cy="20%" r="1.5" fill="${a}" opacity="0.2"/>
+    <circle cx="70%" cy="35%" r="2" fill="${a}" opacity="0.22"/><circle cx="45%" cy="45%" r="1.5" fill="${a}" opacity="0.18"/>
+    <circle cx="60%" cy="55%" r="2" fill="${a}" opacity="0.2"/><circle cx="35%" cy="60%" r="1.5" fill="${a}" opacity="0.15"/>
+    <line x1="30%" y1="25%" x2="55%" y2="20%" stroke="${a}" stroke-width="0.3" opacity="0.1"/>
+    <line x1="55%" y1="20%" x2="70%" y2="35%" stroke="${a}" stroke-width="0.3" opacity="0.1"/>
+    <line x1="70%" y1="35%" x2="45%" y2="45%" stroke="${a}" stroke-width="0.3" opacity="0.08"/>
+    <line x1="45%" y1="45%" x2="60%" y2="55%" stroke="${a}" stroke-width="0.3" opacity="0.08"/>
+    <line x1="60%" y1="55%" x2="35%" y2="60%" stroke="${a}" stroke-width="0.3" opacity="0.06"/>`,
 
-    filterBtns.forEach(btn=>{
-      btn.addEventListener('click',()=>{
-        filterBtns.forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        const f=btn.dataset.filter;
+  'tree': (a) => `<line x1="50%" y1="80%" x2="50%" y2="35%" stroke="${a}" stroke-width="0.8" opacity="0.12"/>
+    <line x1="50%" y1="50%" x2="35%" y2="38%" stroke="${a}" stroke-width="0.5" opacity="0.1"/>
+    <line x1="50%" y1="45%" x2="62%" y2="32%" stroke="${a}" stroke-width="0.5" opacity="0.1"/>
+    <line x1="50%" y1="55%" x2="38%" y2="48%" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <circle cx="50%" cy="30%" r="18" fill="${a}" opacity="0.025"/>`,
 
-        if(f==='all'){
-          [availableDivider,availableGrid,subHook,comingDivider,bookGrid].forEach(el=>el.style.display='');
-          storyCards.forEach(c=>c.style.display='');
-          bookSpines.forEach(b=>b.style.display='');
-          return;
-        }
+  'clock': (a) => `<circle cx="50%" cy="42%" r="26" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.12"/>
+    <circle cx="50%" cy="42%" r="1.5" fill="${a}" opacity="0.15"/>
+    <line x1="50%" y1="42%" x2="50%" y2="26%" stroke="${a}" stroke-width="0.4" opacity="0.15"/>
+    <line x1="50%" y1="42%" x2="62%" y2="38%" stroke="${a}" stroke-width="0.3" opacity="0.12"/>`,
 
-        let anyAvail=false;
-        storyCards.forEach(c=>{const show=c.dataset.mood===f;c.style.display=show?'':'none';if(show)anyAvail=true});
-        availableDivider.style.display=anyAvail?'':'none';
-        availableGrid.style.display=anyAvail?'':'none';
+  'river': (a) => `<path d="M30,10 Q55,25 40,40 Q25,55 50,70 Q75,85 60,100" fill="none" stroke="${a}" stroke-width="0.8" opacity="0.1"/>
+    <path d="M34,10 Q59,25 44,40 Q29,55 54,70 Q79,85 64,100" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.06"/>`,
 
-        let anyBook=false;
-        bookSpines.forEach(b=>{const show=b.dataset.mood===f;b.style.display=show?'':'none';if(show)anyBook=true});
-        comingDivider.style.display=anyBook?'':'none';
-        bookGrid.style.display=anyBook?'':'none';
+  'pines': (a) => `<polygon points="25,70 30,45 35,70" fill="${a}" opacity="0.06" stroke="${a}" stroke-width="0.3" opacity="0.1"/>
+    <polygon points="40,72 47,38 54,72" fill="${a}" opacity="0.05" stroke="${a}" stroke-width="0.3" opacity="0.08"/>
+    <polygon points="58,70 63,42 68,70" fill="${a}" opacity="0.06" stroke="${a}" stroke-width="0.3" opacity="0.1"/>
+    <polygon points="72,72 76,50 80,72" fill="${a}" opacity="0.04" stroke="${a}" stroke-width="0.3" opacity="0.07"/>`,
 
-        subHook.style.display='';
-      });
-    });
-  })();
+  'stars-cluster': (a) => `<circle cx="40%" cy="30%" r="3" fill="${a}" opacity="0.2"/>
+    <circle cx="55%" cy="25%" r="2" fill="${a}" opacity="0.15"/><circle cx="65%" cy="35%" r="2.5" fill="${a}" opacity="0.18"/>
+    <circle cx="45%" cy="42%" r="1.5" fill="${a}" opacity="0.12"/><circle cx="58%" cy="48%" r="2" fill="${a}" opacity="0.14"/>
+    <circle cx="50%" cy="35%" r="8" fill="${a}" opacity="0.02"/><circle cx="50%" cy="35%" r="18" fill="${a}" opacity="0.01"/>`,
 
-  // Navigation
-  const navWrap=document.getElementById("navWrap");
-  window.addEventListener("scroll",()=>{navWrap.classList.toggle("scrolled",window.scrollY>30)},{passive:true});
-  const burger=document.getElementById("burgerBtn");
-  const drawer=document.getElementById("navDrawer");
-  burger.addEventListener("click",()=>{burger.classList.toggle("open");drawer.classList.toggle("open");document.body.style.overflow=drawer.classList.contains("open")?"hidden":""});
-  drawer.querySelectorAll(".nav-drawer__link").forEach(l=>{l.addEventListener("click",()=>{burger.classList.remove("open");drawer.classList.remove("open");document.body.style.overflow=""})});
-  </script>
+  'windmill': (a) => `<line x1="50%" y1="30%" x2="50%" y2="75%" stroke="${a}" stroke-width="0.6" opacity="0.12"/>
+    <line x1="50%" y1="30%" x2="35%" y2="15%" stroke="${a}" stroke-width="0.4" opacity="0.1"/>
+    <line x1="50%" y1="30%" x2="65%" y2="15%" stroke="${a}" stroke-width="0.4" opacity="0.1"/>
+    <line x1="50%" y1="30%" x2="35%" y2="45%" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <line x1="50%" y1="30%" x2="65%" y2="45%" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <circle cx="50%" cy="30%" r="2.5" fill="${a}" opacity="0.1"/>`,
+
+  'rain': (a) => `<line x1="20%" y1="15%" x2="20%" y2="22%" stroke="${a}" stroke-width="0.4" opacity="0.12"/>
+    <line x1="35%" y1="20%" x2="35%" y2="27%" stroke="${a}" stroke-width="0.4" opacity="0.1"/>
+    <line x1="50%" y1="12%" x2="50%" y2="19%" stroke="${a}" stroke-width="0.4" opacity="0.14"/>
+    <line x1="65%" y1="18%" x2="65%" y2="25%" stroke="${a}" stroke-width="0.4" opacity="0.1"/>
+    <line x1="80%" y1="14%" x2="80%" y2="21%" stroke="${a}" stroke-width="0.4" opacity="0.12"/>
+    <line x1="28%" y1="30%" x2="28%" y2="37%" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <line x1="42%" y1="28%" x2="42%" y2="35%" stroke="${a}" stroke-width="0.4" opacity="0.1"/>
+    <line x1="58%" y1="32%" x2="58%" y2="39%" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <line x1="72%" y1="26%" x2="72%" y2="33%" stroke="${a}" stroke-width="0.4" opacity="0.1"/>`,
+
+  'mountain': (a) => `<polygon points="15,70 40,25 65,70" fill="${a}" opacity="0.04" stroke="${a}" stroke-width="0.5" stroke-opacity="0.12"/>
+    <polygon points="45,70 65,32 85,70" fill="${a}" opacity="0.03" stroke="${a}" stroke-width="0.4" stroke-opacity="0.08"/>
+    <line x1="0" y1="70%" x2="100%" y2="70%" stroke="${a}" stroke-width="0.3" opacity="0.06"/>`,
+
+  'torii': (a) => `<line x1="35%" y1="25%" x2="35%" y2="70%" stroke="${a}" stroke-width="0.8" opacity="0.12"/>
+    <line x1="65%" y1="25%" x2="65%" y2="70%" stroke="${a}" stroke-width="0.8" opacity="0.12"/>
+    <line x1="28%" y1="28%" x2="72%" y2="28%" stroke="${a}" stroke-width="0.6" opacity="0.15"/>
+    <line x1="30%" y1="35%" x2="70%" y2="35%" stroke="${a}" stroke-width="0.4" opacity="0.1"/>`,
+
+  'fireflies': (a) => `<circle cx="25%" cy="35%" r="2" fill="${a}" opacity="0.2"/><circle cx="25%" cy="35%" r="6" fill="${a}" opacity="0.04"/>
+    <circle cx="60%" cy="28%" r="1.5" fill="${a}" opacity="0.15"/><circle cx="60%" cy="28%" r="5" fill="${a}" opacity="0.03"/>
+    <circle cx="42%" cy="50%" r="2" fill="${a}" opacity="0.18"/><circle cx="42%" cy="50%" r="6" fill="${a}" opacity="0.035"/>
+    <circle cx="75%" cy="45%" r="1.5" fill="${a}" opacity="0.14"/><circle cx="75%" cy="45%" r="5" fill="${a}" opacity="0.03"/>
+    <circle cx="35%" cy="65%" r="2" fill="${a}" opacity="0.16"/><circle cx="35%" cy="65%" r="6" fill="${a}" opacity="0.03"/>`,
+
+  'flame': (a) => `<path d="M50,62 Q44,48 48,38 Q50,30 50,22 Q50,30 52,38 Q56,48 50,62Z" fill="${a}" opacity="0.06" stroke="${a}" stroke-width="0.4" stroke-opacity="0.12"/>
+    <circle cx="50%" cy="55%" r="6" fill="${a}" opacity="0.025"/><circle cx="50%" cy="45%" r="16" fill="${a}" opacity="0.015"/>`,
+
+  'mist': (a) => `<ellipse cx="30%" cy="40%" rx="22%" ry="3%" fill="${a}" opacity="0.04"/>
+    <ellipse cx="60%" cy="48%" rx="25%" ry="3%" fill="${a}" opacity="0.035"/>
+    <ellipse cx="40%" cy="56%" rx="28%" ry="3%" fill="${a}" opacity="0.03"/>
+    <ellipse cx="55%" cy="64%" rx="20%" ry="3%" fill="${a}" opacity="0.025"/>`,
+
+  'owl-eyes': (a) => `<circle cx="40%" cy="38%" r="10" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.12"/>
+    <circle cx="60%" cy="38%" r="10" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.12"/>
+    <circle cx="40%" cy="38%" r="3" fill="${a}" opacity="0.1"/>
+    <circle cx="60%" cy="38%" r="3" fill="${a}" opacity="0.1"/>
+    <path d="M30,38 Q35,28 40,30" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.08"/>
+    <path d="M70,38 Q65,28 60,30" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.08"/>`,
+
+  'spiral': (a) => `<path d="M50,42 Q52,38 56,38 Q62,38 62,44 Q62,52 54,52 Q44,52 44,42 Q44,30 56,30 Q70,30 70,46 Q70,62 52,62 Q34,62 34,42" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.1"/>`,
+
+  'hills': (a) => `<path d="M0,65 Q20,40 40,55 Q55,35 75,50 Q90,42 100,52 L100,100 L0,100Z" fill="${a}" opacity="0.04"/>
+    <path d="M0,72 Q25,55 45,65 Q60,50 80,60 Q95,55 100,60 L100,100 L0,100Z" fill="${a}" opacity="0.03"/>`,
+
+  'weave': (a) => `<path d="M25,20 Q40,30 25,40 Q10,50 25,60 Q40,70 25,80" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.1"/>
+    <path d="M50,20 Q65,30 50,40 Q35,50 50,60 Q65,70 50,80" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <path d="M75,20 Q90,30 75,40 Q60,50 75,60 Q90,70 75,80" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.1"/>`,
+
+  'leaves': (a) => `<path d="M35,55 Q25,40 35,30 Q45,40 35,55Z" fill="${a}" opacity="0.05" stroke="${a}" stroke-width="0.3" stroke-opacity="0.1"/>
+    <path d="M55,50 Q45,35 55,25 Q65,35 55,50Z" fill="${a}" opacity="0.04" stroke="${a}" stroke-width="0.3" stroke-opacity="0.08"/>
+    <path d="M68,60 Q58,48 68,38 Q78,48 68,60Z" fill="${a}" opacity="0.035" stroke="${a}" stroke-width="0.3" stroke-opacity="0.07"/>`,
+
+  'quill': (a) => `<path d="M55,18 Q52,35 48,50 L46,70" fill="none" stroke="${a}" stroke-width="0.6" opacity="0.12"/>
+    <path d="M55,18 Q62,22 58,30" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.08"/>
+    <path d="M55,18 Q50,24 52,32" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.08"/>`,
+
+  'quilt': (a) => `<rect x="25%" y="28%" width="20%" height="18%" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.1"/>
+    <rect x="45%" y="28%" width="20%" height="18%" fill="${a}" opacity="0.03"/>
+    <rect x="25%" y="46%" width="20%" height="18%" fill="${a}" opacity="0.025"/>
+    <rect x="45%" y="46%" width="20%" height="18%" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <line x1="25%" y1="28%" x2="45%" y2="46%" stroke="${a}" stroke-width="0.3" opacity="0.06"/>
+    <line x1="45%" y1="28%" x2="65%" y2="46%" stroke="${a}" stroke-width="0.3" opacity="0.06"/>`,
+
+  'bird': (a) => `<path d="M30,40 Q40,30 50,35 Q60,30 70,40" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.12"/>
+    <path d="M35,48 Q42,42 48,45" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.08"/>`,
+
+  'stone-circle': (a) => `<circle cx="50%" cy="50%" r="28" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.06" stroke-dasharray="1,8"/>
+    <rect x="48%" y="24%" width="4%" height="8%" rx="1" fill="${a}" opacity="0.08"/>
+    <rect x="68%" y="34%" width="4%" height="7%" rx="1" fill="${a}" opacity="0.07" transform="rotate(30,72,38)"/>
+    <rect x="72%" y="54%" width="4%" height="7%" rx="1" fill="${a}" opacity="0.06" transform="rotate(60,74,58)"/>
+    <rect x="28%" y="34%" width="4%" height="7%" rx="1" fill="${a}" opacity="0.07" transform="rotate(-30,30,38)"/>
+    <rect x="24%" y="54%" width="4%" height="7%" rx="1" fill="${a}" opacity="0.06" transform="rotate(-60,26,58)"/>
+    <rect x="38%" y="70%" width="4%" height="6%" rx="1" fill="${a}" opacity="0.05"/>
+    <rect x="58%" y="70%" width="4%" height="6%" rx="1" fill="${a}" opacity="0.05"/>`,
+
+  'press': (a) => `<rect x="30%" y="30%" width="40%" height="36%" rx="1" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.1"/>
+    <line x1="34%" y1="40%" x2="66%" y2="40%" stroke="${a}" stroke-width="0.3" opacity="0.08"/>
+    <line x1="34%" y1="46%" x2="60%" y2="46%" stroke="${a}" stroke-width="0.3" opacity="0.06"/>
+    <line x1="34%" y1="52%" x2="66%" y2="52%" stroke="${a}" stroke-width="0.3" opacity="0.08"/>
+    <line x1="34%" y1="58%" x2="55%" y2="58%" stroke="${a}" stroke-width="0.3" opacity="0.06"/>`,
+
+  'vinyl': (a) => `<circle cx="50%" cy="44%" r="26" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.1"/>
+    <circle cx="50%" cy="44%" r="18" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.06"/>
+    <circle cx="50%" cy="44%" r="10" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.08"/>
+    <circle cx="50%" cy="44%" r="3" fill="${a}" opacity="0.1"/>`,
+
+  'tide-pool': (a) => `<circle cx="50%" cy="45%" r="22" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.1"/>
+    <circle cx="45%" cy="42%" r="12" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.07"/>
+    <circle cx="55%" cy="50%" r="8" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.08"/>
+    <circle cx="48%" cy="46%" r="3" fill="${a}" opacity="0.05"/>`,
+
+  'strings': (a) => `<line x1="30%" y1="15%" x2="30%" y2="85%" stroke="${a}" stroke-width="0.3" opacity="0.12"/>
+    <line x1="40%" y1="15%" x2="40%" y2="85%" stroke="${a}" stroke-width="0.3" opacity="0.1"/>
+    <line x1="50%" y1="15%" x2="50%" y2="85%" stroke="${a}" stroke-width="0.3" opacity="0.08"/>
+    <line x1="60%" y1="15%" x2="60%" y2="85%" stroke="${a}" stroke-width="0.3" opacity="0.1"/>
+    <line x1="70%" y1="15%" x2="70%" y2="85%" stroke="${a}" stroke-width="0.3" opacity="0.12"/>
+    <ellipse cx="50%" cy="65%" rx="22%" ry="8%" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.06"/>`
+};
+
+function genBg(story) {
+  const cp = catPalettes[story.c];
+  const s = hash(story.t);
+  const bg = cp.bgs[s % cp.bgs.length];
+  const acc = cp.accents[s % cp.accents.length];
+
+  const x1 = 15+(s%50), y1 = 10+((s>>4)%40);
+  const x2 = 40+((s>>2)%40), y2 = 50+((s>>3)%35);
+  const x3 = 10+((s>>5)%55), y3 = 55+((s>>1)%35);
+  const a = 130+(s%80);
+
+  return {
+    bg: `radial-gradient(ellipse 55% 60% at ${x1}% ${y1}%, rgba(${bg[0]+15},${bg[1]+20},${bg[2]+15},0.5) 0%,transparent 100%),
+      radial-gradient(ellipse 50% 55% at ${x2}% ${y2}%, rgba(${bg[0]+10},${bg[1]+15},${bg[2]+10},0.35) 0%,transparent 100%),
+      radial-gradient(ellipse 60% 65% at ${x3}% ${y3}%, rgba(${bg[0]+8},${bg[1]+12},${bg[2]+8},0.3) 0%,transparent 100%),
+      radial-gradient(ellipse 30% 30% at ${75-(s%30)}% ${15+(s%20)}%, rgba(${acc},0.04) 0%,transparent 100%),
+      linear-gradient(${a}deg, rgb(${bg}) 0%, rgb(${bg[0]+4},${bg[1]+3},${bg[2]+3}) 50%, rgb(${bg}) 100%)`,
+    accent: `rgb(${acc})`
+  };
+}
+
+function render(filter) {
+  const grid = document.getElementById('ssGrid');
+  grid.innerHTML = '';
+  const items = filter === 'all' ? stories : stories.filter(s => s.c === filter);
+
+  items.forEach((s, i) => {
+    const { bg, accent } = genBg(s);
+    const motifFn = motifs[s.m] || motifs['constellation'];
+    const svg = motifFn(accent);
+
+    const el = document.createElement('div');
+    el.className = 'ss-book' + (s.free ? ' available' : ' locked');
+    el.style.opacity = '0';
+    el.style.animation = `ssRise 0.45s ease-out ${0.025*i}s forwards`;
+
+    el.innerHTML = `
+      <div class="ss-book-bg" style="background:${bg}"></div>
+      <div class="ss-book-motif"><svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">${svg}</svg></div>
+      <div class="ss-book-frame"></div>
+      <div class="ss-book-noise"></div>
+      <div class="ss-book-content">
+        <div class="ss-book-week">Week ${s.w}</div>
+        <div style="margin-top:auto">
+          <div class="ss-book-title">${s.t}</div>
+          <div class="ss-book-cat">${s.c}</div>
+        </div>
+      </div>
+      <div class="ss-book-salus">Salus</div>
+      ${s.free ? '' : '<div class="ss-book-lock"><svg viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>'}
+      <div class="ss-book-border"></div>
+    `;
+
+    grid.appendChild(el);
+  });
+}
+
+document.getElementById('ssFilters').addEventListener('click', e => {
+  const btn = e.target.closest('.ss-filter-btn');
+  if (!btn) return;
+  document.querySelectorAll('.ss-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render(btn.dataset.filter);
+});
+
+render('all');
+
+// Navigation
+const navWrap=document.getElementById("navWrap");
+window.addEventListener("scroll",()=>{navWrap.classList.toggle("scrolled",window.scrollY>30)},{passive:true});
+const burger=document.getElementById("burgerBtn");
+const drawer=document.getElementById("navDrawer");
+burger.addEventListener("click",()=>{burger.classList.toggle("open");drawer.classList.toggle("open");document.body.style.overflow=drawer.classList.contains("open")?"hidden":""});
+drawer.querySelectorAll(".nav-drawer__link").forEach(l=>{l.addEventListener("click",()=>{burger.classList.remove("open");drawer.classList.remove("open");document.body.style.overflow=""})});
+</script>
+
 </body>
 </html>

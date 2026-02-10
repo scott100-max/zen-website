@@ -1,0 +1,26 @@
+# Openings Register — Salus Session Catalogue
+# Format: [Session #] | [Opening line] | [Opening technique]
+# Updated: 10 February 2026
+
+01-morning-meditation | "This is your morning meditation." | Theme statement
+03-breathing-for-anxiety | "This is a gentle breathing session." | Theme statement
+09-rainfall-sleep-journey | "Tonight, it's raining." | Environmental observation
+18-calm-in-three-minutes | "Right now, wherever you are, you are safe enough to take three minutes." | Reassurance + time contract
+19-release-and-restore | "Find somewhere comfortable to lie down." | Direct body instruction
+23-the-calm-reset | "This is a quick reset. Five minutes. Let's make them count." | Theme statement + time contract
+25-introduction-to-mindfulness | "This is a simple introduction to mindfulness." | Theme statement + reassurance
+32-observing-emotions | "Today we are going to practise something that might seem uncomfortable at first." | Candid framing
+36-loving-kindness-intro-v3 | "Find a comfortable position, wherever you are right now." | Direct body instruction
+38-seven-day-mindfulness-day1 | "Today you are starting a seven-day mindfulness practice." | Course framing statement
+39-seven-day-mindfulness-day2 | "You came back. That already says something good about you." | Affirmation / acknowledgement
+40-seven-day-mindfulness-day3 | "Today we give your body the attention it deserves." | Body-centered observation
+41-seven-day-mindfulness-day4 | "Right now, your mind is doing something interesting." | Meta-cognitive observation
+42-seven-day-mindfulness-day5 | "Before I say anything else, just listen for a moment." | Environmental / sensory instruction
+43-seven-day-mindfulness-day6 | "Take a moment to notice how you arrived here today." | Emotional check-in
+44-seven-day-mindfulness-day7 | "This is your seventh day. Welcome to the final session." | Milestone acknowledgement
+43-non-dual-awareness | "This meditation is for experienced practitioners." | Audience qualifier
+52-the-court-of-your-mind | "Your mind has been busy building a case against you." | Mid-action start / metaphor
+53-the-gardeners-almanac | "There is a garden." | Scene-setting
+54-the-slow-train-north | "The platform is almost empty." | Scene-setting
+55-the-bookshop-at-the-end-of-the-lane | "You almost walked past it." | Mid-action start
+56-the-lighthouse-keepers-log | "The path to the lighthouse runs along the cliff edge." | Scene-setting

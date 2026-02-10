@@ -1,0 +1,109 @@
+# Phrases Register — Salus Session Catalogue
+# Format: [Session #] | [Phrase or cue] | [Context]
+# Updated: 10 February 2026 (abridged — distinctive phrases only, not common instructions)
+
+# === SILENCE ANNOUNCEMENTS (must be unique per session) ===
+03 | "I'll be quiet for a while now. Just keep breathing at your own pace. Let the birds hold you." | Silence — ambient handover
+03 | "I'm going to give you some quiet now. Stay with your breath. I'll be back soon." | Silence — reassurance of return
+09 | "I'm going to be quiet now for a little while. Just let the rain hold you." | Silence — rain handover
+38-day1 | "I am going to leave some quiet now. Stay with the breath, and when you drift, come back." | Silence — breath return
+39-day2 | "I will be quiet for a little while. Keep counting, and start again at one whenever you lose track." | Silence — counting continuation
+40-day3 | "Rest here with the body for a while. I will guide you back when the time comes." | Silence — body rest
+41-day4 | "I am going to step back for a while. When a thought arrives, notice it, give it a name, and let it pass." | Silence — thought labelling
+42-day5 | "I am going to be quiet now. Let the sounds around you become your only anchor." | Silence — sound anchor
+43-day6 | "I will leave you in quiet now. Whatever you are noticing, stay with it. You do not need to change anything." | Silence — non-intervention
+44-day7 | "This is your time now. Hold everything at once. The breath, the body, the sounds, the thoughts." | Silence — open awareness
+
+# === DISTINCTIVE PHRASES BY SESSION ===
+
+# Session 01 — Morning Meditation
+01 | "Choose one word. One intention. Let it settle in your mind like a stone in still water." | Intention metaphor
+01 | "Gratitude has a way of softening us. It opens a small door that lets light in." | Gratitude metaphor
+01 | "Even on difficult days, this moment is yours." | Moment ownership
+01 | "Sleep. Relax. Restore." | Sign-off motto
+
+# Session 03 — Breathing for Anxiety
+03 | "Whatever you're feeling right now, that's okay. You don't need to fix anything." | Validation of current state
+03 | "Rain on a roof... you're inside. You're sheltered." | Safety signal (in 09)
+03 | "Whenever anxiety rises, come back to this. Breathe in. Hold. Let go." | Portable technique summary
+03 | "It won't make everything perfect. But it will make the next moment easier." | Honest expectation-setting
+
+# Session 09 — Rainfall Sleep Journey
+09 | "Rain on a roof is ancient. It says one thing. You're inside. You're sheltered." | Rain as safety signal
+09 | "This is an all-night rain." | Continuity reassurance
+09 | "The rain is the technique. The rain is the meditation. The rain is the lullaby." | Triple-beat declaration
+09 | "Each drop on the roof is a tiny permission." | Drop as permission
+09 | "A thousand permissions per second, falling from the sky." | Poetic intensification
+
+# Session 18 — Calm in Three Minutes
+18 | "Take a breath. A real one." | Distinctive breath cue
+18 | "Look around and name five things you can see." | 5-4-3-2-1 grounding technique
+
+# Session 19 — Release and Restore
+19 | "Notice the difference. That wave of softness washing through." | Post-release awareness
+19 | "Imagine that warmth as a golden glow that starts at your feet." | Golden glow visualisation
+19 | "This kind of release is not indulgent. It is maintenance. It is care." | Self-care validation
+
+# Session 23 — The Calm Reset
+23 | "Imagine all the stress as a physical weight sitting across your shoulders." | Stress-as-weight metaphor
+23 | "Roll your shoulders back, and that weight slides off and lands on the floor." | Physical shrugging-off
+23 | "It will wait if you want it later. But right now, it is on the ground." | Stress will wait
+
+# Session 25 — Introduction to Mindfulness
+25 | "Not because it's special, but because it's always there." | Breath rationale
+25 | "That moment of noticing, that is the whole practice right there." | Core insight
+25 | "Like clouds moving through a wide open sky." | Clouds-in-sky metaphor
+25 | "You are building a habit of returning." | Practice as habit
+25 | "You can do this on a bus. At your desk. Waiting for someone." | Portability list
+
+# Session 32 — Observing Emotions
+32 | "What is the emotional weather?" | Emotional weather metaphor
+32 | "Anxious is more useful than bad. Irritated is more useful than angry." | Specificity instruction
+32 | "Emotions are like weather. They come and go. You do not need to explain the rain." | Weather metaphor
+32 | "I see you. You are welcome here." | Self-compassion phrase
+32 | "Fighting it takes more energy than allowing it." | Energy conservation
+
+# Session 36 — Loving-Kindness Intro
+36 | "Offer the words like seeds planted in open ground." | Seeds metaphor
+36 | "May I live safe and protected from harm." | LK phrase — safety
+36 | "Picture warmth moving outward from your heart, like ripples spreading across still water." | Ripples metaphor
+36 | "There is no limit to how far kindness can travel." | Kindness as infinite
+
+# Session 38-44 — Seven-Day Mindfulness Course
+38-day1 | "That is your anchor for today." | Anchor introduction
+38-day1 | "Follow each breath as it arrives, and follow it as it leaves." | Breath following instruction
+38-day1 | "Noticing the drift is itself a moment of awareness." | Drift-as-awareness insight
+39-day2 | "You came back. That already says something good about you." | Return affirmation
+39-day2 | "The breath is your anchor. Not a chain holding you in place, but a point you can always return to." | Anchor redefinition
+40-day3 | "Your body knows how to rest. You just reminded it." | Body wisdom
+41-day4 | "Thoughts are visitors, not residents." | Thought metaphor
+41-day4 | "A thought is an event in your mind, not a fact and not an instruction." | Thought reframing
+42-day5 | "The world is already speaking to you. All it asks is that you listen." | Sound observation
+43-day6 | "The act of naming what you experience has a measurable effect." | Evidence-based naming
+43-day6 | "There is a difference between an emotion and a reaction." | Emotion vs reaction distinction
+44-day7 | "This is open awareness." | Concept naming
+44-day7 | "You built something real this week. Carry it forward." | Course completion
+
+# Session 43 — Non-Dual Awareness
+43 | "There's very little to do here, and a lot to notice." | Inversion of instruction
+43 | "The silence isn't filler. It is the practice." | Silence as practice
+43 | "When you look for the looker, what do you find?" | Core non-dual pointer
+43 | "The noticing is the freedom." | Core phrase
+43 | "You can't manufacture it. And you can't lose it. You can only overlook it." | Can't-lose pointer
+
+# Session 52 — The Court of Your Mind
+52 | "Your mind has been busy building a case against you." | Central metaphor
+52 | "Can you provide specific evidence for any of those claims?" | Key question
+52 | "The prosecution has been running this case for years. And it has almost no evidence." | Core revelation
+52 | "The papers were blank. They were always blank." | Powerful image
+52 | "Case dismissed." | Verdict
+52 | "Where is your evidence?" | Portable tool
+
+# Sessions 53-56 — Sleep Stories (shared patterns)
+53 | "The first thing you notice is the air. It is different here." | Threshold moment
+54 | "Click. Click. Click. The wheels on the rails." | Onomatopoeia
+54 | "Sleep is not something you go to tonight. It is something the train carries you into." | Sleep as destination
+55 | "It gives way beneath you like a conversation." | Chair simile
+55 | "Books that were loved, not collected." | Distinctive characterisation
+56 | "There is no urgency in a lighthouse." | Pace declaration
+56 | "One light, in the right place, doing one thing well." | Purpose statement
