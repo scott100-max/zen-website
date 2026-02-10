@@ -350,7 +350,8 @@ def _score_wav(wav_path, prev_mfcc=None):
 
 async def generate_chunk_candidates(
     http_session, chunk_idx, text, chunk_dir, semaphore,
-    emotion='calm', prev_best_mfcc=None, executor=None, api_log=None
+    emotion='calm', prev_best_mfcc=None, executor=None, api_log=None,
+    extra=0
 ):
     """Generate all candidates for one chunk. Chunks are processed sequentially
     (tonal distance needs previous chunk's best), but candidates within a chunk
@@ -358,7 +359,7 @@ async def generate_chunk_candidates(
 
     Returns (chunk_meta_dict, best_mfcc, scores_list).
     """
-    n_candidates = get_candidate_count(len(text), is_chunk_0=(chunk_idx == 0))
+    n_candidates = get_candidate_count(len(text), is_chunk_0=(chunk_idx == 0)) + extra
     chunk_dir = Path(chunk_dir)
     chunk_dir.mkdir(parents=True, exist_ok=True)
     prefix = f"c{chunk_idx:02d}"
@@ -1025,7 +1026,7 @@ def _save_gen_log(log, path):
 # Main Build Orchestration
 # ---------------------------------------------------------------------------
 
-async def build_session(script_path, dry_run=False):
+async def build_session(script_path, dry_run=False, extra=0, only_chunks=None):
     """Generate vault candidates for a single session script.
 
     Returns session manifest dict.
@@ -1113,13 +1114,31 @@ async def build_session(script_path, dry_run=False):
     async with aiohttp.ClientSession() as http_session:
         prev_best_mfcc = None
 
+        only_set = None
+        if only_chunks:
+            only_set = set(int(x) for x in only_chunks.split(',')) if isinstance(only_chunks, str) else set(only_chunks)
+
         for ci, (text, pause) in enumerate(blocks):
+            if only_set is not None and ci not in only_set:
+                # Still need prev_best_mfcc for tonal distance
+                chunk_dir = session_dir / f"c{ci:02d}"
+                scores_file = chunk_dir / f"c{ci:02d}_scores.json"
+                if scores_file.exists():
+                    sd = json.loads(scores_file.read_text())
+                    best_v = sd.get('best_version', 0)
+                    best_wav = chunk_dir / f"c{ci:02d}_v{best_v:02d}.wav"
+                    if best_wav.exists():
+                        prev_best_mfcc = build.compute_mfcc_profile(str(best_wav))
+                print(f"  Chunk {ci}: skipped (not in --only-chunks)")
+                continue
+
             chunk_dir = session_dir / f"c{ci:02d}"
 
             chunk_meta, prev_best_mfcc, scores = await generate_chunk_candidates(
                 http_session, ci, text, chunk_dir, semaphore,
                 emotion=emotion, prev_best_mfcc=prev_best_mfcc,
-                executor=executor, api_log=api_log
+                executor=executor, api_log=api_log,
+                extra=extra
             )
 
             # Mark closing chunk
@@ -1211,6 +1230,10 @@ async def main():
                         help='Only generate inventory.json, no audio')
     parser.add_argument('--no-upload', action='store_true',
                         help='Skip R2 upload')
+    parser.add_argument('--extra', type=int, default=0,
+                        help='Generate N extra candidates per chunk (on top of standard count)')
+    parser.add_argument('--only-chunks', metavar='LIST',
+                        help='Only process these chunk indices (comma-separated, e.g. 13,27,28)')
     args = parser.parse_args()
 
     # Ensure vault directory exists
@@ -1244,7 +1267,7 @@ async def main():
 
         results = []
         for script in scripts:
-            manifest = await build_session(script, dry_run=args.dry_run)
+            manifest = await build_session(script, dry_run=args.dry_run, extra=args.extra, only_chunks=args.only_chunks)
             if manifest:
                 results.append(manifest)
 
@@ -1259,7 +1282,7 @@ async def main():
                 f"Pre-filter failures: {sum(m['chunks_below_prefilter'] for m in results)}"
             )
     elif args.script:
-        manifest = await build_session(args.script, dry_run=args.dry_run)
+        manifest = await build_session(args.script, dry_run=args.dry_run, extra=args.extra, only_chunks=args.only_chunks)
         if manifest and not args.dry_run:
             send_notification(
                 f"Vault Build Complete — {manifest['script_id']}",
