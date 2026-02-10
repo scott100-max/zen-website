@@ -5,11 +5,7 @@ Ambient: garden
 Style: Warm, grounded male narrator
 ---
 
-This is Day One.
-
-...
-
-The beginning of something simple.
+This is Day One. The beginning of something simple.
 
 ...
 

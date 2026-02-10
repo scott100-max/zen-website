@@ -1,6 +1,6 @@
-<h1>Vault Picker &mdash; 52-the-court-of-your-mind</h1>
+<h1>Vault Picker &mdash; {{SESSION_ID}}</h1>
 <p class="meta">A/B Tournament v2</p>
-<p class="meta">Audio base: <input id="basePath" value="https://media.salus-mind.com/vault/52-the-court-of-your-mind" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;color:#f0eefc;padding:2px 6px;font-size:.72rem;width:420px" onchange="updateBasePath()"></p>
+<p class="meta">Audio base: <input id="basePath" value="https://media.salus-mind.com/vault/{{SESSION_ID}}" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;color:#f0eefc;padding:2px 6px;font-size:.72rem;width:420px" onchange="updateBasePath()"></p>
 <div class="save-status ok" id="saveStatus">Auto-save active</div>
 <div class="progress" id="progress">0 / 0 picked</div>
 <div class="chunk-nav" id="chunkNav"></div>
