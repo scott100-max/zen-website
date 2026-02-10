@@ -264,25 +264,16 @@ function pickSide(side) {
       logDebug('Last candidate wins chunk ' + chunk.idx + ': v' + state.winner);
       showToast('PICKED: v' + state.winner + ' (last standing)');
     } else {
-      // Remaining candidates exist — queue them, advance to next chunk
+      // Remaining candidates exist — load next pair on same chunk
       state.champion = state.top5[remaining[0]];
       state.challengerIdx = remaining[1];
       state.round = (state.round || 0) + 1;
-      logDebug('Both rejected, ' + remaining.length + ' remain. Moving to next chunk.');
+      logDebug('Both rejected, ' + remaining.length + ' remain. Loading next pair.');
     }
 
-    // Auto-advance after reject both
+    // Stay on current chunk — show next pair (no auto-advance)
     try { saveState(); } catch (e) { logDebug('saveState error: ' + e.message); }
     renderChunk();
-    setTimeout(function() {
-      for (var i = currentChunkArrayIdx + 1; i < chunkData.length; i++) {
-        if (abState[chunkData[i].idx] && !abState[chunkData[i].idx].done && !(abState[chunkData[i].idx].rejected && abState[chunkData[i].idx].rejected.length > 0)) {
-          currentChunkArrayIdx = i;
-          renderChunk();
-          return;
-        }
-      }
-    }, 600);
     return;
   } else {
     // A wins or B wins — PICK IMMEDIATELY
