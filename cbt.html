@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CBT Exercises — Salus</title>
+  <meta name="description" content="Guided exercises built on the principles of Cognitive Behavioural Therapy — the most widely researched approach to managing difficult thoughts and emotions.">
+  <link rel="canonical" href="https://salus-mind.com/cbt.html">
+  <meta property="og:title" content="CBT Exercises — Salus">
+  <meta property="og:description" content="Guided exercises built on the principles of Cognitive Behavioural Therapy — the most widely researched approach to managing difficult thoughts and emotions.">
+  <meta property="og:url" content="https://salus-mind.com/cbt.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://salus-mind.com/images/meditation-woman-outdoor.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=1770564391">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/auth.js?v=1770564391"></script>
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --deep:#060810;--ink:#0a0d18;
+    --teal:#4ecdc4;--purple:#a78bfa;--green:#34d399;--amber:#fbbf24;--sky:#38bdf8;--rose:#f472b6;
+    --cbt:#fbbf24;--cbt-dim:rgba(251,191,36,0.6);--cbt-glow:rgba(251,191,36,0.08);--cbt-border:rgba(251,191,36,0.15);
+    --text-bright:#f2f0fa;--text-muted:rgba(242,240,250,0.45);--text-mid:rgba(242,240,250,0.65);--border:rgba(255,255,255,0.06);
+  }
+  html{font-size:16px;scroll-behavior:smooth}
+  body{background:var(--deep);color:var(--text-bright);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+  /* ═══════════════ NAVIGATION ═══════════════ */
+  .nav-wrap{position:fixed;top:0;left:0;right:0;z-index:1000;transition:background .4s ease,box-shadow .4s ease;background:rgba(6,8,16,0.5);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+  .nav-wrap.scrolled{background:rgba(6,8,16,0.92);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);box-shadow:0 1px 0 rgba(255,255,255,0.06),0 12px 40px rgba(0,0,0,0.3)}
+  .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px}
+  .nav-row-1{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .nav-brand{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.5rem;letter-spacing:.12em;text-decoration:none;color:#f0eefc;transition:opacity .3s ease;flex-shrink:0}
+  .nav-brand:hover{opacity:.8}
+  .nav-primary{display:flex;align-items:center;gap:4px;list-style:none}
+  .nav-primary a{font-weight:300;font-size:.82rem;letter-spacing:.02em;color:rgba(240,238,252,0.6);text-decoration:none;padding:6px 13px;border-radius:8px;transition:all .3s ease;position:relative;white-space:nowrap}
+  .nav-primary a:hover{color:#f0eefc;background:rgba(255,255,255,0.04)}
+  .nav-primary a.active{color:#f0eefc;background:rgba(255,255,255,0.06)}
+  .nav-primary a.active::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:16px;height:2px;border-radius:1px;background:#4ecdc4;opacity:.7}
+  .nav-ctas{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  .nav-cta{font-family:'Outfit',sans-serif;font-weight:400;font-size:.78rem;letter-spacing:.04em;padding:7px 18px;border-radius:40px;cursor:pointer;text-decoration:none;transition:all .35s cubic-bezier(.22,1,.36,1);white-space:nowrap}
+  .nav-cta--subscribe{color:#060810;background:#4ecdc4;border:1px solid #4ecdc4}
+  .nav-cta--subscribe:hover{background:#5ed8d0;transform:translateY(-1px);box-shadow:0 4px 16px rgba(78,205,196,0.25)}
+  .nav-cta--login{color:rgba(240,238,252,0.6);background:transparent;border:1px solid rgba(255,255,255,0.1)}
+  .nav-cta--login:hover{color:#f0eefc;border-color:rgba(255,255,255,0.22);background:rgba(255,255,255,0.04)}
+  .nav-row-2{display:flex;align-items:center;justify-content:center;gap:32px;height:34px;border-top:1px solid rgba(255,255,255,0.06);transition:height .4s ease,opacity .3s ease,border-top-color .3s ease;overflow:hidden}
+  .nav-wrap.scrolled .nav-row-2{height:0;opacity:0;border-top-color:transparent}
+  .nav-row-2 a{font-weight:300;font-size:.72rem;letter-spacing:.03em;color:rgba(240,238,252,0.4);text-decoration:none;transition:color .3s ease;white-space:nowrap}
+  .nav-row-2 a:hover{color:rgba(240,238,252,0.6)}
+  .nav-burger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;transition:background .3s ease}
+  .nav-burger:hover{background:rgba(255,255,255,0.04)}
+  .nav-burger span{display:block;width:100%;height:1.5px;background:rgba(240,238,252,0.6);border-radius:1px;transition:all .3s ease;transform-origin:center}
+  .nav-burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+  .nav-burger.open span:nth-child(2){opacity:0}
+  .nav-burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+  .nav-drawer{display:none;position:fixed;top:56px;left:0;right:0;bottom:0;background:rgba(6,8,16,0.95);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);z-index:999;flex-direction:column;padding:32px 28px 40px;overflow-y:auto;opacity:0;transform:translateY(-8px);transition:opacity .3s ease,transform .3s ease}
+  .nav-drawer.open{display:flex;opacity:1;transform:translateY(0)}
+  .nav-drawer__section-label{font-weight:300;font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(240,238,252,0.4);margin-bottom:14px;margin-top:24px}
+  .nav-drawer__section-label:first-child{margin-top:0}
+  .nav-drawer__link{display:flex;align-items:center;gap:12px;font-weight:300;font-size:1.05rem;color:rgba(240,238,252,0.6);text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);transition:color .3s ease}
+  .nav-drawer__link:hover{color:#f0eefc}
+  .nav-drawer__link-dot{width:5px;height:5px;border-radius:50%;background:#4ecdc4;opacity:.5}
+  .nav-drawer__ctas{display:flex;gap:10px;margin-top:32px}
+  .nav-drawer__ctas .nav-cta{flex:1;text-align:center;padding:12px 20px;font-size:.88rem}
+  @media(max-width:860px){.nav-primary,.nav-row-2,.nav-ctas{display:none}.nav-burger{display:flex}.nav-row-1{height:56px}}
+
+  /* ═══════════════ CBT PAGE BODY ═══════════════ */
+  .cbt{padding:100px 24px 60px;max-width:1080px;margin:0 auto}
+  .cbt__header{text-align:center;margin-bottom:20px}
+  .cbt__label{display:inline-flex;align-items:center;gap:10px;font-weight:300;font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--cbt-dim);margin-bottom:20px}
+  .cbt__label::before,.cbt__label::after{content:'';width:24px;height:1px;background:linear-gradient(90deg,transparent,rgba(251,191,36,0.35),transparent)}
+  .cbt__header h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.8rem,4vw,2.4rem);margin-bottom:10px}
+  .cbt__header p{font-weight:200;font-size:.85rem;color:var(--text-muted);max-width:560px;margin:0 auto;line-height:1.7}
+
+  .disclaimer{max-width:1080px;margin:0 auto;padding:0 24px 32px}
+  .disclaimer__inner{display:flex;align-items:flex-start;gap:14px;padding:16px 22px;border-radius:12px;background:rgba(251,191,36,0.03);border:1px solid rgba(251,191,36,0.08)}
+  .disclaimer__icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.12)}
+  .disclaimer__icon svg{width:16px;height:16px;fill:none;stroke:var(--cbt-dim);stroke-width:1.5}
+  .disclaimer__text{font-weight:200;font-size:.74rem;line-height:1.65;color:var(--text-muted)}
+  .disclaimer__text strong{font-weight:400;color:rgba(251,191,36,0.7)}
+
+  .what-cbt{max-width:1080px;margin:0 auto;padding:0 24px 48px}
+  .what-cbt__inner{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border-radius:16px;overflow:hidden}
+  .what-cbt__block{background:var(--ink);padding:32px 28px}
+  .what-cbt__block h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.3rem;margin-bottom:12px}
+  .what-cbt__block p{font-weight:200;font-size:.8rem;line-height:1.7;color:var(--text-muted)}
+  .what-cbt__pillars{display:flex;flex-direction:column;gap:16px}
+  .pillar{display:flex;align-items:flex-start;gap:12px}
+  .pillar__dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px}
+  .pillar__text{display:flex;flex-direction:column;gap:2px}
+  .pillar__title{font-weight:400;font-size:.82rem;color:var(--text-bright)}
+  .pillar__desc{font-weight:200;font-size:.74rem;line-height:1.55;color:var(--text-muted)}
+
+  .featured{position:relative;border-radius:20px;overflow:hidden;margin:0 auto 28px;max-width:1080px;display:grid;grid-template-columns:1fr 1fr;min-height:420px;background:linear-gradient(145deg,#1a1508 0%,#2a220e 30%,#1e1a0a 100%);transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s ease;cursor:pointer;text-decoration:none;color:#fff}
+  .featured:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+  .featured::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:.5;pointer-events:none;border-radius:inherit;z-index:1}
+  .featured__orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.2;pointer-events:none;z-index:0}
+  .featured__orb--1{width:240px;height:240px;top:-60px;left:40%;background:var(--amber)}
+  .featured__orb--2{width:160px;height:160px;bottom:-40px;right:10%;background:#92400e}
+
+  .featured__content{position:relative;z-index:3;padding:44px 40px;display:flex;flex-direction:column;justify-content:center}
+  .featured__badge{display:inline-flex;align-self:flex-start;font-weight:400;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;color:rgba(251,191,36,0.8);background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.2);margin-bottom:16px}
+  .featured__meta{font-weight:300;font-size:.74rem;color:rgba(255,255,255,0.4);margin-bottom:8px}
+  .featured__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(1.6rem,3.5vw,2.2rem);line-height:1.25;margin-bottom:14px}
+  .featured__desc{font-weight:200;font-size:.84rem;line-height:1.7;color:rgba(255,255,255,0.5);max-width:440px;margin-bottom:24px}
+  .featured__play{display:inline-flex;align-items:center;gap:10px;font-weight:300;font-size:.78rem;color:var(--cbt-dim);transition:color .3s ease}
+  .featured:hover .featured__play{color:var(--amber)}
+  .featured__play-icon{width:36px;height:36px;border-radius:50%;border:1px solid rgba(251,191,36,0.25);background:rgba(251,191,36,0.08);display:flex;align-items:center;justify-content:center;transition:all .3s ease}
+  .featured:hover .featured__play-icon{background:rgba(251,191,36,0.15);border-color:rgba(251,191,36,0.4)}
+  .featured__play-icon svg{width:12px;height:12px;fill:var(--amber);margin-left:2px}
+
+  .featured__scene{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;padding:32px;overflow:hidden}
+  .featured__scene::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 55%,rgba(251,191,36,0.06) 0%,transparent 70%)}
+  .courtroom-svg{width:100%;max-width:380px;height:auto;filter:drop-shadow(0 8px 32px rgba(0,0,0,0.4))}
+  .courtroom-svg .glow{animation:court-glow 4s ease-in-out infinite alternate}
+  @keyframes court-glow{0%{opacity:.15}100%{opacity:.35}}
+
+  .sessions-header{max-width:1080px;margin:0 auto;padding:32px 24px 20px;border-top:1px solid var(--border)}
+  .sessions-header__label{font-weight:300;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
+  .sessions-header h3{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:1.5rem}
+
+  .session-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1080px;margin:0 auto;padding:0 24px 48px}
+
+  .s-card{position:relative;border-radius:16px;overflow:hidden;padding:28px 24px 24px;display:flex;flex-direction:column;min-height:280px;background:var(--ink);border:1px solid var(--border);transition:transform .4s cubic-bezier(.22,1,.36,1),border-color .4s ease,box-shadow .4s ease;cursor:pointer;text-decoration:none;color:#fff}
+  .s-card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,0.1);box-shadow:0 16px 48px rgba(0,0,0,0.3)}
+  .s-card::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:.4;pointer-events:none;border-radius:inherit}
+
+  .s-card__orb{position:absolute;border-radius:50%;filter:blur(40px);pointer-events:none;z-index:0;transition:opacity .4s ease}
+  .s-card__orb--amber{width:100px;height:100px;top:-20px;right:-10px;background:var(--amber);opacity:.08}
+  .s-card:hover .s-card__orb--amber{opacity:.15}
+  .s-card__orb--teal{width:80px;height:80px;top:-15px;right:-5px;background:var(--teal);opacity:.08}
+  .s-card:hover .s-card__orb--teal{opacity:.15}
+  .s-card__orb--purple{width:90px;height:90px;top:-18px;right:-8px;background:var(--purple);opacity:.08}
+  .s-card:hover .s-card__orb--purple{opacity:.15}
+  .s-card__orb--green{width:85px;height:85px;top:-16px;right:-6px;background:var(--green);opacity:.08}
+  .s-card:hover .s-card__orb--green{opacity:.15}
+  .s-card__orb--rose{width:85px;height:85px;top:-16px;right:-6px;background:var(--rose);opacity:.08}
+  .s-card:hover .s-card__orb--rose{opacity:.15}
+
+  .s-card__badge{position:relative;z-index:3;display:inline-flex;align-self:flex-start;font-weight:400;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:16px;margin-bottom:14px}
+  .badge--cbt{color:rgba(251,191,36,0.8);background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.15)}
+  .badge--coming{color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)}
+
+  .s-card__meta{position:relative;z-index:3;font-weight:300;font-size:.68rem;color:rgba(255,255,255,0.35);margin-bottom:8px}
+  .s-card__title{position:relative;z-index:3;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.25rem;line-height:1.25;margin-bottom:10px}
+  .s-card__desc{position:relative;z-index:3;font-weight:200;font-size:.78rem;line-height:1.6;color:rgba(255,255,255,0.45);margin-bottom:auto}
+  .s-card__technique{position:relative;z-index:3;display:inline-flex;align-items:center;gap:6px;font-weight:300;font-size:.66rem;color:rgba(251,191,36,0.5);margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
+  .s-card__technique svg{width:10px;height:10px;fill:currentColor}
+
+  .player{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:10px 18px 10px 10px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);position:relative;z-index:3;margin-top:16px}
+  .player__btn{width:36px;height:36px;border-radius:50%;flex-shrink:0;border:1px solid rgba(251,191,36,0.2);background:rgba(251,191,36,0.06);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s ease}
+  .player__btn:hover{background:rgba(251,191,36,0.14);border-color:rgba(251,191,36,0.35);transform:scale(1.05)}
+  .player__btn svg{width:12px;height:12px;fill:var(--amber);margin-left:2px}
+  .player__track{flex:1;height:3px;background:rgba(255,255,255,0.12);border-radius:2px;overflow:hidden;cursor:pointer}
+  .player__progress{height:100%;width:0%;border-radius:2px;background:var(--amber);transition:width .1s linear}
+  .player__time{font-weight:300;font-size:.7rem;color:rgba(255,255,255,0.45);white-space:nowrap;min-width:72px;text-align:right;font-variant-numeric:tabular-nums}
+
+  .how{max-width:1080px;margin:0 auto;padding:0 24px 48px}
+  .how__header{text-align:center;margin-bottom:28px;padding-top:32px;border-top:1px solid var(--border)}
+  .how__header h3{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:1.5rem;margin-bottom:6px}
+  .how__header p{font-weight:200;font-size:.78rem;color:var(--text-muted)}
+  .how__grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:16px;overflow:hidden}
+  .how__step{background:var(--ink);padding:28px 24px;display:flex;flex-direction:column;gap:10px}
+  .how__num{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:1.8rem;color:rgba(251,191,36,0.2);line-height:1}
+  .how__step-title{font-weight:400;font-size:.82rem;color:var(--text-bright)}
+  .how__step-desc{font-weight:200;font-size:.74rem;line-height:1.6;color:var(--text-muted)}
+
+  .approach{max-width:1080px;margin:0 auto;padding:0 24px 48px}
+  .approach__inner{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border-radius:16px;overflow:hidden}
+  .approach__item{background:var(--ink);padding:32px 28px;display:flex;align-items:flex-start;gap:14px}
+  .approach__icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(255,255,255,0.08)}
+  .approach__icon svg{width:16px;height:16px;fill:none;stroke-width:1.5}
+  .approach__text{display:flex;flex-direction:column;gap:4px}
+  .approach__title{font-weight:400;font-size:.82rem;color:var(--text-bright)}
+  .approach__desc{font-weight:200;font-size:.74rem;line-height:1.6;color:var(--text-muted)}
+
+  .coming{text-align:center;padding:40px 24px 100px;max-width:1080px;margin:0 auto;border-top:1px solid var(--border)}
+  .coming__label{font-weight:300;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px}
+  .coming__tags{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+  .coming__tag{font-weight:200;font-size:.74rem;padding:6px 16px;border-radius:40px;border:1px solid var(--border);color:var(--text-muted);background:rgba(255,255,255,0.02)}
+
+  @media(max-width:900px){
+    .featured{grid-template-columns:1fr}
+    .featured__scene{min-height:260px}
+    .session-grid{grid-template-columns:repeat(2,1fr)}
+    .what-cbt__inner{grid-template-columns:1fr}
+    .how__grid{grid-template-columns:repeat(2,1fr)}
+    .approach__inner{grid-template-columns:1fr}
+  }
+  @media(max-width:600px){
+    .session-grid{grid-template-columns:1fr}
+    .how__grid{grid-template-columns:1fr}
+    .featured__content{padding:28px 24px}
+  }
+</style>
+</head>
+<body>
+<nav class="nav-wrap" id="navWrap">
+  <div class="nav-inner">
+    <div class="nav-row-1">
+      <a href="index.html" class="nav-brand">SALUS</a>
+      <ul class="nav-primary">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="sessions.html">Meditations</a></li>
+        <li><a href="mindfulness.html">Mindfulness</a></li>
+        <li><a href="asmr.html">ASMR</a></li>
+        <li><a href="sleep-stories.html">Sleep Stories</a></li>
+        <li><a href="education.html">Learn</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <div class="nav-ctas">
+        <a href="apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+        <a href="login.html" class="nav-cta nav-cta--login">Log In</a>
+      </div>
+      <button class="nav-burger" id="burgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+    <div class="nav-row-2">
+      <a href="tools.html">Tools</a>
+      <a href="reading.html">Reading</a>
+      <a href="applied-psychology.html">Applied Psychology</a>
+      <a href="cbt.html" class="active" style="color:rgba(240,238,252,0.7)">CBT</a>
+      <a href="newsletter.html">Newsletter</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+</nav>
+<div class="nav-drawer" id="navDrawer">
+  <div class="nav-drawer__section-label">Main</div>
+  <a href="index.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Home</a>
+  <a href="sessions.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Meditations</a>
+  <a href="mindfulness.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Mindfulness</a>
+  <a href="asmr.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>ASMR</a>
+  <a href="sleep-stories.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Sleep Stories</a>
+  <a href="education.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Learn</a>
+  <a href="about.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>About</a>
+  <div class="nav-drawer__section-label">More</div>
+  <a href="tools.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Tools</a>
+  <a href="reading.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Reading</a>
+  <a href="applied-psychology.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Applied Psychology</a>
+  <a href="cbt.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:var(--amber)"></span>CBT Exercises</a>
+  <a href="newsletter.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Newsletter</a>
+  <a href="contact.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Contact</a>
+  <div class="nav-drawer__ctas">
+    <a href="apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+    <a href="login.html" class="nav-cta nav-cta--login">Log In</a>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     1. PAGE HEADER
+═══════════════════════════════════════════════ -->
+<section class="cbt">
+  <div class="cbt__header">
+    <div class="cbt__label"><span></span>CBT Exercises<span></span></div>
+    <h2>Change How You Think, Change How You Feel</h2>
+    <p>Guided exercises built on the principles of Cognitive Behavioural Therapy — the most widely researched and clinically supported approach to managing difficult thoughts and emotions. Close your eyes, press play, and let the session guide you through it.</p>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     2. DISCLAIMER
+═══════════════════════════════════════════════ -->
+<div class="disclaimer">
+  <div class="disclaimer__inner">
+    <div class="disclaimer__icon">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div>
+    <p class="disclaimer__text"><strong>Self-help tools, not therapy.</strong> These sessions are CBT-informed guided exercises designed to support your wellbeing. They are not a replacement for professional mental health support. If you are experiencing significant distress, please reach out to a qualified therapist or your GP.</p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     3. WHAT IS CBT — EDUCATIONAL BLOCK
+═══════════════════════════════════════════════ -->
+<div class="what-cbt">
+  <div class="what-cbt__inner">
+    <div class="what-cbt__block">
+      <h3>What Is CBT?</h3>
+      <p>Cognitive Behavioural Therapy is based on a simple but powerful idea: the way we think about a situation affects how we feel about it — and how we respond to it. By noticing unhelpful thought patterns and gently examining them, we can shift both our emotional state and our behaviour. CBT is the most evidence-based psychological approach in modern practice, recommended by the NHS, NICE, and major clinical bodies worldwide.</p>
+    </div>
+    <div class="what-cbt__block">
+      <h3>Three Pillars</h3>
+      <div class="what-cbt__pillars">
+        <div class="pillar">
+          <div class="pillar__dot" style="background:var(--amber)"></div>
+          <div class="pillar__text">
+            <span class="pillar__title">Cognitive Restructuring</span>
+            <span class="pillar__desc">Identify and challenge distorted or unhelpful thought patterns — replacing them with more balanced perspectives.</span>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar__dot" style="background:var(--teal)"></div>
+          <div class="pillar__text">
+            <span class="pillar__title">Thought Defusion</span>
+            <span class="pillar__desc">Create distance between you and your thoughts. Observe them without being swept away by them.</span>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar__dot" style="background:var(--green)"></div>
+          <div class="pillar__text">
+            <span class="pillar__title">Behavioural Activation</span>
+            <span class="pillar__desc">Break the inertia of low mood by re-engaging with activities that bring purpose, pleasure, or connection.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     4. FEATURED — THE COURT OF YOUR MIND
+═══════════════════════════════════════════════ -->
+<div style="max-width:1080px;margin:0 auto;padding:0 24px 28px">
+<a href="sessions/session-52.html" class="featured">
+  <div class="featured__orb featured__orb--1"></div>
+  <div class="featured__orb featured__orb--2"></div>
+
+  <div class="featured__content">
+    <span class="featured__badge">Featured Session</span>
+    <span class="featured__meta">22 min · Cognitive Restructuring · Premium</span>
+    <h3 class="featured__title">The Court of Your Mind</h3>
+    <p class="featured__desc">Your inner critic has been running the trial unchallenged for years — presenting only the evidence that proves you're not good enough. This session puts you in the courtroom. You'll hear the prosecution's case. Then, for the first time, you'll hear the defence. And finally, you become the judge.</p>
+    <span class="featured__play">
+      <span class="featured__play-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+      Listen now
+    </span>
+  </div>
+
+  <!-- ══ COURTROOM SVG SCENE ══ -->
+  <div class="featured__scene">
+    <svg class="courtroom-svg" viewBox="0 0 400 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="courtGlow" cx="50%" cy="45%" r="50%">
+          <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.12"/>
+          <stop offset="100%" stop-color="#fbbf24" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="benchGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#3d2f1a"/>
+          <stop offset="100%" stop-color="#1a150a"/>
+        </linearGradient>
+        <linearGradient id="woodGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#4a3820"/>
+          <stop offset="100%" stop-color="#2a1f10"/>
+        </linearGradient>
+        <linearGradient id="scaleGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#92400e" stop-opacity="0.3"/>
+        </linearGradient>
+      </defs>
+
+      <ellipse class="glow" cx="200" cy="160" rx="180" ry="120" fill="url(#courtGlow)"/>
+
+      <path d="M140 30 Q200 0 260 30 L260 120 Q200 105 140 120 Z" fill="rgba(251,191,36,0.03)" stroke="rgba(251,191,36,0.08)" stroke-width="1"/>
+      <line x1="200" y1="8" x2="200" y2="115" stroke="rgba(251,191,36,0.06)" stroke-width="1"/>
+      <line x1="155" y1="35" x2="245" y2="35" stroke="rgba(251,191,36,0.04)" stroke-width="1"/>
+      <line x1="148" y1="70" x2="252" y2="70" stroke="rgba(251,191,36,0.04)" stroke-width="1"/>
+
+      <rect x="65" y="60" width="16" height="230" rx="3" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+      <rect x="67" y="55" width="12" height="8" rx="1" fill="rgba(255,255,255,0.04)"/>
+      <rect x="64" y="48" width="18" height="8" rx="2" fill="rgba(255,255,255,0.05)"/>
+
+      <rect x="319" y="60" width="16" height="230" rx="3" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+      <rect x="321" y="55" width="12" height="8" rx="1" fill="rgba(255,255,255,0.04)"/>
+      <rect x="318" y="48" width="18" height="8" rx="2" fill="rgba(255,255,255,0.05)"/>
+
+      <rect x="130" y="130" width="140" height="60" rx="4" fill="url(#benchGrad)" stroke="rgba(251,191,36,0.12)" stroke-width="0.8"/>
+      <rect x="130" y="130" width="140" height="4" rx="2" fill="rgba(251,191,36,0.1)"/>
+      <rect x="145" y="142" width="110" height="38" rx="2" fill="rgba(251,191,36,0.03)" stroke="rgba(251,191,36,0.06)" stroke-width="0.5"/>
+      <rect x="145" y="190" width="8" height="20" fill="rgba(74,56,32,0.6)"/>
+      <rect x="247" y="190" width="8" height="20" fill="rgba(74,56,32,0.6)"/>
+
+      <ellipse cx="235" cy="143" rx="8" ry="3" fill="rgba(251,191,36,0.1)"/>
+      <rect x="230" y="137" width="10" height="6" rx="2" fill="#5c4416" stroke="rgba(251,191,36,0.15)" stroke-width="0.5"/>
+      <line x1="225" y1="140" x2="245" y2="140" stroke="#5c4416" stroke-width="1.5" stroke-linecap="round"/>
+
+      <line x1="200" y1="82" x2="200" y2="128" stroke="url(#scaleGrad)" stroke-width="1.5"/>
+      <line x1="168" y1="90" x2="232" y2="90" stroke="url(#scaleGrad)" stroke-width="1.2"/>
+      <circle cx="200" cy="80" r="4" fill="rgba(251,191,36,0.15)" stroke="rgba(251,191,36,0.3)" stroke-width="0.8"/>
+      <line x1="168" y1="90" x2="160" y2="112" stroke="rgba(251,191,36,0.25)" stroke-width="0.6"/>
+      <line x1="168" y1="90" x2="176" y2="112" stroke="rgba(251,191,36,0.25)" stroke-width="0.6"/>
+      <ellipse cx="168" cy="114" rx="14" ry="4" fill="rgba(251,191,36,0.08)" stroke="rgba(251,191,36,0.2)" stroke-width="0.6"/>
+      <line x1="232" y1="90" x2="224" y2="106" stroke="rgba(251,191,36,0.25)" stroke-width="0.6"/>
+      <line x1="232" y1="90" x2="240" y2="106" stroke="rgba(251,191,36,0.25)" stroke-width="0.6"/>
+      <ellipse cx="232" cy="108" rx="14" ry="4" fill="rgba(251,191,36,0.08)" stroke="rgba(251,191,36,0.2)" stroke-width="0.6"/>
+
+      <rect x="40" y="220" width="90" height="50" rx="3" fill="url(#woodGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+      <rect x="40" y="220" width="90" height="3" rx="1.5" fill="rgba(255,255,255,0.05)"/>
+      <rect x="52" y="230" width="66" height="32" rx="2" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"/>
+      <circle cx="85" cy="198" r="10" fill="rgba(220,50,50,0.12)" stroke="rgba(220,50,50,0.2)" stroke-width="0.6"/>
+      <path d="M72 220 Q85 210 98 220" fill="rgba(220,50,50,0.08)" stroke="rgba(220,50,50,0.15)" stroke-width="0.5"/>
+
+      <rect x="270" y="220" width="90" height="50" rx="3" fill="url(#woodGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+      <rect x="270" y="220" width="90" height="3" rx="1.5" fill="rgba(255,255,255,0.05)"/>
+      <rect x="282" y="230" width="66" height="32" rx="2" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"/>
+      <circle cx="315" cy="198" r="10" fill="rgba(78,205,196,0.12)" stroke="rgba(78,205,196,0.2)" stroke-width="0.6"/>
+      <path d="M302 220 Q315 210 328 220" fill="rgba(78,205,196,0.08)" stroke="rgba(78,205,196,0.15)" stroke-width="0.5"/>
+
+      <rect x="170" y="260" width="60" height="40" rx="3" fill="url(#woodGrad)" stroke="rgba(251,191,36,0.08)" stroke-width="0.5"/>
+      <rect x="170" y="260" width="60" height="3" rx="1.5" fill="rgba(251,191,36,0.06)"/>
+      <circle cx="200" cy="240" r="11" fill="rgba(251,191,36,0.08)" stroke="rgba(251,191,36,0.2)" stroke-width="0.8"/>
+      <path d="M186 262 Q200 252 214 262" fill="rgba(251,191,36,0.05)" stroke="rgba(251,191,36,0.12)" stroke-width="0.5"/>
+      <circle cx="200" cy="240" r="18" fill="rgba(251,191,36,0.04)"/>
+
+      <line x1="40" y1="290" x2="160" y2="290" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <line x1="240" y1="290" x2="360" y2="290" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <line x1="40" y1="285" x2="40" y2="295" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <line x1="80" y1="285" x2="80" y2="295" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <line x1="120" y1="285" x2="120" y2="295" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <line x1="160" y1="285" x2="160" y2="295" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <line x1="240" y1="285" x2="240" y2="295" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <line x1="280" y1="285" x2="280" y2="295" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <line x1="320" y1="285" x2="320" y2="295" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <line x1="360" y1="285" x2="360" y2="295" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+
+      <line x1="30" y1="310" x2="370" y2="310" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"/>
+
+      <text x="85" y="335" text-anchor="middle" fill="rgba(220,50,50,0.3)" font-family="Outfit,sans-serif" font-size="8" font-weight="300" letter-spacing="0.1em">PROSECUTION</text>
+      <text x="200" y="335" text-anchor="middle" fill="rgba(251,191,36,0.3)" font-family="Outfit,sans-serif" font-size="8" font-weight="300" letter-spacing="0.1em">YOU</text>
+      <text x="315" y="335" text-anchor="middle" fill="rgba(78,205,196,0.3)" font-family="Outfit,sans-serif" font-size="8" font-weight="300" letter-spacing="0.1em">DEFENCE</text>
+
+      <text x="200" y="42" text-anchor="middle" fill="rgba(251,191,36,0.08)" font-family="Cormorant Garamond,serif" font-size="14" font-weight="300" letter-spacing="0.2em">THE COURT OF YOUR MIND</text>
+    </svg>
+  </div>
+</a>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     5. SESSION GRID
+═══════════════════════════════════════════════ -->
+<div class="sessions-header">
+  <div class="sessions-header__label">CBT Exercise Library</div>
+  <h3>Guided Exercises</h3>
+</div>
+
+<div class="session-grid">
+
+  <!-- Session: Court of Your Mind (with player) -->
+  <div class="s-card">
+    <div class="s-card__orb s-card__orb--amber"></div>
+    <span class="s-card__badge badge--cbt">Premium</span>
+    <span class="s-card__meta">22 min · Cognitive Restructuring</span>
+    <h3 class="s-card__title">The Court of Your Mind</h3>
+    <p class="s-card__desc">Challenge your inner critic by putting its case to trial. Hear the prosecution, build the defence, and deliver the verdict.</p>
+    <div class="player">
+      <button class="player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="player__track"><div class="player__progress"></div></div>
+      <span class="player__time">0:00 / 22:14</span>
+    </div>
+    <span class="s-card__technique"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> Cognitive Restructuring</span>
+  </div>
+
+  <!-- Session: The Thought Train -->
+  <div class="s-card">
+    <div class="s-card__orb s-card__orb--teal"></div>
+    <span class="s-card__badge badge--coming">Coming Soon</span>
+    <span class="s-card__meta">15 min · Thought Defusion</span>
+    <h3 class="s-card__title">The Thought Train</h3>
+    <p class="s-card__desc">Sit on the platform and watch your thoughts arrive like trains. You don't have to board every one. A defusion exercise in letting thoughts pass without attachment.</p>
+    <span class="s-card__technique"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> Thought Defusion</span>
+  </div>
+
+  <!-- Session: The Evidence Log -->
+  <div class="s-card">
+    <div class="s-card__orb s-card__orb--amber"></div>
+    <span class="s-card__badge badge--coming">Coming Soon</span>
+    <span class="s-card__meta">12 min · Cognitive Restructuring</span>
+    <h3 class="s-card__title">The Evidence Log</h3>
+    <p class="s-card__desc">Your mind presents beliefs as facts. This exercise teaches you to separate opinion from evidence — and discover that the case against you is weaker than it sounds.</p>
+    <span class="s-card__technique"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> Cognitive Restructuring</span>
+  </div>
+
+  <!-- Session: One Small Thing -->
+  <div class="s-card">
+    <div class="s-card__orb s-card__orb--green"></div>
+    <span class="s-card__badge badge--coming">Coming Soon</span>
+    <span class="s-card__meta">10 min · Behavioural Activation</span>
+    <h3 class="s-card__title">One Small Thing</h3>
+    <p class="s-card__desc">When low mood makes everything feel impossible, start with one small thing. This session walks you through re-engaging with purpose, pleasure, and connection — gently.</p>
+    <span class="s-card__technique"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> Behavioural Activation</span>
+  </div>
+
+  <!-- Session: The Worry Window -->
+  <div class="s-card">
+    <div class="s-card__orb s-card__orb--purple"></div>
+    <span class="s-card__badge badge--coming">Coming Soon</span>
+    <span class="s-card__meta">14 min · Cognitive Restructuring</span>
+    <h3 class="s-card__title">The Worry Window</h3>
+    <p class="s-card__desc">Worry expands to fill whatever space you give it. This session teaches you to contain it — acknowledge it, give it a window, and then close the window.</p>
+    <span class="s-card__technique"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> Cognitive Restructuring</span>
+  </div>
+
+  <!-- Session: Naming the Pattern -->
+  <div class="s-card">
+    <div class="s-card__orb s-card__orb--rose"></div>
+    <span class="s-card__badge badge--coming">Coming Soon</span>
+    <span class="s-card__meta">11 min · Thought Defusion</span>
+    <h3 class="s-card__title">Naming the Pattern</h3>
+    <p class="s-card__desc">Catastrophising. All-or-nothing thinking. Mind reading. Once you can name the pattern, you break its hold. A guided exercise in recognising cognitive distortions.</p>
+    <span class="s-card__technique"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> Thought Defusion</span>
+  </div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     6. HOW A CBT SESSION WORKS
+═══════════════════════════════════════════════ -->
+<div class="how">
+  <div class="how__header">
+    <h3>How a CBT Exercise Works</h3>
+    <p>Each session follows a structured arc designed to guide you through the process</p>
+  </div>
+  <div class="how__grid">
+    <div class="how__step">
+      <span class="how__num">01</span>
+      <span class="how__step-title">Ground</span>
+      <span class="how__step-desc">Settle into stillness. A short breathing exercise brings you into the present moment and prepares your mind for the work ahead.</span>
+    </div>
+    <div class="how__step">
+      <span class="how__num">02</span>
+      <span class="how__step-title">Notice</span>
+      <span class="how__step-desc">Identify the thought, belief, or pattern you're working with. No judgement — just clear-eyed observation of what's happening in your mind.</span>
+    </div>
+    <div class="how__step">
+      <span class="how__num">03</span>
+      <span class="how__step-title">Examine</span>
+      <span class="how__step-desc">Apply the CBT technique: challenge the evidence, defuse from the thought, or explore an alternative perspective. This is where the shift happens.</span>
+    </div>
+    <div class="how__step">
+      <span class="how__num">04</span>
+      <span class="how__step-title">Integrate</span>
+      <span class="how__step-desc">Consolidate what you've noticed. Anchor the new perspective. Return to your day carrying something different from when you arrived.</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     7. APPROACH
+═══════════════════════════════════════════════ -->
+<div class="approach">
+  <div class="approach__inner">
+    <div class="approach__item">
+      <div class="approach__icon" style="background:rgba(251,191,36,0.06);border-color:rgba(251,191,36,0.12)"><svg viewBox="0 0 24 24" stroke="#fbbf24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg></div>
+      <div class="approach__text">
+        <span class="approach__title">Evidence-Based</span>
+        <span class="approach__desc">Every exercise is grounded in established CBT principles recommended by NICE and the NHS. No improvisation — just proven techniques.</span>
+      </div>
+    </div>
+    <div class="approach__item">
+      <div class="approach__icon" style="background:rgba(78,205,196,0.06);border-color:rgba(78,205,196,0.12)"><svg viewBox="0 0 24 24" stroke="#4ecdc4"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <div class="approach__text">
+        <span class="approach__title">Guided, Not Lectured</span>
+        <span class="approach__desc">These aren't audiobooks about CBT. They're immersive guided exercises — close your eyes, follow the voice, and do the work in real time.</span>
+      </div>
+    </div>
+    <div class="approach__item">
+      <div class="approach__icon" style="background:rgba(167,139,250,0.06);border-color:rgba(167,139,250,0.12)"><svg viewBox="0 0 24 24" stroke="#a78bfa"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+      <div class="approach__text">
+        <span class="approach__title">Psychologist Reviewed</span>
+        <span class="approach__desc">Content reviewed by our team with over 40 years of combined experience in psychology and mental health. Accuracy matters here.</span>
+      </div>
+    </div>
+    <div class="approach__item">
+      <div class="approach__icon" style="background:rgba(52,211,153,0.06);border-color:rgba(52,211,153,0.12)"><svg viewBox="0 0 24 24" stroke="#34d399"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+      <div class="approach__text">
+        <span class="approach__title">Compassionate Framing</span>
+        <span class="approach__desc">CBT can sound clinical. Ours doesn't. Every session is written with warmth, care, and respect for wherever you are right now.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     8. COMING SOON
+═══════════════════════════════════════════════ -->
+<div class="coming">
+  <div class="coming__label">More Exercises Arriving</div>
+  <div class="coming__tags">
+    <span class="coming__tag">Core Beliefs</span>
+    <span class="coming__tag">Safety Behaviours</span>
+    <span class="coming__tag">Rumination</span>
+    <span class="coming__tag">Perfectionism</span>
+    <span class="coming__tag">Social Anxiety</span>
+    <span class="coming__tag">Self-Compassion</span>
+    <span class="coming__tag">Anger &amp; Frustration</span>
+  </div>
+</div>
+
+
+<script>
+  // Navigation
+  const navWrap=document.getElementById("navWrap");
+  window.addEventListener("scroll",()=>{navWrap.classList.toggle("scrolled",window.scrollY>30)},{passive:true});
+  const burger=document.getElementById("burgerBtn");
+  const drawer=document.getElementById("navDrawer");
+  burger.addEventListener("click",()=>{burger.classList.toggle("open");drawer.classList.toggle("open");document.body.style.overflow=drawer.classList.contains("open")?"hidden":""});
+  drawer.querySelectorAll(".nav-drawer__link").forEach(l=>{l.addEventListener("click",()=>{burger.classList.remove("open");drawer.classList.remove("open");document.body.style.overflow=""})});
+</script>
+  <script src="js/main.js?v=1770564391"></script>
+  <script src="js/tracker.js"></script>
+
+<footer class="hb-footer">
+  <div class="hb-footer__inner">
+    <div class="hb-footer__brand">
+      <span class="hb-footer__logo">Salus</span>
+      <p class="hb-footer__tagline">A quieter kind of self-care. Guided meditations, sleep stories, ASMR, and mindfulness tools &mdash; built by a family.</p>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Practice</h4>
+      <ul class="hb-footer__links">
+        <li><a href="sessions.html">Guided Meditations</a></li>
+        <li><a href="mindfulness.html">Mindfulness</a></li>
+        <li><a href="cbt.html" class="active">CBT Exercises</a></li>
+        <li><a href="asmr.html">ASMR &amp; Sounds</a></li>
+        <li><a href="sleep-stories.html">Sleep Stories</a></li>
+        <li><a href="tools.html">Tools</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Discover</h4>
+      <ul class="hb-footer__links">
+        <li><a href="education.html">Learn</a></li>
+        <li><a href="reading.html">Reading</a></li>
+        <li><a href="applied-psychology.html">Applied Psychology</a></li>
+        <li><a href="newsletter.html">Newsletter</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Salus</h4>
+      <ul class="hb-footer__links">
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="apps.html">Go Premium</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="footer-disclaimer">Salus does not provide medical advice. Content is for general wellbeing and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified health provider with any health concerns.</p>
+  <div class="hb-footer__bottom">
+    <span class="hb-footer__copy">&copy; 2026 Salus Mind. All rights reserved.</span>
+    <a href="#" class="hb-footer__back-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">
+      Back to top
+      <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+    </a>
+  </div>
+</footer>
+</body>
+</html>
