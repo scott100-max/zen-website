@@ -112,31 +112,7 @@
   .sp-value h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,4.5vw,2.8rem);line-height:1.25;margin-bottom:16px;max-width:640px;margin-left:auto;margin-right:auto}
   .sp-value p{font-weight:200;font-size:.88rem;line-height:1.7;color:var(--text-mid);max-width:520px;margin:0 auto}
 
-  .sp-pricing{padding:40px 24px 60px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap;max-width:780px;margin:0 auto}
-  .sp-plan{position:relative;flex:1;min-width:280px;max-width:360px;border-radius:20px;padding:36px 32px 32px;overflow:hidden;display:flex;flex-direction:column;transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s ease}
-  .sp-plan:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.35)}
-  .sp-plan::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:.5;pointer-events:none;border-radius:inherit}
-  .sp-plan--monthly{background:linear-gradient(145deg,#0e1420 0%,#141c2e 50%,#0e1420 100%);border:1px solid rgba(255,255,255,0.06)}
-  .sp-plan--annual{background:linear-gradient(145deg,#0d3d4a 0%,#1a5568 50%,#0f4c5c 100%);border:1px solid rgba(78,205,196,0.15)}
-  .sp-plan__orb{position:absolute;border-radius:50%;filter:blur(40px);pointer-events:none;opacity:.25}
-  .sp-plan--annual .sp-plan__orb{background:#22d3ee;width:140px;height:140px;top:-30px;right:-20px}
-  .sp-plan__popular{position:absolute;top:16px;right:16px;z-index:3;font-weight:400;font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;padding:4px 12px;border-radius:20px;color:var(--teal);background:rgba(78,205,196,0.1);border:1px solid rgba(78,205,196,0.2)}
-  .sp-plan__content{position:relative;z-index:3;flex:1;display:flex;flex-direction:column}
-  .sp-plan__name{font-weight:400;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px}
-  .sp-plan__price{display:flex;align-items:baseline;gap:4px;margin-bottom:4px}
-  .sp-plan__currency{font-weight:300;font-size:1rem;color:var(--text-mid)}
-  .sp-plan__amount{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:3rem;line-height:1;color:#fff}
-  .sp-plan__period{font-weight:200;font-size:.78rem;color:var(--text-muted)}
-  .sp-plan__save{font-weight:300;font-size:.72rem;color:var(--teal);margin-top:4px;margin-bottom:20px;min-height:18px}
-  .sp-plan__features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px;flex:1}
-  .sp-plan__features li{display:flex;align-items:flex-start;gap:8px;font-weight:200;font-size:.8rem;color:var(--text-mid);line-height:1.4}
-  .sp-plan__features li::before{content:'';flex-shrink:0;width:16px;height:16px;margin-top:1px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234ecdc4' stroke-width='2'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center/contain no-repeat}
-  .sp-plan__cta{font-family:'Outfit',sans-serif;font-weight:400;font-size:.84rem;letter-spacing:.04em;padding:14px 28px;border-radius:40px;border:none;cursor:pointer;text-decoration:none;text-align:center;transition:all .35s cubic-bezier(.22,1,.36,1);display:block}
-  .sp-plan--monthly .sp-plan__cta{color:var(--text-bright);background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12)}
-  .sp-plan--monthly .sp-plan__cta:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2)}
-  .sp-plan--annual .sp-plan__cta{color:var(--deep);background:linear-gradient(135deg,var(--teal),#6dd5c8)}
-  .sp-plan--annual .sp-plan__cta:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(78,205,196,0.25)}
-  .sp-plan__note{text-align:center;font-weight:200;font-size:.66rem;color:rgba(255,255,255,0.3);margin-top:12px}
+  .sp-pricing{padding:40px 24px 60px;max-width:780px;margin:0 auto}
 
   .sp-breakdown{padding:60px 24px 80px;max-width:980px;margin:0 auto}
   .sp-breakdown__header{text-align:center;margin-bottom:40px}
@@ -170,8 +146,6 @@
   .sp-faq__item.open .sp-faq__a{max-height:200px;padding-top:12px}
 
   @media(max-width:768px){
-    .sp-pricing{flex-direction:column;align-items:center}
-    .sp-plan{max-width:100%}
     .sp-breakdown__grid{grid-template-columns:repeat(2,1fr)}
   }
   @media(max-width:500px){
@@ -266,51 +240,13 @@
 </section>
 
 <!-- ═══ PRICING ═══ -->
-<section class="sp-pricing">
-  <div class="sp-plan sp-plan--monthly">
-    <div class="sp-plan__content">
-      <span class="sp-plan__name">Monthly</span>
-      <div class="sp-plan__price">
-        <span class="sp-plan__currency">£</span>
-        <span class="sp-plan__amount">5.99</span>
-      </div>
-      <span class="sp-plan__period">per month</span>
-      <span class="sp-plan__save">&nbsp;</span>
-      <ul class="sp-plan__features">
-        <li>Full access to all 48 guided meditations</li>
-        <li>52 sleep stories — one new each week</li>
-        <li>ASMR sound mixer with 14 ambient tracks</li>
-        <li>Mindfulness courses &amp; tools</li>
-        <li>Cancel any time</li>
-      </ul>
-      <a href="https://buy.stripe.com/aFacN46Yr4kmffLec0eAg01" class="sp-plan__cta stripe-subscribe-btn" id="monthlyBtn">Start Monthly</a>
-      <span class="sp-plan__note">Cancel any time — no commitment</span>
-    </div>
-  </div>
-
-  <div class="sp-plan sp-plan--annual">
-    <div class="sp-plan__orb"></div>
-    <span class="sp-plan__popular">Best Value</span>
-    <div class="sp-plan__content">
-      <span class="sp-plan__name">Annual</span>
-      <div class="sp-plan__price">
-        <span class="sp-plan__currency">£</span>
-        <span class="sp-plan__amount">49.99</span>
-      </div>
-      <span class="sp-plan__period">per year</span>
-      <span class="sp-plan__save">Save over 30% vs monthly</span>
-      <ul class="sp-plan__features">
-        <li>Everything in Monthly — for less</li>
-        <li>Full access to all 48 guided meditations</li>
-        <li>52 sleep stories — one new each week</li>
-        <li>ASMR sound mixer with 14 ambient tracks</li>
-        <li>Mindfulness courses &amp; tools</li>
-        <li>Priority access to new content</li>
-      </ul>
-      <a href="https://buy.stripe.com/8x24gy4Qj9EGffL8RGeAg02" class="sp-plan__cta stripe-subscribe-btn" id="annualBtn">Start Annual</a>
-      <span class="sp-plan__note">Works out at £4.17/month</span>
-    </div>
-  </div>
+<section class="sp-pricing" id="pricing">
+  <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
+  <stripe-pricing-table
+    pricing-table-id="prctbl_1SzJroAIwCqKZ0fVHIXaQmfx"
+    publishable-key="pk_live_51StLe0AIwCqKZ0fV3uWuESdXGFHG1iB65QmrbeqMs6C2f1sSRkpykRJkoJo2AdfFq4xRIfYjsbx3Z85ey40hhn3Qm00TIcLcwhT"
+    client-reference-id="">
+  </stripe-pricing-table>
 </section>
 
 <!-- ═══ WHAT YOU GET ═══ -->
@@ -462,27 +398,16 @@
       });
     });
 
-    // Handle subscribe buttons based on login state
+    // Set client-reference-id on Stripe Pricing Table from Supabase user ID
     (async function() {
       if (typeof SalusAuth !== 'undefined') {
         await SalusAuth.init();
-        var buttons = document.querySelectorAll('.stripe-subscribe-btn');
-
-        if (SalusAuth.isLoggedIn()) {
-          // Logged in: Update Stripe links with user ID and email
-          buttons.forEach(function(link) {
-            link.href = SalusAuth.getStripeCheckoutUrl(link.href);
-          });
-        } else {
-          // Not logged in: Replace with "Create Account" buttons
-          buttons.forEach(function(link) {
-            var newBtn = document.createElement('a');
-            newBtn.href = 'signup.html?redirect=apps.html';
-            newBtn.className = link.className;
-            newBtn.textContent = 'Create Account to Subscribe';
-            newBtn.style.fontSize = '0.85rem';
-            link.parentNode.replaceChild(newBtn, link);
-          });
+        var table = document.querySelector('stripe-pricing-table');
+        if (table && SalusAuth.isLoggedIn()) {
+          var user = SalusAuth.getUser();
+          if (user && user.id) {
+            table.setAttribute('client-reference-id', user.id);
+          }
         }
       }
     })();
