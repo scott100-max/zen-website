@@ -37,19 +37,19 @@ Close your eyes when you're ready.
 
 Take a long, slow breath in through your nose.
 
-[4 second pause]
+[SILENCE: 4]
 
 And let it all go through your mouth. Feel your body settle deeper into the mattress.
 
-[6 second pause]
+[SILENCE: 6]
 
 One more. Nice and slow.
 
-[4 second pause]
+[SILENCE: 4]
 
 And release everything. Let the exhale carry the last of the day out of you.
 
-[6 second pause]
+[SILENCE: 6]
 
 Good. Now let your breathing settle on its own. No more effort. Just your body doing what it does.
 
@@ -229,7 +229,7 @@ I'm going to be quiet now for a little while. Just let the rain hold you. There'
 
 ...
 
-[60 second pause]
+[SILENCE: 60]
 
 ...
 
@@ -305,7 +305,7 @@ Rest here now. I'll be back soon.
 
 ...
 
-[90 second pause]
+[SILENCE: 90]
 
 ...
 
