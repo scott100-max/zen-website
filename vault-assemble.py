@@ -162,7 +162,7 @@ def encode_mp3(input_wav, output_mp3):
     return output_mp3
 
 
-def assemble(session_id, skip_qa=False):
+def assemble(session_id, skip_qa=False, no_humanize=False):
     """Full assembly pipeline for a vault session."""
     session_dir = VAULT_DIR / session_id
 
@@ -192,14 +192,18 @@ def assemble(session_id, skip_qa=False):
     # Get pause data from manifest
     pauses = {b['index']: b['pause'] for b in manifest.get('blocks', [])}
 
-    # Humanize pauses
+    # Humanize pauses (skip for stories — creates silences too long for narrative)
     blocks_for_humanize = []
     for ci, _ in copied:
         text = next((p['text'] for p in picks_data['picks'] if p['chunk'] == ci), '')
         pause = pauses.get(ci, 0)
         blocks_for_humanize.append((text, pause))
 
-    humanized = build.humanize_pauses(blocks_for_humanize)
+    if no_humanize:
+        humanized = blocks_for_humanize
+        print(f"  Pauses: using raw durations (--no-humanize)")
+    else:
+        humanized = build.humanize_pauses(blocks_for_humanize)
 
     # Process in temp directory
     with tempfile.TemporaryDirectory() as tmp:
@@ -317,9 +321,11 @@ def main():
                         help='Session ID (e.g., 52-the-court-of-your-mind)')
     parser.add_argument('--skip-qa', action='store_true',
                         help='Skip 14-gate QA (for testing)')
+    parser.add_argument('--no-humanize', action='store_true',
+                        help='Skip pause humanization (for stories — raw pause durations)')
     args = parser.parse_args()
 
-    success = assemble(args.session_id, skip_qa=args.skip_qa)
+    success = assemble(args.session_id, skip_qa=args.skip_qa, no_humanize=args.no_humanize)
     sys.exit(0 if success else 1)
 
 
