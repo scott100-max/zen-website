@@ -664,7 +664,7 @@
   }
   .sound-card.playing .sound-card__slider-row,
   .sound-card:hover .sound-card__slider-row {
-    max-height: 40px; opacity: 1; margin-top: 10px; padding-top: 10px;
+    max-height: 40px; opacity: 1; margin-top: 10px; padding-top: 10px; overflow: visible;
   }
   .sound-card__vol-icon { flex-shrink: 0; display: flex; align-items: center; }
   .sound-card__vol-icon svg { width: 13px; height: 13px; fill: rgba(240,238,252,0.4); transition: fill 0.3s ease; }
@@ -1120,6 +1120,7 @@
                   fading = false;
                   audioElements[s.id].active = active;
                   audioElements[s.id].standby = standby;
+                  active.volume = parseFloat(card.querySelector('.sound-card__slider').value) / 100;
                 }
               }, interval);
             }
@@ -1128,7 +1129,7 @@
           audioElements[s.id] = { active: a, standby: b, timer: timer,
             play() { this.active.play(); },
             pause() { this.active.pause(); this.standby.pause(); },
-            setVolume(v) { if (!fading) this.active.volume = v; }
+            setVolume(v) { this.active.volume = v; if (fading) this.standby.volume = v; }
           };
         }
         if (isPlaying) {
@@ -1148,6 +1149,8 @@
         }
       });
       slider.addEventListener('click', (e) => e.stopPropagation());
+      slider.addEventListener('mousedown', (e) => e.stopPropagation());
+      slider.addEventListener('touchstart', (e) => e.stopPropagation());
 
       grid.appendChild(card);
     });
