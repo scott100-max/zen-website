@@ -73,11 +73,16 @@ function updateBasePath() {
   renderChunk();
 }
 
-// --- All non-filtered candidates sorted by score ---
+// --- All non-filtered candidates sorted by score (fallback: all if every candidate filtered) ---
 function getTop(chunk) {
   var result = [];
   for (var i = 0; i < chunk.candidates.length; i++) {
     if (!chunk.candidates[i].filtered) result.push(chunk.candidates[i]);
+  }
+  if (result.length === 0) {
+    for (var i = 0; i < chunk.candidates.length; i++) {
+      result.push(chunk.candidates[i]);
+    }
   }
   result.sort(function(a, b) { return b.score - a.score; });
   return result;
