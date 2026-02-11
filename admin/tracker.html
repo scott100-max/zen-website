@@ -348,6 +348,20 @@
       return data.filter(function(r) { return !isMyRegion(r); });
     }
 
+    // Build set of visitor IDs seen in my region (from page_views + legacy)
+    function getMyRegionVisitorIds() {
+      var ids = {};
+      pageViewsData.forEach(function(pv) { if (isMyRegion(pv) && pv.visitor_id) ids[pv.visitor_id] = true; });
+      legacyData.forEach(function(r) { if (isMyRegion(r) && r.visitor_id) ids[r.visitor_id] = true; });
+      return ids;
+    }
+
+    function applyVisitorExclusion(visitors) {
+      if (!excludeMyRegion) return visitors;
+      var regionIds = getMyRegionVisitorIds();
+      return visitors.filter(function(v) { return !regionIds[v.id]; });
+    }
+
     // Data stores
     var pageViewsData = [];
     var eventsData = [];
@@ -473,27 +487,32 @@
       var todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       var d7 = new Date(); d7.setDate(d7.getDate() - 7);
 
+      // Filtered visitors (exclude my region via page_view cross-reference)
+      var filteredVisitors = applyVisitorExclusion(visitorsData);
+
       // Total unique visitors
-      document.getElementById('stat-visitors').textContent = visitorsData.length.toLocaleString();
+      document.getElementById('stat-visitors').textContent = filteredVisitors.length.toLocaleString();
 
       // New visitors in last 7 days
-      var new7d = visitorsData.filter(function(v) { return new Date(v.first_seen) >= d7; }).length;
+      var new7d = filteredVisitors.filter(function(v) { return new Date(v.first_seen) >= d7; }).length;
       document.getElementById('stat-new7d').textContent = new7d.toLocaleString();
 
       // Returning visitors (total_sessions > 1)
-      var returning = visitorsData.filter(function(v) { return v.total_sessions > 1; }).length;
+      var returning = filteredVisitors.filter(function(v) { return v.total_sessions > 1; }).length;
       document.getElementById('stat-returning').textContent = returning.toLocaleString();
 
-      // Sessions today (unique session_ids in page_views today)
+      // Sessions today (unique session_ids in page_views today) — use filtered pv data
+      var todayPv = applyExclusion(pageViewsData);
+      var todayLegacy = applyExclusion(legacyData);
       var todaySessions = {};
-      pageViewsData.forEach(function(pv) {
+      todayPv.forEach(function(pv) {
         if (new Date(pv.created_at) >= todayStart && pv.session_id) {
           todaySessions[pv.session_id] = true;
         }
       });
       // Fall back to legacy if no page_views yet
       if (Object.keys(todaySessions).length === 0) {
-        legacyData.forEach(function(r) {
+        todayLegacy.forEach(function(r) {
           if (new Date(r.created_at) >= todayStart && r.session_id) {
             todaySessions[r.session_id] = true;
           }
@@ -502,7 +521,7 @@
       document.getElementById('stat-today').textContent = Object.keys(todaySessions).length.toLocaleString();
 
       // Page views (7d)
-      var pv7d = pageViewsData.filter(function(pv) { return new Date(pv.created_at) >= d7; }).length;
+      var pv7d = todayPv.filter(function(pv) { return new Date(pv.created_at) >= d7; }).length;
       document.getElementById('stat-pv7d').textContent = pv7d.toLocaleString();
 
       // Avg duration
@@ -791,7 +810,7 @@
 
     // ===== Returning Visitors =====
     function updateReturning() {
-      var returning = visitorsData.filter(function(v) { return v.total_sessions > 1; });
+      var returning = applyVisitorExclusion(visitorsData).filter(function(v) { return v.total_sessions > 1; });
       returning.sort(function(a, b) { return b.total_sessions - a.total_sessions; });
       var tbody = document.querySelector('#returning-table tbody');
       tbody.innerHTML = returning.slice(0, 20).map(function(v) {
