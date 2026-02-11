@@ -1,6 +1,6 @@
 # Openings Register — Salus Session Catalogue
 # Format: [Session #] | [Opening line] | [Opening technique]
-# Updated: 10 February 2026
+# Updated: 11 February 2026
 
 01-morning-meditation | "This is your morning meditation." | Theme statement
 03-breathing-for-anxiety | "This is a gentle breathing session." | Theme statement
@@ -24,3 +24,26 @@
 54-the-slow-train-north | "The platform is almost empty." | Scene-setting
 55-the-bookshop-at-the-end-of-the-lane | "You almost walked past it." | Mid-action start
 56-the-lighthouse-keepers-log | "The path to the lighthouse runs along the cliff edge." | Scene-setting
+
+# Sessions 57-77 — 21-Day Mindfulness Course
+57-21day-mindfulness-day01 | "Notice three things right now." | Attention test (notice 3 things)
+58-21day-mindfulness-day02 | "Counting sounds boring." | Honest confession / candid framing
+59-21day-mindfulness-day03 | "You have lived in your body your whole life." | Paradox / existential observation
+60-21day-mindfulness-day04 | "What were you thinking sixty seconds ago?" | Thought inventory / question
+61-21day-mindfulness-day05 | [SILENCE: 8] then "What did you hear just now?" | Silence-first
+62-21day-mindfulness-day06 | "Something happens, and then you react." | Stimulus-response framing
+63-21day-mindfulness-day07 | "You know more than you did seven days ago." | Competence recognition
+64-21day-mindfulness-day08 | "What is the weather like outside right now?" | Meteorological framing
+65-21day-mindfulness-day09 | "You are sitting somewhere, listening to this." | Second-person narration
+66-21day-mindfulness-day10 | "Finish this sentence in your mind." | Sentence completion exercise
+67-21day-mindfulness-day11 | "Raise both hands above your head." | Physical provocation
+68-21day-mindfulness-day12 | "Imagine your mind is a house with a front door." | Guest house metaphor
+69-21day-mindfulness-day13 | "Stand up for this one." | Standing start / movement instruction
+70-21day-mindfulness-day14 | "Some things are pleasant right now." | Three-bucket demo
+71-21day-mindfulness-day15 | "Think of your closest friend." | Double-standard exposure
+72-21day-mindfulness-day16 | "Make two fists. Clench them hard." | Weight metaphor enacted
+73-21day-mindfulness-day17 | "Name five things you can see." | Subtraction method
+74-21day-mindfulness-day18 | "Think of a conversation that went wrong." | Conversation replay
+75-21day-mindfulness-day19 | "Gratitude has a branding problem." | Anti-gratitude setup
+76-21day-mindfulness-day20 | "You know what to do." | Minimal instruction
+77-21day-mindfulness-day21 | "One last time. Notice three things." | Full circle / Day 1 callback

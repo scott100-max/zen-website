@@ -1,6 +1,6 @@
 # Phrases Register — Salus Session Catalogue
 # Format: [Session #] | [Phrase or cue] | [Context]
-# Updated: 10 February 2026 (abridged — distinctive phrases only, not common instructions)
+# Updated: 11 February 2026 (abridged — distinctive phrases only, not common instructions)
 
 # === SILENCE ANNOUNCEMENTS (must be unique per session) ===
 03 | "I'll be quiet for a while now. Just keep breathing at your own pace. Let the birds hold you." | Silence — ambient handover
@@ -107,3 +107,134 @@
 55 | "Books that were loved, not collected." | Distinctive characterisation
 56 | "There is no urgency in a lighthouse." | Pace declaration
 56 | "One light, in the right place, doing one thing well." | Purpose statement
+
+# === Sessions 57-77 — 21-Day Mindfulness Course ===
+
+# === SILENCE ANNOUNCEMENTS (21-Day Course) ===
+57-day01 | (no formal silence announcement — instructions lead naturally into silence) | Implicit silence transition
+58-day02 | "I am going to leave some quiet now. If you want to count, count. If you want to just sit with the breath, do that instead. There is no wrong choice here." | Silence — choice offered
+59-day03 | "Stay here, holding the whole body at once, for the next little while. I will come back to you soon." | Silence — body holding
+60-day04 | "I will leave you to practise this in quiet now. Stay on the bank. Watch the water." | Silence — stream metaphor
+61-day05 | "I am going to step back and let the sounds around you become your entire meditation. No breath focus, no body awareness. Just listening." | Silence — sound-only
+62-day06 | "I am going to leave you in quiet to practise this now. Every time a thought arrives, look for the space before you react to it. That is where your freedom lives." | Silence — gap practice
+63-day07 | "I am going to leave you in this open space now. Nothing to do, nothing to fix, nothing to follow. Just here." | Silence — open awareness
+64-day08 | "For the remainder of this session, I am going to step back and let you sit with whatever is present." | Silence — open invitation
+65-day09 | "I am going to step back now and give you this space. You and the narrator. See what happens when you stop taking its commentary personally." | Silence — narrator observation
+66-day10 | "I am going to give you some extended quiet now. During this time, let your stories surface on their own." | Silence — story surfacing
+67-day11 | "I will leave you in extended quiet now. Your only instruction is to stay with whatever arises in the body, comfortable or not, and study it with the same attention you would give something genuinely fascinating." | Silence — discomfort study
+68-day12 | "I am going to be quiet now. Just sit in the house with the door open and see who comes and goes. There is nothing to fix and nobody to turn away." | Silence — guest house open door
+69-day13 | "I am going to leave you in quiet now, whether you sit or stand, eyes open or closed. Just be here in your body, in motion or in rest." | Silence — movement or rest
+70-day14 | "I am going to leave you in quiet now. Hold the middle ground. Let everything be exactly what it is." | Silence — equanimity hold
+71-day15 | "I am going to leave you in quiet now. Stay with whatever came up." | Silence — compassion settling
+72-day16 | "I am going to leave you in extended quiet now. Let your hands rest open. Let whatever wants to soften, soften. Let whatever is not ready, wait." | Silence — forgiveness settling
+73-day17 | "There is nothing to achieve here. Nothing to get right. Just space, and whatever moves through it." | Silence — choiceless awareness
+74-day18 | "I will leave you in quiet now to continue this rehearsal, or to sit with whatever came up during the session." | Silence — conversation rehearsal
+75-day19 | "Choose one thing, any one thing, and stay with the gratitude for it until you can locate exactly where it lives in your body." | Silence — embodied gratitude
+76-day20 | "This is your session." | Silence — minimal instruction
+77-day21 | "You do not need me any more. You have everything you need. Sit in whatever way serves you." | Silence — final release
+
+# === DISTINCTIVE PHRASES — 21-Day Course ===
+
+# Session 57 — Day 1: The Instrument
+57 | "It is the most versatile instrument you own, and almost nobody learns how to use it." | Attention as instrument
+57 | "Drift, notice, return." | Core technique summary (3-word)
+57 | "Fifteen seconds of choosing where your attention goes." | Homework framing
+
+# Session 58 — Day 2: The Anchor
+58 | "It is the difference between an anchor and a cage." | Anchor metaphor
+58 | "Losing count is not a failure, it is information." | Reframe of failure
+58 | "Getting to know the instrument you already own." | Self-knowledge framing
+
+# Session 59 — Day 3: The Map
+59 | "You are making a map, not doing repairs." | Map vs repair distinction
+59 | "Pointing your attention like a torch... making it a floodlight." | Torch/floodlight metaphor
+59 | "The map gets more detailed every time you visit." | Recurring practice metaphor
+
+# Session 60 — Day 4: The Stream
+60 | "Step out of the stream and stand on the bank." | Stream/bank metaphor
+60 | "Thoughts are events that happen in your mind, the same way sounds are events that happen in a room." | Thought-as-event analogy
+60 | "Stay on the bank. Watch the water." | Closing image
+
+# Session 61 — Day 5: The Soundscape
+61 | "Sound is the sense you cannot switch off." | Sound as always-on sense
+61 | "Foreground, mid-ground, and background." | Three-layer listening model
+61 | "The gaps are where your attention becomes genuinely quiet." | Silence-between-sounds insight
+
+# Session 62 — Day 6: The Pause
+62 | "Between stimulus and response, there is a space." | Frankl reference
+62 | "It is your mind making a suggestion, not issuing an order." | Urge reframing
+62 | "That is where your freedom lives." | Freedom-in-the-gap
+
+# Session 63 — Day 7: The Review
+63 | "Five distinct skills, and each one has a name you can use." | Skill naming
+63 | "Where nothing is excluded and nothing is chased." | Open awareness description
+
+# Session 64 — Day 8: The Weather System
+64 | "Recognize, Allow, Investigate, Nurture." | RAIN method
+64 | "Emotions are not problems to solve. They are information." | Emotion-as-information
+64 | "The weather changes. RAIN works in all conditions." | Method metaphor
+
+# Session 65 — Day 9: The Narrator
+65 | "You are not the narrator. You are the one listening." | Core narrator insight
+65 | "Metacognition — thinking about thinking." | Term definition
+65 | "Who is listening?" | Core question (homework)
+
+# Session 66 — Day 10: The Stories We Carry
+66 | "I am the kind of person who." | Sentence completion prompt
+66 | "The story was already there, ready and rehearsed, waiting for someone to ask." | Story-on-autopilot insight
+66 | "The skill is knowing which ones you chose and which ones chose you." | Story agency
+
+# Session 67 — Day 11: The Body Under Pressure
+67 | "Discomfort is not the problem. Resistance to discomfort is the problem." | Core discomfort insight
+67 | "See the urge as a thought, not as a command." | Urge defusion
+67 | "The raw data is almost always manageable." | Pain vs suffering
+
+# Session 68 — Day 12: The Difficult Guest
+68 | "Every difficult emotion carries information." | Emotion-as-messenger
+68 | "You are the host, not the doorman." | Host/doorman metaphor
+68 | "Most of them just want to be acknowledged." | Guest insight
+
+# Session 69 — Day 13: The Walk
+69 | "Lift. Move. Place." | Walking meditation rhythm
+69 | "Mindfulness does not require you to be still. It works in motion." | Motion-compatible mindfulness
+69 | "The feet are awake. The ground is real." | Post-walk awareness
+
+# Session 70 — Day 14: The Middle Ground
+70 | "Neutral experience covers about ninety percent of any given moment." | Neutral statistic
+70 | "The mind skips right past neutral." | Attention bias insight
+70 | "Upekkha does not mean indifference." | Equanimity clarification
+
+# Session 71 — Day 15: The Compassion Turn
+71 | "Would I say this to my closest friend?" | Double standard question
+71 | "This is not a scandal. It is a Tuesday." | Normalising imperfection
+71 | "Self-kindness. Common humanity. Mindfulness." | Three components (Neff)
+
+# Session 72 — Day 16: The Forgiveness Practice
+72 | "Forgiveness means you stop carrying the weight." | Forgiveness redefinition
+72 | "Forgiveness is not an event. It is a direction." | Direction metaphor
+72 | "Your hands can open whenever you choose." | Open-hands image
+
+# Session 73 — Day 17: The Space Between
+73 | "Active attention is a torch. This is more like a mirror." | Torch/mirror distinction
+73 | "Observation without the observer." | Krishnamurti reference
+73 | "It is what remains when you stop producing." | Awareness-as-remainder
+
+# Session 74 — Day 18: The Difficult Conversation
+74 | "Body. Narrative. Intention." | Three-check framework
+74 | "What do I actually want from this conversation?" | Core intention question
+74 | "The pause is the practice." | Interpersonal pause
+
+# Session 75 — Day 19: The Gratitude Inventory
+75 | "Genuine gratitude has almost nothing in common with a list on a fridge." | Anti-list framing
+75 | "Not the thought I am grateful, but the actual physical sensation of having been cared for." | Embodied gratitude distinction
+75 | "Not more things. One thing. Completely." | Depth over breadth
+
+# Session 76 — Day 20: The Long Sit
+76 | "Arrive. Get restless. And stay." | Three-phase summary
+76 | "The restlessness is not a sign that you are doing it wrong." | Restlessness reframe
+76 | "The practice is the sitting, not the state." | Process over outcome
+
+# Session 77 — Day 21: The Return
+77 | "One last time. Notice three things." | Day 1 callback
+77 | "They are skills you have practised, and they live in your nervous system now." | Skills-in-body claim
+77 | "The course is done, but the practice is not. The practice is the rest of your life." | Course completion statement

@@ -1,6 +1,6 @@
 # Closings Register — Salus Session Catalogue
 # Format: [Session #] | [Closing line] | [Closing technique]
-# Updated: 10 February 2026
+# Updated: 11 February 2026
 
 01-morning-meditation | "You've given yourself a gift this morning." | Affirmation + forward projection
 03-breathing-for-anxiety | "When you're ready, open your eyes." | Simple re-emergence
@@ -24,3 +24,26 @@
 54-the-slow-train-north | "The train will be here all night. It knows where it is going. You do not have to." | Permission to surrender
 55-the-bookshop-at-the-end-of-the-lane | "Rest here. In the chair. In the bookshop." | Scene-sinking / permission to rest
 56-the-lighthouse-keepers-log | "The light will burn all night. The mechanism will turn. None of it needs you now." | Permission to surrender
+
+# Sessions 57-77 — 21-Day Mindfulness Course
+57-21day-mindfulness-day01 | "You have started something worth finishing. See you tomorrow." | Forward commitment
+58-21day-mindfulness-day02 | "See you tomorrow, when we go somewhere interesting." | Teaser / forward hook
+59-21day-mindfulness-day03 | "The map gets more detailed every time you visit. See you tomorrow." | Skill metaphor continuation
+60-21day-mindfulness-day04 | "The stream keeps flowing whether you watch it or not. The difference is that now you can choose when to step in." | Metaphor recap + agency
+61-21day-mindfulness-day05 | "Tomorrow, we learn the most powerful micro-skill in all of psychology." | Teaser / forward hook
+62-21day-mindfulness-day06 | "That gap is the most powerful thing you have learned so far." | Skill acknowledgement
+63-21day-mindfulness-day07 | "You have completed the foundation. Next week, we start working with what is difficult." | Week transition
+64-21day-mindfulness-day08 | "The weather changes. RAIN works in all conditions." | Technique metaphor
+65-21day-mindfulness-day09 | "Tomorrow, we go deeper into the stories you carry about yourself." | Teaser / forward hook
+66-21day-mindfulness-day10 | "Every story has a first chapter. And you can always begin a new one." | Narrative metaphor
+67-21day-mindfulness-day11 | "Tomorrow, we turn this same curiosity toward emotions that are even harder to sit with." | Forward hook
+68-21day-mindfulness-day12 | "Tomorrow, you are going to get up and move. Bring comfortable shoes." | Practical instruction + teaser
+69-21day-mindfulness-day13 | "Tomorrow is the final day of week two, and we are going to work with something subtle and profound." | Week-end transition
+70-21day-mindfulness-day14 | "You have completed week two." | Week completion summary
+71-21day-mindfulness-day15 | "Tomorrow, we go even further into courage." | Forward hook / courage framing
+72-21day-mindfulness-day16 | "Tomorrow, we enter the territory of open awareness. The most advanced practice in the course." | Forward hook
+73-21day-mindfulness-day17 | "You are in the final stretch. Four days to go." | Countdown
+74-21day-mindfulness-day18 | "Three days left." | Countdown
+75-21day-mindfulness-day19 | "Two sessions remain. Tomorrow is unlike anything we have done so far." | Countdown + teaser
+76-21day-mindfulness-day20 | "There is no homework tonight. Tomorrow is our last session together. The final day. Be there." | No-homework + final teaser
+77-21day-mindfulness-day21 | "Thank you for every one of those twenty-one days. Go well." | Course completion / gratitude + farewell

@@ -548,283 +548,493 @@ _PICKER_TEMPLATE = r'''<!DOCTYPE html>
 <title>Vault Picker — __SESSION_ID__</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0a12;color:#f0eefc;font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:32px 20px;max-width:1100px;margin:0 auto}
+body{background:#0a0a12;color:#f0eefc;font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:32px 20px;max-width:900px;margin:0 auto}
 h1{font-size:1.3rem;font-weight:300;margin-bottom:4px}
 .meta{font-size:.78rem;color:#888;margin-bottom:6px}
-.save-status{font-size:.72rem;padding:3px 10px;border-radius:4px;margin-bottom:16px;display:inline-block}
+.save-status{font-size:.72rem;padding:3px 10px;border-radius:4px;margin-bottom:8px;display:inline-block}
 .save-status.ok{background:rgba(52,211,153,.1);color:#34d399}
 .save-status.saving{background:rgba(250,204,21,.1);color:#facc15}
 .save-status.error{background:rgba(239,68,68,.1);color:#ef4444}
-.controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;align-items:center}
-.controls button,.controls select{padding:6px 14px;border-radius:6px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#f0eefc;cursor:pointer;font-size:.78rem}
-.controls button:hover{background:rgba(255,255,255,.08)}
-.controls button.active{background:rgba(52,211,153,.15);border-color:#34d399;color:#34d399}
-.progress{font-size:.82rem;color:#34d399;margin-left:auto}
-.chunk-section{margin-bottom:44px;border-top:1px solid rgba(255,255,255,.06);padding-top:20px}
-.chunk-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
-.chunk-title{font-size:.9rem;font-weight:500;color:#34d399}
-.chunk-badge{font-size:.7rem;padding:2px 8px;border-radius:4px;background:rgba(167,139,250,.12);color:#a78bfa}
-.chunk-text{font-size:.82rem;color:#999;font-style:italic;margin-bottom:8px;line-height:1.5}
-.chunk-notes{width:100%;padding:6px 10px;margin-bottom:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:6px;color:#ccc;font-size:.78rem;resize:vertical;min-height:28px}
-.chunk-notes::placeholder{color:#555}
-.sort-bar{display:flex;gap:8px;margin-bottom:10px;font-size:.72rem}
-.sort-bar button{padding:3px 10px;border-radius:4px;border:1px solid rgba(255,255,255,.08);background:transparent;color:#888;cursor:pointer;font-size:.72rem}
-.sort-bar button.active{color:#34d399;border-color:rgba(52,211,153,.3)}
-.version{display:flex;align-items:center;gap:10px;padding:8px 12px;margin-bottom:5px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:8px;transition:all .15s}
-.version:hover{border-color:rgba(255,255,255,.1)}
-.version.picked{border-color:#34d399;background:rgba(52,211,153,.06)}
-.version.rejected{border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.03);opacity:.45}
-.version.filtered{opacity:.35}
-.v-label{font-size:.7rem;color:#888;min-width:28px;font-weight:600;text-align:center}
-.v-audio{flex:1}
-.v-audio audio{width:100%;height:30px}
-.v-stats{display:flex;gap:12px;font-size:.68rem;color:#777;flex-shrink:0;min-width:180px}
-.v-stats span{white-space:nowrap}
-.v-stats .score{color:#34d399}
-.v-stats .dur{color:#a78bfa}
-.v-stats .tone{color:#f59e0b}
-.v-btns{display:flex;gap:5px;flex-shrink:0}
-.v-btns button{padding:3px 10px;border-radius:5px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#f0eefc;cursor:pointer;font-size:.7rem;transition:all .15s}
-.v-btns .pick-btn.active{background:rgba(52,211,153,.2);border-color:#34d399;color:#34d399}
-.v-btns .rej-btn.active{background:rgba(239,68,68,.2);border-color:#ef4444;color:#ef4444}
+.progress{font-size:.82rem;color:#34d399;margin-bottom:16px}
+.chunk-nav{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:20px;padding:12px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:8px}
+.chunk-nav button{width:36px;height:28px;border-radius:4px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#888;cursor:pointer;font-size:.68rem;transition:all .15s}
+.chunk-nav button:hover{background:rgba(255,255,255,.08);color:#f0eefc}
+.chunk-nav button.picked-old{background:rgba(52,211,153,.15);border-color:rgba(52,211,153,.3);color:#34d399;font-weight:400}
+.chunk-nav button.rejected{background:rgba(239,68,68,.25);border-color:#ef4444;color:#ef4444;font-weight:700}
+.chunk-nav button.picked-a{background:#34d399;border-color:#34d399;color:#0a0a12;font-weight:700}
+.chunk-nav button.picked-b{background:#f59e0b;border-color:#f59e0b;color:#0a0a12;font-weight:700}
+.chunk-nav button.has-reject{background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.3);color:#ef4444}
+.chunk-nav button.current{outline:2px solid #f0eefc;outline-offset:1px}
+.pick-toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.8);background:#0f2a20;color:#34d399;border:2px solid #34d399;padding:20px 48px;border-radius:14px;font-size:1.3rem;font-weight:700;z-index:9999;pointer-events:none;opacity:0;transition:opacity .15s,transform .15s}
+.pick-toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.pick-toast.reject{background:#2a0f0f;color:#ef4444;border-color:#ef4444}
+.ab-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.ab-title{font-size:1rem;font-weight:500;color:#34d399}
+.ab-badge{font-size:.72rem;padding:2px 8px;border-radius:4px;background:rgba(167,139,250,.12);color:#a78bfa}
+.ab-text{font-size:.85rem;color:#999;font-style:italic;margin-bottom:14px;line-height:1.5}
+.ab-notes{width:100%;padding:6px 10px;margin-bottom:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:6px;color:#ccc;font-size:.78rem;resize:vertical;min-height:28px}
+.ab-notes::placeholder{color:#555}
+.round-info{font-size:.78rem;color:#888;margin-bottom:12px;text-align:center}
+.ab-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.ab-side{padding:16px;background:rgba(255,255,255,.02);border:2px solid rgba(255,255,255,.08);border-radius:10px;text-align:center;transition:border-color .2s}
+.ab-side:hover{border-color:rgba(255,255,255,.15)}
+.ab-label{font-size:1.4rem;font-weight:700;margin-bottom:8px;letter-spacing:2px}
+.ab-label.label-a{color:#60a5fa}
+.ab-label.label-b{color:#f59e0b}
+.ab-stats{font-size:.72rem;color:#777;margin-top:8px}
+.ab-stats span{margin:0 6px}
+.ab-stats .score{color:#34d399}
+.ab-stats .dur{color:#a78bfa}
+.ab-stats .tone{color:#f59e0b}
+.ab-side audio{width:100%;margin:8px 0}
+.ab-actions{display:flex;justify-content:center;gap:12px;margin-bottom:20px}
+.ab-actions button{padding:10px 28px;border-radius:8px;border:2px solid;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .15s}
+.btn-a{background:rgba(96,165,250,.1);border-color:rgba(96,165,250,.3);color:#60a5fa}
+.btn-a:hover{background:rgba(96,165,250,.2)}
+.btn-same{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.12);color:#888}
+.btn-same:hover{background:rgba(255,255,255,.08)}
+.btn-b{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:#f59e0b}
+.btn-b:hover{background:rgba(245,158,11,.2)}
+.ab-result{text-align:center;padding:24px;background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.15);border-radius:10px;margin-bottom:16px}
+.ab-result .winner-label{font-size:1rem;color:#34d399;margin-bottom:8px}
+.ab-result audio{width:80%;margin:10px 0}
+.ab-result .winner-stats{font-size:.78rem;color:#888;margin-bottom:12px}
+.btn-repick{padding:6px 16px;border-radius:6px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#f0eefc;cursor:pointer;font-size:.78rem}
+.btn-repick:hover{background:rgba(255,255,255,.08)}
+.shortcuts{font-size:.72rem;color:#555;text-align:center;margin-top:12px}
+.shortcuts kbd{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:3px;padding:1px 5px;font-family:inherit}
 .export-bar{margin-top:36px;display:flex;gap:10px;align-items:center}
 .export-bar button{padding:8px 20px;border-radius:7px;border:1px solid rgba(52,211,153,.3);background:rgba(52,211,153,.1);color:#34d399;cursor:pointer;font-size:.82rem;font-weight:500}
 .export-bar button:hover{background:rgba(52,211,153,.18)}
 .export-bar .status{font-size:.78rem;color:#888}
 .summary{margin-top:16px;padding:14px;background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.12);border-radius:8px;display:none}
 .summary pre{white-space:pre-wrap;color:#ccc;font-size:.75rem}
-.chunk0-dur{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.7rem;font-weight:600;margin-left:8px}
-.chunk0-dur.in-range{background:rgba(52,211,153,.15);color:#34d399}
-.chunk0-dur.out-range{background:rgba(239,68,68,.15);color:#ef4444}
-.dur-target{font-size:.72rem;color:#888;margin-bottom:8px}
-.dur-target input{width:50px;padding:2px 5px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;color:#f0eefc;font-size:.72rem;text-align:center}
 </style>
 </head>
 <body>
-<h1>Vault Picker — __SESSION_ID__</h1>
-<p class="meta">Generated __GENERATED_AT__</p>
+<h1>Vault Picker &mdash; __SESSION_ID__</h1>
+<p class="meta">A/B Tournament v2</p>
 <p class="meta">Audio base: <input id="basePath" value="__DEFAULT_BASE_PATH__" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;color:#f0eefc;padding:2px 6px;font-size:.72rem;width:420px" onchange="updateBasePath()"></p>
 <div class="save-status ok" id="saveStatus">Auto-save active</div>
-
-<div class="controls">
-  <button onclick="filterChunks('all')" class="active" id="fAll">All Chunks</button>
-  <button onclick="filterChunks('unpicked')" id="fUnpicked">Unpicked Only</button>
-  <button onclick="filterChunks('opening')" id="fOpening">Chunk 0 Only</button>
-  <button onclick="playAllPicks()" id="btnPlayAll">Play All Picks</button>
-  <span class="progress" id="progress">0 / 0 picked</span>
-</div>
-
-<div id="chunks"></div>
-
+<div class="progress" id="progress">0 / 0 picked</div>
+<div class="chunk-nav" id="chunkNav"></div>
+<div id="abArea"></div>
+<div class="pick-toast" id="toast"></div>
 <div class="export-bar">
   <button onclick="exportPicks()">Download picks.json</button>
   <button onclick="exportTxt()">Download TXT</button>
+  <button onclick="playAllPicks()" id="btnPlayAll">Play All Picks</button>
   <span class="status" id="exportStatus"></span>
 </div>
 <div class="summary" id="summaryBox"><pre id="summaryJson"></pre></div>
+<div id="debugLog" style="margin-top:16px;font-size:.7rem;color:#555;font-family:monospace"></div>
 
 <script>
-const SESSION_ID = '__SESSION_ID__';
-const chunkData = __CHUNKS_DATA__;
+var SESSION_ID = '__SESSION_ID__';
+var chunkData = __CHUNKS_DATA__;
 
-// --- Auto-save configuration ---
-const PICKS_API = '__PICKS_API_URL__';
-const AUTH_TOKEN = '__PICKS_AUTH_TOKEN__';
-let basePath = document.getElementById('basePath').value.replace(/\/+$/, '');
-let durTargetMin = 3.0, durTargetMax = 5.0;
-let currentFilter = 'all';
-let saveTimer = null;
-let initialState = null;
+var PICKS_API = '__PICKS_API_URL__';
+var AUTH_TOKEN = '__PICKS_AUTH_TOKEN__';
+var basePath = document.getElementById('basePath').value.replace(/\/+$/, '');
+var initialState = {};
+var abState = {};
+var currentChunkArrayIdx = 0;
+var pickCounter = 0;
+var pickedThisSession = {};
 
-// --- Load state: try remote first, fall back to localStorage ---
 async function loadState() {
-  // Try remote
-  if (PICKS_API && AUTH_TOKEN) {
-    try {
-      const resp = await fetch(PICKS_API + '/picks/' + SESSION_ID, {
+  var serverState = {}, localState = {};
+  try {
+    if (PICKS_API && AUTH_TOKEN) {
+      var resp = await fetch(PICKS_API + '/picks/' + SESSION_ID, {
         headers: { 'Authorization': 'Bearer ' + AUTH_TOKEN }
       });
       if (resp.ok) {
-        const data = await resp.json();
+        var data = await resp.json();
         if (data.picks && data.picks.length > 0) {
-          initialState = {};
-          data.picks.forEach(p => {
-            initialState[p.chunk] = {
-              picked: p.picked,
-              rejected: p.rejected || [],
-              notes: p.notes || '',
-            };
-          });
-          setSaveStatus('ok', 'Loaded from server');
-          return initialState;
+          for (var i = 0; i < data.picks.length; i++) {
+            var p = data.picks[i];
+            serverState[p.chunk] = { picked: p.picked, rejected: p.rejected || [], notes: p.notes || '', side: p.side || null };
+          }
         }
       }
-    } catch (e) {
-      console.warn('Remote load failed, using localStorage:', e);
     }
-  }
-  // Fall back to localStorage
-  const saved = localStorage.getItem('vault-picks-' + SESSION_ID);
-  if (saved) {
-    initialState = JSON.parse(saved);
-    setSaveStatus('ok', 'Loaded from localStorage');
-    return initialState;
-  }
+  } catch (e) { console.warn('Remote load failed:', e); }
+
+  try {
+    var saved = localStorage.getItem('vault-picks-' + SESSION_ID);
+    if (saved) localState = JSON.parse(saved);
+  } catch (e) { console.warn('localStorage parse failed:', e); }
+
   initialState = {};
-  return {};
+  var serverKeys = Object.keys(serverState);
+  var localKeys = Object.keys(localState);
+  var allKeys = {};
+  for (var i = 0; i < serverKeys.length; i++) allKeys[serverKeys[i]] = true;
+  for (var i = 0; i < localKeys.length; i++) allKeys[localKeys[i]] = true;
+
+  var keys = Object.keys(allKeys);
+  for (var i = 0; i < keys.length; i++) {
+    var k = keys[i];
+    var s = serverState[k] || {};
+    var l = localState[k] || {};
+    if (l.picked != null) initialState[k] = l;
+    else if (s.picked != null) initialState[k] = s;
+    else initialState[k] = ((s.rejected || []).length >= (l.rejected || []).length) ? s : l;
+  }
+
+  var src = serverKeys.length > 0 && localKeys.length > 0 ? 'Merged server+local' :
+    serverKeys.length > 0 ? 'Loaded from server' :
+    localKeys.length > 0 ? 'Loaded from localStorage' : 'No saved state';
+  setSaveStatus('ok', src);
+  logDebug('loadState: ' + keys.length + ' chunks loaded (' + src + ')');
 }
 
 function setSaveStatus(cls, text) {
-  const el = document.getElementById('saveStatus');
-  el.className = 'save-status ' + cls;
-  el.textContent = text;
+  var el = document.getElementById('saveStatus');
+  if (el) { el.className = 'save-status ' + cls; el.textContent = text; }
+}
+
+function logDebug(msg) {
+  var el = document.getElementById('debugLog');
+  if (el) el.textContent = msg;
+  console.log('[picker] ' + msg);
 }
 
 function updateBasePath() {
   basePath = document.getElementById('basePath').value.replace(/\/+$/, '');
-  document.querySelectorAll('.v-audio audio').forEach(a => {
-    const rel = a.dataset.rel;
-    a.src = basePath + '/' + rel;
-  });
+  renderChunk();
+}
+
+function getTop(chunk) {
+  var result = [];
+  for (var i = 0; i < chunk.candidates.length; i++) {
+    if (!chunk.candidates[i].filtered) result.push(chunk.candidates[i]);
+  }
+  result.sort(function(a, b) { return b.score - a.score; });
+  return result;
+}
+
+function initABState(chunkIdx, reset) {
+  var chunk = null;
+  for (var i = 0; i < chunkData.length; i++) {
+    if (chunkData[i].idx === chunkIdx) { chunk = chunkData[i]; break; }
+  }
+  if (!chunk) return;
+
+  var top5 = getTop(chunk);
+  if (top5.length === 0) return;
+
+  var saved = reset ? {} : (initialState[chunkIdx] || {});
+  var notes = (abState[chunkIdx] && abState[chunkIdx].notes) || saved.notes || '';
+
+  if (!reset && saved.picked != null) {
+    abState[chunkIdx] = { top5: top5, winner: saved.picked, rejected: saved.rejected || [], done: true, notes: notes, round: 0, side: saved.side || null };
+    if (saved.side) pickedThisSession[chunkIdx] = saved.side;
+    return;
+  }
+
+  var rejected = reset ? [] : (saved.rejected || []);
+  var available = [];
+  for (var i = 0; i < top5.length; i++) {
+    if (rejected.indexOf(top5[i].v) === -1) available.push(top5[i]);
+  }
+
+  if (available.length === 0) {
+    abState[chunkIdx] = { top5: top5, champion: top5[0], challengerIdx: 1, winner: null, rejected: [], done: false, notes: notes, round: 1 };
+  } else if (available.length === 1) {
+    abState[chunkIdx] = { top5: top5, winner: available[0].v, rejected: rejected, done: true, notes: notes, round: 0 };
+  } else {
+    var challIdx = -1;
+    for (var i = 0; i < top5.length; i++) {
+      if (top5[i] === available[1]) { challIdx = i; break; }
+    }
+    abState[chunkIdx] = { top5: top5, champion: available[0], challengerIdx: challIdx, winner: null, rejected: rejected, done: false, notes: notes, round: 1 };
+  }
+}
+
+function renderChunk() {
+  var chunk = chunkData[currentChunkArrayIdx];
+  var state = abState[chunk.idx];
+  var area = document.getElementById('abArea');
+  if (!area) { logDebug('ERROR: no abArea element'); return; }
+  if (!state) { area.innerHTML = '<p style="color:#ef4444">No candidates for chunk ' + chunk.idx + '</p>'; return; }
+
+  var html = '';
+  html += '<div class="ab-header">';
+  html += '<span class="ab-title">Chunk ' + chunk.idx + '</span>';
+  html += '<span class="ab-badge">' + chunk.chars + ' chars' + (chunk.isOpening ? ' \u00b7 opening' : '') + (chunk.isClosing ? ' \u00b7 closing' : '') + '</span>';
+  html += '</div>';
+  html += '<div class="ab-text">\u201c' + chunk.text + '\u201d</div>';
+  html += '<textarea class="ab-notes" id="notes-' + chunk.idx + '" placeholder="Notes..." oninput="updateNotes(' + chunk.idx + ')">' + (state.notes || '') + '</textarea>';
+
+  if (state.done && state.winner != null) {
+    var w = null;
+    for (var i = 0; i < state.top5.length; i++) {
+      if (state.top5[i].v === state.winner) { w = state.top5[i]; break; }
+    }
+    html += '<div class="ab-result">';
+    html += '<div class="winner-label">\u2705 Winner: v' + state.winner + '</div>';
+    if (w) {
+      html += '<audio controls preload="auto" src="' + basePath + '/' + w.file + '"></audio>';
+      html += '<div class="winner-stats">';
+      html += '<span class="score">Score: ' + w.score.toFixed(3) + '</span>';
+      html += ' \u00b7 <span class="dur">' + w.dur.toFixed(1) + 's</span>';
+      if (chunk.idx > 0) html += ' \u00b7 <span class="tone">Tonal: ' + w.tone.toFixed(4) + '</span>';
+      html += '</div>';
+    }
+    html += '<button class="btn-repick" onclick="resetChunk(' + chunk.idx + ')">Re-pick this chunk</button>';
+    html += '</div>';
+  } else if (!state.done) {
+    var a = state.champion;
+    var bIdx = state.challengerIdx;
+    var b = (bIdx >= 0 && bIdx < state.top5.length) ? state.top5[bIdx] : null;
+
+    if (!a || !b) {
+      html += '<p style="color:#ef4444">Not enough candidates (a=' + !!a + ', b=' + !!b + ', challIdx=' + bIdx + ')</p>';
+      area.innerHTML = html;
+      return;
+    }
+
+    var remaining = 0;
+    for (var ri = 0; ri < state.top5.length; ri++) {
+      if (state.rejected.indexOf(state.top5[ri].v) === -1) remaining++;
+    }
+    html += '<div class="round-info">' + remaining + ' candidates remaining</div>';
+
+    html += '<div class="ab-compare" id="abCompare">';
+    html += '<div class="ab-side">';
+    html += '<div class="ab-label label-a">A <span style="font-size:.6em;opacity:.7">(v' + a.v + ')</span></div>';
+    html += '<audio controls preload="auto" src="' + basePath + '/' + a.file + '"></audio>';
+    html += '<div class="ab-stats"><span class="score">' + a.score.toFixed(3) + '</span><span class="dur">' + a.dur.toFixed(1) + 's</span>';
+    if (chunk.idx > 0) html += '<span class="tone">t' + a.tone.toFixed(4) + '</span>';
+    html += '</div></div>';
+    html += '<div class="ab-side">';
+    html += '<div class="ab-label label-b">B <span style="font-size:.6em;opacity:.7">(v' + b.v + ')</span></div>';
+    html += '<audio controls preload="auto" src="' + basePath + '/' + b.file + '"></audio>';
+    html += '<div class="ab-stats"><span class="score">' + b.score.toFixed(3) + '</span><span class="dur">' + b.dur.toFixed(1) + 's</span>';
+    if (chunk.idx > 0) html += '<span class="tone">t' + b.tone.toFixed(4) + '</span>';
+    html += '</div></div>';
+    html += '</div>';
+
+    html += '<div class="ab-actions">';
+    html += '<button class="btn-a" onclick="pickSide(\'a\')">A wins (A)</button>';
+    html += '<button class="btn-same" onclick="pickSide(\'same\')">Reject both (S)</button>';
+    html += '<button class="btn-b" onclick="pickSide(\'b\')">B wins (B)</button>';
+    html += '</div>';
+    html += '<div class="shortcuts">Keyboard: <kbd>A</kbd> A wins \u00b7 <kbd>S</kbd> Reject both \u00b7 <kbd>B</kbd> B wins \u00b7 <kbd>\u2190</kbd><kbd>\u2192</kbd> Navigate</div>';
+  } else {
+    html += '<p style="color:#f59e0b">Chunk in unexpected state (done=' + state.done + ', winner=' + state.winner + ')</p>';
+  }
+
+  area.innerHTML = html;
+
+  var cmp = document.getElementById('abCompare');
+  if (cmp) {
+    cmp.style.opacity = '0.5';
+    setTimeout(function() { cmp.style.opacity = '1'; }, 50);
+  }
+
+  var navBtns = document.querySelectorAll('.chunk-nav button');
+  for (var i = 0; i < navBtns.length; i++) navBtns[i].classList.remove('current');
+  var navBtn = document.getElementById('nav-' + chunk.idx);
+  if (navBtn) navBtn.classList.add('current');
+
+  logDebug('Rendered chunk ' + chunk.idx + (state.done ? ' (done, winner=v' + state.winner + ')' : ' (round ' + state.round + ', A=v' + (state.champion ? state.champion.v : '?') + ' vs B=v' + ((state.top5[state.challengerIdx] || {}).v || '?') + ')'));
+}
+
+function pickSide(side) {
+  var chunk = chunkData[currentChunkArrayIdx];
+  var state = abState[chunk.idx];
+
+  if (!state) { logDebug('pickSide: no state for chunk ' + chunk.idx); return; }
+  if (state.done) { logDebug('pickSide: chunk ' + chunk.idx + ' already done'); return; }
+
+  var a = state.champion;
+  var b = state.top5[state.challengerIdx];
+
+  if (!a || !b) { logDebug('pickSide: missing a or b'); return; }
+
+  pickCounter++;
+
+  if (side === 'same') {
+    state.rejected.push(a.v);
+    state.rejected.push(b.v);
+    showToast('Rejected both v' + a.v + ' + v' + b.v);
+
+    var remaining = [];
+    for (var i = 0; i < state.top5.length; i++) {
+      if (state.rejected.indexOf(state.top5[i].v) === -1) remaining.push(i);
+    }
+
+    if (remaining.length === 0) {
+      state.done = true;
+      state.winner = null;
+      state.round = 0;
+      logDebug('All candidates rejected for chunk ' + chunk.idx);
+      showToast('No winner \u2014 all rejected');
+    } else if (remaining.length === 1) {
+      state.winner = state.top5[remaining[0]].v;
+      state.done = true;
+      state.round = 0;
+      pickedThisSession[chunk.idx] = 'a';
+      logDebug('Last candidate wins chunk ' + chunk.idx + ': v' + state.winner);
+      showToast('PICKED: v' + state.winner + ' (last standing)');
+    } else {
+      state.champion = state.top5[remaining[0]];
+      state.challengerIdx = remaining[1];
+      state.round = (state.round || 0) + 1;
+      logDebug('Both rejected, ' + remaining.length + ' remain. Loading next pair.');
+    }
+
+    try { saveState(); } catch (e) { logDebug('saveState error: ' + e.message); }
+    renderChunk();
+    return;
+  } else {
+    var winner = (side === 'a') ? a : b;
+    var loser = (side === 'a') ? b : a;
+
+    state.rejected.push(loser.v);
+    state.winner = winner.v;
+    state.done = true;
+    state.round = 0;
+    pickedThisSession[chunk.idx] = side;
+    logDebug('Picked v' + winner.v + ' for chunk ' + chunk.idx);
+    showToast('PICKED: v' + winner.v);
+  }
+
+  try { saveState(); } catch (e) { logDebug('saveState error: ' + e.message); }
+
+  renderChunk();
+
+  if (state.done && state.winner != null) {
+    setTimeout(function() {
+      for (var i = currentChunkArrayIdx + 1; i < chunkData.length; i++) {
+        if (abState[chunkData[i].idx] && !abState[chunkData[i].idx].done) {
+          currentChunkArrayIdx = i;
+          renderChunk();
+          return;
+        }
+      }
+    }, 800);
+  }
+}
+
+function resetChunk(chunkIdx) {
+  initABState(chunkIdx, true);
+  try { saveState(); } catch (e) { logDebug('saveState error: ' + e.message); }
+  renderChunk();
+}
+
+function updateNotes(chunkIdx) {
+  var el = document.getElementById('notes-' + chunkIdx);
+  if (el && abState[chunkIdx]) {
+    abState[chunkIdx].notes = el.value;
+    try { saveState(); } catch (e) {}
+  }
+}
+
+function goToChunk(arrayIdx) {
+  if (arrayIdx >= 0 && arrayIdx < chunkData.length) {
+    currentChunkArrayIdx = arrayIdx;
+    renderChunk();
+  }
+}
+
+function showToast(text) {
+  var t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = text;
+  t.className = 'pick-toast show';
+  setTimeout(function() { t.className = 'pick-toast'; }, 900);
 }
 
 function collectPicks() {
-  const picks = {session: SESSION_ID, reviewed: new Date().toISOString(), picks: []};
-  chunkData.forEach(c => {
-    const picked = document.querySelector(`.version[data-chunk="${c.idx}"] .pick-btn.active`);
-    const rejected = document.querySelectorAll(`.version[data-chunk="${c.idx}"] .rej-btn.active`);
-    const notes = document.getElementById('notes-' + c.idx);
+  var picks = { session: SESSION_ID, reviewed: new Date().toISOString(), picks: [] };
+  for (var i = 0; i < chunkData.length; i++) {
+    var c = chunkData[i];
+    var s = abState[c.idx] || {};
+    var winnerFile = null;
+    if (s.winner != null && s.top5) {
+      for (var j = 0; j < s.top5.length; j++) {
+        if (s.top5[j].v === s.winner) { winnerFile = s.top5[j].file; break; }
+      }
+    }
     picks.picks.push({
       chunk: c.idx,
       text: c.text,
-      picked: picked ? parseInt(picked.closest('.version').dataset.version) : null,
-      picked_file: picked ? picked.closest('.version').querySelector('audio').dataset.rel : null,
-      rejected: Array.from(rejected).map(b => parseInt(b.closest('.version').dataset.version)),
-      notes: notes ? notes.value : '',
+      picked: s.winner != null ? s.winner : null,
+      picked_file: winnerFile,
+      rejected: s.rejected || [],
+      notes: s.notes || '',
+      side: pickedThisSession[c.idx] || s.side || null
     });
-  });
+  }
   return picks;
 }
 
-// --- Auto-save: localStorage immediately, remote debounced ---
 function saveState() {
-  const picks = collectPicks();
-  // localStorage — instant
-  const localState = {};
-  picks.picks.forEach(p => {
-    localState[p.chunk] = { picked: p.picked, rejected: p.rejected, notes: p.notes };
-  });
-  localStorage.setItem('vault-picks-' + SESSION_ID, JSON.stringify(localState));
+  var picks = collectPicks();
+  var ls = {};
+  for (var i = 0; i < picks.picks.length; i++) {
+    var p = picks.picks[i];
+    ls[p.chunk] = { picked: p.picked, rejected: p.rejected, notes: p.notes, side: p.side };
+  }
+  try {
+    localStorage.setItem('vault-picks-' + SESSION_ID, JSON.stringify(ls));
+  } catch (e) {
+    console.warn('localStorage write failed:', e);
+  }
   updateProgress();
-
-  // Remote — debounce 500ms to avoid hammering on rapid clicks
-  if (saveTimer) clearTimeout(saveTimer);
+  updateChunkNav();
   setSaveStatus('saving', 'Saving...');
-  saveTimer = setTimeout(() => saveRemote(picks), 500);
+  saveRemote(picks);
 }
 
 async function saveRemote(picks) {
-  if (!PICKS_API || !AUTH_TOKEN) {
-    setSaveStatus('ok', 'Local only (no API configured)');
-    return;
-  }
+  if (!PICKS_API || !AUTH_TOKEN) { setSaveStatus('ok', 'Local only'); return; }
   try {
-    const resp = await fetch(PICKS_API + '/picks/' + SESSION_ID, {
+    var resp = await fetch(PICKS_API + '/picks/' + SESSION_ID, {
       method: 'PUT',
-      headers: {
-        'Authorization': 'Bearer ' + AUTH_TOKEN,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(picks),
+      headers: { 'Authorization': 'Bearer ' + AUTH_TOKEN, 'Content-Type': 'application/json' },
+      body: JSON.stringify(picks)
     });
-    if (resp.ok) {
-      setSaveStatus('ok', 'Saved ' + new Date().toLocaleTimeString());
-    } else {
-      setSaveStatus('error', 'Save failed: ' + resp.status);
-    }
-  } catch (e) {
-    setSaveStatus('error', 'Save failed: ' + e.message);
-  }
+    setSaveStatus(resp.ok ? 'ok' : 'error', resp.ok ? 'Saved ' + new Date().toLocaleTimeString() : 'Save failed: ' + resp.status);
+  } catch (e) { setSaveStatus('error', 'Save failed: ' + e.message); }
 }
 
 function updateProgress() {
-  let picked = 0;
-  chunkData.forEach(c => {
-    if (document.querySelector(`.version[data-chunk="${c.idx}"] .pick-btn.active`)) picked++;
-  });
-  document.getElementById('progress').textContent = `${picked} / ${chunkData.length} picked`;
-}
-
-function pickVersion(chunk, version, btn) {
-  document.querySelectorAll(`.version[data-chunk="${chunk}"] .pick-btn`).forEach(b => {
-    b.classList.remove('active');
-    b.closest('.version').classList.remove('picked');
-  });
-  btn.classList.add('active');
-  btn.closest('.version').classList.add('picked');
-  btn.closest('.version').classList.remove('rejected');
-  const rej = btn.closest('.version').querySelector('.rej-btn');
-  if (rej) rej.classList.remove('active');
-  saveState();
-}
-
-function rejectVersion(chunk, version, btn) {
-  const ver = btn.closest('.version');
-  btn.classList.toggle('active');
-  ver.classList.toggle('rejected');
-  ver.classList.remove('picked');
-  const pick = ver.querySelector('.pick-btn');
-  if (pick) pick.classList.remove('active');
-  saveState();
-}
-
-function sortChunk(chunkIdx, field) {
-  const section = document.querySelector(`.chunk-section[data-chunk="${chunkIdx}"]`);
-  const versions = Array.from(section.querySelectorAll('.version'));
-  versions.sort((a, b) => {
-    const av = parseFloat(a.dataset[field] || 0);
-    const bv = parseFloat(b.dataset[field] || 0);
-    return field === 'score' ? bv - av : av - bv;
-  });
-  const container = section.querySelector('.versions-container');
-  versions.forEach(v => container.appendChild(v));
-  section.querySelectorAll('.sort-bar button').forEach(b => b.classList.remove('active'));
-  section.querySelector(`.sort-bar button[data-sort="${field}"]`).classList.add('active');
-}
-
-function filterChunks(mode) {
-  currentFilter = mode;
-  document.querySelectorAll('.controls button').forEach(b => b.classList.remove('active'));
-  document.getElementById(mode === 'all' ? 'fAll' : mode === 'unpicked' ? 'fUnpicked' : 'fOpening').classList.add('active');
-  document.querySelectorAll('.chunk-section').forEach(s => {
-    const idx = parseInt(s.dataset.chunk);
-    const hasPick = !!document.querySelector(`.version[data-chunk="${idx}"] .pick-btn.active`);
-    if (mode === 'all') s.style.display = '';
-    else if (mode === 'unpicked') s.style.display = hasPick ? 'none' : '';
-    else if (mode === 'opening') s.style.display = idx === 0 ? '' : 'none';
-  });
-}
-
-async function playAllPicks() {
-  const btn = document.getElementById('btnPlayAll');
-  btn.textContent = 'Playing...';
-  for (const c of chunkData) {
-    const picked = document.querySelector(`.version[data-chunk="${c.idx}"] .pick-btn.active`);
-    if (!picked) continue;
-    const audio = picked.closest('.version').querySelector('audio');
-    audio.currentTime = 0;
-    audio.play();
-    await new Promise(r => audio.onended = r);
-    await new Promise(r => setTimeout(r, 800));
+  var n = 0;
+  for (var i = 0; i < chunkData.length; i++) {
+    var s = abState[chunkData[i].idx];
+    if (s && s.done && s.winner != null) n++;
   }
-  btn.textContent = 'Play All Picks';
+  var el = document.getElementById('progress');
+  if (el) el.textContent = n + ' / ' + chunkData.length + ' picked';
+}
+
+function updateChunkNav() {
+  for (var i = 0; i < chunkData.length; i++) {
+    var c = chunkData[i];
+    var btn = document.getElementById('nav-' + c.idx);
+    if (!btn) continue;
+    btn.className = '';
+    if (i === currentChunkArrayIdx) btn.classList.add('current');
+    var s = abState[c.idx];
+    if (s && s.done && s.winner != null) {
+      var ps = pickedThisSession[c.idx];
+      btn.classList.add(ps ? (ps === 'b' ? 'picked-b' : 'picked-a') : 'picked-old');
+    } else if (s && s.rejected && s.rejected.length > 0) {
+      btn.classList.add('rejected');
+    }
+  }
 }
 
 function exportPicks() {
-  const picks = collectPicks();
-  const json = JSON.stringify(picks, null, 2);
-  const blob = new Blob([json], {type: 'application/json'});
-  const a = document.createElement('a');
+  var picks = collectPicks();
+  var json = JSON.stringify(picks, null, 2);
+  var blob = new Blob([json], { type: 'application/json' });
+  var a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = SESSION_ID + '-vault-picks.json';
   a.click();
@@ -834,95 +1044,85 @@ function exportPicks() {
 }
 
 function exportTxt() {
-  const picks = collectPicks();
-  let txt = `VAULT PICKS: ${picks.session}\nDate: ${picks.reviewed}\n\n`;
-  picks.picks.forEach(p => {
-    txt += `Chunk ${p.chunk}: picked v${p.picked !== null ? p.picked : 'NONE'} (${p.picked_file || 'none'})\n`;
-    txt += `  Text: "${p.text}"\n`;
-    if (p.notes) txt += `  Notes: ${p.notes}\n`;
-    if (p.rejected.length) txt += `  Rejected: ${p.rejected.map(v => 'v' + v).join(', ')}\n`;
+  var picks = collectPicks();
+  var txt = 'VAULT PICKS: ' + picks.session + '\nDate: ' + picks.reviewed + '\n\n';
+  for (var i = 0; i < picks.picks.length; i++) {
+    var p = picks.picks[i];
+    txt += 'Chunk ' + p.chunk + ': picked v' + (p.picked != null ? p.picked : 'NONE') + ' (' + (p.picked_file || 'none') + ')\n';
+    txt += '  Text: "' + p.text + '"\n';
+    if (p.notes) txt += '  Notes: ' + p.notes + '\n';
+    if (p.rejected.length) txt += '  Rejected: ' + p.rejected.map(function(v) { return 'v' + v; }).join(', ') + '\n';
     txt += '\n';
-  });
-  const allPicked = picks.picks.every(p => p.picked !== null);
-  txt += allPicked ? 'STATUS: All chunks picked — ready to assemble\n' : 'STATUS: Not all chunks picked yet\n';
-  const blob = new Blob([txt], {type: 'text/plain'});
-  const a = document.createElement('a');
+  }
+  var blob = new Blob([txt], { type: 'text/plain' });
+  var a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = SESSION_ID + '-vault-picks.txt';
   a.click();
 }
 
-// --- Build UI then load state ---
-async function init() {
-  const savedState = await loadState();
-  const container = document.getElementById('chunks');
-
-  chunkData.forEach(c => {
-    const section = document.createElement('div');
-    section.className = 'chunk-section';
-    section.dataset.chunk = c.idx;
-
-    let html = '<div class="chunk-header">';
-    html += `<span class="chunk-title">Chunk ${c.idx}</span>`;
-    html += `<span class="chunk-badge">${c.chars} chars${c.isOpening ? ' \u00b7 opening' : ''}${c.isClosing ? ' \u00b7 closing' : ''}</span>`;
-    html += '</div>';
-    html += `<div class="chunk-text">"${c.text}"</div>`;
-
-    const savedNote = savedState[c.idx] ? savedState[c.idx].notes || '' : '';
-    html += `<textarea class="chunk-notes" id="notes-${c.idx}" placeholder="Notes..." oninput="saveState()">${savedNote}</textarea>`;
-
-    if (c.isOpening) {
-      html += `<div class="dur-target">Duration target: <input id="durMin-${c.idx}" value="${durTargetMin}" onchange="durTargetMin=parseFloat(this.value)"> \u2013 <input id="durMax-${c.idx}" value="${durTargetMax}" onchange="durTargetMax=parseFloat(this.value)"> seconds</div>`;
+async function playAllPicks() {
+  var btn = document.getElementById('btnPlayAll');
+  if (btn) btn.textContent = 'Playing...';
+  for (var i = 0; i < chunkData.length; i++) {
+    var c = chunkData[i];
+    var s = abState[c.idx];
+    if (!s || s.winner == null || !s.top5) continue;
+    var w = null;
+    for (var j = 0; j < s.top5.length; j++) {
+      if (s.top5[j].v === s.winner) { w = s.top5[j]; break; }
     }
+    if (!w) continue;
+    var audio = new Audio(basePath + '/' + w.file);
+    audio.play();
+    await new Promise(function(r) { audio.onended = r; });
+    await new Promise(function(r) { setTimeout(r, 800); });
+  }
+  if (btn) btn.textContent = 'Play All Picks';
+}
 
-    const defaultSort = c.isOpening ? 'dur' : 'score';
-    html += `<div class="sort-bar">Sort: `;
-    html += `<button data-sort="score" class="${defaultSort==='score'?'active':''}" onclick="sortChunk(${c.idx},'score')">Score</button>`;
-    html += `<button data-sort="dur" class="${defaultSort==='dur'?'active':''}" onclick="sortChunk(${c.idx},'dur')">Duration</button>`;
-    if (c.idx > 0) html += `<button data-sort="tone" onclick="sortChunk(${c.idx},'tone')">Tonal Dist</button>`;
-    html += '</div>';
+document.addEventListener('keydown', function(e) {
+  if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
+  if (e.key === 'a' || e.key === 'A') pickSide('a');
+  else if (e.key === 'b' || e.key === 'B') pickSide('b');
+  else if (e.key === 's' || e.key === 'S') pickSide('same');
+  else if (e.key === 'ArrowLeft') goToChunk(currentChunkArrayIdx - 1);
+  else if (e.key === 'ArrowRight') goToChunk(currentChunkArrayIdx + 1);
+});
 
-    let sorted = [...c.candidates];
-    if (defaultSort === 'score') sorted.sort((a, b) => b.score - a.score);
-    else sorted.sort((a, b) => a.dur - b.dur);
+async function init() {
+  logDebug('Initializing...');
+  await loadState();
 
-    html += '<div class="versions-container">';
-    sorted.forEach(cand => {
-      const vid = `c${String(c.idx).padStart(2,'0')}_v${String(cand.v).padStart(2,'0')}`;
-      const filteredCls = cand.filtered ? ' filtered' : '';
-      const savedPick = savedState[c.idx] && savedState[c.idx].picked === cand.v;
-      const savedRej = savedState[c.idx] && savedState[c.idx].rejected && savedState[c.idx].rejected.includes(cand.v);
-      const pickedCls = savedPick ? ' picked' : '';
-      const rejCls = savedRej ? ' rejected' : '';
+  var nav = document.getElementById('chunkNav');
+  for (var i = 0; i < chunkData.length; i++) {
+    (function(idx) {
+      var btn = document.createElement('button');
+      btn.id = 'nav-' + chunkData[idx].idx;
+      btn.textContent = chunkData[idx].idx;
+      btn.onclick = function() { goToChunk(idx); };
+      nav.appendChild(btn);
+    })(i);
+  }
 
-      let durBadge = '';
-      if (c.isOpening) {
-        const inRange = cand.dur >= durTargetMin && cand.dur <= durTargetMax;
-        durBadge = `<span class="chunk0-dur ${inRange ? 'in-range' : 'out-range'}">${cand.dur.toFixed(1)}s</span>`;
-      }
+  for (var i = 0; i < chunkData.length; i++) {
+    initABState(chunkData[i].idx, false);
+  }
 
-      html += `<div class="version${filteredCls}${pickedCls}${rejCls}" id="${vid}" data-chunk="${c.idx}" data-version="${cand.v}" data-score="${cand.score}" data-dur="${cand.dur}" data-tone="${cand.tone}">`;
-      html += `<span class="v-label">v${cand.v}</span>`;
-      html += `<div class="v-audio"><audio controls preload="none" src="${basePath}/${cand.file}" data-rel="${cand.file}"></audio></div>`;
-      html += `<div class="v-stats">`;
-      html += `<span class="score">${cand.score.toFixed(3)}</span>`;
-      html += `<span class="dur">${cand.dur.toFixed(1)}s${durBadge}</span>`;
-      if (c.idx > 0) html += `<span class="tone">t${cand.tone.toFixed(4)}</span>`;
-      html += `</div>`;
-      html += `<div class="v-btns">`;
-      html += `<button class="pick-btn${savedPick ? ' active' : ''}" onclick="pickVersion(${c.idx},${cand.v},this)">PICK</button>`;
-      html += `<button class="rej-btn${savedRej ? ' active' : ''}" onclick="rejectVersion(${c.idx},${cand.v},this)">X</button>`;
-      html += `</div></div>`;
-    });
-    html += '</div>';
-    section.innerHTML = html;
-    container.appendChild(section);
-  });
+  var first = -1;
+  for (var i = 0; i < chunkData.length; i++) {
+    if (!abState[chunkData[i].idx] || !abState[chunkData[i].idx].done) { first = i; break; }
+  }
+  if (first >= 0) currentChunkArrayIdx = first;
 
   updateProgress();
+  updateChunkNav();
+  renderChunk();
+  logDebug('Ready. ' + chunkData.length + ' chunks loaded.');
 }
 
 init();
+
 </script>
 </body>
 </html>

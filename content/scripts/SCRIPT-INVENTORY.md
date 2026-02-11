@@ -1,7 +1,7 @@
 # Salus Script Inventory
 
-**Last verified:** 5 February 2026
-**Total scripts:** 51 production scripts + 3 utility files
+**Last verified:** 11 February 2026
+**Total scripts:** 72 production scripts + 3 utility files
 
 ---
 
@@ -70,6 +70,27 @@
 | 50 | seven-day-mindfulness-day7.txt | ✓ PRODUCED | Course | 7-day Day 7 |
 | 51 | sleep-stories-ocean-voyage.txt | ⏳ PENDING | Sleep Story | HAD AMBIENT — audio deleted, regenerate voice-only |
 | — | founder-intro.txt | ⏳ PENDING | Special | Scott introduction |
+| 57 | 21day-mindfulness-day01.txt | ⏳ PENDING | Course | 21-day Day 1 "The Instrument" — 10 min, attention calibration |
+| 58 | 21day-mindfulness-day02.txt | ⏳ PENDING | Course | 21-day Day 2 "The Anchor" — 12 min, breath counting |
+| 59 | 21day-mindfulness-day03.txt | ⏳ PENDING | Course | 21-day Day 3 "The Map" — 13 min, resolution body scan |
+| 60 | 21day-mindfulness-day04.txt | ⏳ PENDING | Course | 21-day Day 4 "The Stream" — 14 min, thought observation (ACT) |
+| 61 | 21day-mindfulness-day05.txt | ⏳ PENDING | Course | 21-day Day 5 "The Soundscape" — 15 min, layered listening |
+| 62 | 21day-mindfulness-day06.txt | ⏳ PENDING | Course | 21-day Day 6 "The Pause" — 16 min, stimulus-response gap (Frankl) |
+| 63 | 21day-mindfulness-day07.txt | ⏳ PENDING | Course | 21-day Day 7 "The Review" — 18 min, skills integration |
+| 64 | 21day-mindfulness-day08.txt | ⏳ PENDING | Course | 21-day Day 8 "The Weather System" — 18 min, RAIN method (Brach) |
+| 65 | 21day-mindfulness-day09.txt | ⏳ PENDING | Course | 21-day Day 9 "The Narrator" — 20 min, metacognition |
+| 66 | 21day-mindfulness-day10.txt | ⏳ PENDING | Course | 21-day Day 10 "The Stories We Carry" — 22 min, narrative psychology |
+| 67 | 21day-mindfulness-day11.txt | ⏳ PENDING | Course | 21-day Day 11 "The Body Under Pressure" — 24 min, discomfort investigation |
+| 68 | 21day-mindfulness-day12.txt | ⏳ PENDING | Course | 21-day Day 12 "The Difficult Guest" — 25 min, welcoming difficulty (Rumi) |
+| 69 | 21day-mindfulness-day13.txt | ⏳ PENDING | Course | 21-day Day 13 "The Walk" — 26 min, walking meditation (speed variation) |
+| 70 | 21day-mindfulness-day14.txt | ⏳ PENDING | Course | 21-day Day 14 "The Middle Ground" — 28 min, equanimity (upekkha) |
+| 71 | 21day-mindfulness-day15.txt | ⏳ PENDING | Course | 21-day Day 15 "The Compassion Turn" — 28 min, self-compassion (Neff) |
+| 72 | 21day-mindfulness-day16.txt | ⏳ PENDING | Course | 21-day Day 16 "The Forgiveness Practice" — 30 min, forgiveness (Enright) |
+| 73 | 21day-mindfulness-day17.txt | ⏳ PENDING | Course | 21-day Day 17 "The Space Between" — 32 min, choiceless awareness |
+| 74 | 21day-mindfulness-day18.txt | ⏳ PENDING | Course | 21-day Day 18 "The Difficult Conversation" — 34 min, interpersonal mindfulness |
+| 75 | 21day-mindfulness-day19.txt | ⏳ PENDING | Course | 21-day Day 19 "The Gratitude Inventory" — 36 min, embodied gratitude (Emmons) |
+| 76 | 21day-mindfulness-day20.txt | ⏳ PENDING | Course | 21-day Day 20 "The Long Sit" — 40 min, extended unguided practice |
+| 77 | 21day-mindfulness-day21.txt | ⏳ PENDING | Course | 21-day Day 21 "The Return" — 45 min, complete integration + Day 1 callback |
 
 ---
 
@@ -96,11 +117,11 @@
 
 ```
 PRODUCED:     38 scripts with audio
-PENDING:      13 scripts awaiting production
+PENDING:      34 scripts awaiting production (13 original + 21 new 21-day course)
 VARIANTS:      2 alternative versions
 UTILITY:       3 system files
 ─────────────────────────────────
-TOTAL:        56 files in /content/scripts/
+TOTAL:        77 files in /content/scripts/
 ```
 
 ---
@@ -126,6 +147,29 @@ TOTAL:        56 files in /content/scripts/
 12. **41-vipassana-insight.txt** — Buddhist insight meditation
 13. **founder-intro.txt** — Scott's personal introduction
 
+### 21-Day Mindfulness Course (NEW — vault workflow)
+14. **57-21day-mindfulness-day01.txt** — Day 1 "The Instrument" (10 min)
+15. **58-21day-mindfulness-day02.txt** — Day 2 "The Anchor" (12 min)
+16. **59-21day-mindfulness-day03.txt** — Day 3 "The Map" (13 min)
+17. **60-21day-mindfulness-day04.txt** — Day 4 "The Stream" (14 min)
+18. **61-21day-mindfulness-day05.txt** — Day 5 "The Soundscape" (15 min)
+19. **62-21day-mindfulness-day06.txt** — Day 6 "The Pause" (16 min)
+20. **63-21day-mindfulness-day07.txt** — Day 7 "The Review" (18 min)
+21. **64-21day-mindfulness-day08.txt** — Day 8 "The Weather System" (18 min)
+22. **65-21day-mindfulness-day09.txt** — Day 9 "The Narrator" (20 min)
+23. **66-21day-mindfulness-day10.txt** — Day 10 "The Stories We Carry" (22 min)
+24. **67-21day-mindfulness-day11.txt** — Day 11 "The Body Under Pressure" (24 min)
+25. **68-21day-mindfulness-day12.txt** — Day 12 "The Difficult Guest" (25 min)
+26. **69-21day-mindfulness-day13.txt** — Day 13 "The Walk" (26 min)
+27. **70-21day-mindfulness-day14.txt** — Day 14 "The Middle Ground" (28 min)
+28. **71-21day-mindfulness-day15.txt** — Day 15 "The Compassion Turn" (28 min)
+29. **72-21day-mindfulness-day16.txt** — Day 16 "The Forgiveness Practice" (30 min)
+30. **73-21day-mindfulness-day17.txt** — Day 17 "The Space Between" (32 min)
+31. **74-21day-mindfulness-day18.txt** — Day 18 "The Difficult Conversation" (34 min)
+32. **75-21day-mindfulness-day19.txt** — Day 19 "The Gratitude Inventory" (36 min)
+33. **76-21day-mindfulness-day20.txt** — Day 20 "The Long Sit" (40 min)
+34. **77-21day-mindfulness-day21.txt** — Day 21 "The Return" (45 min)
+
 ---
 
 ## AUDIO FILES AT RISK (No Script)
@@ -148,7 +192,7 @@ TOTAL:        56 files in /content/scripts/
 4. Update status to ✓ PRODUCED
 
 ### Numbering convention:
-- Use next available number (currently: 52)
+- Use next available number (currently: 78)
 - Format: `XX-descriptive-name.txt`
 - Keep numbers sequential, no gaps
 
