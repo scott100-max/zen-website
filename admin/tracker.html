@@ -336,30 +336,24 @@
 
     // Bounding box for owner region (West Yorkshire — Wakefield/Pontefract/Castleford)
     var MY_REGION = { latMin: 53.6, latMax: 53.85, lngMin: -1.7, lngMax: -1.2 };
+    var MY_REGION_CITIES = ['wakefield', 'pontefract', 'castleford', 'normanton', 'featherstone', 'knottingley'];
 
     function isMyRegion(r) {
-      if (!r.latitude || !r.longitude) return false;
-      return r.latitude >= MY_REGION.latMin && r.latitude <= MY_REGION.latMax &&
-             r.longitude >= MY_REGION.lngMin && r.longitude <= MY_REGION.lngMax;
+      // Check lat/lng if available (page_views, visitor_logs)
+      if (r.latitude && r.longitude) {
+        return r.latitude >= MY_REGION.latMin && r.latitude <= MY_REGION.latMax &&
+               r.longitude >= MY_REGION.lngMin && r.longitude <= MY_REGION.lngMax;
+      }
+      // Fall back to city name match (visitors table)
+      if (r.city) {
+        return MY_REGION_CITIES.indexOf(r.city.toLowerCase()) !== -1;
+      }
+      return false;
     }
 
     function applyExclusion(data) {
       if (!excludeMyRegion) return data;
       return data.filter(function(r) { return !isMyRegion(r); });
-    }
-
-    // Build set of visitor IDs seen in my region (from page_views + legacy)
-    function getMyRegionVisitorIds() {
-      var ids = {};
-      pageViewsData.forEach(function(pv) { if (isMyRegion(pv) && pv.visitor_id) ids[pv.visitor_id] = true; });
-      legacyData.forEach(function(r) { if (isMyRegion(r) && r.visitor_id) ids[r.visitor_id] = true; });
-      return ids;
-    }
-
-    function applyVisitorExclusion(visitors) {
-      if (!excludeMyRegion) return visitors;
-      var regionIds = getMyRegionVisitorIds();
-      return visitors.filter(function(v) { return !regionIds[v.id]; });
     }
 
     // Data stores
@@ -487,8 +481,8 @@
       var todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       var d7 = new Date(); d7.setDate(d7.getDate() - 7);
 
-      // Filtered visitors (exclude my region via page_view cross-reference)
-      var filteredVisitors = applyVisitorExclusion(visitorsData);
+      // Filtered visitors (exclude my region via city match)
+      var filteredVisitors = applyExclusion(visitorsData);
 
       // Total unique visitors
       document.getElementById('stat-visitors').textContent = filteredVisitors.length.toLocaleString();
@@ -810,7 +804,7 @@
 
     // ===== Returning Visitors =====
     function updateReturning() {
-      var returning = applyVisitorExclusion(visitorsData).filter(function(v) { return v.total_sessions > 1; });
+      var returning = applyExclusion(visitorsData).filter(function(v) { return v.total_sessions > 1; });
       returning.sort(function(a, b) { return b.total_sessions - a.total_sessions; });
       var tbody = document.querySelector('#returning-table tbody');
       tbody.innerHTML = returning.slice(0, 20).map(function(v) {
