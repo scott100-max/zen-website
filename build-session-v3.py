@@ -194,9 +194,14 @@ def parse_script(script_path):
             key, value = line.split(':', 1)
             key = key.strip().lower()
             value = value.strip()
-            if key in ['duration', 'category', 'ambient', 'style', 'api-emotion', 'expected-repetitions']:
+            if key in ['duration', 'category', 'ambient', 'ambient-db', 'style', 'api-emotion', 'expected-repetitions']:
                 if key == 'ambient':
                     metadata[key] = value.lower() if value.lower() != 'none' else None
+                elif key == 'ambient-db':
+                    try:
+                        metadata['ambient_db'] = float(value)
+                    except ValueError:
+                        pass
                 elif key == 'api-emotion':
                     metadata['api_emotion'] = value.lower()
                 elif key == 'expected-repetitions':
@@ -1238,8 +1243,9 @@ def concatenate_with_silences(voice_chunks, silences, output_path, temp_dir, cle
     return output_path
 
 
-def mix_ambient(voice_path, ambient_name, output_path):
+def mix_ambient(voice_path, ambient_name, output_path, volume_db=None):
     """Mix ambient background with voice (WAV output for lossless pipeline)."""
+    volume_db = volume_db if volume_db is not None else AMBIENT_VOLUME_DB
     # Try WAV first, then MP3 variants
     ambient_path = None
     for ext in ['wav', 'mp3']:
@@ -1271,12 +1277,13 @@ def mix_ambient(voice_path, ambient_name, output_path):
     if ambient_name == 'garden':
         ambient_input = ['-ss', '10', '-i', str(ambient_path)]
 
+    print(f"  Ambient volume: {volume_db}dB" + (f" (override from script)" if volume_db != AMBIENT_VOLUME_DB else ""))
     cmd = [
         'ffmpeg', '-y',
         '-i', voice_path,
         *ambient_input,
         '-filter_complex', (
-            f"[1:a]volume={AMBIENT_VOLUME_DB}dB,"
+            f"[1:a]volume={volume_db}dB,"
             f"afade=t=in:st={AMBIENT_FADE_IN_START}:d={AMBIENT_FADE_IN_DURATION},"
             f"afade=t=out:st={fade_out_start}:d={AMBIENT_FADE_OUT_DURATION}[amb];"
             f"[0:a][amb]amix=inputs=2:duration=first:dropout_transition=2:normalize=0"
@@ -3065,7 +3072,7 @@ def scan_for_clicks(audio_path, manifest_data, threshold=QA_CLICK_THRESHOLD):
     return filtered
 
 
-def patch_stitch_clicks(raw_mp3, manifest_data, output_mp3, ambient_name=None, fade_ms=QA_FADE_MS, click_times=None):
+def patch_stitch_clicks(raw_mp3, manifest_data, output_mp3, ambient_name=None, fade_ms=QA_FADE_MS, click_times=None, ambient_db=None):
     """Patch click artifacts by applying crossfades at stitch boundaries near detected clicks.
 
     Only patches stitch points within 1 second of a detected click artifact.
@@ -3173,11 +3180,12 @@ def patch_stitch_clicks(raw_mp3, manifest_data, output_mp3, ambient_name=None, f
             ambient_input = ['-i', str(ambient_path)]
             if ambient_name == 'garden':
                 ambient_input = ['-ss', '10', '-i', str(ambient_path)]
+            _vol = ambient_db if ambient_db is not None else AMBIENT_VOLUME_DB
             subprocess.run([
                 'ffmpeg', '-y',
                 '-i', normed_wav, *ambient_input,
                 '-filter_complex', (
-                    f"[1:a]volume={AMBIENT_VOLUME_DB}dB,"
+                    f"[1:a]volume={_vol}dB,"
                     f"afade=t=in:st={AMBIENT_FADE_IN_START}:d={AMBIENT_FADE_IN_DURATION},"
                     f"afade=t=out:st={fade_out_start}:d={AMBIENT_FADE_OUT_DURATION}[amb];"
                     f"[0:a][amb]amix=inputs=2:duration=first:dropout_transition=2:normalize=0"
@@ -3282,7 +3290,7 @@ def qa_loop(final_mp3, raw_mp3, manifest_data, ambient_name=None, raw_narration_
 
         click_timestamps = [ts for ts, jump, peak in clicks]
         print(f"  QA PASS {qa_pass}: Patching artifacts near stitch points...")
-        patches = patch_stitch_clicks(raw_mp3, manifest_data, final_mp3, ambient_name, click_times=click_timestamps)
+        patches = patch_stitch_clicks(raw_mp3, manifest_data, final_mp3, ambient_name, click_times=click_timestamps, ambient_db=metadata.get('ambient_db'))
         print(f"  QA PASS {qa_pass}: Applied crossfades at {patches} stitch points")
     else:
         clicks = scan_for_clicks(click_scan_file, manifest_data)
@@ -3503,11 +3511,12 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
     metadata = parse_script(script_path)
     category = metadata['category']
     ambient = metadata['ambient']
+    ambient_db = metadata.get('ambient_db')
     api_emotion = metadata.get('api_emotion', 'calm')
 
     print(f"  Title: {metadata['title']}")
     print(f"  Category: {category}")
-    print(f"  Ambient: {ambient or 'none'}")
+    print(f"  Ambient: {ambient or 'none'}" + (f" @ {ambient_db}dB" if ambient_db is not None else ""))
     print(f"  Provider: {provider}")
     if provider == 'fish':
         print(f"  V3-HD: emotion={api_emotion}, speed=0.95")
@@ -3711,7 +3720,7 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
         mixed_wav = os.path.join(temp_dir, "mixed_complete.wav")
         if ambient:
             print(f"\n  Mixing ambient '{ambient}'...")
-            mix_ambient(voice_path, ambient, mixed_wav)
+            mix_ambient(voice_path, ambient, mixed_wav, volume_db=ambient_db)
         else:
             shutil.copy(voice_path, mixed_wav)
 
