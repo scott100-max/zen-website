@@ -1051,6 +1051,14 @@
     const audioElements = {};
     const grid = document.getElementById('soundGrid');
 
+    // Shared AudioContext for iOS volume control (iOS ignores HTMLMediaElement.volume)
+    let audioCtx = null;
+    function getAudioCtx() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
     soundDefs.forEach((s, i) => {
       const card = document.createElement('div');
       card.className = 'sound-card' + (s.comingSoon ? ' coming-soon' : '');
@@ -1086,26 +1094,37 @@
         </div>
       `;
 
+      // Create an Audio element routed through Web Audio API GainNode
+      function createSource(src) {
+        const ctx = getAudioCtx();
+        const audio = new Audio(src);
+        audio.crossOrigin = 'anonymous';
+        audio.preload = 'auto';
+        const source = ctx.createMediaElementSource(audio);
+        const gain = ctx.createGain();
+        source.connect(gain);
+        gain.connect(ctx.destination);
+        return { audio, gain };
+      }
+
       // Seamless crossfade loop — two Audio elements per sound
       const topRow = card.querySelector('.sound-card__top');
       topRow.addEventListener('click', () => {
         const isPlaying = card.classList.toggle('playing');
         if (!audioElements[s.id]) {
-          const a = new Audio(s.src);
-          const b = new Audio(s.src);
-          a.preload = 'auto';
-          b.preload = 'auto';
+          const a = createSource(s.src);
+          const b = createSource(s.src);
           const vol = card.querySelector('.sound-card__slider').value / 100;
-          a.volume = vol;
-          b.volume = 0;
+          a.gain.gain.value = vol;
+          b.gain.gain.value = 0;
           let active = a, standby = b, fading = false;
           const XFADE = 5; // crossfade seconds before end
           function checkCrossfade() {
-            if (!fading && active.duration && active.currentTime > active.duration - XFADE) {
+            if (!fading && active.audio.duration && active.audio.currentTime > active.audio.duration - XFADE) {
               fading = true;
-              standby.currentTime = 0;
-              standby.volume = 0;
-              standby.play();
+              standby.audio.currentTime = 0;
+              standby.gain.gain.value = 0;
+              standby.audio.play();
               const steps = 50;
               const interval = (XFADE * 1000) / steps;
               const targetVol = parseFloat(card.querySelector('.sound-card__slider').value) / 100;
@@ -1113,28 +1132,28 @@
               const fade = setInterval(() => {
                 step++;
                 const t = step / steps;
-                active.volume = targetVol * (1 - t);
-                standby.volume = targetVol * t;
+                active.gain.gain.value = targetVol * (1 - t);
+                standby.gain.gain.value = targetVol * t;
                 if (step >= steps) {
                   clearInterval(fade);
-                  active.pause();
-                  active.currentTime = 0;
+                  active.audio.pause();
+                  active.audio.currentTime = 0;
                   const tmp = active;
                   active = standby;
                   standby = tmp;
                   fading = false;
                   audioElements[s.id].active = active;
                   audioElements[s.id].standby = standby;
-                  active.volume = parseFloat(card.querySelector('.sound-card__slider').value) / 100;
+                  active.gain.gain.value = parseFloat(card.querySelector('.sound-card__slider').value) / 100;
                 }
               }, interval);
             }
           }
           const timer = setInterval(checkCrossfade, 500);
           audioElements[s.id] = { active: a, standby: b, timer: timer,
-            play() { this.active.play(); },
-            pause() { this.active.pause(); this.standby.pause(); },
-            setVolume(v) { this.active.volume = v; if (fading) this.standby.volume = v; }
+            play() { this.active.audio.play(); },
+            pause() { this.active.audio.pause(); this.standby.audio.pause(); },
+            setVolume(v) { this.active.gain.gain.value = v; }
           };
         }
         if (isPlaying) {
