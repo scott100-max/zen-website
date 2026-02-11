@@ -404,6 +404,21 @@
     transform: scale(1.15);
   }
 
+  /* Hero stats strip */
+  .m-hero-stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 1s 1.2s ease-out forwards;
+  }
+  .m-hero-stat { font-size: 0.78rem; font-weight: 300; color: var(--text-muted); }
+  .m-hero-stat strong { color: var(--glow-core); font-weight: 500; }
+  .m-hero-stat-sep { width: 3px; height: 3px; border-radius: 50%; background: rgba(237, 245, 245, 0.2); }
+
   /* Latin phrase */
   .latin-phrase {
     font-family: 'Cormorant Garamond', serif;
@@ -806,6 +821,14 @@
       </a>
     </div>
 
+    <div class="m-hero-stats">
+      <span class="m-hero-stat"><strong>28</strong> days of courses</span>
+      <span class="m-hero-stat-sep"></span>
+      <span class="m-hero-stat"><strong>5+</strong> standalone sessions</span>
+      <span class="m-hero-stat-sep"></span>
+      <span class="m-hero-stat">Beginner to advanced</span>
+    </div>
+
     <p class="latin-phrase">Salūs — Latin: health, safety, well-being</p>
   </div>
 
@@ -892,8 +915,8 @@
 
 <div class="m-section-divider" id="mCoursesDivider">
   <div class="m-section-divider__line"></div>
-  <div class="m-section-divider__label">Structured Courses
-    <span class="m-section-divider__sub">Follow a guided path</span>
+  <div class="m-section-divider__label">28 Days of Mindfulness
+    <span class="m-section-divider__sub">Two courses. One complete journey.</span>
   </div>
 </div>
 
