@@ -204,6 +204,8 @@
       <button class="filter-btn" data-range="30">Last 30 Days</button>
       <button class="filter-btn" data-range="7">Last 7 Days</button>
       <button class="filter-btn" data-range="1">Today</button>
+      <span style="width:1px;height:20px;background:#2a2d3a;margin:0 4px;"></span>
+      <button class="filter-btn" id="exclude-me-btn">Exclude My Region</button>
     </div>
 
     <div id="map"></div>
@@ -330,6 +332,21 @@
     var map, markerGroup;
     var currentRange = 'all';
     var refreshTimer = null;
+    var excludeMyRegion = false;
+
+    // Bounding box for owner region (West Yorkshire — Wakefield/Pontefract/Castleford)
+    var MY_REGION = { latMin: 53.6, latMax: 53.85, lngMin: -1.7, lngMax: -1.2 };
+
+    function isMyRegion(r) {
+      if (!r.latitude || !r.longitude) return false;
+      return r.latitude >= MY_REGION.latMin && r.latitude <= MY_REGION.latMax &&
+             r.longitude >= MY_REGION.lngMin && r.longitude <= MY_REGION.lngMax;
+    }
+
+    function applyExclusion(data) {
+      if (!excludeMyRegion) return data;
+      return data.filter(function(r) { return !isMyRegion(r); });
+    }
 
     // Data stores
     var pageViewsData = [];
@@ -420,9 +437,9 @@
     }
 
     function updateAllDisplays() {
-      var filtered = filterByRange(pageViewsData, currentRange);
+      var filtered = applyExclusion(filterByRange(pageViewsData, currentRange));
       var filteredEvents = filterByRange(eventsData, currentRange);
-      var filteredLegacy = filterByRange(legacyData, currentRange);
+      var filteredLegacy = applyExclusion(filterByRange(legacyData, currentRange));
 
       updateStats(filtered, filteredEvents);
       // Map: use page_views if available, fall back to legacy
@@ -788,13 +805,20 @@
 
     // ===== Filters =====
     function setupFilters() {
-      document.querySelectorAll('.filter-btn').forEach(function(btn) {
+      document.querySelectorAll('.filter-btn[data-range]').forEach(function(btn) {
         btn.addEventListener('click', function() {
-          document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+          document.querySelectorAll('.filter-btn[data-range]').forEach(function(b) { b.classList.remove('active'); });
           btn.classList.add('active');
           currentRange = btn.getAttribute('data-range');
           updateAllDisplays();
         });
+      });
+
+      var exBtn = document.getElementById('exclude-me-btn');
+      exBtn.addEventListener('click', function() {
+        excludeMyRegion = !excludeMyRegion;
+        exBtn.classList.toggle('active', excludeMyRegion);
+        updateAllDisplays();
       });
     }
 
