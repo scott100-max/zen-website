@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lend Your Voice — Salus Mind</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --deep: #0a0e1a;
+    --bg-mid: #0f1525;
+    --teal: #4ecdc4;
+    --teal-mint: #72e8d0;
+    --teal-hover: #5ed8d0;
+    --lavender: #c4b5e3;
+    --text-bright: #e8e6f0;
+    --text-mid: rgba(232, 230, 240, 0.6);
+    --text-muted: rgba(232, 230, 240, 0.4);
+    --white-faint: rgba(232, 230, 240, 0.08);
+    --white-ghost: rgba(232, 230, 240, 0.04);
+    --green-dot: #4ecdc4;
+    --amber-dot: #e8a84c;
+    --transition: 0.3s ease;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-bright);
+    line-height: 1.7;
+    font-size: 16px;
+    min-height: 100vh;
+    background: var(--deep);
+    overflow-x: hidden;
+  }
+
+  /* ---- Aurora Background ---- */
+  .aurora-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 90% 60% at 50% 30%, rgba(30, 80, 90, 0.35) 0%, transparent 60%),
+      radial-gradient(ellipse 70% 50% at 30% 70%, rgba(20, 60, 80, 0.2) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 40% at 75% 50%, rgba(40, 70, 100, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse 40% 30% at 50% 45%, rgba(78, 205, 196, 0.06) 0%, transparent 50%),
+      linear-gradient(180deg, #080c18 0%, #0c1525 25%, #0e1a2e 50%, #0a1220 75%, #080c18 100%);
+  }
+
+  .aurora-shimmer {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.3;
+  }
+
+  .shimmer-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+  }
+
+  .shimmer-orb:nth-child(1) {
+    width: 500px; height: 300px;
+    background: rgba(78, 205, 196, 0.07);
+    top: 15%; left: 40%;
+    animation: shimmer1 20s ease-in-out infinite;
+  }
+
+  .shimmer-orb:nth-child(2) {
+    width: 400px; height: 250px;
+    background: rgba(100, 140, 200, 0.05);
+    top: 50%; left: 20%;
+    animation: shimmer2 25s ease-in-out infinite;
+  }
+
+  @keyframes shimmer1 {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+    50% { transform: translate(30px, -20px) scale(1.1); opacity: 0.5; }
+  }
+
+  @keyframes shimmer2 {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.2; }
+    50% { transform: translate(-20px, 15px) scale(1.05); opacity: 0.4; }
+  }
+
+  /* ---- Layout ---- */
+  .page {
+    position: relative;
+    z-index: 1;
+  }
+
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ---- Hero ---- */
+  .hero {
+    padding: 140px 0 90px;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-style: italic;
+    font-size: clamp(2.6rem, 5.5vw, 3.8rem);
+    line-height: 1.15;
+    color: var(--lavender);
+    margin-bottom: 16px;
+    letter-spacing: 0.01em;
+  }
+
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    margin-bottom: 32px;
+    letter-spacing: 0.03em;
+  }
+
+  .hero-body {
+    font-size: 1.05rem;
+    color: var(--text-mid);
+    max-width: 540px;
+    margin: 0 auto;
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  /* ---- Category Pills ---- */
+  .pills {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 40px auto 0;
+    max-width: 520px;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    border-radius: 50px;
+    border: 1px solid var(--white-faint);
+    background: rgba(232, 230, 240, 0.03);
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--text-mid);
+    transition: all var(--transition);
+  }
+
+  .pill:hover {
+    border-color: rgba(78, 205, 196, 0.3);
+    color: var(--text-bright);
+  }
+
+  .pill-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+  }
+
+  .pill-dot.green { background: var(--green-dot); }
+  .pill-dot.amber { background: var(--amber-dot); }
+
+  /* ---- Sections ---- */
+  section {
+    padding: 90px 0;
+    text-align: center;
+  }
+
+  .section-header {
+    margin-bottom: 48px;
+  }
+
+  .section-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-style: italic;
+    font-size: 2rem;
+    color: var(--lavender);
+    margin-bottom: 14px;
+    letter-spacing: 0.01em;
+  }
+
+  .section-header p {
+    color: var(--text-mid);
+    font-size: 1rem;
+    max-width: 500px;
+    margin: 0 auto;
+    font-weight: 300;
+    line-height: 1.75;
+  }
+
+  /* ---- Separator ---- */
+  .sep {
+    width: 50px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--teal), transparent);
+    margin: 0 auto;
+    opacity: 0.4;
+  }
+
+  /* ---- Pipeline ---- */
+  .pipeline {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    max-width: 520px;
+    margin: 0 auto;
+    border-radius: 14px;
+    overflow: hidden;
+    text-align: left;
+    border: 1px solid var(--white-faint);
+  }
+
+  .pipeline-item {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 20px 24px;
+    background: var(--white-ghost);
+    transition: background var(--transition);
+  }
+
+  .pipeline-item:hover {
+    background: var(--white-faint);
+  }
+
+  .pipeline-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .pipeline-dot.live {
+    background: var(--green-dot);
+    box-shadow: 0 0 0 4px rgba(78, 205, 196, 0.12);
+  }
+
+  .pipeline-dot.soon {
+    background: var(--amber-dot);
+    box-shadow: 0 0 0 4px rgba(232, 168, 76, 0.12);
+  }
+
+  .pipeline-dot.building {
+    background: var(--text-muted);
+    box-shadow: 0 0 0 4px rgba(232, 230, 240, 0.06);
+  }
+
+  .pipeline-label {
+    flex: 1;
+    font-size: 0.92rem;
+    font-weight: 400;
+    color: var(--text-bright);
+  }
+
+  .pipeline-tag {
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 50px;
+    white-space: nowrap;
+  }
+
+  .pipeline-tag.live {
+    background: rgba(78, 205, 196, 0.1);
+    color: var(--teal);
+    border: 1px solid rgba(78, 205, 196, 0.2);
+  }
+
+  .pipeline-tag.soon {
+    background: rgba(232, 168, 76, 0.08);
+    color: var(--amber-dot);
+    border: 1px solid rgba(232, 168, 76, 0.15);
+  }
+
+  .pipeline-tag.building {
+    background: var(--white-ghost);
+    color: var(--text-muted);
+    border: 1px solid var(--white-faint);
+  }
+
+  /* ---- Invitation Text ---- */
+  .invitation-text {
+    font-size: 1rem;
+    color: var(--text-mid);
+    max-width: 500px;
+    margin: 0 auto 22px;
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  .invitation-text:last-of-type {
+    margin-bottom: 40px;
+  }
+
+  /* ---- Qualities ---- */
+  .qualities {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-width: 460px;
+    margin: 0 auto 40px;
+    text-align: left;
+  }
+
+  .quality {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: var(--white-ghost);
+    border-radius: 10px;
+    border: 1px solid var(--white-faint);
+    transition: border-color var(--transition);
+  }
+
+  .quality:hover {
+    border-color: rgba(78, 205, 196, 0.2);
+  }
+
+  .quality-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--teal);
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+
+  .quality span {
+    font-size: 0.85rem;
+    color: var(--text-mid);
+    font-weight: 400;
+  }
+
+  .invitation-note {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    max-width: 460px;
+    margin: 0 auto;
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  /* ---- Contact Box ---- */
+  .contact-box {
+    max-width: 500px;
+    margin: 0 auto;
+    background: rgba(232, 230, 240, 0.03);
+    border: 1px solid var(--white-faint);
+    border-radius: 16px;
+    padding: 44px 36px;
+    text-align: center;
+  }
+
+  .contact-box h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-style: italic;
+    font-size: 1.4rem;
+    color: var(--lavender);
+    margin-bottom: 10px;
+  }
+
+  .contact-box > p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 28px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: left;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .form-group label {
+    display: block;
+    font-weight: 500;
+    font-size: 0.8rem;
+    margin-bottom: 6px;
+    color: var(--text-mid);
+    letter-spacing: 0.02em;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--white-faint);
+    font-size: 0.9rem;
+    font-family: 'Inter', sans-serif;
+    transition: border-color var(--transition);
+    background: var(--white-ghost);
+    color: var(--text-bright);
+    font-weight: 300;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--teal);
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: var(--text-muted);
+  }
+
+  .form-hint {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    font-weight: 300;
+  }
+
+  /* ---- Buttons (matching site) ---- */
+  .btn {
+    display: inline-block;
+    padding: 14px 32px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all var(--transition);
+    border: none;
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+  }
+
+  .btn-mint {
+    background: var(--teal-mint);
+    color: var(--deep);
+    width: 100%;
+  }
+
+  .btn-mint:hover {
+    background: var(--teal-hover);
+    transform: translateY(-1px);
+  }
+
+  /* ---- Closing ---- */
+  .closing {
+    text-align: center;
+    padding: 50px 0;
+    border-top: 1px solid var(--white-faint);
+  }
+
+  .closing p {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    letter-spacing: 0.03em;
+  }
+
+  /* ---- Fade In ---- */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 768px) {
+    .hero { padding: 100px 0 60px; }
+    .hero h1 { font-size: 2.4rem; }
+    section { padding: 60px 0; }
+    .qualities { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .pipeline-tag { display: none; }
+    .contact-box { padding: 28px 20px; }
+    .pills { gap: 8px; }
+    .pill { font-size: 0.78rem; padding: 6px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="aurora-bg"></div>
+<div class="aurora-shimmer">
+  <div class="shimmer-orb"></div>
+  <div class="shimmer-orb"></div>
+</div>
+
+<div class="page">
+
+  <!-- ======= HERO ======= -->
+  <div class="hero">
+    <div class="container">
+      <h1>Salus is always growing</h1>
+      <p class="hero-subtitle">Your voice could be part of it</p>
+      <p class="hero-body">
+        New meditations. New sleep stories. New voices. Salus isn't a static library — it's a living collection that evolves with the people who use it and the people who create for it. New material added weekly.
+      </p>
+
+      <div class="pills">
+        <span class="pill"><span class="pill-dot green"></span>Meditations</span>
+        <span class="pill"><span class="pill-dot green"></span>Mindfulness</span>
+        <span class="pill"><span class="pill-dot green"></span>ASMR</span>
+        <span class="pill"><span class="pill-dot amber"></span>CBT</span>
+        <span class="pill"><span class="pill-dot amber"></span>Sleep Stories</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ======= CONTENT PIPELINE ======= -->
+  <section>
+    <div class="container">
+      <div class="section-header fade-in">
+        <h2>What's coming</h2>
+        <p>Some sessions take weeks to get right — the pacing, the tone, the pauses between words. We don't rush it.</p>
+      </div>
+
+      <div class="pipeline fade-in">
+        <div class="pipeline-item">
+          <div class="pipeline-dot live"></div>
+          <span class="pipeline-label">Guided sleep stories</span>
+          <span class="pipeline-tag live">Live</span>
+        </div>
+        <div class="pipeline-item">
+          <div class="pipeline-dot live"></div>
+          <span class="pipeline-label">Mindfulness sessions</span>
+          <span class="pipeline-tag live">Live</span>
+        </div>
+        <div class="pipeline-item">
+          <div class="pipeline-dot live"></div>
+          <span class="pipeline-label">CBT-based programmes</span>
+          <span class="pipeline-tag live">Live</span>
+        </div>
+        <div class="pipeline-item">
+          <div class="pipeline-dot soon"></div>
+          <span class="pipeline-label">Evening wind-down collection</span>
+          <span class="pipeline-tag soon">Coming soon</span>
+        </div>
+        <div class="pipeline-item">
+          <div class="pipeline-dot building"></div>
+          <span class="pipeline-label">New narrator voices</span>
+          <span class="pipeline-tag building">In development</span>
+        </div>
+        <div class="pipeline-item">
+          <div class="pipeline-dot building"></div>
+          <span class="pipeline-label">Expanded soundscapes</span>
+          <span class="pipeline-tag building">In development</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="sep"></div>
+
+  <!-- ======= LEND YOUR VOICE ======= -->
+  <section>
+    <div class="container">
+      <div class="section-header fade-in">
+        <h2>Lend your voice</h2>
+      </div>
+
+      <p class="invitation-text fade-in">
+        Every voice on Salus matters. We don't use celebrity endorsements or agency-sourced talent. We work with real people who understand that the space between words is just as important as the words themselves.
+      </p>
+      <p class="invitation-text fade-in">
+        If you're a narrator, voice artist, or simply someone whose voice carries calm — we'd like to hear from you.
+      </p>
+
+      <div class="qualities fade-in">
+        <div class="quality">
+          <div class="quality-dot"></div>
+          <span>A natural, unhurried delivery</span>
+        </div>
+        <div class="quality">
+          <div class="quality-dot"></div>
+          <span>Warmth without performance</span>
+        </div>
+        <div class="quality">
+          <div class="quality-dot"></div>
+          <span>Comfortable with silence</span>
+        </div>
+        <div class="quality">
+          <div class="quality-dot"></div>
+          <span>Clean recording environment</span>
+        </div>
+      </div>
+
+      <p class="invitation-note fade-in">
+        No CV required. No casting call. Just a short sample of your voice — a minute or two reading something that matters to you — and a few words about why Salus caught your attention.
+      </p>
+    </div>
+  </section>
+
+  <div class="sep"></div>
+
+  <!-- ======= CONTACT ======= -->
+  <section id="contact">
+    <div class="container">
+      <div class="contact-box fade-in">
+        <h3>Get in touch</h3>
+        <p>Send us a short voice sample and tell us a little about yourself. We listen to every submission.</p>
+
+        <form class="contact-form" onsubmit="return false;">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" placeholder="Your name">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" placeholder="you@example.com">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="about">Tell us about yourself</label>
+            <textarea id="about" placeholder="A few words about you and your experience with narration, voice work, or why Salus interests you."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="sample">Voice sample link</label>
+            <input type="url" id="sample" placeholder="Link to a recording (Google Drive, Dropbox, SoundCloud, etc.)">
+            <p class="form-hint">A minute or two is plenty. Read something you enjoy — it doesn't need to be a meditation.</p>
+          </div>
+
+          <button type="submit" class="btn btn-mint">Send</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= CLOSING ======= -->
+  <div class="closing">
+    <p>Salus — Latin: health, safety, well-being</p>
+  </div>
+
+</div>
+
+<!-- Scroll reveal -->
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
