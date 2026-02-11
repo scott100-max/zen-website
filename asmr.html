@@ -1055,12 +1055,38 @@
     const audioElements = {};
     const grid = document.getElementById('soundGrid');
 
-    // Shared AudioContext for iOS volume control (iOS ignores HTMLMediaElement.volume)
-    let audioCtx = null;
-    function getAudioCtx() {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      return audioCtx;
+    // Media Session API — shows lock-screen controls on mobile
+    function updateMediaSession() {
+      if (!('mediaSession' in navigator)) return;
+      const playing = Object.keys(audioElements).filter(id => {
+        const card = document.querySelector(`.sound-card[data-sound="${id}"]`);
+        return card && card.classList.contains('playing');
+      });
+      if (playing.length === 0) return;
+      const names = playing.map(id => {
+        const def = soundDefs.find(d => d.id === id);
+        return def ? def.name : id;
+      }).join(', ');
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: names,
+        artist: 'Salus Mind',
+        album: 'ASMR Sounds'
+      });
+      navigator.mediaSession.setActionHandler('pause', () => {
+        playing.forEach(id => {
+          audioElements[id].pause();
+          const card = document.querySelector(`.sound-card[data-sound="${id}"]`);
+          if (card) card.classList.remove('playing');
+        });
+        updateMediaSession();
+      });
+      navigator.mediaSession.setActionHandler('play', () => {
+        playing.forEach(id => {
+          audioElements[id].play();
+          const card = document.querySelector(`.sound-card[data-sound="${id}"]`);
+          if (card) card.classList.add('playing');
+        });
+      });
     }
 
     soundDefs.forEach((s, i) => {
@@ -1098,17 +1124,11 @@
         </div>
       `;
 
-      // Create an Audio element routed through Web Audio API GainNode
+      // Plain HTML5 Audio — allows background playback on mobile (no AudioContext)
       function createSource(src) {
-        const ctx = getAudioCtx();
         const audio = new Audio(src);
-        audio.crossOrigin = 'anonymous';
         audio.preload = 'auto';
-        const source = ctx.createMediaElementSource(audio);
-        const gain = ctx.createGain();
-        source.connect(gain);
-        gain.connect(ctx.destination);
-        return { audio, gain };
+        return { audio };
       }
 
       // Seamless crossfade loop — two Audio elements per sound
@@ -1119,15 +1139,15 @@
           const a = createSource(s.src);
           const b = createSource(s.src);
           const vol = card.querySelector('.sound-card__slider').value / 100;
-          a.gain.gain.value = vol;
-          b.gain.gain.value = 0;
+          a.audio.volume = vol;
+          b.audio.volume = 0;
           let active = a, standby = b, fading = false;
           const XFADE = 5; // crossfade seconds before end
           function checkCrossfade() {
             if (!fading && active.audio.duration && active.audio.currentTime > active.audio.duration - XFADE) {
               fading = true;
               standby.audio.currentTime = 0;
-              standby.gain.gain.value = 0;
+              standby.audio.volume = 0;
               standby.audio.play();
               const steps = 50;
               const interval = (XFADE * 1000) / steps;
@@ -1136,8 +1156,8 @@
               const fade = setInterval(() => {
                 step++;
                 const t = step / steps;
-                active.gain.gain.value = targetVol * (1 - t);
-                standby.gain.gain.value = targetVol * t;
+                active.audio.volume = targetVol * (1 - t);
+                standby.audio.volume = targetVol * t;
                 if (step >= steps) {
                   clearInterval(fade);
                   active.audio.pause();
@@ -1148,7 +1168,7 @@
                   fading = false;
                   audioElements[s.id].active = active;
                   audioElements[s.id].standby = standby;
-                  active.gain.gain.value = parseFloat(card.querySelector('.sound-card__slider').value) / 100;
+                  active.audio.volume = parseFloat(card.querySelector('.sound-card__slider').value) / 100;
                 }
               }, interval);
             }
@@ -1157,7 +1177,7 @@
           audioElements[s.id] = { active: a, standby: b, timer: timer,
             play() { this.active.audio.play(); },
             pause() { this.active.audio.pause(); this.standby.audio.pause(); },
-            setVolume(v) { this.active.gain.gain.value = v; }
+            setVolume(v) { this.active.audio.volume = v; }
           };
         }
         if (isPlaying) {
@@ -1165,6 +1185,7 @@
         } else {
           audioElements[s.id].pause();
         }
+        updateMediaSession();
       });
 
       // Volume slider
