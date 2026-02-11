@@ -831,6 +831,11 @@
       exBtn.addEventListener('click', function() {
         excludeMyRegion = !excludeMyRegion;
         exBtn.classList.toggle('active', excludeMyRegion);
+        // Debug: show cities in visitors data
+        var cities = {};
+        visitorsData.forEach(function(v) { var c = v.city || '(none)'; cities[c] = (cities[c]||0)+1; });
+        console.log('Visitor cities:', cities);
+        console.log('Visitors total:', visitorsData.length, 'After exclusion:', applyExclusion(visitorsData).length);
         updateAllDisplays();
       });
     }
