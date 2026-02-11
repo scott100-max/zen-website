@@ -55,6 +55,19 @@ jobs:
       - name: Install wrangler
         run: npm install -g wrangler
 
+      - name: Download ambient files from R2
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          mkdir -p content/audio/ambient
+          AMBIENT=$(head -10 content/scripts/${{ inputs.session }}.txt | grep -i "^Ambient:" | sed 's/Ambient: *//i')
+          AMBIENT=${AMBIENT:-birds}
+          echo "Downloading ambient: ${AMBIENT}"
+          wrangler r2 object get salus-mind/content/sounds/${AMBIENT}.mp3 \
+            --file content/audio/ambient/${AMBIENT}.mp3
+          ls -la content/audio/ambient/
+
       - name: Run build
         env:
           FISH_API_KEY: ${{ secrets.FISH_API_KEY }}
