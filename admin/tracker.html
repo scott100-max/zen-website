@@ -353,6 +353,12 @@
       return data.filter(function(r) { return !isMyRegion(r); });
     }
 
+    // Site filter — exclude SRA Property data
+    var SRA_FILTER = 'SRA Property Consultants';
+    function isSalusPage(record) {
+      return !record.page_title || record.page_title.indexOf(SRA_FILTER) === -1;
+    }
+
     // Data stores
     var pageViewsData = [];
     var eventsData = [];
@@ -433,9 +439,22 @@
         sb.from('visitor_logs').select('*').order('created_at', { ascending: false }).limit(5000)
       ]);
 
-      pageViewsData = pvResult.data || [];
-      eventsData = evResult.data || [];
-      visitorsData = visResult.data || [];
+      // Filter out SRA Property data — keep only Salus pages
+      var allPV = pvResult.data || [];
+      pageViewsData = allPV.filter(isSalusPage);
+
+      // Build set of Salus visitor IDs
+      var salusVisitorIds = {};
+      pageViewsData.forEach(function(pv) { if (pv.visitor_id) salusVisitorIds[pv.visitor_id] = true; });
+
+      // Filter events to Salus visitors only
+      var allEvents = evResult.data || [];
+      eventsData = allEvents.filter(function(e) { return salusVisitorIds[e.visitor_id]; });
+
+      // Filter visitors to Salus visitors only
+      var allVisitors = visResult.data || [];
+      visitorsData = allVisitors.filter(function(v) { return salusVisitorIds[v.id]; });
+
       legacyData = legResult.data || [];
 
       updateAllDisplays();
