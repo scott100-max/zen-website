@@ -406,6 +406,15 @@
 
   .ss-book.available .ss-book-week { color: rgba(78, 205, 196, 0.5); }
 
+  /* Image cover */
+  .ss-book-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;filter:brightness(0.78) saturate(0.88);transition:transform .6s cubic-bezier(.22,1,.36,1),filter .4s ease}
+  .ss-book:hover .ss-book-img{transform:scale(1.05);filter:brightness(0.85) saturate(0.95)}
+  .ss-book.has-img::before{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(6,8,16,0.1) 0%,rgba(6,8,16,0) 25%,rgba(6,8,16,0) 45%,rgba(6,8,16,0.4) 65%,rgba(6,8,16,0.82) 85%,rgba(6,8,16,0.95) 100%);pointer-events:none}
+  .ss-book.has-img .ss-book-bg,.ss-book.has-img .ss-book-motif,.ss-book.has-img .ss-book-frame{display:none}
+  .ss-book.has-img .ss-book-week{color:rgba(255,255,255,0.85);background:rgba(78,205,196,0.12);border:1px solid rgba(78,205,196,0.2);border-radius:10px;padding:4px 12px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+  .ss-book.has-img .ss-book-title{font-style:normal;font-weight:400;font-size:1.1rem}
+  .ss-book.has-img .ss-book-content{padding:18px 16px 16px 16px}
+
   /* Noise */
   .ss-book-noise {
     position: absolute;
@@ -623,7 +632,7 @@
 <script src="js/tracker.js"></script>
 <script>
 const stories = [
-  { w:1,  t:"The Gardener's Almanac",       c:"nature",  free:true, m:"moon-garden" },
+  { w:1,  t:"The Gardener's Almanac",       c:"nature",  free:true, m:"moon-garden", img:"https://media.salus-mind.com/sleep-stories/covers/week-01-gardeners-almanac.jpg" },
   { w:2,  t:"The Slow Train North",         c:"journey", free:true, m:"horizon-lights" },
   { w:3,  t:"The Bookshop at the End of the Lane", c:"comfort", free:true, m:"books" },
   { w:4,  t:"The Lighthouse Keeper's Log",  c:"nature",  free:true, m:"lighthouse" },
@@ -940,14 +949,14 @@ function render(filter) {
     const svg = motifFn(accent);
 
     const el = document.createElement('div');
-    el.className = 'ss-book' + (s.free ? ' available' : ' locked');
+    el.className = 'ss-book' + (s.free ? ' available' : ' locked') + (s.img ? ' has-img' : '');
     el.style.opacity = '0';
     el.style.animation = `ssRise 0.45s ease-out ${0.025*i}s forwards`;
 
     el.innerHTML = `
-      <div class="ss-book-bg" style="background:${bg}"></div>
+      ${s.img ? `<img class="ss-book-img" src="${s.img}" alt="">` : `<div class="ss-book-bg" style="background:${bg}"></div>
       <div class="ss-book-motif"><svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">${svg}</svg></div>
-      <div class="ss-book-frame"></div>
+      <div class="ss-book-frame"></div>`}
       <div class="ss-book-noise"></div>
       <div class="ss-book-content">
         <div class="ss-book-week">Week ${s.w}</div>
