@@ -1,12 +1,87 @@
-# Claude Code Instructions
+# CLAUDE.md — Salus Website Project Instructions
 
-## Primary Reference
+## Architecture
 
-Before starting any task, read `docs/PROJECT-BIBLE.md` (v2.2). It is the canonical source of truth for all Salus website and audio production standards. If anything conflicts with this document, the Bible wins.
+|Service      |Purpose                |URL                                                           |
+|-------------|-----------------------|--------------------------------------------------------------|
+|GitHub Pages |Website (HTML, CSS, JS)|https://salus-mind.com                                        |
+|Cloudflare R2|Media files (MP3, MP4) |https://media.salus-mind.com                                  |
+|Cloudflare   |DNS                    |Nameservers: gerald.ns.cloudflare.com, megan.ns.cloudflare.com|
+|Supabase     |Auth & user data       |https://egywowuyixfqytaucihf.supabase.co                      |
 
-## Key Rules
+## Cloudflare R2 Credentials
 
-- **Only edit `docs/PROJECT-BIBLE.md` when explicitly directed by Scott** — no unsolicited edits. Never loosen thresholds or weaken governance without approval.
-- **Never commit audio/video to git** — all media goes to Cloudflare R2.
-- **Never run multiple builds simultaneously.**
-- **No threshold loosening without human approval.**
+- **Bucket:** salus-mind
+- **Account ID:** e798430a916680159a81cf34de0db9c2
+- **API Token:** yYNUa2enwfPdNnVrfcUQnWHhgMnebTSFntGWbwGe
+
+### Upload Commands
+
+```bash
+# Upload audio file to R2:
+npx wrangler r2 object put salus-mind/content/audio-free/FILENAME.mp3 --file=./FILENAME.mp3
+
+# Upload sound/ASMR file:
+npx wrangler r2 object put salus-mind/content/sounds/FILENAME.mp3 --file=./FILENAME.mp3
+
+# Upload video:
+npx wrangler r2 object put salus-mind/content/video/FILENAME.mp4 --file=./FILENAME.mp4
+```
+
+### R2 File Paths
+
+|Content Type|R2 Path            |
+|------------|-------------------|
+|Free audio  |content/audio-free/|
+|Sounds/ASMR |content/sounds/    |
+|Video       |content/video/     |
+|Reference   |reference/         |
+
+## Fish API Key
+
+FISH_API_KEY: (stored in GitHub repository secrets — retrieve from GitHub Actions if needed for TTS tasks)
+
+## Critical Rules
+
+1. **NEVER commit audio or video files to Git.** All media goes to Cloudflare R2. The .gitignore excludes *.mp3, *.mp4, *.wav and media directories.
+1. **Website deploys automatically** when code is pushed to the main branch via GitHub Pages. No manual deployment needed.
+1. **Media references in HTML** must use the R2 URL:
+
+   ```html
+   <div class="custom-player" data-src="https://media.salus-mind.com/content/audio-free/FILENAME.mp3">
+   ```
+1. **Always verify the live site** after claiming changes are deployed. Use WebFetch to confirm.
+1. **Root directory should only contain:** HTML pages, build-session-v3.py, audition-voices.py, CNAME, robots.txt, sitemap.xml, package.json.
+
+## Directory Structure
+
+|Directory                  |Contents                                                           |
+|---------------------------|-------------------------------------------------------------------|
+|scripts-archive/           |Old/superseded build scripts                                       |
+|reference/                 |Competitor analysis, voice-clone experiments, branding, transcripts|
+|test/                      |Test files, audio reports, test HTML pages                         |
+|docs/                      |PROJECT-BIBLE, audio quality analysis, stripe links                |
+|content/audio/ambient/     |Ambient tracks (8-hour versions preferred)                         |
+|content/audio/marco-master/|Master reference WAVs and measurements                             |
+
+## Supabase
+
+- **Project URL:** https://egywowuyixfqytaucihf.supabase.co
+- **Project ID:** egywowuyixfqytaucihf
+- **IMPORTANT:** Use the Legacy JWT anon key (starts with eyJ…), NOT the new sb_publishable_ format.
+
+## Terminology
+
+|Use                              |Do Not Use                         |
+|---------------------------------|-----------------------------------|
+|Sample                           |Free (for sessions/sounds sections)|
+|Salus Premium                    |The Salus app                      |
+|Premium                          |Subscribe to Unlock                |
+|Web-only, iOS/Android coming soon|Available on all devices           |
+|New material unlocked each week  |New story every week               |
+
+## Style Notes
+
+- Latin phrase on all pages: "Salūs — Latin: health, safety, well-being"
+- Light backgrounds: color:var(–mid-gray);opacity:0.7
+- Dark/hero backgrounds: color:rgba(255,255,255,0.6)
