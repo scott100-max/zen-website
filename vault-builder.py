@@ -75,7 +75,9 @@ def preprocess_blocks(blocks):
     """Merge short blocks (<50 chars) and split long blocks (>300 chars).
 
     Rules:
-      Merge: with FOLLOWING block, no cross-5s+ silence, no chunk-0+1 merge, result ≤200.
+      Merge: with FOLLOWING block, result ≤200, no chunk-0+1 merge.
+      [SILENCE: X] boundaries are absolute merge barriers — never merge any
+      block that is adjacent to a SILENCE directive (before or after).
       Split: at sentence boundaries, each result 50-200 chars, [SILENCE: 3] between.
 
     Returns (processed_blocks, log_entries).
@@ -97,8 +99,9 @@ def preprocess_blocks(blocks):
 
         if len(text) < 50 and i + 1 < len(blocks):
             next_text, next_pause = blocks[i + 1]
-            # Don't merge across silences ≥5s
-            if pause < 5:
+            # SILENCE boundaries are absolute merge barriers (any direction)
+            prev_pause = blocks[i - 1][1] if i > 0 else 0
+            if pause >= 0 and pause < 5 and next_pause >= 0 and prev_pause >= 0:
                 combined = text + " " + next_text
                 if len(combined) <= 200:
                     merge_log.append(
@@ -120,6 +123,8 @@ def preprocess_blocks(blocks):
     for i, (text, pause) in enumerate(merged):
         if (len(text) < 50 and i > 0 and backward
                 and i != 0  # Never merge into chunk 0
+                and backward[-1][1] >= 0  # Previous pause is not SILENCE
+                and pause >= 0  # Current block's pause is not SILENCE
                 and len(backward[-1][0]) + len(text) + 1 <= 200):
             prev_text, prev_pause = backward[-1]
             # Only backward-merge if the previous block's pause was small
@@ -1376,8 +1381,14 @@ async def build_session(script_path, dry_run=False, extra=0, only_chunks=None):
         ),
         'chunks_below_prefilter': total_filtered,
         'preprocessing_log': preprocess_log,
-        'blocks': [{'index': i, 'text': t, 'chars': len(t), 'pause': p}
-                   for i, (t, p) in enumerate(blocks)],
+        'blocks': [
+            {
+                'index': i, 'text': t, 'chars': len(t),
+                'pause': abs(p),
+                **(({'explicit_pause': True} if p < 0 else {}))
+            }
+            for i, (t, p) in enumerate(blocks)
+        ],
         'status': 'CANDIDATES_READY',
     }
     (session_dir / 'session-manifest.json').write_text(json.dumps(manifest, indent=2))

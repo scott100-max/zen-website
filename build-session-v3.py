@@ -261,8 +261,9 @@ def process_script_for_tts(content, category):
                     break
 
             # Check for explicit [SILENCE: X seconds]
+            # Negative value signals "explicit silence — do not merge or humanize"
             if pause_match.group(1):
-                duration = int(pause_match.group(1))
+                duration = -int(pause_match.group(1))
                 i += 1
             else:
                 duration = get_pause_duration(count, category)

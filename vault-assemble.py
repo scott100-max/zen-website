@@ -14,6 +14,7 @@ import argparse
 import importlib.util
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -162,6 +163,123 @@ def encode_mp3(input_wav, output_mp3):
     return output_mp3
 
 
+def run_vault_qa(session_id, final_wav, raw_wav, final_mp3, assembly_manifest,
+                 metadata, output_dir):
+    """Run post-assembly QA gates (1,2,3,5,7,8,9,10,11,12,13) per Bible v4.1.
+
+    Gates 4, 6, 14 are pre-vault advisory only (handled by human A/B picking).
+    Returns True if all gates pass, False otherwise.
+    """
+    gate_results = {}
+    any_failed = False
+    normed = str(final_wav)
+    raw = str(raw_wav)
+
+    # Gate 1: Quality Benchmarks
+    print(f"\n  --- Gate 1: Quality Benchmarks ---")
+    passed, details = build.qa_quality_check(normed, assembly_manifest)
+    gate_results[1] = {'name': 'Quality Benchmarks', 'passed': passed, 'details': details}
+    if not passed:
+        any_failed = True
+
+    # Gate 2: Click Scan (detection only — no auto-patching in vault)
+    print(f"\n  --- Gate 2: Click Artifacts ---")
+    clicks = build.scan_for_clicks(normed, assembly_manifest)
+    passed = len(clicks) == 0
+    gate_results[2] = {'name': 'Click Artifacts', 'passed': passed,
+                       'details': {'clicks_found': len(clicks), 'clicks': clicks}}
+    if not passed:
+        any_failed = True
+        print(f"  FAIL: {len(clicks)} click(s) detected")
+    else:
+        print(f"  PASS: No clicks detected")
+
+    # Gate 3: Spectral Comparison
+    print(f"\n  --- Gate 3: Spectral Comparison ---")
+    passed, details = build.qa_independent_check(normed, assembly_manifest)
+    gate_results[3] = {'name': 'Spectral Comparison', 'passed': passed, 'details': details}
+    if not passed:
+        any_failed = True
+
+    # Gate 5: Loudness Consistency
+    print(f"\n  --- Gate 5: Loudness Consistency ---")
+    passed, details = build.qa_loudness_consistency_check(normed, assembly_manifest)
+    gate_results[5] = {'name': 'Loudness Consistency', 'passed': passed, 'details': details}
+    if not passed:
+        any_failed = True
+
+    # Gate 7: Volume Surge/Drop (raw pre-loudnorm for natural dynamics)
+    print(f"\n  --- Gate 7: Volume Surge/Drop ---")
+    passed, details = build.qa_volume_surge_check(raw, assembly_manifest)
+    gate_results[7] = {'name': 'Volume Surge/Drop', 'passed': passed, 'details': details}
+    if not passed:
+        any_failed = True
+
+    # Gate 8: Repeated Content
+    print(f"\n  --- Gate 8: Repeated Content ---")
+    expected_reps = metadata.get('expected_repetitions')
+    passed, details = build.qa_repeated_content_check(normed, assembly_manifest,
+                                                       expected_repetitions=expected_reps)
+    gate_results[8] = {'name': 'Repeated Content', 'passed': passed, 'details': details}
+    if not passed:
+        any_failed = True
+
+    # Gate 10: Speech Rate
+    print(f"\n  --- Gate 10: Speech Rate ---")
+    passed, details = build.qa_speech_rate_check(normed, assembly_manifest)
+    gate_results[10] = {'name': 'Speech Rate', 'passed': passed, 'details': details}
+    if not passed:
+        any_failed = True
+
+    # Gate 11: Silence Integrity
+    print(f"\n  --- Gate 11: Silence Integrity ---")
+    passed, details = build.qa_silence_integrity_check(normed, assembly_manifest)
+    gate_results[11] = {'name': 'Silence Integrity', 'passed': passed, 'details': details}
+    if not passed:
+        any_failed = True
+
+    # Gate 12: Duration Accuracy
+    print(f"\n  --- Gate 12: Duration Accuracy ---")
+    passed, details = build.qa_duration_accuracy_check(str(final_mp3), metadata)
+    gate_results[12] = {'name': 'Duration Accuracy', 'passed': passed, 'details': details}
+    if not passed:
+        any_failed = True
+
+    # Gate 13: Ambient Continuity — skipped (ambient not mixed yet at assembly)
+    print(f"\n  --- Gate 13: Ambient Continuity --- SKIPPED (pre-ambient)")
+    gate_results[13] = {'name': 'Ambient Continuity', 'passed': True, 'skipped': True}
+
+    # Gate 9: Energy Spike + Visual Report (always last — uses cumulative results)
+    print(f"\n  --- Gate 9: Energy Spike + Visual Report ---")
+    g9_input = {f"Gate {k}: {v['name']}": v for k, v in gate_results.items()}
+    passed, details, report_path = build.qa_visual_report(
+        normed, assembly_manifest, session_id, g9_input, output_dir=str(output_dir))
+    gate_results[9] = {'name': 'Energy Spike', 'passed': passed, 'details': details}
+    if not passed:
+        any_failed = True
+
+    # Summary
+    passed_count = sum(1 for v in gate_results.values()
+                       if v.get('passed') and not v.get('skipped'))
+    failed_count = sum(1 for v in gate_results.values()
+                       if not v.get('passed'))
+    skipped_count = sum(1 for v in gate_results.values() if v.get('skipped'))
+    total = len(gate_results)
+
+    print(f"\n{'='*70}")
+    verdict = "PASS" if not any_failed else "FAIL"
+    print(f"  QA VERDICT: {verdict}  ({passed_count} passed, "
+          f"{failed_count} failed, {skipped_count} skipped / {total} gates)")
+    print(f"{'='*70}")
+
+    if any_failed:
+        for gnum, result in sorted(gate_results.items()):
+            if not result.get('passed'):
+                print(f"  FAILED: Gate {gnum} — {result['name']}")
+
+    return not any_failed, gate_results
+
+
 def assemble(session_id, skip_qa=False, no_humanize=False):
     """Full assembly pipeline for a vault session."""
     session_dir = VAULT_DIR / session_id
@@ -191,24 +309,38 @@ def assemble(session_id, skip_qa=False, no_humanize=False):
 
     # Get pause data from manifest
     pauses = {b['index']: b['pause'] for b in manifest.get('blocks', [])}
+    explicit_pauses = {b['index'] for b in manifest.get('blocks', [])
+                       if b.get('explicit_pause')}
 
     # Humanize pauses (skip for stories — creates silences too long for narrative)
+    # Explicit [SILENCE: X] pauses are sacred — exact duration, no humanisation.
+    # Pass as negative so humanize_pauses() skips them natively (pause <= 0 check).
     blocks_for_humanize = []
+    n_explicit = 0
     for ci, _ in copied:
         text = next((p['text'] for p in picks_data['picks'] if p['chunk'] == ci), '')
         pause = pauses.get(ci, 0)
+        if ci in explicit_pauses:
+            pause = -pause  # Negative = "do not humanize"
+            n_explicit += 1
         blocks_for_humanize.append((text, pause))
 
     if no_humanize:
-        humanized = blocks_for_humanize
+        humanized = [(t, abs(p)) for t, p in blocks_for_humanize]
         print(f"  Pauses: using raw durations (--no-humanize)")
     else:
-        humanized = build.humanize_pauses(blocks_for_humanize)
+        humanized_raw = build.humanize_pauses(blocks_for_humanize)
+        # Convert back to positive (explicit pauses passed through unchanged)
+        humanized = [(t, abs(p)) for t, p in humanized_raw]
+        if n_explicit:
+            print(f"  Pauses: {n_explicit} explicit [SILENCE] kept exact, rest humanized")
 
     # Process in temp directory
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
         concat_files = []
+        segments = []
+        current_time = 0.0
 
         for i, (ci, pick_wav) in enumerate(copied):
             text, pause = humanized[i]
@@ -219,6 +351,13 @@ def assemble(session_id, skip_qa=False, no_humanize=False):
             concat_files.append(str(faded))
 
             dur = build.get_audio_duration(str(faded))
+            segments.append({
+                'type': 'text', 'index': ci,
+                'start_time': current_time,
+                'end_time': current_time + dur,
+                'duration': dur, 'text': text
+            })
+            current_time += dur
             print(f"  c{ci:02d}: {dur:.1f}s", end="")
 
             # Insert silence after chunk (if any)
@@ -226,6 +365,13 @@ def assemble(session_id, skip_qa=False, no_humanize=False):
                 silence = tmp / f"silence_{ci:02d}_{pause:.1f}s.wav"
                 generate_silence(pause, silence)
                 concat_files.append(str(silence))
+                segments.append({
+                    'type': 'silence',
+                    'start_time': current_time,
+                    'end_time': current_time + pause,
+                    'duration': pause
+                })
+                current_time += pause
                 print(f" + {pause:.1f}s silence", end="")
 
             print()
@@ -265,26 +411,37 @@ def assemble(session_id, skip_qa=False, no_humanize=False):
     final_dur = build.get_audio_duration(str(final_wav))
     print(f"\n  Final duration: {final_dur:.1f}s ({final_dur/60:.1f} min)")
 
-    # Run 14 QA gates
+    # Save assembly manifest (segment timings for QA gates)
+    assembly_manifest = {'segments': segments}
+    manifest_out = final_dir / "assembly-manifest.json"
+    manifest_out.write_text(json.dumps(assembly_manifest, indent=2))
+    print(f"  Assembly manifest: {manifest_out}")
+
+    # Parse script metadata for Gate 12 (Duration Accuracy)
+    script_path = Path("content/scripts") / f"{session_id}.txt"
+    script_metadata = {}
+    if script_path.exists():
+        script_metadata = build.parse_script(script_path)
+        # parse_script captures 'duration' but not 'duration-target' —
+        # vault scripts use Duration-Target header (just a number)
+        if not script_metadata.get('duration'):
+            header = script_path.read_text().split('---')[0]
+            match = re.search(r'Duration-Target:\s*(\d+)', header)
+            if match:
+                script_metadata['duration'] = f"{match.group(1)} min"
+    else:
+        print(f"  WARNING: No script found at {script_path} — Gate 12 will skip")
+
+    # Run post-assembly QA gates (1,2,3,5,7,8,9,10,11,12,13)
+    qa_passed = None
+    qa_gate_results = None
     if not skip_qa:
         print(f"\n{'='*70}")
-        print(f"  RUNNING 14-GATE QA")
+        print(f"  RUNNING POST-ASSEMBLY QA (Gates 1,2,3,5,7,8,9,10,11,12,13)")
         print(f"{'='*70}")
-        # Import and run QA gates
-        try:
-            qa_spec = importlib.util.spec_from_file_location(
-                "run_qa_gates",
-                Path(__file__).parent / "run_qa_gates.py"
-            )
-            qa = importlib.util.module_from_spec(qa_spec)
-
-            # The QA module needs file paths set — check how it's configured
-            # For now, pass the paths it needs
-            print(f"  QA gates would run on: {final_wav}")
-            print(f"  (QA integration pending — run manually with run_qa_gates.py)")
-        except Exception as e:
-            print(f"  QA import failed: {e}")
-            print(f"  Run QA manually: python3 run_qa_gates.py {final_wav}")
+        qa_passed, qa_gate_results = run_vault_qa(
+            session_id, final_wav, raw_copy, final_mp3,
+            assembly_manifest, script_metadata, final_dir)
     else:
         print(f"\n  QA skipped (--skip-qa)")
 
@@ -299,6 +456,14 @@ def assemble(session_id, skip_qa=False, no_humanize=False):
         'duration_minutes': round(final_dur / 60, 1),
         'picks_source': str(picks_data.get('reviewed', 'unknown')),
     }
+    if qa_passed is not None:
+        report['qa_passed'] = qa_passed
+        report['qa_gates'] = 'post-assembly (1,2,3,5,7,8,9,10,11,12,13)'
+        report['qa_summary'] = {
+            str(gnum): {'name': r['name'], 'passed': r['passed'],
+                        **({'skipped': True} if r.get('skipped') else {})}
+            for gnum, r in sorted(qa_gate_results.items())
+        }
     report_path = final_dir / f"{session_id}-build-report.json"
     report_path.write_text(json.dumps(report, indent=2))
 
@@ -309,9 +474,16 @@ def assemble(session_id, skip_qa=False, no_humanize=False):
     print(f"  MP3: {final_mp3}")
     print(f"  Duration: {final_dur/60:.1f} min")
     print(f"  Report: {report_path}")
-    print(f"\n  NEXT: Listen to the full splice, then mix ambient if needed.")
 
-    return True
+    if qa_passed is False:
+        print(f"\n  QA FAILED — do NOT deploy. Fix issues and re-assemble.")
+    elif qa_passed is True:
+        print(f"\n  QA PASSED — ready for human end-to-end listen.")
+        print(f"  NEXT: Listen to the full splice, then mix ambient if needed.")
+    else:
+        print(f"\n  NEXT: Listen to the full splice, then mix ambient if needed.")
+
+    return qa_passed is not False
 
 
 def main():
