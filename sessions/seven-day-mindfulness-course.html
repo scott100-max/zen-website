@@ -13,93 +13,95 @@
   <meta property="og:image" content="https://salus-mind.com/images/meditation-woman-outdoor.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Outfit:wght@200;300;400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css?v=1770564391">
   <style>
-    .day-grid {
-      display:grid; grid-template-columns:repeat(7,1fr); gap:16px;
-    }
-    .day-card {
-      position:relative; background:rgba(255,255,255,0.04); border-radius:18px;
-      padding:28px 16px 22px; text-align:center; transition:all 0.35s cubic-bezier(.4,0,.2,1);
-      cursor:pointer; border:2px solid rgba(255,255,255,0.06);
-    }
-    .day-card:hover {
-      background:rgba(255,255,255,0.08); transform:translateY(-5px);
-      border-color:rgba(var(--day-rgb),0.3);
-      box-shadow:0 12px 36px rgba(0,0,0,0.35), 0 0 24px rgba(var(--day-rgb),0.1);
-    }
-    .day-card.active {
-      border-color:rgba(var(--day-rgb),0.6);
-      background:rgba(var(--day-rgb),0.08);
-      box-shadow:0 4px 28px rgba(var(--day-rgb),0.2);
-    }
-    .day-card.locked { opacity:0.7; }
-    .day-card.locked:hover { opacity:0.9; }
+    /* Journey component — per-day accent colours */
+    .journey{--day1:#4ecdc4;--day2:#6dd598;--day3:#a78bfa;--day4:#f9a8d4;--day5:#fbbf24;--day6:#f87171;--day7:#67e8f9}
+    .journey{position:relative;max-width:880px;margin:0 auto;border-radius:24px;overflow:hidden;background:linear-gradient(160deg,#080c14 0%,#0a1520 30%,#0c1a28 60%,#091218 100%);border:1px solid rgba(78,205,196,0.08);box-shadow:0 40px 100px rgba(0,0,0,0.5),0 0 1px rgba(78,205,196,0.1)}
+    .journey::before{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.4;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E")}
+    .journey__orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0}
+    .journey__orb--1{width:300px;height:300px;background:rgba(78,205,196,0.06);top:-100px;right:-60px}
+    .journey__orb--2{width:200px;height:200px;background:rgba(6,182,212,0.04);bottom:-60px;left:-40px}
 
-    .day-icon-wrap {
-      width:52px; height:52px; border-radius:50%; margin:0 auto 14px;
-      display:flex; align-items:center; justify-content:center;
-      background:rgba(var(--day-rgb),0.1); border:1.5px solid rgba(var(--day-rgb),0.25);
-      transition:all 0.35s ease;
-    }
-    .day-card:hover .day-icon-wrap {
-      background:rgba(var(--day-rgb),0.18); border-color:rgba(var(--day-rgb),0.4);
-      transform:scale(1.08);
-    }
-    .day-card.active .day-icon-wrap {
-      background:rgba(var(--day-rgb),0.2); border-color:rgba(var(--day-rgb),0.5);
-      box-shadow:0 0 16px rgba(var(--day-rgb),0.2);
-    }
-    .day-icon-wrap svg {
-      width:24px; height:24px; fill:none; stroke:rgb(var(--day-rgb));
-      stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
-    }
-    .day-card .day-num {
-      font-size:1.5rem; font-weight:700; color:#fff; margin-bottom:4px;
-    }
-    .day-card.active .day-num { color:rgb(var(--day-rgb)); }
-    .day-card .day-title {
-      font-size:0.75rem; color:rgba(255,255,255,0.6); font-weight:500;
-    }
-    .day-card.active .day-title { color:rgba(255,255,255,0.85); }
-    .day-card .day-lock {
-      margin-top:8px; opacity:0.4;
-    }
+    .journey__header{position:relative;z-index:2;padding:40px 40px 0;text-align:center}
+    .journey__eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:'Outfit',sans-serif;font-weight:400;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(78,205,196,0.65);margin-bottom:14px}
+    .journey__eyebrow::before,.journey__eyebrow::after{content:'';width:20px;height:1px;background:linear-gradient(90deg,transparent,rgba(78,205,196,0.3))}
+    .journey__eyebrow::after{background:linear-gradient(90deg,rgba(78,205,196,0.3),transparent)}
+    .journey__title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.6rem,3.5vw,2.2rem);line-height:1.15;margin-bottom:8px;color:#fff}
+    .journey__subtitle{font-family:'Outfit',sans-serif;font-weight:200;font-size:.8rem;color:rgba(255,255,255,0.5);max-width:420px;margin:0 auto;line-height:1.6}
 
-    .day-card[data-day="1"] { --day-rgb:120,180,230; }
-    .day-card[data-day="2"] { --day-rgb:130,210,150; }
-    .day-card[data-day="3"] { --day-rgb:180,150,220; }
-    .day-card[data-day="4"] { --day-rgb:220,140,160; }
-    .day-card[data-day="5"] { --day-rgb:220,190,100; }
-    .day-card[data-day="6"] { --day-rgb:230,160,160; }
-    .day-card[data-day="7"] { --day-rgb:140,200,240; }
+    .journey__days{position:relative;z-index:2;display:flex;justify-content:center;gap:6px;padding:32px 24px 0}
+    .day-node{position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;padding:10px 12px 14px;border-radius:16px;transition:all .4s cubic-bezier(.22,1,.36,1);background:transparent;border:1px solid transparent;min-width:80px;font-family:'Outfit',sans-serif}
+    .day-node:hover{background:rgba(255,255,255,0.02);border-color:rgba(255,255,255,0.04)}
+    .day-node.active{background:rgba(78,205,196,0.06);border-color:rgba(78,205,196,0.12)}
+    .day-node__circle{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;transition:all .4s cubic-bezier(.22,1,.36,1)}
+    .day-node .day-node__circle{background:color-mix(in srgb, var(--accent) 4%, rgba(255,255,255,0.02));border:1.5px solid color-mix(in srgb, var(--accent) 10%, rgba(255,255,255,0.04))}
+    .day-node:hover .day-node__circle{background:color-mix(in srgb, var(--accent) 8%, rgba(255,255,255,0.03));border-color:color-mix(in srgb, var(--accent) 18%, rgba(255,255,255,0.06))}
+    .day-node.active .day-node__circle{border-color:color-mix(in srgb, var(--accent) 45%, transparent);background:color-mix(in srgb, var(--accent) 10%, transparent);box-shadow:0 0 24px color-mix(in srgb, var(--accent) 15%, transparent),inset 0 0 12px color-mix(in srgb, var(--accent) 8%, transparent)}
+    .day-node[data-day="1"]{--accent:var(--day1)}.day-node[data-day="2"]{--accent:var(--day2)}.day-node[data-day="3"]{--accent:var(--day3)}.day-node[data-day="4"]{--accent:var(--day4)}.day-node[data-day="5"]{--accent:var(--day5)}.day-node[data-day="6"]{--accent:var(--day6)}.day-node[data-day="7"]{--accent:var(--day7)}
+    .day-node__icon{width:22px;height:22px;fill:none;stroke:color-mix(in srgb, var(--accent) 35%, rgba(255,255,255,0.18));stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:all .4s ease}
+    .day-node.active .day-node__icon{stroke:var(--accent)}
+    .day-node:hover .day-node__icon{stroke:color-mix(in srgb, var(--accent) 50%, rgba(255,255,255,0.3))}
+    .day-node__lock{position:absolute;bottom:-2px;right:-2px;width:18px;height:18px;border-radius:50%;background:rgba(20,25,35,0.9);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;opacity:0.6}
+    .day-node__lock svg{width:9px;height:9px;fill:rgba(255,255,255,0.4);stroke:none}
+    .day-node.unlocked .day-node__lock{display:none}
+    .day-node__info{text-align:center}
+    .day-node__num{font-weight:400;font-size:.72rem;letter-spacing:.04em;color:rgba(255,255,255,0.35);margin-bottom:1px;transition:color .3s ease}
+    .day-node.active .day-node__num{color:var(--accent)}
+    .day-node__label{font-weight:200;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,0.25);transition:color .3s ease}
+    .day-node.active .day-node__label{color:color-mix(in srgb, var(--accent) 60%, transparent)}
 
-    .day-content {
-      background:rgba(255,255,255,0.04); border-radius:16px; padding:36px;
-      margin-top:28px; display:none; border:1px solid rgba(255,255,255,0.06);
-      animation:dayFadeIn 0.3s ease;
-    }
-    @keyframes dayFadeIn {
-      from { opacity:0; transform:translateY(8px); }
-      to { opacity:1; transform:translateY(0); }
-    }
-    .day-content.active { display:block; }
-    .day-content h4 { color:#fff; font-size:1.2rem; margin-bottom:8px; }
-    .day-content .meta { color:rgba(255,255,255,0.6); font-size:0.85rem; margin-bottom:16px; }
-    .day-content p { color:rgba(255,255,255,0.85); line-height:1.7; margin-bottom:20px; }
+    .journey__indicator{position:relative;z-index:2;height:2px;margin:8px 40px 0;background:rgba(255,255,255,0.03);border-radius:1px;overflow:visible}
+    .journey__indicator-fill{position:absolute;top:0;left:0;height:100%;width:14.28%;background:linear-gradient(90deg,var(--active-accent, #4ecdc4),color-mix(in srgb, var(--active-accent, #4ecdc4) 30%, transparent));border-radius:1px;transition:all .5s cubic-bezier(.22,1,.36,1);box-shadow:0 0 12px color-mix(in srgb, var(--active-accent, #4ecdc4) 25%, transparent)}
 
-    @media (max-width:768px) {
-      .day-grid { grid-template-columns:repeat(4,1fr); gap:12px; }
-      .day-icon-wrap { width:44px; height:44px; }
-      .day-icon-wrap svg { width:20px; height:20px; }
+    .journey__detail{position:relative;z-index:2;margin:24px 28px 28px;border-radius:18px;overflow:hidden;background:linear-gradient(145deg,rgba(13,61,74,0.4) 0%,rgba(26,85,104,0.2) 50%,rgba(15,76,92,0.3) 100%);border:1px solid rgba(78,205,196,0.08);transition:all .4s ease}
+    .detail__inner{padding:28px 32px 24px;position:relative;opacity:1;transition:opacity .25s ease,transform .25s ease}
+    .detail__inner.switching{opacity:0;transform:translateY(6px)}
+    .detail__orb{position:absolute;border-radius:50%;filter:blur(50px);pointer-events:none;width:120px;height:120px;background:rgba(78,205,196,0.06);top:-30px;right:-20px}
+    .detail__day-label{font-family:'Outfit',sans-serif;font-weight:400;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--active-accent, #4ecdc4);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+    .detail__day-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,color-mix(in srgb, var(--active-accent, #4ecdc4) 25%, transparent),transparent)}
+    .detail__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.5rem;line-height:1.2;color:#fff;margin-bottom:6px}
+    .detail__meta{display:flex;align-items:center;gap:12px;font-family:'Outfit',sans-serif;font-weight:300;font-size:.72rem;color:rgba(255,255,255,0.5);margin-bottom:14px}
+    .detail__meta-dot{width:3px;height:3px;border-radius:50%;background:color-mix(in srgb, var(--active-accent, #4ecdc4) 45%, transparent)}
+    .detail__desc{font-family:'Outfit',sans-serif;font-weight:200;font-size:.84rem;line-height:1.7;color:rgba(255,255,255,0.55);max-width:580px;margin-bottom:20px}
+
+    .detail__player{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:10px 20px 10px 10px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+    .detail__play-btn{width:42px;height:42px;border-radius:50%;flex-shrink:0;border:1px solid color-mix(in srgb, var(--active-accent, #4ecdc4) 30%, transparent);background:color-mix(in srgb, var(--active-accent, #4ecdc4) 10%, transparent);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s ease}
+    .detail__play-btn:hover{background:color-mix(in srgb, var(--active-accent, #4ecdc4) 18%, transparent);border-color:color-mix(in srgb, var(--active-accent, #4ecdc4) 45%, transparent);transform:scale(1.05);box-shadow:0 0 20px color-mix(in srgb, var(--active-accent, #4ecdc4) 15%, transparent)}
+    .detail__play-btn svg{width:15px;height:15px;fill:var(--active-accent, #4ecdc4);margin-left:2px}
+    .detail__track{flex:1;height:3px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;cursor:pointer}
+    .detail__progress{height:100%;width:0%;border-radius:2px;background:var(--active-accent, #4ecdc4);transition:width .1s linear}
+    .detail__time{font-family:'Outfit',sans-serif;font-weight:300;font-size:.7rem;color:rgba(255,255,255,0.4);white-space:nowrap;min-width:72px;text-align:right;font-variant-numeric:tabular-nums}
+
+    .detail__locked{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 32px;min-height:200px}
+    .detail__locked-icon{width:40px;height:40px;margin-bottom:14px;fill:none;stroke:rgba(255,255,255,0.2);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+    .detail__locked-title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.3rem;color:rgba(255,255,255,0.6);margin-bottom:4px}
+    .detail__locked-duration{font-family:'Outfit',sans-serif;font-weight:300;font-size:.72rem;color:var(--active-accent, #4ecdc4);letter-spacing:.02em;margin-bottom:10px}
+    .detail__locked-text{font-family:'Outfit',sans-serif;font-weight:200;font-size:.78rem;color:rgba(255,255,255,0.35);line-height:1.6;max-width:320px;margin-bottom:16px}
+    .detail__unlock-btn{font-family:'Outfit',sans-serif;font-weight:400;font-size:.72rem;letter-spacing:.04em;padding:9px 22px;border-radius:40px;color:#060810;background:linear-gradient(135deg,#4ecdc4,#6dd5c8);border:none;cursor:pointer;text-decoration:none;transition:all .35s cubic-bezier(.22,1,.36,1)}
+    .detail__unlock-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(78,205,196,0.25)}
+
+    .journey__footer{position:relative;z-index:2;text-align:center;padding:0 28px 24px;font-family:'Outfit',sans-serif;font-weight:200;font-size:.7rem;color:rgba(255,255,255,0.25);letter-spacing:.02em}
+    .journey__footer span{color:rgba(78,205,196,0.5)}
+
+    @keyframes fadeSlideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    .journey__header{animation:fadeSlideUp .6s ease both}
+    .journey__days{animation:fadeSlideUp .6s ease .15s both}
+    .journey__detail{animation:fadeSlideUp .6s ease .3s both}
+    .day-node{animation:fadeSlideUp .5s ease both}
+    .day-node:nth-child(1){animation-delay:.2s}.day-node:nth-child(2){animation-delay:.26s}.day-node:nth-child(3){animation-delay:.32s}.day-node:nth-child(4){animation-delay:.38s}.day-node:nth-child(5){animation-delay:.44s}.day-node:nth-child(6){animation-delay:.5s}.day-node:nth-child(7){animation-delay:.56s}
+
+    @media(max-width:700px){
+      .journey__header{padding:28px 24px 0}.journey__days{gap:2px;padding:24px 12px 0}
+      .day-node{min-width:auto;padding:8px 6px 10px}.day-node__circle{width:42px;height:42px}
+      .day-node__icon{width:18px;height:18px}.day-node__label{font-size:.52rem}
+      .journey__indicator{margin:8px 20px}.journey__detail{margin:20px 16px 20px}
+      .detail__inner{padding:22px 20px 20px}.detail__title{font-size:1.3rem}
     }
-    @media (max-width:480px) {
-      .day-grid { grid-template-columns:repeat(3,1fr); gap:10px; }
-      .day-card { padding:20px 10px 18px; border-radius:14px; }
-      .day-card .day-num { font-size:1.2rem; }
-      .day-icon-wrap { width:38px; height:38px; margin-bottom:10px; }
-      .day-icon-wrap svg { width:18px; height:18px; }
+    @media(max-width:420px){
+      .day-node__circle{width:36px;height:36px}.day-node__icon{width:16px;height:16px}
+      .day-node__num{font-size:.64rem}.day-node__label{display:none}.journey__days{gap:0}
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -181,109 +183,103 @@
     </div>
   </section>
 
-  <!-- 7-Day Course -->
-  <section style="background:linear-gradient(160deg,#1b2838 0%,#0d1b2a 100%);color:#fff;padding:80px 0;">
-    <div class="container">
-      <div class="section-header fade-in" style="margin-bottom:48px;">
-        <h2 style="color:#fff;">Your 7-Day Journey</h2>
-        <p style="color:rgba(255,255,255,0.7);">Click any day to preview the session. Day 1 is free — unlock the full course with Salus Premium.</p>
+  <!-- 7-Day Journey -->
+  <section style="padding:60px 0 80px;">
+    <div class="container" style="max-width:940px;">
+
+    <div class="journey">
+      <div class="journey__orb journey__orb--1"></div>
+      <div class="journey__orb journey__orb--2"></div>
+
+      <div class="journey__header">
+        <div class="journey__eyebrow">Your 7-Day Journey</div>
+        <h2 class="journey__title">Seven Days to Stillness</h2>
+        <p class="journey__subtitle">One session each day, building gently from first breath to lasting awareness.</p>
       </div>
 
-      <div class="day-grid">
-        <div class="day-card active" data-day="1">
-          <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><path d="M3 8c3-4 6-4 9 0s6 4 9 0"/><path d="M3 16c3-4 6-4 9 0s6 4 9 0"/></svg></div>
-          <div class="day-num">1</div><div class="day-title">Breath</div>
+      <div class="journey__days" id="daySelector">
+        <div class="day-node active unlocked" data-day="1">
+          <div class="day-node__circle">
+            <svg class="day-node__icon" viewBox="0 0 24 24"><path d="M12 22c-4-3.5-8-7.5-8-12a8 8 0 0 1 16 0c0 4.5-4 8.5-8 12z"/><path d="M9 12s1.5-2 3-2 3 2 3 2"/><path d="M9 16s1.5-2 3-2 3 2 3 2"/></svg>
+            <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+          </div>
+          <div class="day-node__info"><div class="day-node__num">1</div><div class="day-node__label">Breath</div></div>
         </div>
-        <div class="day-card locked" data-day="2">
-          <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/></svg></div>
-          <div class="day-num">2</div><div class="day-title">Body</div>
-          <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <div class="day-node" data-day="2">
+          <div class="day-node__circle">
+            <svg class="day-node__icon" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><path d="M12 7v6m-3 4l3-4 3 4"/><path d="M8 13h8"/></svg>
+            <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+          </div>
+          <div class="day-node__info"><div class="day-node__num">2</div><div class="day-node__label">Body</div></div>
         </div>
-        <div class="day-card locked" data-day="3">
-          <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><path d="M9.5 2A6.5 6.5 0 0 1 16 8.5c0 1.6-.6 3-1.5 4.1a6.5 6.5 0 0 1-5 2.4A6.5 6.5 0 0 1 3 8.5 6.5 6.5 0 0 1 9.5 2z"/><path d="M16 8.5a6.5 6.5 0 0 1 5 6.3V16h-5"/><path d="M3 16h18v2H3z"/><path d="M8 18v3"/><path d="M16 18v3"/></svg></div>
-          <div class="day-num">3</div><div class="day-title">Thoughts</div>
-          <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <div class="day-node" data-day="3">
+          <div class="day-node__circle">
+            <svg class="day-node__icon" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 0-9 9"/><path d="M12 8v4l3 2"/><circle cx="19" cy="19" r="2"/></svg>
+            <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+          </div>
+          <div class="day-node__info"><div class="day-node__num">3</div><div class="day-node__label">Thoughts</div></div>
         </div>
-        <div class="day-card locked" data-day="4">
-          <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
-          <div class="day-num">4</div><div class="day-title">Emotions</div>
-          <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <div class="day-node" data-day="4">
+          <div class="day-node__circle">
+            <svg class="day-node__icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg>
+            <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+          </div>
+          <div class="day-node__info"><div class="day-node__num">4</div><div class="day-node__label">Emotions</div></div>
         </div>
-        <div class="day-card locked" data-day="5">
-          <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><path d="M12 8v4"/><path d="M8 20l4-8 4 8"/><path d="M7 16h10"/></svg></div>
-          <div class="day-num">5</div><div class="day-title">Movement</div>
-          <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <div class="day-node" data-day="5">
+          <div class="day-node__circle">
+            <svg class="day-node__icon" viewBox="0 0 24 24"><path d="M13 4v16"/><path d="M17 8l-4-4-4 4"/><path d="M7 12l5 5 5-5"/></svg>
+            <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+          </div>
+          <div class="day-node__info"><div class="day-node__num">5</div><div class="day-node__label">Movement</div></div>
         </div>
-        <div class="day-card locked" data-day="6">
-          <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>
-          <div class="day-num">6</div><div class="day-title">Kindness</div>
-          <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <div class="day-node" data-day="6">
+          <div class="day-node__circle">
+            <svg class="day-node__icon" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+            <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+          </div>
+          <div class="day-node__info"><div class="day-node__num">6</div><div class="day-node__label">Kindness</div></div>
         </div>
-        <div class="day-card locked" data-day="7">
-          <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a15.3 15.3 0 0 1 4 9 15.3 15.3 0 0 1-4 9 15.3 15.3 0 0 1-4-9 15.3 15.3 0 0 1 4-9z"/><path d="M3 12h18"/></svg></div>
-          <div class="day-num">7</div><div class="day-title">Integration</div>
-          <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <div class="day-node" data-day="7">
+          <div class="day-node__circle">
+            <svg class="day-node__icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+            <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+          </div>
+          <div class="day-node__info"><div class="day-node__num">7</div><div class="day-node__label">Integration</div></div>
         </div>
       </div>
 
-      <!-- Day 1 Content (Free) -->
-      <div class="day-content active" data-day="1">
-        <h4>Day 1: Breath Awareness</h4>
-        <div class="meta">12 minutes · Breath awareness · Your foundation</div>
-        <p>Everything begins with the breath. Today you'll learn to use your breath as an anchor — a place to return to whenever your mind wanders. This single skill is the foundation of every mindfulness practice that follows.</p>
-        <div class="custom-player" data-src="https://media.salus-mind.com/content/audio-free/38-seven-day-mindfulness-day1.mp3">
-          <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.1);border-radius:8px;padding:12px 16px;">
-            <button class="cp-play" style="flex-shrink:0;background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-            <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-            <span class="cp-time" style="font-size:0.8rem;color:rgba(255,255,255,0.6);min-width:70px;text-align:right;">0:00 / 0:00</span>
+      <div class="journey__indicator"><div class="journey__indicator-fill" id="indicatorFill"></div></div>
+
+      <div class="journey__detail" id="detailPanel">
+        <div class="detail__inner" id="detailContent">
+          <div class="detail__orb"></div>
+          <div class="detail__day-label" id="detailDayLabel">Day 1</div>
+          <h3 class="detail__title" id="detailTitle">Breath Awareness</h3>
+          <div class="detail__meta">
+            <span id="detailDuration">12 minutes</span>
+            <span class="detail__meta-dot"></span>
+            <span id="detailTags">Breath awareness · Your foundation</span>
+          </div>
+          <p class="detail__desc" id="detailDesc">Everything begins with the breath. Today you'll learn to use your breath as an anchor — a place to return to whenever your mind wanders. This single skill is the foundation of every mindfulness practice that follows.</p>
+          <div class="detail__player custom-player" data-src="https://media.salus-mind.com/content/audio-free/38-seven-day-mindfulness-day1.mp3">
+            <button class="detail__play-btn cp-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+            <div class="detail__track"><div class="detail__progress"></div></div>
+            <span class="detail__time cp-time">0:00 / 0:00</span>
           </div>
         </div>
+        <div class="detail__locked" id="detailLocked">
+          <svg class="detail__locked-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          <h3 class="detail__locked-title" id="lockedTitle">Day 2 · Body Scan</h3>
+          <p class="detail__locked-duration" id="lockedDuration">12 minutes</p>
+          <p class="detail__locked-text">Unlock the complete 7-day journey with Salus Premium.</p>
+          <a href="../apps.html" class="detail__unlock-btn">Go Premium</a>
+        </div>
       </div>
 
-      <!-- Locked Content Template -->
-      <div class="day-content" data-day="2">
-        <h4>Day 2: Body Scan</h4>
-        <div class="meta">12 minutes · Body scan · Connecting mind and body</div>
-        <p>Learn to scan your body from head to toe, noticing sensations without trying to change them. This practice builds the interoceptive awareness that helps you recognise stress before it overwhelms you.</p>
-        <a href="../apps.html" class="btn" style="background:var(--accent);">Unlock Full Course</a>
-      </div>
+      <div class="journey__footer">Day 1 is free <span>·</span> Unlock all 7 days with Salus Premium</div>
+    </div>
 
-      <div class="day-content" data-day="3">
-        <h4>Day 3: Noting Thoughts</h4>
-        <div class="meta">12 minutes · Thought observation · Seeing the mind clearly</div>
-        <p>Thoughts are not facts. Today you'll practise labelling thoughts as they arise — "thinking", "planning", "worrying" — without getting caught up in their content. This gentle noting technique creates space between you and your mental chatter.</p>
-        <a href="../apps.html" class="btn" style="background:var(--accent);">Unlock Full Course</a>
-      </div>
-
-      <div class="day-content" data-day="4">
-        <h4>Day 4: Emotional Awareness</h4>
-        <div class="meta">12 minutes · Emotions · Feeling without reacting</div>
-        <p>Emotions live in the body. Today you'll learn to notice where emotions show up physically — the tightness, the warmth, the flutter — and simply observe them without needing to fix or flee.</p>
-        <a href="../apps.html" class="btn" style="background:var(--accent);">Unlock Full Course</a>
-      </div>
-
-      <div class="day-content" data-day="5">
-        <h4>Day 5: Mindful Movement</h4>
-        <div class="meta">12 minutes · Movement · Awareness in action</div>
-        <p>Mindfulness doesn't require sitting still. Today you'll bring awareness to gentle movement — feeling each motion, each shift in weight. This bridges formal practice and everyday life.</p>
-        <a href="../apps.html" class="btn" style="background:var(--accent);">Unlock Full Course</a>
-      </div>
-
-      <div class="day-content" data-day="6">
-        <h4>Day 6: Loving-Kindness</h4>
-        <div class="meta">12 minutes · Compassion · Opening the heart</div>
-        <p>Direct warmth and goodwill toward yourself and others. Loving-kindness practice has been shown to increase positive emotions, reduce self-criticism, and strengthen social connection.</p>
-        <a href="../apps.html" class="btn" style="background:var(--accent);">Unlock Full Course</a>
-      </div>
-
-      <div class="day-content" data-day="7">
-        <h4>Day 7: Integration</h4>
-        <div class="meta">12 minutes · Daily life · Making it last</div>
-        <p>Everything comes together. Today you'll weave all six practices into a single sitting, then explore how to carry mindfulness into your daily routine — walking, eating, working, and resting.</p>
-        <a href="../apps.html" class="btn" style="background:var(--accent);">Unlock Full Course</a>
-      </div>
-
-      <p class="fade-in" style="text-align:center;color:rgba(255,255,255,0.5);font-size:0.85rem;margin-top:32px;">Day 1 is free. Unlock all 7 days with Salus Premium.</p>
     </div>
   </section>
 
@@ -336,25 +332,55 @@
   <script src="../js/main.js?v=1770564391"></script>
   <script src="../js/tracker.js"></script>
   <script>
-    // Day card click handling
-    document.querySelectorAll('.day-card').forEach(function(card) {
-      card.addEventListener('click', function() {
-        var day = this.getAttribute('data-day');
+    var dayData = [
+      { day:1, title:'Breath Awareness',      duration:'12 minutes', tags:'Breath awareness \u00b7 Your foundation',     desc:'Everything begins with the breath. Today you\u2019ll learn to use your breath as an anchor \u2014 a place to return to whenever your mind wanders. This single skill is the foundation of every mindfulness practice that follows.', free:true,  accent:'#4ecdc4' },
+      { day:2, title:'Body Scan',             duration:'12 minutes', tags:'Body scan \u00b7 Connecting mind and body',    desc:'Learn to scan your body from head to toe, noticing sensations without trying to change them. This practice builds the interoceptive awareness that helps you recognise stress before it overwhelms you.',  free:false, accent:'#6dd598' },
+      { day:3, title:'Noting Thoughts',       duration:'12 minutes', tags:'Thought observation \u00b7 Seeing the mind clearly', desc:'Thoughts are not facts. Today you\u2019ll practise labelling thoughts as they arise \u2014 \u201cthinking\u201d, \u201cplanning\u201d, \u201cworrying\u201d \u2014 without getting caught up in their content. This gentle noting technique creates space between you and your mental chatter.', free:false, accent:'#a78bfa' },
+      { day:4, title:'Emotional Awareness',   duration:'12 minutes', tags:'Emotions \u00b7 Feeling without reacting',     desc:'Emotions live in the body. Today you\u2019ll learn to notice where emotions show up physically \u2014 the tightness, the warmth, the flutter \u2014 and simply observe them without needing to fix or flee.', free:false, accent:'#f9a8d4' },
+      { day:5, title:'Mindful Movement',      duration:'12 minutes', tags:'Movement \u00b7 Awareness in action',          desc:'Mindfulness doesn\u2019t require sitting still. Today you\u2019ll bring awareness to gentle movement \u2014 feeling each motion, each shift in weight. This bridges formal practice and everyday life.', free:false, accent:'#fbbf24' },
+      { day:6, title:'Loving-Kindness',       duration:'12 minutes', tags:'Compassion \u00b7 Opening the heart',          desc:'Direct warmth and goodwill toward yourself and others. Loving-kindness practice has been shown to increase positive emotions, reduce self-criticism, and strengthen social connection.',           free:false, accent:'#f87171' },
+      { day:7, title:'Integration',           duration:'12 minutes', tags:'Daily life \u00b7 Making it last',             desc:'Everything comes together. Today you\u2019ll weave all six practices into a single sitting, then explore how to carry mindfulness into your daily routine \u2014 walking, eating, working, and resting.', free:false, accent:'#67e8f9' },
+    ];
 
-        // Update active card styling
-        document.querySelectorAll('.day-card').forEach(function(c) {
-          c.classList.remove('active');
-        });
-        this.classList.add('active');
+    var journeyEl = document.querySelector('.journey');
+    var nodes = document.querySelectorAll('.day-node');
+    var indicatorFill = document.getElementById('indicatorFill');
+    var detailContent = document.getElementById('detailContent');
+    var detailLocked = document.getElementById('detailLocked');
+    journeyEl.style.setProperty('--active-accent', dayData[0].accent);
 
-        // Show corresponding content
-        document.querySelectorAll('.day-content').forEach(function(content) {
-          content.classList.remove('active');
-        });
-        var targetContent = document.querySelector('.day-content[data-day="' + day + '"]');
-        if (targetContent) {
-          targetContent.classList.add('active');
+    function selectDay(dayNum) {
+      var data = dayData[dayNum - 1];
+      journeyEl.style.setProperty('--active-accent', data.accent);
+      nodes.forEach(function(n) { n.classList.remove('active'); });
+      nodes[dayNum - 1].classList.add('active');
+      var pct = ((dayNum - 1) / 6) * 100;
+      indicatorFill.style.left = pct + '%';
+      indicatorFill.style.width = (100 / 7) + '%';
+      detailContent.classList.add('switching');
+      detailLocked.style.display = 'none';
+      setTimeout(function() {
+        if (data.free) {
+          detailContent.style.display = '';
+          detailLocked.style.display = 'none';
+          document.getElementById('detailDayLabel').textContent = 'Day ' + data.day;
+          document.getElementById('detailTitle').textContent = data.title;
+          document.getElementById('detailDuration').textContent = data.duration;
+          document.getElementById('detailTags').textContent = data.tags;
+          document.getElementById('detailDesc').textContent = data.desc;
+        } else {
+          detailContent.style.display = 'none';
+          detailLocked.style.display = 'flex';
+          document.getElementById('lockedTitle').textContent = 'Day ' + data.day + ' \u00b7 ' + data.title;
+          document.getElementById('lockedDuration').textContent = data.duration;
         }
+        detailContent.classList.remove('switching');
+      }, 250);
+    }
+
+    nodes.forEach(function(node) {
+      node.addEventListener('click', function() {
+        selectDay(parseInt(node.dataset.day));
       });
     });
   </script>
