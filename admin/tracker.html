@@ -334,21 +334,18 @@
     var refreshTimer = null;
     var excludeMyRegion = false;
 
-    // Bounding box for owner region (West Yorkshire — Wakefield/Pontefract/Castleford)
+    // Owner region — West Yorkshire bounding box + country fallback
     var MY_REGION = { latMin: 53.6, latMax: 53.85, lngMin: -1.7, lngMax: -1.2 };
-    var MY_REGION_CITIES = ['wakefield', 'pontefract', 'castleford', 'normanton', 'featherstone', 'knottingley'];
+    var MY_COUNTRY = 'United Kingdom';
 
     function isMyRegion(r) {
-      // Check lat/lng if available (page_views, visitor_logs)
+      // Lat/lng check (page_views, visitor_logs)
       if (r.latitude && r.longitude) {
         return r.latitude >= MY_REGION.latMin && r.latitude <= MY_REGION.latMax &&
                r.longitude >= MY_REGION.lngMin && r.longitude <= MY_REGION.lngMax;
       }
-      // Fall back to city name match (visitors table)
-      if (r.city) {
-        return MY_REGION_CITIES.indexOf(r.city.toLowerCase()) !== -1;
-      }
-      return false;
+      // Country fallback (visitors table — no lat/lng columns)
+      return r.country === MY_COUNTRY;
     }
 
     function applyExclusion(data) {
@@ -831,11 +828,6 @@
       exBtn.addEventListener('click', function() {
         excludeMyRegion = !excludeMyRegion;
         exBtn.classList.toggle('active', excludeMyRegion);
-        // Debug: show cities in visitors data
-        var cities = {};
-        visitorsData.forEach(function(v) { var c = v.city || '(none)'; cities[c] = (cities[c]||0)+1; });
-        console.log('Visitor cities:', cities);
-        console.log('Visitors total:', visitorsData.length, 'After exclusion:', applyExclusion(visitorsData).length);
         updateAllDisplays();
       });
     }
