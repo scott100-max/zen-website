@@ -13,122 +13,125 @@
   <meta property="og:image" content="https://salus-mind.com/images/meditation-woman-outdoor.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Outfit:wght@200;300;400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=1770564391">
   <style>
-    .week-section { margin-bottom:48px; }
-    .week-header {
-      display:flex; align-items:center; gap:16px; margin-bottom:24px;
-      padding-bottom:16px; border-bottom:2px solid rgba(255,255,255,0.08);
+    :root{
+      --teal:#4ecdc4;
+      --week1:#4ecdc4;--week2:#a78bfa;--week3:#fbbf24;
+      --d1:#4ecdc4;--d2:#6dd598;--d3:#3ec9a0;--d4:#38bdf8;
+      --d5:#5eead4;--d6:#86efac;--d7:#4ecdc4;
+      --d8:#a78bfa;--d9:#f9a8d4;--d10:#f87171;--d11:#818cf8;
+      --d12:#34d399;--d13:#c084fc;--d14:#a78bfa;
+      --d15:#67e8f9;--d16:#6dd598;--d17:#fbbf24;--d18:#f97316;
+      --d19:#818cf8;--d20:#c084fc;--d21:#fbbf24;
     }
-    .week-number {
-      background:var(--accent); color:#fff; width:48px; height:48px;
-      border-radius:50%; display:flex; align-items:center; justify-content:center;
-      font-weight:700; font-size:1.1rem; flex-shrink:0;
-    }
-    .week-header h3 { font-size:1.3rem; margin:0; }
-    .week-header p { color:var(--mid-gray); font-size:0.9rem; margin:4px 0 0; }
-    .day-grid {
-      display:grid; grid-template-columns:repeat(7,1fr); gap:16px;
-    }
-    .day-card {
-      position:relative; background:rgba(255,255,255,0.04); border-radius:18px;
-      padding:28px 16px 22px; text-align:center; transition:all 0.35s cubic-bezier(.4,0,.2,1);
-      cursor:pointer; border:2px solid rgba(255,255,255,0.06);
-    }
-    .day-card:hover {
-      background:rgba(255,255,255,0.08); transform:translateY(-5px);
-      border-color:rgba(var(--day-rgb),0.3);
-      box-shadow:0 12px 36px rgba(0,0,0,0.35), 0 0 24px rgba(var(--day-rgb),0.1);
-    }
-    .day-card.active {
-      border-color:rgba(var(--day-rgb),0.6);
-      background:rgba(var(--day-rgb),0.08);
-      box-shadow:0 4px 28px rgba(var(--day-rgb),0.2);
-    }
-    .day-card.locked { opacity:0.7; }
-    .day-card.locked:hover { opacity:0.9; }
+    .programme{width:100%;max-width:920px;margin:0 auto;position:relative;border-radius:24px;overflow:hidden;background:linear-gradient(160deg,#080c14 0%,#0a1520 30%,#0c1a28 60%,#091218 100%);border:1px solid rgba(78,205,196,0.08);box-shadow:0 40px 100px rgba(0,0,0,0.5),0 0 1px rgba(78,205,196,0.1);padding:40px 36px 32px}
+    .programme::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.4;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E")}
+    .programme__orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0}
+    .programme__orb--1{width:300px;height:300px;background:rgba(78,205,196,0.05);top:-100px;right:-60px}
+    .programme__orb--2{width:200px;height:200px;background:rgba(167,139,250,0.04);bottom:-60px;left:-40px}
 
-    .day-icon-wrap {
-      width:52px; height:52px; border-radius:50%; margin:0 auto 14px;
-      display:flex; align-items:center; justify-content:center;
-      background:rgba(var(--day-rgb),0.1); border:1.5px solid rgba(var(--day-rgb),0.25);
-      transition:all 0.35s ease;
-    }
-    .day-card:hover .day-icon-wrap {
-      background:rgba(var(--day-rgb),0.18); border-color:rgba(var(--day-rgb),0.4);
-      transform:scale(1.08);
-    }
-    .day-card.active .day-icon-wrap {
-      background:rgba(var(--day-rgb),0.2); border-color:rgba(var(--day-rgb),0.5);
-      box-shadow:0 0 16px rgba(var(--day-rgb),0.2);
-    }
-    .day-icon-wrap svg {
-      width:24px; height:24px; fill:none; stroke:rgb(var(--day-rgb));
-      stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
-    }
-    .day-card .day-num {
-      font-size:1.5rem; font-weight:700; color:#fff; margin-bottom:4px;
-    }
-    .day-card.active .day-num { color:rgb(var(--day-rgb)); }
-    .day-card .day-title {
-      font-size:0.75rem; color:rgba(255,255,255,0.6); font-weight:500;
-    }
-    .day-card.active .day-title { color:rgba(255,255,255,0.85); }
-    .day-card .day-lock {
-      margin-top:8px; opacity:0.4;
-    }
+    .prog-header{position:relative;z-index:2;text-align:center;margin-bottom:36px}
+    .prog-header__eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:'Outfit',sans-serif;font-weight:400;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(78,205,196,0.6);margin-bottom:12px}
+    .prog-header__eyebrow::before,.prog-header__eyebrow::after{content:'';width:20px;height:1px;background:linear-gradient(90deg,transparent,rgba(78,205,196,0.3))}
+    .prog-header__eyebrow::after{background:linear-gradient(90deg,rgba(78,205,196,0.3),transparent)}
+    .prog-header__title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.6rem,3.5vw,2.2rem);line-height:1.15;margin-bottom:8px}
+    .prog-header__sub{font-family:'Outfit',sans-serif;font-weight:200;font-size:.8rem;color:rgba(255,255,255,0.5);max-width:460px;margin:0 auto;line-height:1.6}
 
-    /* Week 1 */
-    .day-card[data-day="1"] { --day-rgb:120,180,230; }
-    .day-card[data-day="2"] { --day-rgb:130,210,150; }
-    .day-card[data-day="3"] { --day-rgb:180,150,220; }
-    .day-card[data-day="4"] { --day-rgb:220,190,100; }
-    .day-card[data-day="5"] { --day-rgb:140,200,240; }
-    .day-card[data-day="6"] { --day-rgb:180,200,230; }
-    .day-card[data-day="7"] { --day-rgb:140,210,180; }
-    /* Week 2 */
-    .day-card[data-day="8"] { --day-rgb:180,150,220; }
-    .day-card[data-day="9"] { --day-rgb:220,140,160; }
-    .day-card[data-day="10"] { --day-rgb:230,160,160; }
-    .day-card[data-day="11"] { --day-rgb:120,180,230; }
-    .day-card[data-day="12"] { --day-rgb:130,210,150; }
-    .day-card[data-day="13"] { --day-rgb:210,170,120; }
-    .day-card[data-day="14"] { --day-rgb:140,210,180; }
-    /* Week 3 */
-    .day-card[data-day="15"] { --day-rgb:140,200,240; }
-    .day-card[data-day="16"] { --day-rgb:130,210,150; }
-    .day-card[data-day="17"] { --day-rgb:190,210,140; }
-    .day-card[data-day="18"] { --day-rgb:220,190,100; }
-    .day-card[data-day="19"] { --day-rgb:180,160,220; }
-    .day-card[data-day="20"] { --day-rgb:180,200,230; }
-    .day-card[data-day="21"] { --day-rgb:220,200,140; }
+    .week-phase{position:relative;z-index:2;margin-bottom:8px}
+    .week-phase:last-of-type{margin-bottom:0}
+    .phase-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;padding-left:4px}
+    .phase-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;font-weight:500;font-size:.72rem;color:#060810;flex-shrink:0}
+    .phase-num--1{background:var(--week1)}
+    .phase-num--2{background:var(--week2)}
+    .phase-num--3{background:var(--week3)}
+    .phase-info{display:flex;flex-direction:column;gap:1px}
+    .phase-title{font-family:'Outfit',sans-serif;font-weight:500;font-size:.88rem}
+    .phase-desc{font-family:'Outfit',sans-serif;font-weight:200;font-size:.7rem;color:rgba(255,255,255,0.5)}
 
-    .day-content {
-      background:rgba(255,255,255,0.04); border-radius:16px; padding:36px;
-      margin-top:28px; display:none; border:1px solid rgba(255,255,255,0.06);
-      animation:dayFadeIn 0.3s ease;
-    }
-    @keyframes dayFadeIn {
-      from { opacity:0; transform:translateY(8px); }
-      to { opacity:1; transform:translateY(0); }
-    }
-    .day-content.active { display:block; }
-    .day-content h4 { color:#fff; font-size:1.2rem; margin-bottom:8px; }
-    .day-content .meta { color:rgba(255,255,255,0.6); font-size:0.85rem; margin-bottom:16px; }
-    .day-content p { color:rgba(255,255,255,0.85); line-height:1.7; margin-bottom:20px; }
+    .prog-day-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:24px}
+    .day-node{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;padding:10px 4px 12px;border-radius:14px;transition:all .4s cubic-bezier(.22,1,.36,1);background:color-mix(in srgb, var(--accent) 3%, rgba(255,255,255,0.01));border:1px solid color-mix(in srgb, var(--accent) 8%, rgba(255,255,255,0.03));font-family:'Outfit',sans-serif}
+    .day-node:hover{background:color-mix(in srgb, var(--accent) 7%, rgba(255,255,255,0.02));border-color:color-mix(in srgb, var(--accent) 16%, rgba(255,255,255,0.05))}
+    .day-node.active{background:color-mix(in srgb, var(--accent) 10%, rgba(255,255,255,0.02));border-color:color-mix(in srgb, var(--accent) 25%, transparent);box-shadow:0 0 20px color-mix(in srgb, var(--accent) 10%, transparent)}
+    .day-node__circle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;transition:all .4s cubic-bezier(.22,1,.36,1);background:color-mix(in srgb, var(--accent) 5%, rgba(255,255,255,0.02));border:1.5px solid color-mix(in srgb, var(--accent) 12%, rgba(255,255,255,0.04))}
+    .day-node:hover .day-node__circle{background:color-mix(in srgb, var(--accent) 10%, rgba(255,255,255,0.03));border-color:color-mix(in srgb, var(--accent) 22%, rgba(255,255,255,0.06))}
+    .day-node.active .day-node__circle{border-color:color-mix(in srgb, var(--accent) 50%, transparent);background:color-mix(in srgb, var(--accent) 14%, transparent);box-shadow:0 0 20px color-mix(in srgb, var(--accent) 12%, transparent),inset 0 0 10px color-mix(in srgb, var(--accent) 6%, transparent)}
+    .day-node__icon{width:18px;height:18px;fill:none;stroke:color-mix(in srgb, var(--accent) 40%, rgba(255,255,255,0.15));stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:all .4s ease}
+    .day-node.active .day-node__icon{stroke:var(--accent);opacity:1}
+    .day-node:hover .day-node__icon{stroke:color-mix(in srgb, var(--accent) 55%, rgba(255,255,255,0.25))}
+    .day-node__lock{position:absolute;bottom:-1px;right:-1px;width:16px;height:16px;border-radius:50%;background:rgba(20,25,35,0.9);border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;opacity:0.5}
+    .day-node__lock svg{width:8px;height:8px;fill:rgba(255,255,255,0.35);stroke:none}
+    .day-node.unlocked .day-node__lock{display:none}
+    .day-node__num{font-weight:400;font-size:.68rem;letter-spacing:.02em;color:rgba(255,255,255,0.3);transition:color .3s ease}
+    .day-node.active .day-node__num{color:var(--accent)}
+    .day-node__label{font-weight:200;font-size:.54rem;letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,0.22);transition:color .3s ease}
+    .day-node.active .day-node__label{color:color-mix(in srgb, var(--accent) 55%, transparent)}
+    .day-node[data-day="1"]{--accent:var(--d1)} .day-node[data-day="2"]{--accent:var(--d2)}
+    .day-node[data-day="3"]{--accent:var(--d3)} .day-node[data-day="4"]{--accent:var(--d4)}
+    .day-node[data-day="5"]{--accent:var(--d5)} .day-node[data-day="6"]{--accent:var(--d6)}
+    .day-node[data-day="7"]{--accent:var(--d7)} .day-node[data-day="8"]{--accent:var(--d8)}
+    .day-node[data-day="9"]{--accent:var(--d9)} .day-node[data-day="10"]{--accent:var(--d10)}
+    .day-node[data-day="11"]{--accent:var(--d11)} .day-node[data-day="12"]{--accent:var(--d12)}
+    .day-node[data-day="13"]{--accent:var(--d13)} .day-node[data-day="14"]{--accent:var(--d14)}
+    .day-node[data-day="15"]{--accent:var(--d15)} .day-node[data-day="16"]{--accent:var(--d16)}
+    .day-node[data-day="17"]{--accent:var(--d17)} .day-node[data-day="18"]{--accent:var(--d18)}
+    .day-node[data-day="19"]{--accent:var(--d19)} .day-node[data-day="20"]{--accent:var(--d20)}
+    .day-node[data-day="21"]{--accent:var(--d21)}
 
-    @media (max-width:768px) {
-      .day-grid { grid-template-columns:repeat(4,1fr); gap:12px; }
-      .day-icon-wrap { width:44px; height:44px; }
-      .day-icon-wrap svg { width:20px; height:20px; }
+    .detail-panel{position:relative;z-index:2;margin:0 0 28px;border-radius:18px;overflow:hidden;background:linear-gradient(145deg,rgba(13,61,74,0.35) 0%,rgba(26,85,104,0.15) 50%,rgba(15,76,92,0.25) 100%);border:1px solid rgba(78,205,196,0.06);transition:all .4s ease}
+    .detail-panel__orb{position:absolute;border-radius:50%;filter:blur(50px);pointer-events:none;width:120px;height:120px;background:color-mix(in srgb, var(--active-accent,var(--teal)) 8%, transparent);top:-30px;right:-20px;transition:background .5s ease}
+    .detail__inner{padding:28px 32px 24px;position:relative;opacity:1;transition:opacity .25s ease,transform .25s ease}
+    .detail__inner.switching{opacity:0;transform:translateY(6px)}
+    .detail__day-label{font-family:'Outfit',sans-serif;font-weight:400;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--active-accent,var(--teal));margin-bottom:10px;display:flex;align-items:center;gap:8px}
+    .detail__day-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,color-mix(in srgb, var(--active-accent,var(--teal)) 25%, transparent),transparent)}
+    .detail__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.45rem;line-height:1.2;color:#fff;margin-bottom:6px}
+    .detail__meta{display:flex;align-items:center;gap:12px;font-family:'Outfit',sans-serif;font-weight:300;font-size:.72rem;color:rgba(255,255,255,0.5);margin-bottom:14px}
+    .detail__meta-dot{width:3px;height:3px;border-radius:50%;background:color-mix(in srgb, var(--active-accent,var(--teal)) 45%, transparent)}
+    .detail__desc{font-family:'Outfit',sans-serif;font-weight:200;font-size:.84rem;line-height:1.7;color:rgba(255,255,255,0.55);max-width:600px;margin-bottom:20px}
+    .detail__player{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:10px 20px 10px 10px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+    .detail__play-btn{width:42px;height:42px;border-radius:50%;flex-shrink:0;border:1px solid color-mix(in srgb, var(--active-accent,var(--teal)) 30%, transparent);background:color-mix(in srgb, var(--active-accent,var(--teal)) 10%, transparent);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s ease}
+    .detail__play-btn:hover{background:color-mix(in srgb, var(--active-accent,var(--teal)) 18%, transparent);border-color:color-mix(in srgb, var(--active-accent,var(--teal)) 45%, transparent);transform:scale(1.05);box-shadow:0 0 20px color-mix(in srgb, var(--active-accent,var(--teal)) 15%, transparent)}
+    .detail__play-btn svg{width:15px;height:15px;fill:var(--active-accent,var(--teal));margin-left:2px}
+    .detail__track{flex:1;height:3px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;cursor:pointer}
+    .detail__progress{height:100%;width:0%;border-radius:2px;background:var(--active-accent,var(--teal));transition:width .1s linear}
+    .detail__time{font-family:'Outfit',sans-serif;font-weight:300;font-size:.7rem;color:rgba(255,255,255,0.4);white-space:nowrap;min-width:72px;text-align:right;font-variant-numeric:tabular-nums}
+    .detail__locked{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:36px 32px;min-height:180px}
+    .detail__locked-icon{width:36px;height:36px;margin-bottom:12px;fill:none;stroke:rgba(255,255,255,0.2);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+    .detail__locked-title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.25rem;color:rgba(255,255,255,0.6);margin-bottom:4px}
+    .detail__locked-duration{font-family:'Outfit',sans-serif;font-weight:300;font-size:.72rem;color:var(--active-accent,var(--teal));margin-bottom:10px}
+    .detail__locked-text{font-family:'Outfit',sans-serif;font-weight:200;font-size:.76rem;color:rgba(255,255,255,0.35);line-height:1.6;max-width:320px;margin-bottom:14px}
+    .detail__unlock-btn{font-family:'Outfit',sans-serif;font-weight:400;font-size:.72rem;letter-spacing:.04em;padding:9px 22px;border-radius:40px;color:#060810;background:linear-gradient(135deg,var(--active-accent,var(--teal)),color-mix(in srgb, var(--active-accent,var(--teal)) 70%, #fff));border:none;cursor:pointer;text-decoration:none;transition:all .35s cubic-bezier(.22,1,.36,1)}
+    .detail__unlock-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px color-mix(in srgb, var(--active-accent,var(--teal)) 25%, transparent)}
+
+    .phase-divider{height:1px;margin:28px 0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.04),transparent)}
+    .prog-footer{position:relative;z-index:2;text-align:center;font-family:'Outfit',sans-serif;font-weight:200;font-size:.7rem;color:rgba(255,255,255,0.25);letter-spacing:.02em;margin-top:4px}
+    .prog-footer span{color:rgba(78,205,196,0.5)}
+
+    @keyframes fadeSlideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    .prog-header{animation:fadeSlideUp .6s ease both}
+    .week-phase:nth-child(1){animation:fadeSlideUp .6s ease .1s both}
+    .week-phase:nth-child(3){animation:fadeSlideUp .6s ease .2s both}
+    .week-phase:nth-child(5){animation:fadeSlideUp .6s ease .3s both}
+
+    @media(max-width:700px){
+      .programme{padding:28px 16px 24px}
+      .prog-day-grid{gap:4px}
+      .day-node{padding:8px 2px 10px;border-radius:10px}
+      .day-node__circle{width:36px;height:36px}
+      .day-node__icon{width:15px;height:15px}
+      .day-node__num{font-size:.6rem}
+      .day-node__label{display:none}
+      .detail__inner{padding:22px 18px 20px}
+      .detail__title{font-size:1.2rem}
+      .phase-header{margin-bottom:12px}
     }
-    @media (max-width:480px) {
-      .day-grid { grid-template-columns:repeat(3,1fr); gap:10px; }
-      .day-card { padding:20px 10px 18px; border-radius:14px; }
-      .day-card .day-num { font-size:1.2rem; }
-      .day-icon-wrap { width:38px; height:38px; margin-bottom:10px; }
-      .day-icon-wrap svg { width:18px; height:18px; }
+    @media(max-width:420px){
+      .day-node__circle{width:30px;height:30px}
+      .day-node__icon{width:13px;height:13px}
+      .prog-day-grid{gap:3px}
+      .day-node{padding:6px 1px 8px}
+      .day-node__num{font-size:.54rem}
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -224,180 +227,259 @@
     </div>
   </section>
 
-  <!-- 21-Day Course -->
-  <section style="background:linear-gradient(160deg,#1b2838 0%,#0d1b2a 100%);color:#fff;padding:80px 0;">
+  <!-- 21-Day Programme -->
+  <section style="background:transparent;padding:80px 0;">
     <div class="container">
-      <div class="section-header fade-in" style="margin-bottom:48px;">
-        <h2 style="color:#fff;">The 21-Day Journey</h2>
-        <p style="color:rgba(255,255,255,0.7);">Click any day to preview the session. Day 1 is free — unlock the full course with Salus Premium.</p>
-      </div>
+      <div class="programme" id="programme">
+        <div class="programme__orb programme__orb--1"></div>
+        <div class="programme__orb programme__orb--2"></div>
 
-      <!-- Week 1 -->
-      <div class="week-section fade-in">
-        <div class="week-header">
-          <div class="week-number">1</div>
-          <div>
-            <h3 style="color:#fff;">Foundation</h3>
-            <p>Building the basics of mindful awareness</p>
-          </div>
-        </div>
-        <div class="day-grid">
-          <div class="day-card active" data-day="1">
-            <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><path d="M3 8c3-4 6-4 9 0s6 4 9 0"/><path d="M3 16c3-4 6-4 9 0s6 4 9 0"/></svg></div>
-            <div class="day-num">1</div><div class="day-title">Breath</div>
-          </div>
-          <div class="day-card locked" data-day="2">
-            <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/></svg></div>
-            <div class="day-num">2</div><div class="day-title">Body</div>
-            <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <div class="day-card locked" data-day="3">
-            <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M12 12v8"/><path d="M8 22h8"/><path d="M7 16h10"/></svg></div>
-            <div class="day-num">3</div><div class="day-title">Anchor</div>
-            <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <div class="day-card locked" data-day="4">
-            <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 5v-2"/><path d="M12 21v-2"/><path d="M5 12H3"/><path d="M21 12h-2"/></svg></div>
-            <div class="day-num">4</div><div class="day-title">Senses</div>
-            <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <div class="day-card locked" data-day="5">
-            <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></div>
-            <div class="day-num">5</div><div class="day-title">Stillness</div>
-            <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <div class="day-card locked" data-day="6">
-            <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg></div>
-            <div class="day-num">6</div><div class="day-title">Patience</div>
-            <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <div class="day-card locked" data-day="7">
-            <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"/></svg></div>
-            <div class="day-num">7</div><div class="day-title">Review</div>
-            <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
+        <div class="prog-header">
+          <div class="prog-header__eyebrow">Structured Course</div>
+          <h2 class="prog-header__title">21-Day Mindfulness Programme</h2>
+          <p class="prog-header__sub">A complete guided journey from first breath to lasting habit. One session per day, building progressively — no experience needed.</p>
         </div>
 
-        <!-- Day 1 Content (Free) -->
-        <div class="day-content active" data-day="1">
-          <h4>Day 1: The Breath</h4>
-          <div class="meta">12 minutes · Breath awareness · Your foundation</div>
-          <p>Everything begins with the breath. Today you'll learn to use your breath as an anchor — a place to return to whenever your mind wanders. This single skill is the foundation of every mindfulness practice that follows.</p>
-          <div class="custom-player" data-src="https://media.salus-mind.com/content/audio-free/38-seven-day-mindfulness-day1.mp3">
-            <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.1);border-radius:8px;padding:12px 16px;">
-              <button class="cp-play" style="flex-shrink:0;background:var(--accent);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-              <input type="range" class="cp-seek" min="0" max="100" value="0" style="flex:1;cursor:pointer;">
-              <span class="cp-time" style="font-size:0.8rem;color:rgba(255,255,255,0.6);min-width:70px;text-align:right;">0:00 / 0:00</span>
+        <!-- Week 1: Foundation -->
+        <div class="week-phase">
+          <div class="phase-header">
+            <div class="phase-num phase-num--1">1</div>
+            <div class="phase-info">
+              <div class="phase-title">Foundation</div>
+              <div class="phase-desc">Building the basics of mindful awareness</div>
+            </div>
+          </div>
+          <div class="prog-day-grid" id="week1Grid">
+            <div class="day-node active unlocked" data-day="1">
+              <div class="day-node__circle">
+                <svg class="day-node__icon" viewBox="0 0 24 24"><path d="M12 22c-4-3.5-8-7.5-8-12a8 8 0 0116 0c0 4.5-4 8.5-8 12z"/><path d="M9 12s1.5-2 3-2 3 2 3 2"/><path d="M9 16s1.5-2 3-2 3 2 3 2"/></svg>
+                <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+              </div>
+              <div class="day-node__num">1</div>
+              <div class="day-node__label">Instrument</div>
+            </div>
+            <div class="day-node" data-day="2">
+              <div class="day-node__circle">
+                <svg class="day-node__icon" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><path d="M12 7v6m-3 4l3-4 3 4"/><path d="M8 13h8"/></svg>
+                <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+              </div>
+              <div class="day-node__num">2</div>
+              <div class="day-node__label">Anchor</div>
+            </div>
+            <div class="day-node" data-day="3">
+              <div class="day-node__circle">
+                <svg class="day-node__icon" viewBox="0 0 24 24"><path d="M12 2a4 4 0 014 4c0 2-2 3-4 4-2-1-4-2-4-4a4 4 0 014-4z"/><path d="M12 10v12"/><path d="M8 14l4-4 4 4"/></svg>
+                <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+              </div>
+              <div class="day-node__num">3</div>
+              <div class="day-node__label">Map</div>
+            </div>
+            <div class="day-node" data-day="4">
+              <div class="day-node__circle">
+                <svg class="day-node__icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+              </div>
+              <div class="day-node__num">4</div>
+              <div class="day-node__label">Stream</div>
+            </div>
+            <div class="day-node" data-day="5">
+              <div class="day-node__circle">
+                <svg class="day-node__icon" viewBox="0 0 24 24"><path d="M8 3v3a2 2 0 01-2 2H3"/><path d="M21 8h-3a2 2 0 01-2-2V3"/><path d="M3 16h3a2 2 0 012 2v3"/><path d="M16 21v-3a2 2 0 012-2h3"/></svg>
+                <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+              </div>
+              <div class="day-node__num">5</div>
+              <div class="day-node__label">Sound</div>
+            </div>
+            <div class="day-node" data-day="6">
+              <div class="day-node__circle">
+                <svg class="day-node__icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+              </div>
+              <div class="day-node__num">6</div>
+              <div class="day-node__label">Pause</div>
+            </div>
+            <div class="day-node" data-day="7">
+              <div class="day-node__circle">
+                <svg class="day-node__icon" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+                <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+              </div>
+              <div class="day-node__num">7</div>
+              <div class="day-node__label">Review</div>
             </div>
           </div>
         </div>
 
-        <!-- Locked Content Template -->
-        <div class="day-content" data-day="2">
-          <h4>Day 2: Body Awareness</h4>
-          <div class="meta">12 minutes · Body scan · Connecting mind and body</div>
-          <p>Learn to scan your body from head to toe, noticing sensations without trying to change them. This practice builds the interoceptive awareness that helps you recognise stress before it overwhelms you.</p>
-          <a href="apps.html" class="btn" style="background:var(--accent);">Unlock Full Course</a>
+        <!-- Detail Panel -->
+        <div class="detail-panel" id="detailPanel">
+          <div class="detail-panel__orb"></div>
+          <div class="detail__inner" id="detailContent">
+            <div class="detail__day-label" id="detailDayLabel">Day 1</div>
+            <h3 class="detail__title" id="detailTitle">The Instrument</h3>
+            <div class="detail__meta">
+              <span id="detailDuration">7 minutes</span>
+              <span class="detail__meta-dot"></span>
+              <span id="detailTags">Breath awareness · Your foundation</span>
+            </div>
+            <p class="detail__desc" id="detailDesc">Everything begins with the breath. Today you'll learn to use your breath as an anchor — a place to return to whenever your mind wanders. This single skill is the foundation of every mindfulness practice that follows.</p>
+            <div class="detail__player custom-player" data-src="https://media.salus-mind.com/content/audio-free/38-seven-day-mindfulness-day1.mp3">
+              <button class="detail__play-btn cp-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+              <div class="detail__track"><div class="detail__progress"></div></div>
+              <span class="detail__time cp-time">0:00 / 0:00</span>
+            </div>
+          </div>
+          <div class="detail__locked" id="detailLocked">
+            <svg class="detail__locked-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            <h3 class="detail__locked-title" id="lockedTitle">Day 2 · The Anchor</h3>
+            <p class="detail__locked-duration" id="lockedDuration">9 minutes</p>
+            <p class="detail__locked-text">Unlock the complete 21-day programme with Salus Premium.</p>
+            <a href="apps.html" class="detail__unlock-btn">Go Premium</a>
+          </div>
         </div>
-      </div>
 
-      <!-- Week 2 -->
-      <div class="week-section fade-in">
-        <div class="week-header">
-          <div class="week-number">2</div>
-          <div>
-            <h3 style="color:#fff;">Expansion</h3>
-            <p>Deepening your practice and exploring emotions</p>
-          </div>
-        </div>
-        <div class="day-grid">
-          <div class="day-card locked" data-day="8">
-            <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><path d="M9.5 2a6.5 6.5 0 0 1 0 13h-3l-3 3v-3A6.5 6.5 0 0 1 9.5 2z"/><path d="M14 10a6.5 6.5 0 0 1 6.5 3.5"/></svg></div>
-            <div class="day-num">8</div><div class="day-title">Thoughts</div>
-            <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <div class="day-card locked" data-day="9">
-            <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
-            <div class="day-num">9</div><div class="day-title">Emotions</div>
-            <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <div class="day-card locked" data-day="10">
-            <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>
-            <div class="day-num">10</div><div class="day-title">Kindness</div>
-            <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <div class="day-card locked" data-day="11">
-            <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg></div>
-            <div class="day-num">11</div><div class="day-title">Self</div>
-            <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <div class="day-card locked" data-day="12">
-            <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><circle cx="17" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg></div>
-            <div class="day-num">12</div><div class="day-title">Others</div>
-            <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <div class="day-card locked" data-day="13">
-            <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><path d="M8 3l4 8 4-8"/><path d="M4 14l8 7 8-7"/></svg></div>
-            <div class="day-num">13</div><div class="day-title">Difficult</div>
-            <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <div class="day-card locked" data-day="14">
-            <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"/></svg></div>
-            <div class="day-num">14</div><div class="day-title">Review</div>
-            <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-        </div>
-      </div>
+        <div class="phase-divider"></div>
 
-      <!-- Week 3 -->
-      <div class="week-section fade-in">
-        <div class="week-header">
-          <div class="week-number">3</div>
-          <div>
-            <h3 style="color:#fff;">Integration</h3>
-            <p>Advanced practices and lifelong habits</p>
+        <!-- Week 2: Expansion -->
+        <div class="week-phase">
+          <div class="phase-header">
+            <div class="phase-num phase-num--2">2</div>
+            <div class="phase-info">
+              <div class="phase-title">Expansion</div>
+              <div class="phase-desc">Deepening your practice and exploring emotions</div>
+            </div>
+          </div>
+          <div class="prog-day-grid" id="week2Grid">
+            <div class="day-node" data-day="8">
+              <div class="day-node__circle">
+                <svg class="day-node__icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+              </div>
+              <div class="day-node__num">8</div>
+              <div class="day-node__label">Weather</div>
+            </div>
+            <div class="day-node" data-day="9">
+              <div class="day-node__circle">
+                <svg class="day-node__icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg>
+                <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+              </div>
+              <div class="day-node__num">9</div>
+              <div class="day-node__label">Narrator</div>
+            </div>
+            <div class="day-node" data-day="10">
+              <div class="day-node__circle">
+                <svg class="day-node__icon" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1010 10A10 10 0 0012 2z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+              </div>
+              <div class="day-node__num">10</div>
+              <div class="day-node__label">Stories</div>
+            </div>
+            <div class="day-node" data-day="11">
+              <div class="day-node__circle">
+                <svg class="day-node__icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+              </div>
+              <div class="day-node__num">11</div>
+              <div class="day-node__label">Body</div>
+            </div>
+            <div class="day-node" data-day="12">
+              <div class="day-node__circle">
+                <svg class="day-node__icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+              </div>
+              <div class="day-node__num">12</div>
+              <div class="day-node__label">Guest</div>
+            </div>
+            <div class="day-node" data-day="13">
+              <div class="day-node__circle">
+                <svg class="day-node__icon" viewBox="0 0 24 24"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
+                <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+              </div>
+              <div class="day-node__num">13</div>
+              <div class="day-node__label">Walk</div>
+            </div>
+            <div class="day-node" data-day="14">
+              <div class="day-node__circle">
+                <svg class="day-node__icon" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+                <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+              </div>
+              <div class="day-node__num">14</div>
+              <div class="day-node__label">Ground</div>
+            </div>
           </div>
         </div>
-        <div class="day-grid">
-          <div class="day-card locked" data-day="15">
-            <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg></div>
-            <div class="day-num">15</div><div class="day-title">Open</div>
-            <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <div class="day-card locked" data-day="16">
-            <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><path d="M12 8v4"/><path d="M8 20l4-8 4 8"/><path d="M7 16h10"/></svg></div>
-            <div class="day-num">16</div><div class="day-title">Walking</div>
-            <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <div class="day-card locked" data-day="17">
-            <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.5 4.5 0 0 0 12 18c0-.7-.16-1.36-.45-1.95l4.46-7.03"/><circle cx="17" cy="5" r="3"/></svg></div>
-            <div class="day-num">17</div><div class="day-title">Eating</div>
-            <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <div class="day-card locked" data-day="18">
-            <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M16.2 7.8l-2 6.3-6.4 2.1 2-6.3z"/></svg></div>
-            <div class="day-num">18</div><div class="day-title">Work</div>
-            <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <div class="day-card locked" data-day="19">
-            <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
-            <div class="day-num">19</div><div class="day-title">Sleep</div>
-            <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <div class="day-card locked" data-day="20">
-            <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg></div>
-            <div class="day-num">20</div><div class="day-title">Silence</div>
-            <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <div class="day-card locked" data-day="21">
-            <div class="day-icon-wrap"><svg viewBox="0 0 24 24"><path d="M18.178 8c5.096 0 5.096 8 0 8-5.095 0-7.133-8-12.739-8-4.585 0-4.585 8 0 8 5.606 0 7.644-8 12.74-8z"/></svg></div>
-            <div class="day-num">21</div><div class="day-title">Forever</div>
-            <svg class="day-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-        </div>
-      </div>
 
-      <p class="fade-in" style="text-align:center;color:rgba(255,255,255,0.5);font-size:0.85rem;margin-top:32px;">Day 1 is free. Unlock all 21 days with Salus Premium.</p>
+        <div class="phase-divider"></div>
+
+        <!-- Week 3: Integration -->
+        <div class="week-phase">
+          <div class="phase-header">
+            <div class="phase-num phase-num--3">3</div>
+            <div class="phase-info">
+              <div class="phase-title">Integration</div>
+              <div class="phase-desc">Advanced practices and lifelong habits</div>
+            </div>
+          </div>
+          <div class="prog-day-grid" id="week3Grid">
+            <div class="day-node" data-day="15">
+              <div class="day-node__circle">
+                <svg class="day-node__icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+                <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+              </div>
+              <div class="day-node__num">15</div>
+              <div class="day-node__label">Compassion</div>
+            </div>
+            <div class="day-node" data-day="16">
+              <div class="day-node__circle">
+                <svg class="day-node__icon" viewBox="0 0 24 24"><path d="M13 4v16"/><path d="M17 8l-4-4-4 4"/><path d="M7 12l5 5 5-5"/></svg>
+                <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+              </div>
+              <div class="day-node__num">16</div>
+              <div class="day-node__label">Forgive</div>
+            </div>
+            <div class="day-node" data-day="17">
+              <div class="day-node__circle">
+                <svg class="day-node__icon" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+              </div>
+              <div class="day-node__num">17</div>
+              <div class="day-node__label">Space</div>
+            </div>
+            <div class="day-node" data-day="18">
+              <div class="day-node__circle">
+                <svg class="day-node__icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+                <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+              </div>
+              <div class="day-node__num">18</div>
+              <div class="day-node__label">Dialogue</div>
+            </div>
+            <div class="day-node" data-day="19">
+              <div class="day-node__circle">
+                <svg class="day-node__icon" viewBox="0 0 24 24"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="23" y1="22" x2="1" y2="22"/></svg>
+                <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+              </div>
+              <div class="day-node__num">19</div>
+              <div class="day-node__label">Gratitude</div>
+            </div>
+            <div class="day-node" data-day="20">
+              <div class="day-node__circle">
+                <svg class="day-node__icon" viewBox="0 0 24 24"><path d="M5.64 19.36a9 9 0 010-12.73"/><path d="M18.36 6.64a9 9 0 010 12.73"/><circle cx="12" cy="12" r="2"/></svg>
+                <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+              </div>
+              <div class="day-node__num">20</div>
+              <div class="day-node__label">Long Sit</div>
+            </div>
+            <div class="day-node" data-day="21">
+              <div class="day-node__circle">
+                <svg class="day-node__icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+                <div class="day-node__lock"><svg viewBox="0 0 24 24"><path d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-3 0V7a4 4 0 00-8 0v4"/></svg></div>
+              </div>
+              <div class="day-node__num">21</div>
+              <div class="day-node__label">Return</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="prog-footer">Day 1 is free <span>&middot;</span> Unlock all 21 days with Salus Premium</div>
+      </div>
     </div>
   </section>
 
@@ -450,29 +532,72 @@
   <script src="js/main.js?v=1770564391"></script>
   <script src="js/tracker.js"></script>
   <script>
-    // Day card click handling
-    document.querySelectorAll('.day-card').forEach(function(card) {
-      card.addEventListener('click', function() {
-        var day = this.getAttribute('data-day');
+    const dayData = [
+      {day:1, title:'The Instrument',            duration:'7 minutes',   tags:'Breath awareness · Your foundation',        desc:'Everything begins with the breath. Today you\'ll learn to use your breath as an anchor — a place to return to whenever your mind wanders. This single skill is the foundation of every mindfulness practice that follows.', free:true,  accent:'#4ecdc4', time:'0:00 / 7:24'},
+      {day:2, title:'The Anchor',                duration:'9 minutes',   tags:'Deepening focus · Returning again',          desc:'The breath as anchor — not to control, but to return to. Today you\'ll practise the gentle art of noticing when you\'ve drifted and coming back, again and again.', free:false, accent:'#6dd598', time:'0:00 / 8:30'},
+      {day:3, title:'The Map',                   duration:'10 minutes',  tags:'Body awareness · Physical grounding',        desc:'Bring gentle attention to every part of your body, from crown to toes. Learn to notice tension you didn\'t know you were carrying — and let it soften.', free:false, accent:'#3ec9a0', time:'0:00 / 10:06'},
+      {day:4, title:'The Stream',                duration:'8 minutes',   tags:'Thought observation · Mental clarity',       desc:'Thoughts flow like a stream — constant, shifting, never the same twice. Today you\'ll practise sitting on the bank and watching them pass without being carried away.', free:false, accent:'#38bdf8', time:'0:00 / 8:24'},
+      {day:5, title:'The Soundscape',            duration:'9 minutes',   tags:'Sensory awareness · Present-moment contact', desc:'Hearing is always in the present. Today you\'ll use sound as a doorway into awareness — noticing layers of sound you\'ve never paid attention to before.', free:false, accent:'#5eead4', time:'0:00 / 9:06'},
+      {day:6, title:'The Pause',                 duration:'11 minutes',  tags:'Settling in · Resting with what is',         desc:'Not forced stillness, but a willingness to stop. Today you\'ll practise the art of pausing — letting the body settle, letting the mind do what it does.', free:false, accent:'#86efac', time:'0:00 / 10:42'},
+      {day:7, title:'The Review',                duration:'11 minutes',  tags:'Integration · Looking back',                 desc:'A chance to revisit everything you\'ve explored this week. Breath, body, thoughts, sound, and stillness — woven together in one continuous practice.', free:false, accent:'#4ecdc4', time:'0:00 / 11:00'},
+      {day:8, title:'The Weather System',        duration:'~10 minutes', tags:'Emotional awareness · Inner weather',        desc:'Emotions move through you like weather systems — arriving, shifting, passing. Today you\'ll learn to observe your inner climate without trying to change the forecast.', free:false, accent:'#a78bfa', time:'\u2014'},
+      {day:9, title:'The Narrator',              duration:'~10 minutes', tags:'Inner voice · Thought patterns',             desc:'We all have a narrator running commentary on our lives. Today you\'ll notice the voice — its habits, its stories — and discover the space between you and your thoughts.', free:false, accent:'#f9a8d4', time:'\u2014'},
+      {day:10,title:'The Stories We Carry',      duration:'~10 minutes', tags:'Beliefs · Letting go of narrative',          desc:'The stories we tell ourselves shape how we experience the world. Today you\'ll gently examine the narratives you carry and practise holding them more lightly.', free:false, accent:'#f87171', time:'\u2014'},
+      {day:11,title:'The Body Under Pressure',   duration:'~10 minutes', tags:'Stress response · Somatic awareness',       desc:'Stress lives in the body before the mind notices. Today you\'ll explore how pressure manifests physically — and practise releasing tension at its source.', free:false, accent:'#818cf8', time:'\u2014'},
+      {day:12,title:'The Difficult Guest',       duration:'~11 minutes', tags:'Working with difficulty · Acceptance',       desc:'What if difficult feelings were guests, not intruders? Today you\'ll practise making space for discomfort — meeting it at the door rather than barricading it out.', free:false, accent:'#34d399', time:'\u2014'},
+      {day:13,title:'The Walk',                  duration:'~11 minutes', tags:'Movement · Embodied presence',               desc:'Awareness doesn\'t require sitting still. Today you\'ll bring mindful attention to the simple act of walking — step by step, breath by breath.', free:false, accent:'#c084fc', time:'\u2014'},
+      {day:14,title:'The Middle Ground',         duration:'~11 minutes', tags:'Balance · Equanimity',                       desc:'Between grasping and pushing away lies equanimity — the middle ground. Today you\'ll practise finding steadiness amidst the constant pull of preference.', free:false, accent:'#a78bfa', time:'\u2014'},
+      {day:15,title:'The Compassion Turn',       duration:'~11 minutes', tags:'Self-compassion · Inner kindness',           desc:'Turning the warmth you extend to others back towards yourself. Today you\'ll practise meeting your own struggles with the kindness you\'d offer a close friend.', free:false, accent:'#67e8f9', time:'\u2014'},
+      {day:16,title:'The Forgiveness Practice',  duration:'~12 minutes', tags:'Letting go · Releasing resentment',          desc:'Forgiveness isn\'t condoning — it\'s releasing the weight. Today you\'ll explore the possibility of loosening the grip of old hurts, gently and at your own pace.', free:false, accent:'#6dd598', time:'\u2014'},
+      {day:17,title:'The Space Between',         duration:'~12 minutes', tags:'Transitions · Liminal awareness',            desc:'Between stimulus and response there is a space. Today you\'ll widen that space — discovering freedom in the gap between what happens and how you react.', free:false, accent:'#fbbf24', time:'\u2014'},
+      {day:18,title:'The Difficult Conversation',duration:'~13 minutes', tags:'Communication · Mindful relating',           desc:'Bringing presence into the moments that matter most. Today you\'ll practise staying grounded when conversations become charged.', free:false, accent:'#f97316', time:'\u2014'},
+      {day:19,title:'The Gratitude Inventory',   duration:'~13 minutes', tags:'Appreciation · Shifting perspective',        desc:'Not forced positivity, but genuine noticing — what is already here, already enough. Today you\'ll cultivate the quiet practice of appreciation.', free:false, accent:'#818cf8', time:'\u2014'},
+      {day:20,title:'The Long Sit',              duration:'~15 minutes', tags:'Deep stillness · Beyond technique',          desc:'Today you\'ll sit for longer — no guidance for stretches, just you and whatever arises. Trust what you\'ve built over these twenty days.', free:false, accent:'#c084fc', time:'\u2014'},
+      {day:21,title:'The Return',                duration:'~16 minutes', tags:'Continuation · A practice for life',         desc:'The course ends, but the practice never does. Today you\'ll set your intention for what comes next — carrying mindfulness forward into every moment.', free:false, accent:'#fbbf24', time:'\u2014'},
+    ];
 
-        // Update active card styling
-        document.querySelectorAll('.day-card').forEach(function(c) {
-          c.classList.remove('active');
-        });
-        this.classList.add('active');
+    const programme = document.getElementById('programme');
+    const allNodes = document.querySelectorAll('.day-node');
+    const detailContent = document.getElementById('detailContent');
+    const detailLocked = document.getElementById('detailLocked');
 
-        // Show corresponding content (only day 1 has playable content)
-        document.querySelectorAll('.day-content').forEach(function(content) {
-          content.classList.remove('active');
-        });
-        var targetContent = document.querySelector('.day-content[data-day="' + day + '"]');
-        if (targetContent) {
-          targetContent.classList.add('active');
-        } else if (day !== '1') {
-          // Show day 2 content (locked message) for all locked days
-          document.querySelector('.day-content[data-day="2"]').classList.add('active');
+    programme.style.setProperty('--active-accent', dayData[0].accent);
+
+    function selectDay(dayNum) {
+      const data = dayData[dayNum - 1];
+      programme.style.setProperty('--active-accent', data.accent);
+
+      allNodes.forEach(n => n.classList.remove('active'));
+      document.querySelector('.day-node[data-day="' + dayNum + '"]').classList.add('active');
+
+      detailContent.classList.add('switching');
+
+      setTimeout(() => {
+        if (data.free) {
+          detailContent.style.display = '';
+          detailLocked.style.display = 'none';
+          document.getElementById('detailDayLabel').textContent = 'Day ' + data.day;
+          document.getElementById('detailTitle').textContent = data.title;
+          document.getElementById('detailDuration').textContent = data.duration;
+          document.getElementById('detailTags').textContent = data.tags;
+          document.getElementById('detailDesc').textContent = data.desc;
+          document.querySelector('.detail__time').textContent = data.time;
+        } else {
+          detailContent.style.display = 'none';
+          detailLocked.style.display = 'flex';
+          document.getElementById('lockedTitle').textContent = 'Day ' + data.day + ' \u00b7 ' + data.title;
+          document.getElementById('lockedDuration').textContent = data.duration;
         }
-      });
+        detailContent.classList.remove('switching');
+
+        if (window.innerWidth < 700) {
+          document.getElementById('detailPanel').scrollIntoView({ behavior:'smooth', block:'nearest' });
+        }
+      }, 250);
+    }
+
+    allNodes.forEach(node => {
+      node.addEventListener('click', () => selectDay(parseInt(node.dataset.day)));
     });
   </script>
 
