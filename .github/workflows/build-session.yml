@@ -1,0 +1,138 @@
+name: Build Audio Session
+
+on:
+  workflow_dispatch:
+    inputs:
+      session:
+        description: 'Session name (e.g. 01-morning-meditation)'
+        required: true
+        type: string
+      provider:
+        description: 'TTS provider'
+        required: true
+        default: 'fish'
+        type: choice
+        options:
+          - fish
+          - elevenlabs
+          - resemble
+      mode:
+        description: 'Build mode'
+        required: true
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - remix-only
+      deploy:
+        description: 'Deploy to R2 after build'
+        required: true
+        default: true
+        type: boolean
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Set up ambient directory
+        run: |
+          mkdir -p content/audio/ambient
+          # Symlink sounds into ambient dir for the build script
+          for f in content/sounds/*.mp3; do
+            ln -sf "$(realpath "$f")" "content/audio/ambient/$(basename "$f")"
+          done
+          ls -la content/audio/ambient/
+
+      - name: Create .env
+        run: |
+          cat <<EOF > .env
+          FISH_API_KEY=${{ secrets.FISH_API_KEY }}
+          RESEMBLE_API_KEY=${{ secrets.RESEMBLE_API_KEY }}
+          ELEVENLABS_API_KEY=${{ secrets.ELEVENLABS_API_KEY }}
+          RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
+          EOF
+
+      - name: Full build (TTS + ambient mix + QA)
+        if: inputs.mode == 'full'
+        run: |
+          python3 build-session-v3.py ${{ inputs.session }} \
+            --provider ${{ inputs.provider }} \
+            --no-deploy
+
+      - name: Remix only (re-mix ambient on existing raw narration)
+        if: inputs.mode == 'remix-only'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          # Download existing raw narration from R2
+          npm install -g wrangler
+          mkdir -p content/audio-free/raw
+          wrangler r2 object get salus-mind/content/audio-free/raw/${{ inputs.session }}.mp3 \
+            --file content/audio-free/raw/${{ inputs.session }}.mp3
+
+          # Get duration for fade-out calculation
+          RAW_DURATION=$(ffprobe -v error -show_entries format=duration -of csv=p=0 \
+            content/audio-free/raw/${{ inputs.session }}.mp3)
+          FADE_OUT_START=$(python3 -c "print(f'{float($RAW_DURATION) - 8:.2f}')")
+
+          # Read ambient name from script metadata
+          AMBIENT=$(head -10 content/scripts/${{ inputs.session }}.txt | grep -i "^Ambient:" | sed 's/Ambient: *//i')
+          AMBIENT=${AMBIENT:-birds}
+
+          # Read ambient dB from script metadata (default -14)
+          AMBIENT_DB=$(head -10 content/scripts/${{ inputs.session }}.txt | grep -i "^Ambient-dB:" | sed 's/Ambient-dB: *//i')
+          AMBIENT_DB=${AMBIENT_DB:--14}
+
+          echo "Mixing: ambient=$AMBIENT @ ${AMBIENT_DB}dB, fade_out_start=$FADE_OUT_START"
+
+          # Mix ambient
+          mkdir -p content/audio-free
+          ffmpeg -y \
+            -i content/audio-free/raw/${{ inputs.session }}.mp3 \
+            -i content/audio/ambient/${AMBIENT}.mp3 \
+            -filter_complex \
+              "[1:a]volume=${AMBIENT_DB}dB,afade=t=in:st=0:d=15,afade=t=out:st=${FADE_OUT_START}:d=8[amb];[0:a][amb]amix=inputs=2:duration=first:dropout_transition=2:normalize=0" \
+            -b:a 192k \
+            content/audio-free/${{ inputs.session }}.mp3
+
+          echo "Mixed output:"
+          ffprobe -v error -show_entries format=duration,size -of default \
+            content/audio-free/${{ inputs.session }}.mp3
+
+      - name: Deploy to R2
+        if: inputs.deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          npm install -g wrangler
+          wrangler r2 object put \
+            salus-mind/content/audio-free/${{ inputs.session }}.mp3 \
+            --file content/audio-free/${{ inputs.session }}.mp3 \
+            --content-type audio/mpeg
+          echo "Deployed to: https://media.salus-mind.com/content/audio-free/${{ inputs.session }}.mp3"
+
+      - name: Upload build artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output-${{ inputs.session }}
+          path: |
+            content/audio-free/${{ inputs.session }}.mp3
+            content/audio-free/${{ inputs.session }}_manifest.json
+            content/audio-free/${{ inputs.session }}_REPORT_v4.txt
+          retention-days: 7
