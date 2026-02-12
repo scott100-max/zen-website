@@ -6,8 +6,8 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon.ico" sizes="32x32">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <title>Welcome to Salus Premium — Salus</title>
-  <meta name="description" content="Thank you for joining the Salus family.">
+  <title>Welcome to Salūs Premium — Salūs</title>
+  <meta name="description" content="Thank you for joining the Salūs family.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=1770564391">
@@ -79,7 +79,7 @@
       </div>
       <h1 style="font-family:'Cormorant Garamond',serif;font-size:2.5rem;margin-bottom:16px;color:#f0eefc;">Welcome to the Family</h1>
       <p style="font-size:1.1rem;color:var(--mid-gray);line-height:1.8;margin-bottom:24px;">
-        Thank you for joining Salus Premium. Your subscription is now active and you can cancel anytime.
+        Thank you for joining Salūs Premium. Your subscription is now active and you can cancel anytime.
       </p>
       <p style="font-size:1rem;color:var(--mid-gray);line-height:1.8;margin-bottom:32px;">
         You now have full access to our complete library of guided meditations, sleep stories, ASMR, and all future content. We're so glad you're here.
@@ -106,7 +106,7 @@
   <footer class="hb-footer">
   <div class="hb-footer__inner">
     <div class="hb-footer__brand">
-      <span class="hb-footer__logo">Salus</span>
+      <span class="hb-footer__logo">Salūs</span>
       <p class="hb-footer__tagline">A quieter kind of self-care. Guided practices, sleep stories, ASMR, and mindfulness tools &mdash; built by a family.</p>
     </div>
     <div>
@@ -129,7 +129,7 @@
       </ul>
     </div>
     <div>
-      <h4 class="hb-footer__col-title">Salus</h4>
+      <h4 class="hb-footer__col-title">Salūs</h4>
       <ul class="hb-footer__links">
         <li><a href="about.html">About Us</a></li>
         <li><a href="apps.html">Go Premium</a></li>
@@ -137,9 +137,9 @@
       </ul>
     </div>
   </div>
-  <p class="footer-disclaimer">Salus does not provide medical advice. Content is for general wellbeing and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified health provider with any health concerns.</p>
+  <p class="footer-disclaimer">Salūs does not provide medical advice. Content is for general wellbeing and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified health provider with any health concerns.</p>
   <div class="hb-footer__bottom">
-    <span class="hb-footer__copy">&copy; 2026 Salus Mind. All rights reserved.</span>
+    <span class="hb-footer__copy">&copy; 2026 Salūs Mind. All rights reserved.</span>
     <a href="#" class="hb-footer__back-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">
       Back to top
       <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
@@ -156,12 +156,12 @@
 
     // Handle account status
     (async function() {
-      if (typeof SalusAuth !== 'undefined') {
-        await SalusAuth.init();
-        if (SalusAuth.isLoggedIn()) {
+      if (typeof SalūsAuth !== 'undefined') {
+        await SalūsAuth.init();
+        if (SalūsAuth.isLoggedIn()) {
           // Logged in: refresh subscription from Supabase
           setTimeout(async function() {
-            await SalusAuth.refreshSubscription();
+            await SalūsAuth.refreshSubscription();
           }, 2000);
         } else {
           // Not logged in: show account creation prompt

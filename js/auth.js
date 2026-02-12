@@ -324,7 +324,7 @@ var SalusAuth = (function() {
           return;
         }
         // Footer/page subscribe CTAs → redirect to dashboard
-        if (text === 'Subscribe' || text === 'Upgrade to Premium' || text === 'Get Salus Premium' || text === 'Go Premium') {
+        if (text === 'Subscribe' || text === 'Upgrade to Premium' || text === 'Get Salūs Premium' || text === 'Go Premium') {
           link.textContent = 'My Account';
           link.href = pathPrefix + 'dashboard.html';
         }

@@ -6,11 +6,11 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon.ico" sizes="32x32">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <title>Pricing & Apps — Salus</title>
-  <meta name="description" content="Salus Premium. One subscription, everything included — guided meditations, sleep stories, breathing exercises, ASMR, and more.">
+  <title>Pricing & Apps — Salūs</title>
+  <meta name="description" content="Salūs Premium. One subscription, everything included — guided meditations, sleep stories, breathing exercises, ASMR, and more.">
   <link rel="canonical" href="https://salus-mind.com/apps.html">
-  <meta property="og:title" content="Pricing &amp; Apps — Salus">
-  <meta property="og:description" content="Salus Premium. One subscription, everything included — guided meditations, sleep stories, breathing exercises, ASMR, and more.">
+  <meta property="og:title" content="Pricing &amp; Apps — Salūs">
+  <meta property="og:description" content="Salūs Premium. One subscription, everything included — guided meditations, sleep stories, breathing exercises, ASMR, and more.">
   <meta property="og:url" content="https://salus-mind.com/apps.html">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://salus-mind.com/images/meditation-woman-outdoor.jpg">
@@ -214,7 +214,7 @@
 <section class="hero">
   <div class="gem-canvas"><canvas id="gemCanvas"></canvas></div>
   <div class="hero-content">
-    <div class="hero-label">Salus Premium</div>
+    <div class="hero-label">Salūs Premium</div>
     <h1 class="hero-title"><span>Everything. Unlocked.</span></h1>
     <p class="hero-tagline">One subscription, the full library</p>
     <p class="hero-subtitle">Access to all areas — meditations, soundscapes, sleep stories, CBT exercises, tools, and new material unlocked each week.</p>
@@ -231,7 +231,7 @@
 
 <!-- ═══ VALUE PROPOSITION ═══ -->
 <section class="sp-value">
-  <div class="sp-value__label"><span></span>Salus Premium<span></span></div>
+  <div class="sp-value__label"><span></span>Salūs Premium<span></span></div>
   <h2>One subscription. Everything inside. New content every week.</h2>
   <p>No tiers, no upsells, no content locked behind a higher plan. Subscribe once and you get the full library — plus fresh material added every single week. The longer you stay, the more there is.</p>
 </section>
@@ -296,7 +296,7 @@
   <div class="sp-guarantee__card">
     <div class="sp-guarantee__icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
     <h3 class="sp-guarantee__title">No Contracts. No Catches. A Library That Grows.</h3>
-    <p class="sp-guarantee__text">Cancel any time with one click — no emails, no phone calls, no retention screens. New sessions, stories, and tools arrive weekly, so your subscription becomes more valuable the longer you hold it. If Salus isn't for you, you keep access until your billing period ends and that's that.</p>
+    <p class="sp-guarantee__text">Cancel any time with one click — no emails, no phone calls, no retention screens. New sessions, stories, and tools arrive weekly, so your subscription becomes more valuable the longer you hold it. If Salūs isn't for you, you keep access until your billing period ends and that's that.</p>
   </div>
 </section>
 
@@ -306,7 +306,7 @@
     <h2>Common Questions</h2>
   </div>
   <div class="sp-faq__item">
-    <div class="sp-faq__q">What do I get with Salus Premium?</div>
+    <div class="sp-faq__q">What do I get with Salūs Premium?</div>
     <div class="sp-faq__a">Everything. All 48 guided meditations, 52 sleep stories (one new each week), the ASMR sound mixer, mindfulness courses, breathing tools, and every piece of new content we publish — which is weekly, without fail. There are no hidden tiers or locked features.</div>
   </div>
   <div class="sp-faq__item">
@@ -318,16 +318,16 @@
     <div class="sp-faq__a">Yes, instantly. No emails, no phone calls, no hoops. Cancel from your dashboard and you keep full access until your current billing period ends.</div>
   </div>
   <div class="sp-faq__item">
-    <div class="sp-faq__q">Is Salus available as a mobile app?</div>
-    <div class="sp-faq__a">Salus is currently web-only, designed to work beautifully on any device through your browser. iOS and Android apps are on the roadmap — subscribe now and you'll have full access when they launch.</div>
+    <div class="sp-faq__q">Is Salūs available as a mobile app?</div>
+    <div class="sp-faq__a">Salūs is currently web-only, designed to work beautifully on any device through your browser. iOS and Android apps are on the roadmap — subscribe now and you'll have full access when they launch.</div>
   </div>
   <div class="sp-faq__item">
     <div class="sp-faq__q">Who creates the content?</div>
-    <div class="sp-faq__a">Salus is a family-run project with over 40 years of combined experience in psychology and mental health. Every session is reviewed for accuracy, pacing, and therapeutic integrity before it goes live.</div>
+    <div class="sp-faq__a">Salūs is a family-run project with over 40 years of combined experience in psychology and mental health. Every session is reviewed for accuracy, pacing, and therapeutic integrity before it goes live.</div>
   </div>
   <div class="sp-faq__item">
     <div class="sp-faq__q">Do you sell my data or show adverts?</div>
-    <div class="sp-faq__a">No. Salus is funded entirely by subscriptions. We do not sell data, track behaviour for advertisers, or show any adverts. Your calm is not a product.</div>
+    <div class="sp-faq__a">No. Salūs is funded entirely by subscriptions. We do not sell data, track behaviour for advertisers, or show any adverts. Your calm is not a product.</div>
   </div>
 </section>
 
@@ -396,11 +396,11 @@
 
     // Set client-reference-id on Stripe Pricing Table from Supabase user ID
     (async function() {
-      if (typeof SalusAuth !== 'undefined') {
-        await SalusAuth.init();
+      if (typeof SalūsAuth !== 'undefined') {
+        await SalūsAuth.init();
         var table = document.querySelector('stripe-pricing-table');
-        if (table && SalusAuth.isLoggedIn()) {
-          var user = SalusAuth.getUser();
+        if (table && SalūsAuth.isLoggedIn()) {
+          var user = SalūsAuth.getUser();
           if (user && user.id) {
             table.setAttribute('client-reference-id', user.id);
           }
@@ -412,7 +412,7 @@
 <footer class="hb-footer">
   <div class="hb-footer__inner">
     <div class="hb-footer__brand">
-      <span class="hb-footer__logo">Salus</span>
+      <span class="hb-footer__logo">Salūs</span>
       <p class="hb-footer__tagline">A quieter kind of self-care. Guided practices, sleep stories, ASMR, and mindfulness tools &mdash; built by a family.</p>
     </div>
     <div>
@@ -435,7 +435,7 @@
       </ul>
     </div>
     <div>
-      <h4 class="hb-footer__col-title">Salus</h4>
+      <h4 class="hb-footer__col-title">Salūs</h4>
       <ul class="hb-footer__links">
         <li><a href="about.html">About Us</a></li>
         <li><a href="apps.html">Go Premium</a></li>
@@ -443,9 +443,9 @@
       </ul>
     </div>
   </div>
-  <p class="footer-disclaimer">Salus does not provide medical advice. Content is for general wellbeing and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified health provider with any health concerns.</p>
+  <p class="footer-disclaimer">Salūs does not provide medical advice. Content is for general wellbeing and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified health provider with any health concerns.</p>
   <div class="hb-footer__bottom">
-    <span class="hb-footer__copy">&copy; 2026 Salus Mind. All rights reserved.</span>
+    <span class="hb-footer__copy">&copy; 2026 Salūs Mind. All rights reserved.</span>
     <a href="#" class="hb-footer__back-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">
       Back to top
       <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
