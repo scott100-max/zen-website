@@ -384,7 +384,7 @@
   }
   .sound-card.playing .sound-card__slider-row,
   .sound-card:hover .sound-card__slider-row {
-    max-height: 40px; opacity: 1; margin-top: 10px; padding-top: 10px; overflow: visible;
+    max-height: 50px; opacity: 1; margin-top: 10px; padding-top: 10px; overflow: visible;
   }
   .sound-card__vol-icon { flex-shrink: 0; display: flex; align-items: center; }
   .sound-card__vol-icon svg { width: 13px; height: 13px; fill: rgba(240,238,252,0.4); transition: fill 0.3s ease; }
@@ -392,15 +392,16 @@
   .sound-card__slider {
     flex: 1; -webkit-appearance: none; appearance: none; height: 3px;
     border-radius: 2px; background: rgba(255,255,255,0.08); outline: none; cursor: pointer;
+    padding: 10px 0; touch-action: none;
   }
   .sound-card__slider::-webkit-slider-thumb {
-    -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%;
+    -webkit-appearance: none; appearance: none; width: 22px; height: 22px; border-radius: 50%;
     background: var(--card-accent, var(--accent)); border: 2px solid #0a0a12;
     cursor: pointer; transition: transform 0.2s ease;
   }
   .sound-card__slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
   .sound-card__slider::-moz-range-thumb {
-    width: 14px; height: 14px; border-radius: 50%;
+    width: 22px; height: 22px; border-radius: 50%;
     background: var(--card-accent, var(--accent)); border: 2px solid #0a0a12; cursor: pointer;
   }
   .sound-card__slider::-moz-range-track { height: 3px; border-radius: 2px; background: rgba(255,255,255,0.08); }
@@ -907,9 +908,17 @@
           audioElements[s.id].setVolume(e.target.value / 100);
         }
       });
+      slider.addEventListener('change', (e) => {
+        valLabel.textContent = e.target.value + '%';
+        if (audioElements[s.id]) {
+          audioElements[s.id].setVolume(e.target.value / 100);
+        }
+      });
       slider.addEventListener('click', (e) => e.stopPropagation());
       slider.addEventListener('mousedown', (e) => e.stopPropagation());
-      slider.addEventListener('touchstart', (e) => e.stopPropagation());
+      slider.addEventListener('touchstart', (e) => e.stopPropagation(), {passive: true});
+      slider.addEventListener('touchmove', (e) => e.stopPropagation(), {passive: true});
+      slider.addEventListener('touchend', (e) => e.stopPropagation());
 
       grid.appendChild(card);
     });
