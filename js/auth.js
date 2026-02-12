@@ -317,9 +317,10 @@ var SalusAuth = (function() {
     if (isPremium()) {
       document.querySelectorAll('a[href="apps.html"], a[href="../apps.html"]').forEach(function(link) {
         var text = link.textContent.trim();
-        // Nav subscribe buttons → hide (login button already shows "My Account")
+        // Nav subscribe buttons → show "Account" for premium users
         if (text === 'Subscribe' && link.classList.contains('nav-cta--subscribe')) {
-          link.style.display = 'none';
+          link.textContent = 'Account';
+          link.href = pathPrefix + 'dashboard.html';
           return;
         }
         // Footer/page subscribe CTAs → redirect to dashboard
