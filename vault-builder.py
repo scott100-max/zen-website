@@ -56,6 +56,7 @@ CANDIDATE_COUNTS = [
 ]
 
 SCORE_FILTER_THRESHOLD = 0.30  # Below this = pre-filter flagged (kept, not deleted)
+MARCO_MASTER_WAV = Path(__file__).parent / "content/audio/marco-master/marco-master-v1.wav"
 
 # ---------------------------------------------------------------------------
 # Script Pre-Processing
@@ -241,11 +242,15 @@ def generate_inventory(scripts_dir, output_path=None):
 # ---------------------------------------------------------------------------
 
 async def _generate_one(session, text, wav_path, chunk_num, semaphore,
-                        emotion='calm', api_log=None):
+                        emotion='calm', api_log=None, ref_audio_path=None,
+                        ref_text=None):
     """Generate a single TTS candidate via Fish API, save as WAV.
 
+    If ref_audio_path is provided, it is base64-encoded and sent as a
+    conditioning reference so Fish can match tonal quality.
     Returns wav_path on success, raises on failure.
     """
+    import base64
     mp3_tmp = str(wav_path) + ".tmp.mp3"
     call_id = f"c{chunk_num:02d}_{Path(wav_path).stem}"
     started = time.time()
@@ -261,6 +266,14 @@ async def _generate_one(session, text, wav_path, chunk_num, semaphore,
             "prosody": {"speed": 0.95, "volume": 0},
             "sample_rate": SAMPLE_RATE,
         }
+        # Audio conditioning: pass reference audio for tonal consistency
+        if ref_audio_path and Path(ref_audio_path).exists():
+            ref_bytes = Path(ref_audio_path).read_bytes()
+            ref_b64 = base64.b64encode(ref_bytes).decode('ascii')
+            payload["references"] = [{
+                "audio": ref_b64,
+                "text": ref_text or "",
+            }]
         headers = {
             "Authorization": f"Bearer {FISH_API_KEY}",
             "Content-Type": "application/json",
@@ -356,7 +369,7 @@ def _score_wav(wav_path, prev_mfcc=None):
 async def generate_chunk_candidates(
     http_session, chunk_idx, text, chunk_dir, semaphore,
     emotion='calm', prev_best_mfcc=None, executor=None, api_log=None,
-    extra=0
+    extra=0, ref_audio_path=None, ref_text=None
 ):
     """Generate all candidates for one chunk. Chunks are processed sequentially
     (tonal distance needs previous chunk's best), but candidates within a chunk
@@ -394,7 +407,9 @@ async def generate_chunk_candidates(
         wav_path = chunk_dir / f"{prefix}_v{v:02d}.wav"
         gen_tasks.append(
             _generate_one(http_session, text, wav_path, chunk_idx,
-                          semaphore, emotion, api_log)
+                          semaphore, emotion, api_log,
+                          ref_audio_path=ref_audio_path,
+                          ref_text=ref_text)
         )
 
     if gen_tasks:
@@ -1318,6 +1333,8 @@ async def build_session(script_path, dry_run=False, extra=0, only_chunks=None):
 
     async with aiohttp.ClientSession() as http_session:
         prev_best_mfcc = None
+        prev_best_wav = None   # Track best WAV path for audio conditioning
+        prev_text = None       # Track previous chunk text for reference
 
         only_set = None
         if only_chunks:
@@ -1325,7 +1342,7 @@ async def build_session(script_path, dry_run=False, extra=0, only_chunks=None):
 
         for ci, (text, pause) in enumerate(blocks):
             if only_set is not None and ci not in only_set:
-                # Still need prev_best_mfcc for tonal distance
+                # Still need prev_best_mfcc + wav for tonal distance & conditioning
                 chunk_dir = session_dir / f"c{ci:02d}"
                 scores_file = chunk_dir / f"c{ci:02d}_scores.json"
                 if scores_file.exists():
@@ -1334,17 +1351,37 @@ async def build_session(script_path, dry_run=False, extra=0, only_chunks=None):
                     best_wav = chunk_dir / f"c{ci:02d}_v{best_v:02d}.wav"
                     if best_wav.exists():
                         prev_best_mfcc = build.compute_mfcc_profile(str(best_wav))
+                        prev_best_wav = str(best_wav)
+                        prev_text = text
                 print(f"  Chunk {ci}: skipped (not in --only-chunks)")
                 continue
 
             chunk_dir = session_dir / f"c{ci:02d}"
 
+            # Determine conditioning reference for this chunk
+            if ci == 0:
+                # Chunk 0: condition on marco-master to avoid cold-start
+                ref_audio = str(MARCO_MASTER_WAV) if MARCO_MASTER_WAV.exists() else None
+                ref_text_val = "Welcome to Salus. I will be your guide through this practice."
+                if ref_audio:
+                    print(f"  Chunk 0: conditioning on marco-master reference")
+            else:
+                # Chunks 1+: condition on previous chunk's best candidate
+                ref_audio = prev_best_wav
+                ref_text_val = prev_text
+                if ref_audio:
+                    print(f"  Chunk {ci}: conditioning on {Path(ref_audio).name}")
+
             chunk_meta, prev_best_mfcc, scores = await generate_chunk_candidates(
                 http_session, ci, text, chunk_dir, semaphore,
                 emotion=emotion, prev_best_mfcc=prev_best_mfcc,
                 executor=executor, api_log=api_log,
-                extra=extra
+                extra=extra, ref_audio_path=ref_audio, ref_text=ref_text_val
             )
+            # Update prev_best_wav for next chunk's conditioning
+            if scores.get('best_version') is not None:
+                prev_best_wav = str(chunk_dir / f"c{ci:02d}_v{scores['best_version']:02d}.wav")
+                prev_text = text
 
             # Mark closing chunk
             if ci == len(blocks) - 1:
