@@ -1,0 +1,14 @@
+{
+  "name": "salus-website",
+  "version": "1.0.0",
+  "description": "Salus Website — E2E Tests",
+  "scripts": {
+    "test": "node --test e2e/all.test.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
