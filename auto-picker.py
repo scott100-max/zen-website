@@ -615,8 +615,28 @@ def select_candidate(chunk_idx, chunk_data, prev_best_mfcc=None, session_log=Non
     return selected_c['version'], log
 
 
+def _load_existing_picks(session_id):
+    """Load existing picks.json if present. Returns dict of chunk_idx → pick entry, or empty dict."""
+    session_dir = VAULT_DIR / session_id
+    picks_path = session_dir / "picks" / "picks.json"
+    if not picks_path.exists():
+        picks_path = session_dir / "picks-auto.json"
+    if not picks_path.exists():
+        return {}
+    try:
+        data = json.loads(picks_path.read_text())
+        picks_list = data.get('picks', []) if isinstance(data, dict) else data
+        return {p['chunk']: p for p in picks_list}
+    except Exception:
+        return {}
+
+
 def auto_pick_session(session_id, chunks_data=None):
     """Run the automated picker on a session.
+
+    FAILSAFE: If a chunk's text is unchanged and has an existing deployed/verified
+    pick, that pick is preserved (locked) — the auto-picker will NOT re-pick it.
+    Only chunks with no prior pick or changed text get re-picked.
 
     Returns (picks_dict, selection_logs).
     """
@@ -631,6 +651,10 @@ def auto_pick_session(session_id, chunks_data=None):
         total_pass = sum(len(h.get('pass_versions', set())) for h in verdict_history.values())
         print(f"  Loaded verdict history: {total_hard} hard, {total_soft} soft, {total_pass} pass")
 
+    # FAILSAFE: Load existing picks to preserve locked/deployed choices
+    existing_picks = _load_existing_picks(session_id)
+    locked_count = 0
+
     picks = {
         'session': session_id,
         'reviewed': _now_iso(),
@@ -642,6 +666,29 @@ def auto_pick_session(session_id, chunks_data=None):
     chunk_indices = sorted(chunks_data.keys())
     for ci in chunk_indices:
         chunk = chunks_data[ci]
+
+        # FAILSAFE: Check if this chunk has an existing pick with matching text
+        existing = existing_picks.get(ci)
+        if existing and existing.get('picked') is not None:
+            existing_text = existing.get('text', '').strip()
+            current_text = chunk['text'].strip()
+            # Text match check (normalise Salus/Salūs)
+            norm_existing = existing_text.replace('Salūs', 'Salus')
+            norm_current = current_text.replace('Salūs', 'Salus')
+            if norm_existing == norm_current:
+                # Text unchanged — preserve existing pick (LOCKED)
+                locked_entry = dict(existing)
+                locked_entry['notes'] = f"LOCKED — preserved existing pick v{existing['picked']:02d} (text unchanged)"
+                locked_entry['locked'] = True
+                picks['picks'].append(locked_entry)
+                selection_logs.append({
+                    'chunk': ci, 'text': current_text[:80],
+                    'locked': True, 'locked_version': existing['picked'],
+                    'reason': 'text unchanged, existing pick preserved',
+                })
+                locked_count += 1
+                continue
+
         version, log = select_candidate(ci, chunk, verdict_history=verdict_history)
 
         is_unresolvable = log.get('unresolvable', False)
@@ -660,6 +707,9 @@ def auto_pick_session(session_id, chunks_data=None):
             pick_entry['notes'] = f"auto-picked (confidence: {log.get('confidence', 'unknown')})"
         picks['picks'].append(pick_entry)
         selection_logs.append(log)
+
+    if locked_count:
+        print(f"  LOCKED: {locked_count} chunks preserved (text unchanged, existing picks kept)")
 
     return picks, selection_logs
 

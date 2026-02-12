@@ -37,6 +37,44 @@ _build_spec.loader.exec_module(build)
 VAULT_DIR = Path("content/audio-free/vault")
 SAMPLE_RATE = 44100
 
+# CDN cache purge — load from .env
+_env_path = Path(__file__).parent / ".env"
+_env_vars = {}
+if _env_path.exists():
+    for line in _env_path.read_text().splitlines():
+        if '=' in line and not line.startswith('#'):
+            k, v = line.split('=', 1)
+            _env_vars[k.strip()] = v.strip()
+CF_CACHE_PURGE_TOKEN = _env_vars.get('CF_CACHE_PURGE_TOKEN', '')
+CF_ZONE_ID = _env_vars.get('CF_ZONE_ID', '')
+CDN_BASE = "https://media.salus-mind.com"
+
+
+def purge_cdn_cache(r2_key):
+    """Purge a specific file from Cloudflare CDN cache after R2 upload."""
+    if not CF_CACHE_PURGE_TOKEN or not CF_ZONE_ID:
+        print("  WARNING: CDN purge skipped — CF_CACHE_PURGE_TOKEN/CF_ZONE_ID not set in .env")
+        return False
+    import urllib.request
+    url = f"https://api.cloudflare.com/client/v4/zones/{CF_ZONE_ID}/purge_cache"
+    data = json.dumps({"files": [f"{CDN_BASE}/{r2_key}"]}).encode()
+    req = urllib.request.Request(url, data=data, method='POST', headers={
+        'Authorization': f'Bearer {CF_CACHE_PURGE_TOKEN}',
+        'Content-Type': 'application/json',
+    })
+    try:
+        resp = urllib.request.urlopen(req)
+        result = json.loads(resp.read())
+        if result.get('success'):
+            print(f"  CDN purge: OK ({CDN_BASE}/{r2_key})")
+            return True
+        else:
+            print(f"  CDN purge: FAILED — {result}")
+            return False
+    except Exception as e:
+        print(f"  CDN purge: ERROR — {e}")
+        return False
+
 
 def load_picks(session_dir):
     """Load picks.json from session's picks/ directory."""
