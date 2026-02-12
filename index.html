@@ -835,6 +835,7 @@
         </div>
         <span class="hb-narrator__time" id="narratorTime">0:00</span>
       </div>
+      <audio id="graceAudio" preload="none" src="https://media.salus-mind.com/content/audio-free/asmr-grace.mp3" loop></audio>
     </div>
   </div>
 </section>
@@ -1175,65 +1176,57 @@
   })();
 
 
-  // Narrator player (10s fade-in, 10s fade-out)
+  // Narrator player — Grace ambient fades in 10s / out 10s underneath
   (function(){
-    const audio=document.getElementById('narratorAudio');
-    const btn=document.getElementById('narratorPlayBtn');
-    const bar=document.getElementById('narratorBar');
-    const time=document.getElementById('narratorTime');
-    const iconPlay=btn.querySelector('.hb-narrator__icon-play');
-    const iconPause=btn.querySelector('.hb-narrator__icon-pause');
-    const progress=bar.parentElement;
-    const FADE_MS=10000;
-    const STEP=50;
+    var audio=document.getElementById('narratorAudio');
+    var btn=document.getElementById('narratorPlayBtn');
+    var bar=document.getElementById('narratorBar');
+    var time=document.getElementById('narratorTime');
+    var iconPlay=btn.querySelector('.hb-narrator__icon-play');
+    var iconPause=btn.querySelector('.hb-narrator__icon-pause');
+    var progress=bar.parentElement;
+    var grace=document.getElementById('graceAudio');
+    var GRACE_VOL=0.3;
+    var FADE_MS=10000;
+    var STEP=50;
     var fadeTimer=null;
 
-    function fmt(s){const m=Math.floor(s/60);return m+':'+(('0'+Math.floor(s%60)).slice(-2));}
+    function fmt(s){var m=Math.floor(s/60);return m+':'+(('0'+Math.floor(s%60)).slice(-2));}
 
-    function fade(from,to,ms,done){
+    function fadeGrace(from,to,ms,done){
       if(fadeTimer){clearInterval(fadeTimer);fadeTimer=null;}
+      if(!grace)return;
       var steps=Math.round(ms/STEP);
       var delta=(to-from)/steps;
       var step=0;
-      audio.volume=from;
+      grace.volume=from;
       fadeTimer=setInterval(function(){
         step++;
         if(step>=steps){
           clearInterval(fadeTimer);fadeTimer=null;
-          audio.volume=to;
+          grace.volume=to;
+          if(to===0)grace.pause();
           if(done)done();
           return;
         }
-        audio.volume=Math.max(0,Math.min(1,from+delta*step));
+        grace.volume=Math.max(0,Math.min(1,from+delta*step));
       },STEP);
     }
 
-    btn.addEventListener('click',function(){
-      if(audio.paused){
-        audio.volume=0;
-        audio.play();
-        fade(0,1,FADE_MS);
-      }else{
-        fade(audio.volume,0,FADE_MS,function(){audio.pause();audio.volume=1;});
-      }
+    btn.addEventListener('click',function(){if(audio.paused){audio.play()}else{audio.pause()}});
+    audio.addEventListener('play',function(){
+      iconPlay.style.display='none';iconPause.style.display='block';
+      if(grace){grace.volume=0;grace.play();fadeGrace(0,GRACE_VOL,FADE_MS);}
     });
-    audio.addEventListener('play',function(){iconPlay.style.display='none';iconPause.style.display='block'});
-    audio.addEventListener('pause',function(){iconPlay.style.display='block';iconPause.style.display='none'});
-    audio.addEventListener('timeupdate',function(){
-      if(!audio.duration)return;
-      bar.style.width=(audio.currentTime/audio.duration*100)+'%';
-      time.textContent=fmt(audio.currentTime);
-      // Auto fade-out for last 10 seconds
-      var remaining=audio.duration-audio.currentTime;
-      if(remaining<=10&&!fadeTimer&&audio.volume>0){
-        fade(audio.volume,0,remaining*1000);
-      }
+    audio.addEventListener('pause',function(){
+      iconPlay.style.display='block';iconPause.style.display='none';
+      if(grace&&!grace.paused)fadeGrace(grace.volume,0,FADE_MS);
     });
     audio.addEventListener('ended',function(){
-      iconPlay.style.display='block';iconPause.style.display='none';
-      bar.style.width='0%';audio.volume=1;
-      if(fadeTimer){clearInterval(fadeTimer);fadeTimer=null;}
+      iconPlay.style.display='block';iconPause.style.display='none';bar.style.width='0%';
+      if(grace&&!grace.paused)fadeGrace(grace.volume,0,FADE_MS);
     });
+    audio.addEventListener('timeupdate',function(){if(audio.duration){bar.style.width=(audio.currentTime/audio.duration*100)+'%';time.textContent=fmt(audio.currentTime)}});
     progress.addEventListener('click',function(e){if(audio.duration){var rect=progress.getBoundingClientRect();audio.currentTime=(e.clientX-rect.left)/rect.width*audio.duration}});
   })();
 
