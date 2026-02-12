@@ -385,7 +385,74 @@
     .ss-book-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px 12px; }
     .ss-premium-inner { flex-direction: column; text-align: center; }
     .ss-book-title { font-size: 1.1rem; }
+    .ss-now-playing { flex-direction: column; gap: 16px; padding: 20px; }
+    .ss-np-info { text-align: center; }
   }
+
+  /* Play badge on covers with audio */
+  .ss-book-play-badge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 6;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(52, 211, 153, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 20px rgba(52, 211, 153, 0.3);
+  }
+  .ss-book:hover .ss-book-play-badge { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+  .ss-book-play-badge svg { width: 16px; height: 16px; fill: var(--deep); margin-left: 2px; }
+
+  /* Now-playing panel */
+  .ss-now-playing {
+    display: none;
+    align-items: center;
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto 40px;
+    padding: 24px 32px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    animation: ssRise 0.4s ease-out both;
+  }
+  .ss-now-playing.visible { display: flex; }
+  .ss-np-info { flex-shrink: 0; }
+  .ss-np-label { font-size: 0.6rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-dim); margin-bottom: 4px; }
+  .ss-np-title { font-family: 'Cormorant Garamond', serif; font-weight: 500; font-style: italic; font-size: 1.2rem; color: var(--text-bright); }
+  .ss-np-player { flex: 1; min-width: 0; }
+  .ss-np-controls { display: flex; align-items: center; gap: 14px; }
+  .ss-np-play-btn {
+    width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+    background: var(--accent); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s ease, transform 0.15s ease;
+  }
+  .ss-np-play-btn:hover { background: var(--accent-bright); transform: scale(1.05); }
+  .ss-np-play-btn svg { width: 14px; height: 14px; fill: var(--deep); }
+  .ss-np-play-btn.playing svg { margin-left: 0; }
+  .ss-np-play-btn:not(.playing) svg { margin-left: 2px; }
+  .ss-np-track {
+    flex: 1; height: 4px; background: rgba(255,255,255,0.08);
+    border-radius: 2px; cursor: pointer; position: relative;
+  }
+  .ss-np-progress { height: 100%; background: var(--accent); border-radius: 2px; width: 0; transition: width 0.15s linear; }
+  .ss-np-time { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; flex-shrink: 0; }
+  .ss-np-close {
+    width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s ease;
+  }
+  .ss-np-close:hover { background: rgba(255,255,255,0.1); }
+  .ss-np-close svg { width: 12px; height: 12px; stroke: var(--text-muted); fill: none; stroke-width: 2; }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-config.js?v=1770917123"></script>
@@ -506,6 +573,29 @@
   <div class="ss-book-grid" id="ssGrid"></div>
 </div>
 
+<!-- Now-playing panel -->
+<div class="ss-now-playing" id="ssPlayer" style="max-width:1200px;padding-left:24px;padding-right:24px;">
+  <div class="ss-np-info">
+    <div class="ss-np-label">Now Playing</div>
+    <div class="ss-np-title" id="ssPlayerTitle"></div>
+  </div>
+  <div class="ss-np-player">
+    <div class="ss-np-controls">
+      <button class="ss-np-play-btn" id="ssPlayBtn">
+        <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+      <div class="ss-np-track" id="ssTrack">
+        <div class="ss-np-progress" id="ssProgress"></div>
+      </div>
+      <span class="ss-np-time" id="ssTime">0:00 / 0:00</span>
+      <button class="ss-np-close" id="ssClose">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <audio id="ssAudio" preload="auto"></audio>
+</div>
+
 <div class="ss-premium-bar">
   <div class="ss-premium-inner">
     <div class="ss-premium-text">
@@ -548,6 +638,8 @@
         <li><a href="about.html">About Us</a></li>
         <li><a href="apps.html">Go Premium</a></li>
         <li><a href="contact.html">Contact</a></li>
+        <li><a href="privacy.html">Privacy</a></li>
+        <li><a href="terms.html">Terms</a></li>
       </ul>
     </div>
   </div>
@@ -565,7 +657,7 @@
 <script src="js/tracker.js?v=1770917123"></script>
 <script>
 const stories = [
-  { w:1,  t:"The Gardener's Almanac",       c:"nature",  m:"moon-garden", img:"https://media.salus-mind.com/sleep-stories/covers/week-01-gardeners-almanac.jpg" },
+  { w:1,  t:"The Gardener's Almanac",       c:"nature",  m:"moon-garden", img:"https://media.salus-mind.com/sleep-stories/covers/week-01-gardeners-almanac.jpg", src:"https://media.salus-mind.com/content/audio-free/53-the-gardeners-almanac.mp3" },
   { w:2,  t:"The Slow Train North",         c:"journey", m:"horizon-lights", img:"https://media.salus-mind.com/sleep-stories/covers/week-02-slow-train-north.jpg" },
   { w:3,  t:"The Bookshop at the End of the Lane", c:"comfort", m:"books", img:"https://media.salus-mind.com/sleep-stories/covers/week-03-bookshop-at-the-end-of-the-lane.jpg" },
   { w:4,  t:"The Lighthouse Keeper's Log",  c:"nature",  m:"lighthouse", img:"https://media.salus-mind.com/sleep-stories/covers/week-04-lighthouse-keepers-log.jpg" },
