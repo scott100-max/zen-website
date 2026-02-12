@@ -1175,7 +1175,7 @@
   })();
 
 
-  // Narrator player
+  // Narrator player (10s fade-in, 10s fade-out)
   (function(){
     const audio=document.getElementById('narratorAudio');
     const btn=document.getElementById('narratorPlayBtn');
@@ -1184,12 +1184,56 @@
     const iconPlay=btn.querySelector('.hb-narrator__icon-play');
     const iconPause=btn.querySelector('.hb-narrator__icon-pause');
     const progress=bar.parentElement;
+    const FADE_MS=10000;
+    const STEP=50;
+    var fadeTimer=null;
+
     function fmt(s){const m=Math.floor(s/60);return m+':'+(('0'+Math.floor(s%60)).slice(-2));}
-    btn.addEventListener('click',function(){if(audio.paused){audio.play()}else{audio.pause()}});
+
+    function fade(from,to,ms,done){
+      if(fadeTimer){clearInterval(fadeTimer);fadeTimer=null;}
+      var steps=Math.round(ms/STEP);
+      var delta=(to-from)/steps;
+      var step=0;
+      audio.volume=from;
+      fadeTimer=setInterval(function(){
+        step++;
+        if(step>=steps){
+          clearInterval(fadeTimer);fadeTimer=null;
+          audio.volume=to;
+          if(done)done();
+          return;
+        }
+        audio.volume=Math.max(0,Math.min(1,from+delta*step));
+      },STEP);
+    }
+
+    btn.addEventListener('click',function(){
+      if(audio.paused){
+        audio.volume=0;
+        audio.play();
+        fade(0,1,FADE_MS);
+      }else{
+        fade(audio.volume,0,FADE_MS,function(){audio.pause();audio.volume=1;});
+      }
+    });
     audio.addEventListener('play',function(){iconPlay.style.display='none';iconPause.style.display='block'});
     audio.addEventListener('pause',function(){iconPlay.style.display='block';iconPause.style.display='none'});
-    audio.addEventListener('ended',function(){iconPlay.style.display='block';iconPause.style.display='none';bar.style.width='0%'});
-    audio.addEventListener('timeupdate',function(){if(audio.duration){bar.style.width=(audio.currentTime/audio.duration*100)+'%';time.textContent=fmt(audio.currentTime)}});
+    audio.addEventListener('timeupdate',function(){
+      if(!audio.duration)return;
+      bar.style.width=(audio.currentTime/audio.duration*100)+'%';
+      time.textContent=fmt(audio.currentTime);
+      // Auto fade-out for last 10 seconds
+      var remaining=audio.duration-audio.currentTime;
+      if(remaining<=10&&!fadeTimer&&audio.volume>0){
+        fade(audio.volume,0,remaining*1000);
+      }
+    });
+    audio.addEventListener('ended',function(){
+      iconPlay.style.display='block';iconPause.style.display='none';
+      bar.style.width='0%';audio.volume=1;
+      if(fadeTimer){clearInterval(fadeTimer);fadeTimer=null;}
+    });
     progress.addEventListener('click',function(e){if(audio.duration){var rect=progress.getBoundingClientRect();audio.currentTime=(e.clientX-rect.left)/rect.width*audio.duration}});
   })();
 
