@@ -1,9 +1,9 @@
 Narrator Welcome
 Category: mindfulness
-Ambient: none
+Ambient: grace
 API-Emotion: calm
 ---
-Hello. I'm Marco. Welcome to Salus.
+Welcome to Salus. I'm Marco, and I'll be your guide.
 ...
 A small team built this place with one aim. To help you slow down, take a breath, and come back to yourself.
 ...
