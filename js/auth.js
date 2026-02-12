@@ -345,11 +345,9 @@ var SalusAuth = (function() {
         }
       });
 
-      // Unlock locked day cards on course pages
-      document.querySelectorAll('.day-card.locked').forEach(function(card) {
-        card.classList.remove('locked');
-        var lockIcon = card.querySelector('svg');
-        if (lockIcon) lockIcon.remove();
+      // Unlock locked day tiles on mindfulness listing page
+      document.querySelectorAll('.day-tile--locked').forEach(function(tile) {
+        tile.classList.remove('day-tile--locked');
       });
     }
 

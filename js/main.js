@@ -96,8 +96,8 @@ document.querySelectorAll('.custom-player').forEach(player => {
   }
 
   function updateTime() {
-    seekBar.value = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
-    timeEl.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration || 0);
+    if (seekBar) seekBar.value = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+    if (timeEl) timeEl.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration || 0);
   }
 
   playBtn.addEventListener('click', () => {
@@ -127,16 +127,18 @@ document.querySelectorAll('.custom-player').forEach(player => {
     }
   });
 
-  seekBar.addEventListener('input', () => {
-    if (audio.duration) {
-      audio.currentTime = (seekBar.value / 100) * audio.duration;
-    }
-  });
+  if (seekBar) {
+    seekBar.addEventListener('input', () => {
+      if (audio.duration) {
+        audio.currentTime = (seekBar.value / 100) * audio.duration;
+      }
+    });
+  }
 
   audio.addEventListener('timeupdate', updateTime);
   audio.addEventListener('loadedmetadata', updateTime);
   audio.addEventListener('ended', () => {
     playBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
-    seekBar.value = 0;
+    if (seekBar) seekBar.value = 0;
   });
 });

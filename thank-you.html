@@ -150,9 +150,12 @@
   <script src="js/main.js?v=1770917123"></script>
   <script src="js/tracker.js?v=1770917123"></script>
   <script>
-    // Set premium access flag (localStorage for backwards compatibility)
-    localStorage.setItem('salus_premium', 'true');
-    localStorage.setItem('salus_premium_date', new Date().toISOString());
+    // Set premium access flag only if arriving from Stripe checkout (has session_id)
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('session_id') || document.referrer.includes('stripe.com') || document.referrer.includes('checkout.stripe.com')) {
+      localStorage.setItem('salus_premium', 'true');
+      localStorage.setItem('salus_premium_date', new Date().toISOString());
+    }
 
     // Handle account status
     (async function() {
