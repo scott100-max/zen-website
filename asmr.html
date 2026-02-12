@@ -899,26 +899,35 @@
         updateMediaSession();
       });
 
-      // Volume slider
+      // Volume slider — iOS-safe manual touch tracking
       const slider = card.querySelector('.sound-card__slider');
       const valLabel = card.querySelector('.sound-card__vol-value');
-      slider.addEventListener('input', (e) => {
-        valLabel.textContent = e.target.value + '%';
-        if (audioElements[s.id]) {
-          audioElements[s.id].setVolume(e.target.value / 100);
-        }
-      });
-      slider.addEventListener('change', (e) => {
-        valLabel.textContent = e.target.value + '%';
-        if (audioElements[s.id]) {
-          audioElements[s.id].setVolume(e.target.value / 100);
-        }
-      });
+      function updateVol(val) {
+        val = Math.max(0, Math.min(100, Math.round(val)));
+        slider.value = val;
+        valLabel.textContent = val + '%';
+        if (audioElements[s.id]) audioElements[s.id].setVolume(val / 100);
+      }
+      slider.addEventListener('input', (e) => updateVol(e.target.value));
+      slider.addEventListener('change', (e) => updateVol(e.target.value));
       slider.addEventListener('click', (e) => e.stopPropagation());
       slider.addEventListener('mousedown', (e) => e.stopPropagation());
-      slider.addEventListener('touchstart', (e) => e.stopPropagation(), {passive: true});
-      slider.addEventListener('touchmove', (e) => e.stopPropagation(), {passive: true});
-      slider.addEventListener('touchend', (e) => e.stopPropagation());
+      // iOS: native range touch is unreliable — compute value from touch position
+      function touchToVal(touch) {
+        const rect = slider.getBoundingClientRect();
+        return ((touch.clientX - rect.left) / rect.width) * 100;
+      }
+      slider.addEventListener('touchstart', (e) => {
+        e.stopPropagation(); e.preventDefault();
+        updateVol(touchToVal(e.touches[0]));
+      }, {passive: false});
+      slider.addEventListener('touchmove', (e) => {
+        e.stopPropagation(); e.preventDefault();
+        updateVol(touchToVal(e.touches[0]));
+      }, {passive: false});
+      slider.addEventListener('touchend', (e) => {
+        e.stopPropagation(); e.preventDefault();
+      });
 
       grid.appendChild(card);
     });
