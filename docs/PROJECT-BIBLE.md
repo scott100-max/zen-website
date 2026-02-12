@@ -1,7 +1,7 @@
 # Salus Project Bible
 
-**Version:** 3.7
-**Updated:** 9 February 2026
+**Version:** 4.2
+**Updated:** 12 February 2026
 **Purpose:** Single source of truth for all Salus website and audio production standards
 
 This document is the canonical reference for Claude Code and all contributors. Where this document conflicts with earlier briefs, amendment logs, or conversation history, **this document wins**.
@@ -33,6 +33,9 @@ This document is the canonical reference for Claude Code and all contributors. W
 16. [Build Execution](#16-build-execution)
 16A. [Chunk Repair Pipeline](#16a-chunk-repair-pipeline)
 16B. [Echo Detection](#16b-echo-detection)
+16C. [Vault Production System](#16c-vault-production-system)
+16D. [Vault Production Workflow](#16d-vault-production-workflow)
+16E. [Auto-Picker](#16e-auto-picker)
 17. [Governance](#17-governance)
 18. [V3 API Emotion System](#18-v3-api-emotion-system)
 
@@ -149,28 +152,6 @@ This document is the canonical reference for Claude Code and all contributors. W
 | **GitHub Pages** | Website code (HTML, CSS, JS, small images) | `https://salus-mind.com` |
 | **Cloudflare R2** | Media files (MP3, MP4) | `https://media.salus-mind.com` |
 | **Cloudflare** | DNS for entire domain | Nameservers: `gerald.ns.cloudflare.com`, `megan.ns.cloudflare.com` |
-| ~~**LALAL.AI**~~ | ~~Per-chunk audio cleaning~~ Ã¢â‚¬â€ **REMOVED 9 Feb 2026** (all modes tested, none effective on Fish output) | `https://www.lalal.ai/api/v1` |
-
-### LALAL.AI
-
-| | |
-|---|---|
-| **Service** | AI audio cleaning ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â noise cancellation, de-echo, de-reverb |
-| **API** | REST v1 (`/upload/`, `/split/voice_clean/`, `/check/`, `/split/batch/voice_clean/`) |
-| **Auth** | `X-License-Key` header (activation code from account profile) |
-| **Account** | scottripley@icloud.com |
-| **Plan** | Lite (Ãƒâ€šÃ‚Â£6/mo, 90 min fast queue) |
-| **Env var** | `LALAL_API_KEY` in `.env` |
-| **Quota** | ~3 min per full session build (36 chunks ÃƒÆ’Ã¢â‚¬â€ ~5s each). Lite plan covers ~30 builds/month. |
-| **Status** | **DEAD** Ã¢â‚¬â€ removed from pipeline. Dehiss-only mode tested 9 Feb 2026 and failed (uniform attenuation, not selective denoising). See below. |
-
-**What works:** Noise cancellation (`noise_cancelling_level=1`) removed almost all hiss from session 25 rebuild. Proven effective for TTS hiss cleanup.
-
-**What doesn't work:** Dereverb (`dereverb_enabled=True`) strips Marco's vocal resonance, mistaking it for room reverb. Fish TTS output has no actual room reverb ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â dereverb has nothing legitimate to remove and damages vocal character instead. Voice quality degradation worst on opening chunks (1ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“5), settles later.
-
-**Dehiss-only test result (9 Feb 2026):** `dereverb_enabled=False` tested on session 25 chunk 1 (worst hiss reading across all sessions at Ã¢Ë†â€™7.26 dB). Result: uniform 3 dB attenuation across all frequencies, SNR unchanged at 21.8 dB. LALAL applied a flat volume reduction rather than selective denoising Ã¢â‚¬â€ no hiss improvement whatsoever. This was the final viable LALAL configuration. **LALAL is not capable of selective hiss removal on Fish TTS output.** Removed from pipeline entirely.
-
-**Cannot fix:** Voice character shift and echo. These are TTS generation problems baked into Fish output. No external post-processing service can fix what Fish generates wrong ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â the only remedy is chunk regeneration.
 
 ### GitHub Pages
 - **Repository:** `https://github.com/scott100-max/Salus-Website.git`
@@ -205,6 +186,39 @@ npx wrangler r2 object put salus-mind/content/audio-free/FILENAME.mp3 --file=./F
 - Sounds (ASMR): `content/sounds/`
 - Video: `content/video/`
 - Reference: `reference/` (marco master etc.)
+
+### Cloudflare CDN Cache Purge
+
+| | |
+|---|---|
+| **Purpose** | Purge stale cached content from Cloudflare CDN after R2 uploads |
+| **Token** | `8XAFM9HRU8FwrEsfso10pKtOfUqckWF0Am8UWMny` |
+| **Permission** | Zone > Cache Purge > Purge (salus-mind.com only) |
+| **Zone ID** | `5322a6fb271fa30c2b910369e10d7aab` |
+| **Env vars** | `CF_CACHE_PURGE_TOKEN` and `CF_ZONE_ID` in `.env` |
+
+**Usage:** After every R2 upload, purge the specific URL:
+
+```bash
+curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/purge_cache" \
+  -H "Authorization: Bearer ${CF_CACHE_PURGE_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{"files":["https://media.salus-mind.com/PATH_TO_FILE"]}'
+```
+
+Must be integrated into: vault-assemble.py deploy step, any R2 upload workflow, and the `cpd` shortcut.
+
+**Evidence:** Narrator-welcome session served stale audio from CDN after R2 upload until manual purge was performed.
+
+### Verdicts API
+
+| | |
+|---|---|
+| **Endpoint** | `PUT/GET /verdicts/{session-id}` at `vault-picks.salus-mind.com` |
+| **Storage** | R2 at `vault/{session}/verdicts/verdicts.json` |
+| **Auth** | Bearer `salus-vault-2026` (same as picks API) |
+| **Purpose** | Stores human review verdicts with severity labels (HARD FAIL / SOFT FAIL / PASS + defect tags) |
+| **Used by** | Review page generator, auto-picker (loads verdict history to inform selection) |
 
 **ASMR sounds:**
 - All ASMR audio is user-provided (downloaded from YouTube, cut to 1 hour each). Not procedurally generated.
@@ -248,6 +262,12 @@ Cards without `data-src` show a visual-only player (no audio loaded). Add `data-
 | `docs/` | PROJECT-BIBLE, audio quality analysis, stripe links |
 | `content/audio/ambient/` | Ambient tracks (8-hour versions preferred) |
 | `content/audio/marco-master/` | Master reference WAVs and measurements |
+| `auto-picker.py` | v7 auto-picker (root — alongside vault-builder.py) |
+| `sweep-weights.py` | Weight sweep tool (230+ combinations across 5 phases) |
+| `tools/review-page-generator.py` | Standard review page template with severity, auto-advance, keyboard shortcuts |
+| `docs/auto-picker-validation.json` | v7 final validation (245 chunks, 10 sessions) |
+| `docs/weight-sweep-results.json` | Weight sweep phases 1–3 data |
+| `docs/weight-sweep-phase4.json` | Tonal/hiss sweep data |
 
 **Root should only contain:** HTML pages, `build-session-v3.py`, `audition-voices.py`, `label-server.py`, `score-chunks-whisper.py`, `echo-detector.py`, `CNAME`, `robots.txt`, `sitemap.xml`, `package.json`.
 
@@ -447,6 +467,8 @@ sed -i '' 's|../sessions.html">Guided Meditations</a></li>|../sessions.html">Gui
 
 **Prevention:** All gates must be pass/fail. No informational-only gates. Visual analysis must include programmatic evaluation, not just image generation.
 
+**ASMR slider mobile touch issues (12 Feb 2026):** Volume slider on ASMR cards was unusable on mobile — browser hijacked touch drags for scrolling. Fix: `touch-action: none` on slider, larger thumb (14px → 22px), `touchmove`/`touchend` stopPropagation, `change` event listener for iOS Safari.
+
 ---
 
 # PART B ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â AUDIO PRODUCTION
@@ -468,21 +490,32 @@ sed -i '' 's|../sessions.html">Guided Meditations</a></li>|../sessions.html">Gui
 11. **No post-build splicing Ã¢â‚¬â€ with one exception.** Never splice individual chunks into an existing build during normal production Ã¢â‚¬â€ splicing causes tonal seams at splice boundaries (tested and failed). Selective regeneration WITHIN a build is permitted: `--focus-chunks` gives problem chunks more generation attempts (best-of-10) while others get best-of-5. **Exception: the Chunk Repair Pipeline (Section 16A)** permits targeted splice repair of deployed sessions under controlled conditions: 100ms cosine crossfade, speechÃ¢â€ â€™silence boundary targeting, tonal distance measurement, and mandatory human A/B review before promotion to live. This exception exists because full rebuilds risk introducing new defects in currently-clean chunks. The repair pipeline was validated on 9 Feb 2026 (session 32 chunk 1).
 12. **Automated gates: 100% pass required.** All 14 gates must pass ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â no exceptions. Human review: accept a reasonable clean rate and ship. Perfection should not prevent shipping, but the clean rate and any flagged chunks must be documented in the build record. If a session ships below 100% human clean rate, the specific issues accepted are logged for future pipeline improvement.
 13. **Lossless pipeline.** All intermediate audio MUST be WAV. MP3 encoding happens exactly ONCE at the final step.
-14. **Never overwrite raw narration.** Raw narration WAVs must be preserved before any processing that modifies them. Save timestamped copies: `{session}_raw_v1.wav`, `{session}_raw_v2.wav` etc. If LALAL or any other cleaning service is applied, both pre-clean and post-clean versions must be saved to `content/audio-free/raw/`. Never leave raw files in temp directories, never overwrite without preserving the original.
-15. **All audio comparisons must be narration-only.** When evaluating audio quality differences (A/B testing, LALAL before/after, pipeline changes), always compare raw narration without ambient. Ambient masks differences and makes evaluation invalid. Both A and B files must be provided simultaneously with clear naming (e.g. `25-intro-NO-LALAL-narration.wav`, `25-intro-LALAL-narration.wav`).
-16. **Garden ambient offset.** `garden-8hr.mp3` has 9.5 seconds of dead digital silence at the file start. Always use `-ss 10` when mixing garden ambient. This is automated in `build-session-v3.py` for both Fish and Resemble mix paths (confirmed 9 Feb 2026).
+14. **Never overwrite raw narration.** Raw narration WAVs must be preserved before any processing that modifies them. Save timestamped copies: `{session}_raw_v1.wav`, `{session}_raw_v2.wav` etc. If any cleaning service is applied, both pre-clean and post-clean versions must be saved to `content/audio-free/raw/`. Never leave raw files in temp directories, never overwrite without preserving the original.
+15. **All audio comparisons must be narration-only.** When evaluating audio quality differences (A/B testing, pipeline changes), always compare raw narration without ambient. Ambient masks differences and makes evaluation invalid. Both A and B files must be provided simultaneously with clear naming.
+16. **Garden ambient offset.** `garden-8hr.mp3` has 9.5 seconds of dead digital silence at the file start. Always use `-ss 10` when mixing garden ambient. This is automated in `build-session-v3.py` for Fish mix path (confirmed 9 Feb 2026).
+
+20. **CDN cache purge after every R2 upload.** Cloudflare CDN caches media.salus-mind.com aggressively. After uploading any file to R2, immediately purge the specific URL. See Section 3 for token and curl command. Evidence: narrator-welcome session served stale audio until manual purge.
+
+21. **Ambient is mandatory for all sessions.** All sessions MUST be mixed with ambient before final review and deployment. Grace ambient (or similar warm tonal pad) at −14 dB below voice, **15s fade-in, 8s fade-out** (unchanged from existing Bible spec — Section 11). Ambient effectively masks mild echo, hiss, and transition artefacts — turns ~80% raw pass rate into ~96% perceived pass rate. Echo tolerance relaxed: mild echo marked OK (not soft fail) when ambient is present. This is not optional. **The fade values are locked. Do not modify without a Bible amendment.** Code deployed sessions with 0s fade-in on 12 Feb — this is a critical spec violation.
+
+22. **Fish split threshold is 150 characters (lowered from 300).** Chunks exceeding 150 characters get systematically truncated by Fish. The vault-builder's preprocessing step must split at sentence boundaries before generation. Evidence: 9 persistent-fail chunks in session 01 trial — 5 of 9 were >150 chars with 78–82% cutoff rates. Already implemented in vault-builder.py.
+
+23. **Known-pass versions are sacred.** Human-confirmed clean versions bypass ALL automated filters in future picker runs. Store pass/fail/severity in verdict history, load on every picker run. A candidate rated EXCELLENT by human ears is never re-eliminated by automated metrics, regardless of its composite score. Evidence: session 01 c01 v10 (composite 0.263, below 0.30 floor) was EXCELLENT by ear — the composite floor would have killed it.
+
+24. **UNRESOLVABLE chunks require script-level fix.** When the auto-picker eliminates all candidates for a chunk, it is UNRESOLVABLE. Do not silently fall back to the lowest-scoring candidate. Flag for script revision: split text at sentence boundary, regenerate. Evidence: session 09 had 3 unresolvable chunks (c21, c35, c42) — all were text-level failures.
+
+25. **Audio processing parameters are locked to Bible values.** Fade durations, loudnorm targets, ambient levels, edge fade lengths, and all other numeric audio parameters documented in the Bible must not be modified by Code without an explicit Bible amendment. Any deviation requires Scott's approval via a brief. Evidence: Code changed ambient fade-in from 15s (Bible spec) to 10s to 0s across 12 Feb deploys — three successive deviations from spec, each uncaught because no post-deploy verification existed.
 
 ---
 
 ## 9. TTS Providers
 
-### Provider Routing (Decision Tree)
+### Provider Routing
 
 ```
-Is the script mostly short phrases with pauses? ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Fish Audio
-Is the script mostly long flowing narrative?    ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Resemble AI
-Mixed content?                                  ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Fish (safer default)
-Unsure?                                         ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Fish (Marco's home)
+Fish Audio is the ONLY TTS provider.
+Resemble AI was evaluated and used for early builds but is removed from the pipeline as of 12 Feb 2026.
+All sessions — short-phrase, long narrative, sleep stories — use Fish Audio with the vault + auto-picker workflow.
 ```
 
 ### Fish Audio ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â PRIMARY PROVIDER
@@ -498,7 +531,7 @@ Unsure?                                         ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚
 | **Character** | Deep resonance, slight accent (possibly Italian), very soothing |
 | **Atempo** | 0.95x (standard Marco speed adjustment) |
 
-**Best for:** Meditation, mindfulness, loving-kindness, body scans, breathwork, mantras, affirmations. Reliable up to ~20 minutes of narration content. Sessions exceeding 20 minutes should default to Resemble unless there is a specific reason to use Fish â€” quality degrades above this threshold (volume surges, voice drift, higher rebuild rates). The previous <15 min guidance was too conservative for short-phrase meditation content but remains approximately correct for continuous narrative.
+**Best for:** Meditation, mindfulness, loving-kindness, body scans, breathwork, mantras, affirmations, sleep stories. All session durations handled via the vault + auto-picker workflow (Section 16D, 16E).
 
 **Architecture:** One TTS call per text block. Pauses stitched in post-production.
 
@@ -511,6 +544,21 @@ Unsure?                                         ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚
 - Chunk volume spread: ~8 dB (Auphonic leveller data)
 - SNR: 45+ dB (broadcast quality without processing)
 - No hum, minimal noise floor
+
+### Fish Speaking Rate (CORRECTED — 12 Feb 2026)
+
+Fish speaks at **10–13 characters per second**, not the previously assumed 7.2 ch/s. The 7.2 figure may apply to Resemble but is wrong for Fish by nearly 2×.
+
+**Evidence (known-good candidates):**
+
+| Chunk | Chars | Duration | Rate |
+|-------|-------|----------|------|
+| c01 v10 (EXCELLENT) | 58 | 4.3s | 13.5 ch/s |
+| c04 v04 (EXCELLENT) | 60 | 6.7s | 9.0 ch/s |
+| c08 v10 (EXCELLENT) | 61 | 5.5s | 11.0 ch/s |
+| c18 v10 (OK) | 126 | 9.4s | 13.4 ch/s |
+
+**Impact:** All duration estimates and cutoff detection thresholds must use this corrected rate. The auto-picker's Layer 1 cutoff uses `chars/22` (minimum viable duration) and the compound filter uses `cps > 14` (maximum expected rate). Any reference to Fish speaking at ~7 ch/s in the Bible or production tools is incorrect.
 
 **The Fish API is stateless.** There is NO `condition_on_previous_chunks` parameter in the Fish Audio TTS API. Each API call is completely independent. Voice conditioning between chunks is implemented CLIENT-SIDE in `build-session-v3.py` by passing the previous chunk's audio as the `references` input for the next chunk. This is our pipeline's feature, not a Fish feature. Each chunk can be regenerated independently as long as the correct reference audio is provided.
 
@@ -525,6 +573,23 @@ Unsure?                                         ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚
 **Script rule:** Opening chunks must be one short sentence, under ~60 characters. The second chunk carries the remainder of the opening and receives conditioning from the first. This replaces the previously proposed "throwaway conditioning chunk" approach.
 
 **Scoring formula bias on chunk 0:** The composite scoring metric (spectral flux variance + contrast + flatness + HF ratio + tonal distance) is calibrated against mid-session chunks that have conditioning context. It systematically produces false catastrophic scores on chunk 0 because unconditioned audio inherently has higher spectral flux variance. A chunk 0 scoring Ã¢Ë†â€™358 combined with 0.7 echo risk may sound perfectly clean to a human ear. **Do not use automated scores for pass/fail decisions on chunk 0. Human listening is the only reliable gate for opening chunks.**
+
+### Mid-Sentence Conditioning for Chunk 0 (PROVEN — 12 Feb 2026)
+
+**Problem:** Even with the split-chunk technique, chunk 0 still has no audio conditioning reference. The `marco-master` WAV used as a fallback reference produces scores of 0.4–0.9 but voice character doesn't match Fish's natural output style.
+
+**The fix — Mid-sentence conditioning:** Use a clean, human-picked chunk from a deployed session as the Fish API `references` parameter for chunk 0 generation. Tricks Fish into continuing a conversation rather than cold-starting.
+
+**Evidence:** Narrator-welcome session chunk 0 — mid-sentence conditioning (using `c04_v19.wav` from session 42): **20/20 passed filter**, scores 7.5–8.8 (vs ~60% pass rate unconditioned).
+
+**vault-builder.py changes:**
+- `MARCO_MASTER_WAV` constant added (fallback reference)
+- `_generate_one()` accepts `ref_audio_path` and `ref_text` parameters
+- Base64-encodes reference audio and adds to Fish API payload as `references`
+- Chunk 0: conditions on `MARCO_MASTER_WAV` (interim — should be replaced with curated reference library)
+- Chunks 1+: conditions on previous chunk's best-scoring candidate WAV
+
+**This is real audio conditioning at generation time, not just post-hoc MFCC scoring.**
 
 **Fish cleanup chain (CANONICAL ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â use this, nothing else):**
 1. Edge fades: 15ms cosine on each chunk before concatenation
@@ -547,45 +612,8 @@ The HF shelf cut (`highshelf=f=7000:g=-3`) was proposed and tested across the fu
 - ~~highpass=80~~ (not needed for Fish ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â no low-frequency noise)
 - ~~highshelf=f=7000:g=-3~~ (tested and failed ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â does not address root cause)
 - ~~highshelf=f=3000:g=3~~ (removed 8 Feb ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â causes perceived echo on certain words)
-- ~~LALAL.AI~~ (all modes tested and failed. Dereverb strips vocal resonance. Dehiss-only applies uniform attenuation, not selective denoising. Tested 8Ã¢â‚¬â€œ9 Feb 2026. Removed from pipeline.)
 
-**Hard failure ceiling (9 Feb 2026):** Some chunks are unsalvageable with Fish regardless of regeneration count. Session 36 chunk 7 failed to improve across 10 consecutive best-of-10 attempts. When a chunk fails 10 regenerations without any improvement in composite score, stop retrying. Escalate to human review â€” the options are: accept as-is if not audibly jarring, mask with ambient level adjustment, or flag for a Resemble rebuild of the session.
-
-### Resemble AI ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â LONG-FORM PROVIDER
-
-| Setting | Value |
-|---------|-------|
-| **Voice** | Marco T2 (`da18eeca`) |
-| **Preset** | `expressive-story` (`6199a148-cd33-4ad7-b452-f067fdff3894`) ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â MUST be in every API call |
-| **pace** | 0.85 |
-| **pitch** | 0 |
-| **useHd** | true |
-| **temperature** | 0.8 |
-| **exaggeration** | 0.75 |
-
-**Best for:** Sleep stories, guided journeys, any session >20 min with long flowing narrative.
-
-**Architecture:** Large ~2000-character chunks, merged with SSML `<break>` tags (original pause durations, capped at 5s). Do NOT use for short phrase content.
-
-**Resemble cleanup chain (CANONICAL):**
-`highpass=80, lowpass=10000, afftdn=-25, loudnorm I=-26`
-
-**What produces clean audio:**
-- Always include `voice_settings_preset_uuid` in API payload
-- Use `output_format: wav` from the API (native WAV, no intermediate lossy steps)
-- Keep pace at 0.85
-- Let Resemble handle pacing via SSML breaks with original pause durations
-- Save native WAV from API directly ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â no MP3 intermediate
-
-**What degrades audio:**
-- Omitting the voice settings preset (produces noisy, hissy output)
-- pace > 0.9 (too fast for meditation/sleep)
-- `loudnorm I=-24` (too loud, raises noise floor)
-- `dynaudnorm` (amplifies silence regions)
-- WAVÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢MP3ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢WAV at any point (lossy round-trip)
-- `cleanup full` (Fish chain ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â wrong for Resemble)
-- `cleanup light` (insufficient for Resemble)
-- Random SSML break durations (use original pause values)
+**Hard failure ceiling (9 Feb 2026):** Some chunks are unsalvageable with Fish regardless of regeneration count. Session 36 chunk 7 failed to improve across 10 consecutive best-of-10 attempts. When a chunk fails 10 regenerations without any improvement in composite score, stop retrying. Escalate to human review â€” the options are: accept as-is if not audibly jarring, mask with ambient level adjustment, or flag for script revision and regeneration.
 
 ### ElevenLabs ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â ABANDONED (6 Feb 2026)
 
@@ -717,39 +745,6 @@ qa_loop() ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ 14-GATE QA (see Section 12)
 deploy_to_r2() ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ send_build_email()
 ```
 
-### Resemble Pipeline
-
-```
-Script (... pause markers)
-        ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡
-        ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â¼
-process_script_for_tts() ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ blocks with pause durations
-        ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡
-        ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â¼
-merge_blocks_for_resemble(category) ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ merged chunks with SSML breaks
-        ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡                              (original pause durations, capped at 5s)
-        ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â¼
-generate_tts_chunk_resemble() ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Resemble API (HD mode, pace=0.85)
-        ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡                        Native WAV preserved (no mono forcing)
-        ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â¼
-concatenate_with_silences() ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ auto-detect channels, match silence
-        ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡
-        ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â¼
-cleanup_audio_resemble() ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ highpass 80 + lowpass 10k + afftdn=-25 + loudnorm I=-26
-        ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡
-        ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â¼
-mix_ambient() ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ ambient mixed at category level
-        ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡
-        ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â¼
-SINGLE MP3 ENCODE (128kbps) ÃƒÂ¢Ã¢â‚¬Â Ã‚Â only lossy step
-        ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡
-        ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â¼
-qa_loop() ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ 14-GATE QA (see Section 12)
-        ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡
-        ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â¼
-deploy_to_r2() ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ send_build_email()
-```
-
 ### Whole-File Loudnorm (Fish only)
 
 Apply `loudnorm` to the full concatenated narration WAV AFTER assembly ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â not per-chunk. This preserves the natural dynamic variation between chunks that gives Marco his character. Per-chunk loudnorm was tested and removed (8 Feb 2026) because it flattened the delivery and, combined with the highshelf boost, introduced perceived echo on certain words.
@@ -767,6 +762,23 @@ Marco standard speed adjustment: 0.95x atempo. Applied to the master and consist
 ### Channel Mismatch Bug (RESOLVED)
 
 All files MUST be mono before concatenation. When ffmpeg's concat demuxer joins mono and stereo PCM files, it misinterprets the sample data ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â stereo segments play at double duration. Silence files must be generated as mono (`cl=mono`), not stereo.
+
+### Sleep Story Pause Profiles (12 Feb 2026)
+
+The existing "story" pause profile (1.5/3/5s) is designed for continuous narrative, NOT sleep stories. Sleep stories need dramatically longer pauses — ambient fills the silence, lets the mind wander and drift.
+
+**Proposed PAUSE_PROFILES addition:**
+
+| Category | `...` (within-scene) | `......` (scene transition) | End sequence |
+|----------|---------------------|---------------------------|-------------|
+| `story` (existing) | 1.5s | 3s | 5s |
+| `sleep-story` (NEW) | 12s | 35s | 60s |
+
+**Evidence:** Session 53 (The Gardener's Almanac) assembled at 10.3 min with story profile pauses vs 23.2 min target. Manually scaled pauses to 12/35/60s — pacing made narrative sense with `......` markers correctly placed at scene transitions.
+
+**The `...` vs `......` distinction in scripts IS meaningful** and maps correctly to within-scene pauses vs scene-transition pauses. This distinction must be preserved in PAUSE_PROFILES.
+
+**Humanise pauses: RE-ENABLED for sleep stories.** Without humanisation, sleep stories assembled at approximately half their target duration — the rigid short pauses removed the breathing room that gives sleep stories their pacing. Session 53 confirmed: 10.3 min without humanisation vs 23.2 min target. Humanisation restores the intended duration and pacing.
 
 ### Ambient Rules
 
@@ -926,7 +938,7 @@ Verifies the final output duration matches the script's target.
 
 15% tolerance rather than 10% because humanised pauses introduce natural variation. A 12-minute target producing 10:12 to 13:48 is acceptable.
 
-**Duration header accuracy (9 Feb 2026):** When rebuilding an existing session, set `Duration-Target` by cross-referencing the previous build's actual output duration â€” not by estimating from character count or guessing. Session 03 was overcorrected from 15 to 20 minutes, producing a 22.9% deviation and a Gate 12 failure. If no previous build output exists, use the build script's dry-run duration estimate. The character-based formula (~7.2 chars/sec) is for rough planning only and should never be the sole basis for the header value.
+**Duration header accuracy (9 Feb 2026):** When rebuilding an existing session, set `Duration-Target` by cross-referencing the previous build's actual output duration â€” not by estimating from character count or guessing. Session 03 was overcorrected from 15 to 20 minutes, producing a 22.9% deviation and a Gate 12 failure. If no previous build output exists, use the build script's dry-run duration estimate. The character-based formula (~10–13 chars/sec for Fish; see Section 9) is for rough planning only and should never be the sole basis for the header value.
 
 ### Gate 13: Ambient Continuity
 Programmatically enforces the rule that there must be no dead silence anywhere in the final track and ambient must continue through all pauses and silences.
@@ -959,11 +971,45 @@ Runs the following gates with TIGHTER thresholds on the first 60 seconds of the 
 
 **Calibration note:** Gate 5 opening threshold calibrated at 6 dB (not the originally proposed 4 dB). Known-good sessions show 5.3 dB loudness variation in the opening.
 
+### Gate 15: Post-Deploy Live Audio Scanner
+
+**Status:** CRITICAL — added 12 Feb 2026. Two failures on the same day: (1) a deployed session shipped with a massive audio breakdown that the existing 14-gate pipeline missed, (2) Code deployed sessions with 0s ambient fade-in (spec is 15s) with no detection. Both would have been caught by this gate.
+
+**Purpose:** Automated scan of the live deployed MP3 file on R2 to catch obvious audio failures that the pre-deploy pipeline missed. This is not a pre-deploy gate — it runs AFTER deployment, scanning the actual file that listeners will hear.
+
+**What it detects:**
+
+| Check | Method | Threshold | Catches |
+|-------|--------|-----------|---------|
+| Catastrophic silence | Windowed RMS scan (5s windows) | Any window below −60 dBFS within expected speech region | Audio dropout, failed chunks, missing audio |
+| Volume explosion | Windowed peak scan (5s windows) | Any window with peak > −1 dBTP | Loudness spikes, uncontrolled surges |
+| Voice breakdown | Windowed spectral centroid variance | Centroid drops below 500 Hz or jumps above 6 kHz for >3s | Voice mush, robotic distortion, Fish model collapse |
+| Duration sanity | Total file duration vs script target | More than 30% deviation from expected duration | Assembly errors, missing chunks, wrong pause profile |
+| Hiss cascade | Windowed HF scan (10s windows) | HF above −36 dB sustained across 3+ consecutive windows | Conditioning chain contamination |
+| **Ambient fade-in** | RMS of first 15s ambient-only region | Ambient reaches full level before 15s | Missing or incorrect fade-in. Spec: 15s fade-in. Code deployed 0s fade-in on 12 Feb — this check would have caught it instantly. |
+| **Ambient fade-out** | RMS of final 8s | Ambient does not taper to silence | Missing or incorrect fade-out. Spec: 8s fade-out. |
+
+**Workflow integration:**
+
+```
+Deploy to R2 → CDN cache purge → Gate 15 scan of live URL → Report
+```
+
+Gate 15 runs automatically after every deployment. If any check fails, the report flags the session for immediate human review with timestamps of detected issues. The session remains live (speed > perfection) but the failure is logged and acted on in the next review round.
+
+**This gate would have caught both 12 Feb failures:**
+
+1. **Audio breakdown:** A deployed session contained a massive audio breakdown audible to any listener. All 14 pre-deploy gates passed. The voice breakdown check (spectral centroid) and/or volume explosion check would have flagged it immediately.
+
+2. **0s ambient fade-in:** Code deployed sessions with ambient slamming in at full volume from the first sample (spec: 15s fade-in). The ambient fade-in check would have detected full-level ambient in the first second and flagged the file. This is a spec violation that no pre-deploy gate currently checks for because pre-deploy gates run on intermediate audio before ambient mixing.
+
+**The pattern:** Both failures occurred in the final deployment stage — after ambient mixing, MP3 encoding, and R2 upload. Pre-deploy gates scan intermediate audio. Gate 15 scans the actual product. Without Gate 15, the only safety net is human listening, which didn't catch these before subscribers could hear them.
+
 ### Overgeneration Retry Logic
 
 If a generated chunk's duration exceeds 2ÃƒÆ’Ã¢â‚¬â€ the expected duration for its character count, reject it and regenerate immediately. Up to 3 retries per chunk before flagging as build failure.
 
-**Expected duration:** Character count ÃƒÆ’Ã‚Â· speaking rate. Meditation speaking rate ÃƒÂ¢Ã¢â‚¬Â°Ã‹â€  100ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“110 wpm ÃƒÂ¢Ã¢â‚¬Â°Ã‹â€  8ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“10 characters per second.
+**Expected duration:** Character count / speaking rate. Fish meditation speaking rate: 10–13 characters per second (see Section 9, Fish Speaking Rate).
 
 ### Threshold Calibration Reference
 
@@ -1021,6 +1067,8 @@ The first chunk of every session (chunk 0) must be one short sentence, under ~60
 | sleep | 10s | 30s | 60s |
 | mindfulness | 8s | 25s | 50s |
 | stress | 6s | 20s | 40s |
+| story | 1.5s | 3s | 5s |
+| sleep-story (NEW — 12 Feb 2026) | 12s | 35s | 60s |
 | default | 8s | 25s | 50s |
 
 ### Script Rules
@@ -1032,7 +1080,7 @@ The first chunk of every session (chunk 0) must be one short sentence, under ~60
 | Use `...` for pauses (not `ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â`) | Script parser reads `...` as pause markers |
 | No ellipsis in spoken text | Fish renders `...` as nervous/hesitant delivery |
 | Scripts must contain ZERO parenthetical tags | In-text emotion tags don't work (see Section 18) |
-| Estimate ~7.2 chars/second for narration duration | Calibrated from Fish/Marco output. **Caveat (9 Feb 2026):** This estimate tends to overestimate session duration ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â session 32 was scripted for 12 min but TTS produced 9.5 min. The build script's own duration estimate (calculated from actual chunk generation) is more reliable than the character-based formula. Use 7.2 chars/sec for rough planning only; set the `Duration-Target` header based on the build script's estimate after a dry run, not on character count alone. |
+| Estimate ~10–13 chars/second for Fish narration duration (CORRECTED 12 Feb 2026 — was 7.2) | See Section 9, Fish Speaking Rate. The 7.2 figure was wrong by nearly 2x. Use 10–13 ch/s for Fish estimates. The build script's own duration estimate (from actual chunk generation or dry run) remains more reliable than any character-based formula. |
 
 ### Script Metadata Header
 
@@ -1494,9 +1542,6 @@ python3 build-session-v3.py 25-introduction-to-mindfulness --dry-run
 # Build + QA but don't deploy
 python3 build-session-v3.py 25-introduction-to-mindfulness --no-deploy
 
-# Resemble provider
-python3 build-session-v3.py SESSION --provider resemble
-
 # Raw output (no cleanup) for quality testing
 python3 build-session-v3.py SESSION --no-cleanup
 ```
@@ -1517,8 +1562,8 @@ python3 build-session-v3.py SESSION --no-cleanup
 
 **Environment:**
 - [ ] Only building ONE session (no parallel builds)
-- [ ] Provider set to `fish` (default) or `resemble` as appropriate
-- [ ] `FISH_API_KEY` / `RESEMBLE_API_KEY` set in `.env`
+- [ ] Provider set to `fish`
+- [ ] `FISH_API_KEY` set in `.env`
 - [ ] `RESEND_API_KEY` set in `.env`
 - [ ] `AUPHONIC_USERNAME` / `AUPHONIC_PASSWORD` set in `.env`
 - [ ] Master reference WAV exists at `content/audio/marco-master/marco-master-v1.wav`
@@ -1578,16 +1623,22 @@ python3 build-session-v3.py SESSION --no-cleanup
 
 | Session | Duration | Provider | Ambient | Status |
 |---------|----------|----------|---------|--------|
-| 01-morning-meditation | 24.4 min | Fish | â€” | v3 rebuild 9 Feb. 13/14 gates (Gate 10 false positive â€” 87% silence). |
+| 01-morning-meditation | 13.7 min | Fish | Grace (-14 dB) | **Redeployed 12 Feb** via auto-picker v7 + grace ambient. 26 chunks, 1,710 candidates, rich verdict history (4 trial runs). Auto-picked 26/26. **Awaiting full-audio review.** |
 | 03-breathing-for-anxiety | 15.4 min | Fish | — | v3 rebuild 9 Feb. 12/14 gates (Gate 12 duration overcorrection, Gate 13 bird chirp ambient). Previous: 54% flagged → 6.25% flagged (8.6× improvement). **Rollback (9 Feb):** v3 rebuild deployed but had major voice failure on opening chunk. Rolled back to previous version (16:03 build, 14.9MB). Voice-fail version archived to `archive/03-breathing-for-anxiety_voice-fail_2026-02-09.mp3`. Still needs successful rebuild using split-chunk technique on chunk 0, plus Gate 12 and Gate 13 fixes. |
-| 09-rainfall-sleep-journey | 29.3 min | Fish | rain | v3 rebuild 9 Feb. 13/14 gates (Gate 7 volume surge). 30 min narrative â€” should be Resemble per routing rules. Resemble rebuild may be needed if volume inconsistencies confirmed on listening. |
+| 09-rainfall-sleep-journey | 25.7 min | Fish | Grace (-14 dB) | **Redeployed 12 Feb** via auto-picker. 63 chunks, 1,145 candidates. 3 unresolvable chunks (c21, c35, c42). **Awaiting full-audio review** — expect issues at 5:55, 12:10, 14:51. |
 | 18-calm-in-three-minutes | 3.2 min | Fish | rain | Deployed (build 1, 14/14 gates, 9 Feb, commit 752752f) |
 | 19-release-and-restore | 14.5 min | Fish | garden | Deployed (build 4, 14/14 gates, 9 Feb, commit 752752f). Builds 1Ã¢â‚¬â€œ3 failed Gate 7 (surge). Script rewritten (trigger-word clean, progressive muscle relaxation). **Repair (9 Feb):** Chunk 0 echo Ã¢â‚¬â€ 30 generations across 3 approaches all flagged by scorer, but split-chunk version confirmed clean by human listening. Scoring formula bias on unconditioned chunks proven. Wrong ambient noted (script=garden, build=rain). Chunk 0 split + remixed with correct ambient, deployed. |
 | 23-the-calm-reset | 5.5 min | Fish | stream | Deployed (build 1, 14/14 gates, 9 Feb, commit 752752f). Script rewritten (trigger-word clean). |
 | 25-introduction-to-mindfulness | 14.4 min | Fish | garden, Ã¢Ë†â€™ss 10 offset | Deployed (rebuild 8 Feb, LALAL-cleaned Ã¢â‚¬â€ voice degraded, trigger word fix "nowhere else", commit acb5842). LALAL removed from pipeline (all modes tested and failed Ã¢â‚¬â€ see v3.4). 4 flagged chunks including opening (worst hiss at Ã¢Ë†â€™7.26 dB) Ã¢â‚¬â€ repair or rebuild decision pending (Ledger L-05). |
 | 32-observing-emotions | 9.5 min | Fish | garden | Deployed (build 3, 14/14 gates, 9 Feb, commit 752752f). Builds 1Ã¢â‚¬â€œ2 failed Gate 7 (surge). Gate 12 fix: Duration-Target adjusted from 12 to 10 min (script overestimated). Script new. **Repair trial (9 Feb):** Chunk 1 echo on "something" Ã¢â‚¬â€ best-of-10 regeneration, v4 selected (combined 0.417Ã¢â€ â€™0.467, quality 0.426Ã¢â€ â€™0.490, echo risk Ã¢Ë†â€™15%). 14/14 gates. Splice at speechÃ¢â€ â€™silence boundary, tonal distance 0.000443 (0.09% of threshold). Repaired file at `32-observing-emotions-repair-1.mp3` on R2 Ã¢â‚¬â€ **promoted to live 9 Feb after human A/B review confirmed echo eliminated.** |
 | 36-loving-kindness-intro-v3 | 10.5 min | Fish | birds, ÃƒÂ¢Ã‹â€ Ã¢â‚¬â„¢42dB (14dB below voice) | Deployed (v3b focused rebuild, best-of-10, 14/14 gates, 65% clean rate) |
-| 38-seven-day-mindfulness-day1 | 10.7 min | Fish | â€” | v3 rebuild 9 Feb. 14/14 gates. Cleanest build of batch. |
+| 38-seven-day-mindfulness-day1 | 10.7 min | Fish | — | v3 rebuild 9 Feb. 14/14 gates. Cleanest build of batch. |
+| 39-seven-day-mindfulness-day2 | 8.1 min | Fish | Grace (-14 dB) | **First auto-picker assembled session.** v7 round 3: 24/25 pass (96%), 1 VOICE fail. 3 review rounds, 5 chunks regenerated. Deployed to R2. |
+| 42-seven-day-mindfulness-day5 | ~12 min | Fish | Grace | Vault-assembled 12 Feb. A/B picked, deployed to R2. |
+| 53-the-gardeners-almanac | 23.2 min | Fish | Grace (-14 dB) | **First sleep story from auto-picker.** 49 chunks, 980 candidates. Pause scaling issue discovered — story profile pauses (1.5/3/5s) too short, manually scaled to 12/35/60s. **Awaiting full-audio review.** |
+| 61-21day-mindfulness-day5 | ~9 min | Fish | Stream (-8.4 dB) | Vault-assembled 12 Feb. A/B picked, deployed to R2. |
+| 76-21day-mindfulness-day20 | ~15 min | Fish | Birds (-2.3 dB) | Vault-assembled 12 Feb. Gate overrides: Gate 7 + Gate 12 (expected false positives for "long sit" format). |
+| narrator-welcome | 1.3 min | Fish | Grace (-10 dB, 5s in, 10s out — non-standard fades, clip too short for 15/8) | Vault-assembled 12 Feb. c0 conditioned via mid-sentence technique (session 42 c04_v19.wav). Picks: c0=v78, c1=v47, c2=v50, c3=v35, c4=v22. |
 
 ---
 
@@ -1614,7 +1665,7 @@ Chunk repair is for fixing a specific defective chunk in an already-deployed ses
 - The session has never passed human review
 
 
-**Hard failure rule:** If a chunk fails 10 consecutive regenerations without improvement in composite score, stop. Do not continue retrying. The chunk is a Fish hard failure (e.g., Session 36 chunk 7 â€” 0/10 improved). Options: accept if not audibly jarring in context, mask with ambient level adjustment, or flag the session for a full Resemble rebuild.
+**Hard failure rule:** If a chunk fails 10 consecutive regenerations without improvement in composite score, stop. Do not continue retrying. The chunk is a Fish hard failure (e.g., Session 36 chunk 7 â€” 0/10 improved). Options: accept if not audibly jarring in context, mask with ambient level adjustment, or flag for script revision and regeneration.
 ### Process
 
 1. **Identify the defect.** Per-chunk QA scoring flags chunks below 0.50 composite score. Human listening confirms the specific defect (echo, hiss, voice shift) and its location.
@@ -1749,6 +1800,199 @@ These approaches require more labelled data before they become viable:
 
 ---
 
+## 16C. Vault Production System
+
+> **Status update (12 Feb 2026):** The A/B tournament picker remains the fallback human review interface but is no longer the primary candidate selection method. The auto-picker (Section 16E) now handles initial candidate selection. Human review shifts from per-chunk A/B comparison (~2 hrs/session) to full-audio review of auto-picked assembly (~45 min/session including regen rounds). The picker's rejection reason tags (Echo, Hiss, Cut Short, Voice) continue to accumulate training data during any manual review sessions.
+
+### Rejection Reason Tags (12 Feb 2026)
+
+**4 tags:** Echo, Hiss, Cut Short, Voice
+
+Colour-coded inline checkboxes below score/duration stats in each A/B candidate panel. Tags auto-collect on pick/reject.
+
+**Data structure (per chunk in picks.json):**
+
+```json
+"rejection_reasons": {
+  "6": ["Voice"],
+  "10": ["Echo"],
+  "15": ["Cut Short"],
+  "19": ["Echo"],
+  "22": ["Cut Short"]
+}
+```
+
+**Implementation:** `tools/vault-picker/ab_picker_js.js` — `tagCheckboxes()` renders, `collectInlineTags()` harvests. All 54 pickers rebuilt and uploaded to R2.
+
+### Solo Mode Fix (12 Feb 2026)
+
+When A/B tournament reaches last remaining candidate, picker now shows "solo mode" (red border) for explicit accept/reject instead of auto-winning. Fixed `pickSide()` guard blocking solo mode buttons.
+
+### The Critical Finding — Score ≠ Quality
+
+The composite scoring metric cannot separate pass from fail. Quality score overlap between PASS and HARD FAIL is complete.
+
+### Extended Evidence (78 Labelled Verdicts — 12 Feb 2026)
+
+The auto-picker trial produced 78 severity-labelled verdicts across 4 review rounds of session 01 (26 chunks). The results confirm and strengthen the original finding:
+
+| Severity | Avg Quality Score | Range |
+|----------|------------------|-------|
+| PASS | 0.890 | 0.667–1.293 |
+| HARD FAIL | 0.990 | 0.836–1.199 |
+| SOFT FAIL | 0.846 | 0.511–1.321 |
+
+Hard fails have a **higher** average quality score than passes. Complete overlap across all severity levels. The composite scoring metric is fundamentally incapable of separating pass from fail. This is not a calibration issue — it is a measurement limitation.
+
+**Implication:** The auto-picker uses ranking weights (echo, tonal distance, quality, flatness) rather than threshold-based pass/fail decisions. Quality score contributes at moderate weight (6.0) as a general signal but never makes the selection decision alone.
+
+### Vault Scope — Current Inventory
+
+| Metric | Value |
+|--------|-------|
+| Sessions in vault | 54 |
+| Total chunks | 1,671 |
+| Total candidates generated | ~12,800 |
+| Sessions deployed | 13 (see Deployed Sessions table) |
+| Sessions parked | 1 (session 01 — was parked for hiss, now redeployed via auto-picker, awaiting review) |
+| Sessions waiting | 40 |
+| Remaining human review time | ~30 hours (down from ~58 hours — auto-picker reduces per-session time by ~80%) |
+| Platform target | 100+ sessions |
+
+---
+
+## 16D. Vault Production Workflow
+
+### Numbered Workflow Sequence (Revised 12 Feb 2026)
+
+```
+1. Script → Structural guidelines check + autonomous fixes (Section 13)
+2. Generate candidates per chunk (20 standard, split threshold 150 chars)
+3. Pre-filter (0.30 composite score — advisory only)
+4. Run auto-picker v7 (severity-aware selection — Section 16E)
+5. Assemble voice-only (concat + loudnorm)
+6. Mix with ambient (grace default, -14dB, 15s fade-in / 8s fade-out per Bible spec)
+7. Deploy to R2 + CDN cache purge (Production Rule 20)
+8. Human full-audio review (listen end-to-end, report failures at timestamps)
+9. Map failures to chunks → regen failing chunks (20 extra candidates per fail)
+10. Re-run auto-picker with verdict history → re-assemble → redeploy
+11. Repeat rounds 8-10 until pass rate acceptable (typically 1-2 rounds)
+```
+
+Steps 1–7 and 9–10 are autonomous. Steps 8 and 11 require Scott. Typically 1–3 rounds to reach 96%+ pass rate.
+
+**Key workflow shift:** Human review moves from per-chunk A/B picking (26 chunks × ~150 comparisons each = ~2 hrs) to full-audio review of pre-selected assembly (~15 min per round, 1–3 rounds = ~45 min total).
+
+**Verdict history:** Every human review round feeds back into the auto-picker. Known-pass chunks are never re-eliminated. Known hard-fails are profiled and similar candidates rejected. This creates a virtuous cycle — each round improves the next.
+
+---
+
+## 16E. Auto-Picker
+
+**Status:** PROVEN — v7 validated across 245 chunks, 10 sessions, 5,146+ candidates. First fully assembled session (39) at 96% pass rate. Replaces manual A/B tournament as primary candidate selection method.
+
+### Why This Exists
+
+The A/B tournament picker required ~58 hours of manual picking across 1,400 chunks. The auto-picker reduces human time from ~2 hours to ~45 minutes per session — an 80% reduction. At scale (54 sessions), this saves approximately 40 hours of human review time.
+
+### Development History (v1→v7, 12 Feb 2026)
+
+| Version | Pass Rate | Key Change |
+|---------|-----------|------------|
+| v1 | 23% | Quality score ranked (baseline) |
+| v2 | 23% | Echo-first ranking — same rate, different composition |
+| v3 | 23% raw / 73% effective | Severity tracking — 13 of 20 fails were SOFT (masked by ambient) |
+| v4 | 53% | Known-pass bypass + hard-fail elimination + soft-fail penalty |
+| v5 | Cross-session validated | Filters loosened — eliminations reduced 89% (95→10 human picks wrongly rejected) |
+| v6 | 61.2% top-3 | Weight sweep (230+ combos). Tonal distance discovered as strongest signal (+7.8%) |
+| v7 | 96% (session 39 live) | Three-layer cutoff + compound filter. First assembled session from auto-picker. |
+
+### Algorithm (v7 — CURRENT)
+
+**Three mechanisms:**
+
+1. **Known-pass bypass:** Human-confirmed clean versions skip ALL elimination filters. A candidate scoring 0.263 composite (below the 0.30 floor) that was rated EXCELLENT by ear is sacred — never re-eliminated.
+
+2. **Hard-fail profile elimination:** Candidates with metrics within 15% of known hard-fail versions rejected before ranking.
+
+3. **Soft-fail penalty:** Candidates similar to soft-fail profiles penalised in ranking (−500 points). Known-pass candidates receive +1000 bonus.
+
+**Ranking weights (v7 — weight-swept across 230+ combinations):**
+
+```python
+ECHO_RANK_WEIGHT = 200        # Echo risk penalty
+QUALITY_RANK_WEIGHT = 6.0     # Composite quality score
+TONAL_RANK_WEIGHT = 250       # MFCC distance to previous chunk (strongest signal)
+FLATNESS_PENALTY = 20         # Spectral monotony
+HISS_RANK_WEIGHT = 0          # DISABLED — ambient masks hiss, any weight hurts accuracy
+DURATION_PREFER = 0           # DISABLED — "humans prefer longer" was WRONG at every weight tested
+```
+
+**Three-layer cutoff detection:**
+
+| Layer | Method | Threshold | What it catches |
+|-------|--------|-----------|-----------------|
+| 1 | Duration cutoff | `chars/22` | Fish stops mid-text — extreme truncation |
+| 2 | Tail cutoff | < 12ms trailing silence | Audio ends mid-waveform. `measure_tail_silence()` reads last 500ms of WAV, finds last sample above −40 dBFS |
+| 3 | Compound cutoff | `cps > 14 AND tail < 25ms AND chars > 80` | Fish rushing with abrupt end. Neither tail nor chars/sec alone catches this — the combination is the signal |
+
+**Content cutoff as ranking penalty or elimination: PROVEN HARMFUL** at every weight (50–500) and every threshold (15–18 ch/s) across all test phases. Pushes to worse alternatives because existing human picks include content cutoffs.
+
+**UNRESOLVABLE detection:** When all candidates are eliminated, chunk is flagged UNRESOLVABLE. Action: split text at sentence boundary, regenerate. Do not silently fall back to lowest-scoring candidate.
+
+### Critical Findings
+
+**Quality score does NOT predict human verdict (PROVEN — 78 labelled verdicts):**
+
+| Severity | Avg Quality Score | Range |
+|----------|------------------|-------|
+| PASS | 0.890 | 0.667–1.293 |
+| HARD FAIL | 0.990 | 0.836–1.199 |
+| SOFT FAIL | 0.846 | 0.511–1.321 |
+
+Complete overlap between pass and hard fail. A candidate scoring 1.199 can be a hard fail while one scoring 0.667 is EXCELLENT. Composite score is a pre-filter only, not a selection metric.
+
+**Tonal consistency is the strongest ranking signal.** MFCC distance to previous chunk measures voice consistency. Lower = better. Weight sweep Phase 4 discovered this: tonal=500 produced +7.8% top-3 improvement. Final weight settled at 250 (balanced with other signals).
+
+**Duration preference ALWAYS hurts.** Every non-zero duration weight reduced accuracy across all 72 combinations tested. The intuition "humans prefer longer" was wrong for ranking.
+
+**Hiss weight ALWAYS hurts.** Ambient masks hiss. Humans don't penalise it. Zero hiss weight is optimal.
+
+**Human review variance is ~15%.** Across 4 runs, 4 regressions were the same audio file receiving different verdicts. Most flips are between PASS and SOFT FAIL. The severity system helps — it captures the gradient that binary pass/fail misses.
+
+### Defect Priority (from human review data)
+
+1. **Tonal consistency** — voice character shifts between chunks (highest impact)
+2. **Cutoff** — zero tolerance, outright unusable
+3. **Echo** — noticeable but ambient masks mild cases
+4. **Quality** — general audio cleanliness
+5. **Flatness** — spectral monotony
+6. **Hiss** — lowest priority, ambient masks significantly
+
+### Validation Data (v7 Final)
+
+| Metric | Value |
+|--------|-------|
+| Exact match (auto-pick = human pick) | 24.5% |
+| Top-3 (human pick in auto-picker's top 3) | 59.2% |
+| Eliminated (human pick rejected by filters) | 18.8% |
+| Chunks validated | 245 |
+| Sessions validated | 10 |
+| Candidates analysed | 5,146+ |
+
+### Files
+
+| File | Purpose |
+|------|---------|
+| `auto-picker.py` | v7 auto-picker (severity-aware + weight-swept + three-layer cutoff + compound filter) |
+| `sweep-weights.py` | Automated weight sweep tool (230+ combos across 5 phases) |
+| `tools/review-page-generator.py` | Standard review page template (auto-advance, severity, auto-save, keyboard shortcuts) |
+| `docs/auto-picker-validation.json` | Final v7 validation data (245 chunks, 10 sessions) |
+| `docs/weight-sweep-results.json` | Full sweep data (phases 1–3) |
+| `docs/weight-sweep-phase4.json` | Tonal/hiss sweep data |
+
+---
+
 ## 17. Governance
 
 ### Stop Rules
@@ -1876,11 +2120,11 @@ On receiving any brief, Code's first action ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â
 
 ```
 FISH_API_KEY=your_fish_api_key
-RESEMBLE_API_KEY=your_resemble_api_key
 RESEND_API_KEY=your_resend_api_key
 AUPHONIC_USERNAME=your_auphonic_username
 AUPHONIC_PASSWORD=your_auphonic_password
-LALAL_API_KEY=your_lalal_api_key
+CF_CACHE_PURGE_TOKEN=your_cf_cache_purge_token
+CF_ZONE_ID=your_cf_zone_id
 STRIPE_SECRET_KEY=your_stripe_secret
 STRIPE_WEBHOOK_SECRET=your_webhook_secret
 ```
@@ -2259,7 +2503,7 @@ Sessions 18 and 23 are new scripts. Sessions 19 and 23 had scripts rewritten (tr
 
 **Gate 10 known limitation documented:** High-silence meditation sessions (e.g., Session 01 at 87% silence) produce false positives on speech rate detection. Added as a known limitation in Gate 10 section â€” human review should override Gate 10 failures on sessions with >70% silence content.
 
-**Fish Audio long-form ceiling formalised:** Session 09 (30 min, narrative sleep story) exhibited volume surges under Fish. New explicit guidance: sessions exceeding 20 minutes of narration content should default to Resemble. Fish can produce longer sessions but quality degrades above this threshold â€” volume inconsistencies, voice drift, and higher rebuild rates. "Best for" line updated in Section 9.
+**Fish Audio long-form ceiling formalised:** Session 09 (30 min, narrative sleep story) exhibited volume surges under Fish. New explicit guidance: sessions exceeding 20 minutes of narration content should default to Resemble. Fish can produce longer sessions but quality degrades above this threshold â€” volume inconsistencies, voice drift, and higher rebuild rates. "Best for" line updated in Section 9. **Superseded 12 Feb 2026 — Resemble removed from pipeline.**
 
 **Fish hard failure ceiling documented:** Session 36 chunk 7 failed to improve across 10 regeneration attempts (0/10 improved). New rule in Fish section and Section 16A: when a chunk fails 10 consecutive regenerations without improvement, stop retrying and escalate to human review.
 
@@ -2319,7 +2563,29 @@ Sessions 18 and 23 are new scripts. Sessions 19 and 23 had scripts rewritten (tr
 ---
 
 
-*Last updated: 9 February 2026 — v3.7: Echo detection investigation complete (Fish echo is generative distortion, not acoustic — no off-the-shelf tool detects it). Whisper confidence integrated as review page visual cue. Label server and auto-save pipeline documented. Human review scope rule formalised. Session 03 v3 rollback. `cpd` deployment shortcut documented.*
+### 12 February 2026 — v4.2: Auto-Picker, Ambient Mandate, Workflow Revolution
+
+**Source:** Session debrief 12 Feb 2026, automation trial debrief (auto-picker v1→v7, 245 chunks, 10 sessions, 5,146+ candidates), Code gap analysis of Bible v3.7/v4.1.
+
+**Headline:** Auto-picker v7 achieved 96% pass rate on session 39, reducing human review time by ~80% (from ~2 hrs to ~45 min per session). Production workflow fundamentally changed from per-chunk A/B picking to auto-pick → assemble → full-audio review → regen-at-timestamps.
+
+Changes:
+
+- **NEW Section 16E:** Auto-picker documented — algorithm (severity-aware + weight-swept + three-layer cutoff), v7 configuration, validation data (24.5% exact, 59.2% top-3), critical findings (quality score doesn't predict verdict, tonal distance is strongest signal, duration/hiss weights harmful)
+- **Section 16D (Vault Workflow):** Revised from 10-step manual process to 11-step auto-picker workflow. Human review shifts from per-chunk picking to full-audio review.
+- **Section 3:** CDN cache purge (token, zone ID, curl command). Verdicts API endpoint documented. File organisation updated with new tools.
+- **Section 7:** ASMR mobile volume slider fix.
+- **Section 8:** 6 new Production Rules — CDN purge (20), ambient mandatory with locked 15/8 fades (21), 150-char split threshold (22), known-pass sacred (23), UNRESOLVABLE chunks need script fix (24), audio parameters locked to Bible values (25). Rule 25 added after Code deployed 0s ambient fade-in (spec: 15s) without authorisation.
+- **Section 9:** Mid-sentence conditioning for chunk 0. Fish speaking rate corrected to 10–13 ch/s (was 7.2). Sleep story pause profiles added (12/35/60s). **Resemble AI removed entirely** — Fish is the only TTS provider. All Resemble references, routing rules, cleanup chains, environment variables, and code paths to be removed.
+- **Section 12:** NEW Gate 15 — Post-deploy live material scanner (CRITICAL). Automated scan of deployed MP3 for catastrophic failures including ambient fade verification. Two failures on 12 Feb: audio breakdown undetected by 14 pre-deploy gates, and 0s ambient fade-in (spec: 15s) deployed without detection. Both would have been caught.
+- **Section 16:** 7 new deployed sessions (01 redeployed, 09 redeployed, 39, 42, 53, 61, 76, narrator-welcome). 4 awaiting full-audio review.
+- **Section 16C:** A/B picker status updated (fallback, no longer primary). Rejection reason tags. Solo mode fix. Score ≠ Quality strengthened with 78-verdict dataset. Vault scope updated (54 sessions, 13 deployed, 40 waiting, ~30 hrs remaining).
+- **Ledger:** L-15→CLOSED (Resemble removed), L-16→PARTIAL, L-17→COMPLETE, L-27→COMPLETE, L-25 updated (auto-picker, 40 remaining), L-28 priority downgraded (tail detector mitigates), L-29 updated (01 redeployed, awaiting review), L-30 lower priority (ambient masking). New: L-31 (reference library), L-32 (CDN purge automation), L-33 (sleep story pauses), L-34 (auto-picker rollout), L-35 (Gate 15 live scanner), L-36 (Fish Elevated tier), L-37 (Resemble code cleanup).
+- **LALAL.AI:** Removed from Architecture table, LALAL subsection deleted from Section 3, LALAL references cleaned from Production Rules 14/15 and DO NOT APPLY list. LALAL.AI is dead — absent from all active sections, preserved in Amendment Log as historical record.
+
+---
+
+*Last updated: 12 February 2026 — v4.2: Auto-picker v7 validated (96% pass rate on session 39). Resemble AI removed entirely. 6 new Production Rules. Gate 15 post-deploy scanner. 7 new deployed sessions. CDN cache purge. Mid-sentence conditioning. Fish speaking rate corrected. Sleep story pause profiles. LALAL.AI cleaned from active sections.*
 
 ---
 
@@ -2351,10 +2617,22 @@ Outstanding actions, pending decisions, and items requiring human input. Items a
 | L-13 | ~~Retroactive chunk extraction~~ | v3.5 | Code | **COMPLETE** â€” superseded by v3 rebuilds |
 | L-14 | **Scoring formula chunk 0 recalibration** Ã¢â‚¬â€ The composite metric is unreliable for opening chunks. Either add a chunk 0 exemption, apply separate calibration for unconditioned chunks, or remove chunk 0 from automated scoring entirely. Current workaround: human listening. | v3.5 | Scott/Code | OPEN |
 | L-12 | **Test run on new material** Ã¢â‚¬â€ Next new session build should use best-of-10 as standard for all chunks (not just focused chunks), with the repair pipeline standing by for any flagged chunks post-build. Validates end-to-end quality on fresh content. | v3.4 | Scott/Code | WAITING |
-| L-15 | **Session 09 Resemble evaluation** â€” 30 min narrative sleep story built with Fish despite routing rules directing to Resemble. Volume surge flagged (Gate 7). If listening review confirms volume inconsistencies, rebuild with Resemble. | v3.6 | Scott | WAITING â€” after listening review |
-| L-16 | **CBT section development** â€” New dedicated page with CBT-informed guided meditation sessions. Requires: page design, session scripting (thought defusion, cognitive restructuring, behavioural activation), disclaimer text, placement decision (standalone vs AP sub-section). First CBT scripts should go through the standard pipeline with extra attention to psychological accuracy. | v3.6 | Scott/Code | OPEN |
-| L-17 | **Session 03 rebuild** — v3 rebuild rolled back due to voice failure on opening chunk. Needs successful rebuild using split-chunk technique on chunk 0 (one short sentence < 60 chars as chunk 0a), plus Gate 12 (duration overcorrection) and Gate 13 (bird chirp ambient) fixes. Previous version (16:03 build) currently live. | v3.7 | Scott/Code | OPEN |
-| L-18 | **Echo detector revalidation** — Retest Whisper confidence + local DSP combined model when labelled dataset reaches 50+ ECHO examples across 5+ sessions. If AUC > 0.70 and FNR < 10%, integrate as formal pre-review filter. Current: 12 ECHO examples, AUC 0.506. | v3.7 | Scott/Code | BLOCKED — needs 50+ ECHO labels |
+| L-15 | ~~**Session 09 Resemble evaluation**~~ — Resemble removed from pipeline entirely (12 Feb 2026). Session 09 redeployed via auto-picker with grace ambient. Resemble evaluation no longer applicable. | v3.6 | Scott | **CLOSED** |
+| L-16 | **CBT section development** — 4 CBT sessions scripted, vault-built, and in picker (78-The Thought Train, 79-The Evidence Log, 80-One Small Thing, 81-The Worry Window). Remaining: page design, disclaimer text, A/B picking or auto-picker run, assembly, deployment. | v3.6 | Scott/Code | PARTIAL |
+| L-17 | ~~**Session 03 rebuild**~~ | v3.7 | Scott/Code | **COMPLETE** |
+| L-18 | **Echo detector revalidation** — Rejection reason tags and auto-picker verdict history both accumulating labelled data. With ~30 hrs of review ahead at accelerated pace, the 50-label threshold will be reached during normal production. The auto-picker's three-layer cutoff detection provides a complementary signal — cutoff is now reliably detected without the echo detector. | v3.7 | Scott/Code | BLOCKED — needs 50+ ECHO labels |
+| L-25 | **Vault session completion — 40 sessions remaining.** Auto-picker v7 replaces manual A/B picking as primary method. ~80% reduction in human time per session (~45 min vs ~2 hrs). 54 sessions in vault, 13 deployed (4 awaiting review), 1 parked, 40 waiting. Rejection reason tags continue accumulating passively during any manual review. | v4.2 | Scott/Code | OPEN |
+| L-27 | ~~**Session 03 full rebuild — breathing silence bugs**~~ | v4.1 | Scott/Code | **COMPLETE** |
+| L-28 | **Expendable tail padding in vault-builder.py.** The auto-picker's tail cutoff detector (Layer 2: < 12ms trailing silence) now catches end-of-chunk truncation and rejects affected candidates. This mitigates the impact of the truncation bug by ensuring truncated candidates are never selected. However, the underlying ~30% candidate waste remains — clean candidates are still being generated and then rejected. The code fix (append throwaway phrase, trim in post-processing) would recover those candidates and improve tournament quality. Priority downgraded from HIGH to MEDIUM given the tail detector workaround. | v4.1 | Code | MEDIUM — OPEN |
+| L-29 | **Session 01 chunk 11 rewrite** — Session 01 redeployed via auto-picker with grace ambient. c11 remains a persistent fail (191 chars, BAD/voice mush, 82% cutoff rate). Needs text split at 150-char boundary and regeneration. Auto-picker selected least-bad candidate for assembly — ambient may mask the issue. **Awaiting full-audio review** to determine if rewrite still needed. | v4.1 | Scott/Code | OPEN |
+| L-30 | **Post-assembly conditioning chain QA gate** — The auto-picker workflow with ambient masking reduces the impact of conditioning chain contamination (ambient covers mild downstream hiss). However, the sequential HF scan remains valuable as a safety net. Lower priority given ambient masking, but still OPEN. | v4.1 | Scott/Code | OPEN |
+| L-31 | **Curated chunk 0 reference library** — Replace `MARCO_MASTER_WAV` fallback with 3–5 proven Fish-generated chunks from deployed sessions. Mid-sentence conditioning achieved 20/20 pass rate vs ~60% with marco-master. | v4.2 | Code | OPEN |
+| L-32 | **Automate CDN cache purge in deploy workflows** — Integrate purge into vault-assemble.py deploy step, `cpd` shortcut, and any R2 upload script. | v4.2 | Code | OPEN |
+| L-33 | **Sleep story pause profile** — Add `sleep-story` category to PAUSE_PROFILES in vault-builder.py (12/35/60s). Override when Category=story AND Duration-Target > 20 min. Evidence: session 53 required manual pause scaling. | v4.2 | Code | OPEN |
+| L-34 | **Auto-picker production rollout** — Run auto-picker v7 across remaining 40 vault sessions. Establish verdict history per session through iterative review rounds. Target: all 54 sessions deployed within ~30 hours of human review (down from ~58 hours with A/B picking). | v4.2 | Scott/Code | OPEN |
+| L-35 | **Post-deploy live material scanner (Gate 15)** — CRITICAL. Automated scan of deployed MP3 on R2 for catastrophic failures: silence dropouts, volume explosions, voice breakdowns, duration deviation, hiss cascades, ambient fade verification. Runs AFTER every deployment. Evidence: two failures on 12 Feb — (1) massive audio breakdown that all 14 pre-deploy gates missed, (2) Code deployed 0s ambient fade-in (spec: 15s) undetected. Both would have been caught. See Section 12, Gate 15 specification. | v4.2 | Code | CRITICAL — OPEN |
+| L-36 | **Fish Elevated tier confirmation** — Fish Audio account upgraded to Elevated tier (15 concurrent connections, up from 5 on Starter). Vault-builder.py `MAX_CONCURRENT` updated from 5 to 15. Total generation cost for session 01 trial: ~$116.69. | v4.2 | Scott | OPEN |
+| L-37 | **Resemble AI removal cleanup** — Remove all Resemble references from codebase: `build-session-v3.py` Resemble paths, environment variable references, provider routing logic, and any Resemble-specific cleanup chains. The Bible update documents what to remove; Code should execute the actual code cleanup. | v4.2 | Code | OPEN |
 
 ### Completed (Recent)
 
@@ -2369,6 +2647,9 @@ Outstanding actions, pending decisions, and items requiring human input. Items a
 | L-11 | Catalogue repair run | v3.4 | 9 Feb 2026 | All 4 unscored sessions rebuilt to v3 standard. Phase 2 repairs deployed. Session 36 chunk 7 = Fish hard failure (0/10). |
 | L-13 | Retroactive chunk extraction | v3.5 | 9 Feb 2026 | Superseded by full v3 rebuilds â€” all sessions now have per-chunk scoring data. |
 | L-02 | Auphonic credentials | v3.4 | 9 Feb 2026 | Credits topped up. Auphonic echo analysis run on full labelled dataset. Ruled out for echo detection (AUC 0.341). |
+| L-15 | Session 09 Resemble evaluation | v3.6 | 12 Feb 2026 | CLOSED — Resemble removed from pipeline. Session 09 redeployed via auto-picker with grace ambient. |
+| L-17 | Session 03 rebuild | v3.7 | 12 Feb 2026 | Complete. |
+| L-27 | Session 03 full rebuild — breathing silence bugs | v4.1 | 12 Feb 2026 | Complete. |
 
 ### Ledger Rules
 
