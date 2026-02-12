@@ -13,6 +13,9 @@
   <url><loc>https://salus-mind.com/education.html</loc><lastmod>2026-02-06</lastmod><priority>0.9</priority></url>
   <url><loc>https://salus-mind.com/apps.html</loc><lastmod>2026-02-06</lastmod><priority>0.9</priority></url>
 
+  <url><loc>https://salus-mind.com/asmr.html</loc><lastmod>2026-02-12</lastmod><priority>0.9</priority></url>
+  <url><loc>https://salus-mind.com/cbt.html</loc><lastmod>2026-02-12</lastmod><priority>0.9</priority></url>
+
   <!-- Feature pages -->
   <url><loc>https://salus-mind.com/breathe.html</loc><lastmod>2026-02-06</lastmod><priority>0.8</priority></url>
   <url><loc>https://salus-mind.com/timer.html</loc><lastmod>2026-02-06</lastmod><priority>0.8</priority></url>
@@ -21,6 +24,7 @@
   <url><loc>https://salus-mind.com/reading.html</loc><lastmod>2026-02-06</lastmod><priority>0.8</priority></url>
   <url><loc>https://salus-mind.com/applied-psychology.html</loc><lastmod>2026-02-06</lastmod><priority>0.8</priority></url>
   <url><loc>https://salus-mind.com/mindfulness-21-day.html</loc><lastmod>2026-02-06</lastmod><priority>0.8</priority></url>
+  <url><loc>https://salus-mind.com/lend-your-voice.html</loc><lastmod>2026-02-12</lastmod><priority>0.6</priority></url>
 
   <!-- Info pages -->
   <url><loc>https://salus-mind.com/about.html</loc><lastmod>2026-02-06</lastmod><priority>0.7</priority></url>

@@ -1,4 +1,13 @@
 User-agent: *
 Allow: /
+Disallow: /dashboard.html
+Disallow: /login.html
+Disallow: /signup.html
+Disallow: /reset-password.html
+Disallow: /thank-you.html
+Disallow: /preview-narrator.html
+Disallow: /admin/
+Disallow: /test/
+Disallow: /content/
 
 Sitemap: https://salus-mind.com/sitemap.xml
