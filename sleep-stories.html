@@ -992,9 +992,14 @@ function render(filter) {
         </div>
       </div>
       <div class="ss-book-salus">Salūs</div>
+      ${s.src ? '<div class="ss-book-play-badge"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>' : ''}
       ${(s.free || premium) ? '' : '<div class="ss-book-lock"><svg viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>'}
       <div class="ss-book-border"></div>
     `;
+
+    if (s.src) {
+      el.addEventListener('click', () => openPlayer(s));
+    }
 
     grid.appendChild(el);
   });
@@ -1021,6 +1026,75 @@ render('all');
       if (premBar) premBar.style.display = 'none';
     }
   }
+})();
+
+// Player logic
+(function() {
+  const audio = document.getElementById('ssAudio');
+  const panel = document.getElementById('ssPlayer');
+  const titleEl = document.getElementById('ssPlayerTitle');
+  const playBtn = document.getElementById('ssPlayBtn');
+  const track = document.getElementById('ssTrack');
+  const progress = document.getElementById('ssProgress');
+  const timeEl = document.getElementById('ssTime');
+  const closeBtn = document.getElementById('ssClose');
+
+  const playSvg = '<svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+  const pauseSvg = '<svg viewBox="0 0 24 24"><rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/></svg>';
+
+  function fmt(s) { const m = Math.floor(s/60); return m + ':' + String(Math.floor(s%60)).padStart(2,'0'); }
+
+  window.openPlayer = function(story) {
+    audio.src = story.src;
+    titleEl.textContent = story.t;
+    panel.classList.add('visible');
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    audio.play();
+    playBtn.classList.add('playing');
+    playBtn.innerHTML = pauseSvg;
+  };
+
+  playBtn.addEventListener('click', function() {
+    if (audio.paused) {
+      audio.play();
+      playBtn.classList.add('playing');
+      playBtn.innerHTML = pauseSvg;
+    } else {
+      audio.pause();
+      playBtn.classList.remove('playing');
+      playBtn.innerHTML = playSvg;
+    }
+  });
+
+  audio.addEventListener('timeupdate', function() {
+    if (audio.duration) {
+      progress.style.width = (audio.currentTime / audio.duration * 100) + '%';
+      timeEl.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration);
+    }
+  });
+
+  audio.addEventListener('ended', function() {
+    playBtn.classList.remove('playing');
+    playBtn.innerHTML = playSvg;
+    progress.style.width = '0%';
+  });
+
+  track.addEventListener('click', function(e) {
+    if (audio.duration) {
+      var rect = track.getBoundingClientRect();
+      audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+    }
+  });
+
+  closeBtn.addEventListener('click', function() {
+    audio.pause();
+    audio.src = '';
+    panel.classList.remove('visible');
+    playBtn.classList.remove('playing');
+    playBtn.innerHTML = playSvg;
+    progress.style.width = '0%';
+    timeEl.textContent = '0:00 / 0:00';
+  });
 })();
 
 // Navigation
