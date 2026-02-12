@@ -510,6 +510,9 @@
   }
 </style>
 <link rel="stylesheet" href="css/style.css?v=1770564391">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/auth.js?v=1770564391"></script>
 </head>
 <body>
 
@@ -718,7 +721,7 @@
 
   <!-- ======= CLOSING ======= -->
   <div class="closing">
-    <p>Salus — Latin: health, safety, well-being</p>
+    <p>Salūs — Latin: health, safety, well-being</p>
   </div>
 
 </div>
@@ -780,6 +783,8 @@
   </div>
 </footer>
 
+<script src="js/main.js?v=1770564391"></script>
+<script src="js/tracker.js"></script>
 <script>
 const navWrap=document.getElementById("navWrap");
 window.addEventListener("scroll",()=>{navWrap.classList.toggle("scrolled",window.scrollY>30)},{passive:true});
