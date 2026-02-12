@@ -1,8 +1,10 @@
 /**
- * Vault Picks Worker — Cloudflare Worker for persisting picker page selections.
+ * Vault Picks Worker — Cloudflare Worker for persisting picker selections and verdicts.
  *
- * GET  /picks/{session-id}  → returns picks.json from R2
- * PUT  /picks/{session-id}  → saves picks.json to R2
+ * GET  /picks/{session-id}     → returns picks.json from R2
+ * PUT  /picks/{session-id}     → saves picks.json to R2
+ * GET  /verdicts/{session-id}  → returns verdicts.json from R2
+ * PUT  /verdicts/{session-id}  → saves verdicts.json to R2
  *
  * Auth: Bearer token in Authorization header (matches AUTH_TOKEN env var).
  * CORS: Allows requests from salus-mind.com and media.salus-mind.com.
@@ -33,18 +35,23 @@ export default {
       return new Response(null, { status: 204, headers: corsHeaders });
     }
 
-    // Parse path: /picks/{session-id}
+    // Parse path: /picks/{session-id} or /verdicts/{session-id}
     const url = new URL(request.url);
-    const match = url.pathname.match(/^\/picks\/([a-zA-Z0-9_-]+)$/);
+    const picksMatch = url.pathname.match(/^\/picks\/([a-zA-Z0-9_-]+)$/);
+    const verdictsMatch = url.pathname.match(/^\/verdicts\/([a-zA-Z0-9_-]+)$/);
+    const match = picksMatch || verdictsMatch;
     if (!match) {
-      return new Response(JSON.stringify({ error: 'Invalid path. Use /picks/{session-id}' }), {
+      return new Response(JSON.stringify({ error: 'Invalid path. Use /picks/{session-id} or /verdicts/{session-id}' }), {
         status: 404,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
     const sessionId = match[1];
-    const r2Key = `vault/${sessionId}/picks/picks.json`;
+    const isVerdicts = !!verdictsMatch;
+    const r2Key = isVerdicts
+      ? `vault/${sessionId}/verdicts/verdicts.json`
+      : `vault/${sessionId}/picks/picks.json`;
 
     // Auth check
     const authHeader = request.headers.get('Authorization') || '';

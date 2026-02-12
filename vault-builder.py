@@ -45,7 +45,7 @@ FISH_API_URL = "https://api.fish.audio/v1/tts"
 FISH_VOICE_ID = "0165567b33324f518b02336ad232e31a"
 FISH_API_KEY = os.getenv("FISH_API_KEY")
 SAMPLE_RATE = 44100
-MAX_CONCURRENT = 5  # Fish Starter tier limit
+MAX_CONCURRENT = 15  # Fish Elevated tier (auto at $100+ spend, was 5 Starter)
 
 # Candidate counts by character range
 CANDIDATE_COUNTS = [
@@ -56,7 +56,12 @@ CANDIDATE_COUNTS = [
 ]
 
 SCORE_FILTER_THRESHOLD = 0.30  # Below this = pre-filter flagged (kept, not deleted)
-MARCO_MASTER_WAV = Path(__file__).parent / "content/audio/marco-master/marco-master-v1.wav"
+# Chunk 0 conditioning: use a clean human-picked chunk from a deployed session
+# instead of marco-master WAV (per 12 Feb 2026 debrief — mid-sentence conditioning)
+CHUNK0_REFERENCE_WAV = Path(__file__).parent / "content/audio-free/vault/42-seven-day-mindfulness-day5/c04/c04_v19.wav"
+MARCO_MASTER_WAV = CHUNK0_REFERENCE_WAV if CHUNK0_REFERENCE_WAV.exists() else (
+    Path(__file__).parent / "content/audio/marco-master/marco-master-v1.wav"
+)
 
 # ---------------------------------------------------------------------------
 # Script Pre-Processing
@@ -140,10 +145,10 @@ def preprocess_blocks(blocks):
             backward.append((text, pause))
     merged = backward
 
-    # --- Pass 2: Split long blocks ---
+    # --- Pass 2: Split long blocks (150 chars for Fish, prevents truncation) ---
     final = []
     for idx, (text, pause) in enumerate(merged):
-        if len(text) > 300:
+        if len(text) > 150:
             fragments = _split_at_sentences(text)
             split_log.append(
                 f"SPLIT: block {idx} ({len(text)}ch) → {len(fragments)} fragments "
@@ -160,8 +165,8 @@ def preprocess_blocks(blocks):
     return final, merge_log + split_log
 
 
-def _split_at_sentences(text, target_max=200, target_min=50):
-    """Split text at sentence boundaries into 50-200 char fragments."""
+def _split_at_sentences(text, target_max=150, target_min=50):
+    """Split text at sentence boundaries into 50-150 char fragments."""
     sentences = re.split(r'(?<=[.!?])\s+', text)
     fragments = []
     current = []

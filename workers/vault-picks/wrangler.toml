@@ -10,5 +10,5 @@ bucket_name = "salus-mind"
 AUTH_TOKEN = "salus-vault-2026"
 
 [[routes]]
-pattern = "vault-picks.salus-mind.com/*"
+pattern = "vault-picks.salus-mind.com"
 custom_domain = true
