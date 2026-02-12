@@ -78,13 +78,15 @@ ECHO_RISK_CEILING = 0.003      # Hard ceiling on echo_risk (was 0.0016, eliminat
 HISS_RISK_CEILING = -5.0       # Loosened from -10.0 (was eliminating 16 human picks at borderline -6.9 to -9.8)
 CUT_SHORT_RATIO = 0.60         # Reject if duration < 60% of chunk median
 CUTOFF_CHARS_PER_SEC = 22.0    # Loosened from 14.0 (was eliminating 70 human picks; chars/22 keeps 94%)
+CONTENT_CUTOFF_CPS = 14.0      # ch/s threshold for compound cutoff (Fish normal: 10-13)
+COMPOUND_CUTOFF_TAIL_MS = 25   # Compound cutoff: reject if tail < 25ms AND cps > 14 AND chars > 80
 ECHO_RANK_WEIGHT = 200.0       # v6: Reduced from 300 (sweep: lower echo weight + tonal = better)
 FLATNESS_PENALTY_WEIGHT = 20.0 # Flatness penalty (sweep confirmed 20 optimal)
 QUALITY_RANK_WEIGHT = 6.0      # v6: Increased from 3.0 (sweep: 5-7 optimal for top-3)
 DURATION_PREFER_WEIGHT = 0.0   # v6: Disabled (sweep proved harmful across all weights)
 TONAL_RANK_WEIGHT = 250.0      # v6: NEW — tonal consistency (MFCC distance to prev chunk, sweep: huge signal)
 HISS_RANK_WEIGHT = 0.0         # v6: Disabled (sweep proved harmful)
-TAIL_SILENCE_MIN_MS = 10       # Reject if trailing silence < 10ms (tail cutoff — audio ends abruptly)
+TAIL_SILENCE_MIN_MS = 12       # Reject if trailing silence < 12ms (tail cutoff — audio ends abruptly)
 TAIL_SILENCE_DB = -40          # dBFS threshold for silence detection
 CONFIDENCE_MARGIN = 0.05       # Score margin for high vs low confidence
 HARD_FAIL_SIMILARITY = 0.15    # Reject if metrics within 15% of a known hard-fail
@@ -435,6 +437,14 @@ def select_candidate(chunk_idx, chunk_data, prev_best_mfcc=None, session_log=Non
         if tail_ms is not None and tail_ms < TAIL_SILENCE_MIN_MS:
             reasons.append(f"tail_cutoff: {tail_ms:.0f}ms trailing silence (min {TAIL_SILENCE_MIN_MS}ms)")
 
+        # 1e2: Compound cutoff — rushing + short tail (catches borderline cutoffs neither filter gets alone)
+        if (chunk_data.get('char_count', 0) > 80
+                and c.get('duration') is not None and c['duration'] > 0
+                and tail_ms is not None):
+            cps = chunk_data['char_count'] / c['duration']
+            if cps > CONTENT_CUTOFF_CPS and tail_ms < COMPOUND_CUTOFF_TAIL_MS:
+                reasons.append(f"compound_cutoff: {cps:.1f}ch/s + {tail_ms:.0f}ms tail (rushing with abrupt end)")
+
         # 1f: Echo risk hard ceiling
         if c.get('echo_risk') is not None and c['echo_risk'] > ECHO_RISK_CEILING:
             reasons.append(f"echo_risk {c['echo_risk']:.6f} > {ECHO_RISK_CEILING}")
@@ -548,6 +558,7 @@ def select_candidate(chunk_idx, chunk_data, prev_best_mfcc=None, session_log=Non
         if dur_median and c.get('duration') and c['duration'] > 0:
             dur_ratio = (c['duration'] - dur_median) / dur_median  # positive = longer than median
             base += dur_ratio * DURATION_PREFER_WEIGHT
+
 
         # Soft-fail penalty from verdict history
         if soft_profiles:

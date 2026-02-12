@@ -1,13 +1,13 @@
 {
-  "validated_at": "2026-02-12T14:55:17Z",
+  "validated_at": "2026-02-12T15:24:46Z",
   "total_sessions": 10,
   "total_chunks": 245,
-  "exact_match": 62,
-  "exact_match_pct": 25.3,
-  "top3_match": 147,
-  "top3_match_pct": 60.0,
-  "human_eliminated": 34,
-  "human_eliminated_pct": 13.9,
+  "exact_match": 60,
+  "exact_match_pct": 24.5,
+  "top3_match": 145,
+  "top3_match_pct": 59.2,
+  "human_eliminated": 46,
+  "human_eliminated_pct": 18.8,
   "sessions": [
     {
       "session": "01-morning-meditation",
@@ -111,9 +111,9 @@
         },
         {
           "chunk": 13,
-          "auto_picked": 7,
+          "auto_picked": 11,
           "human_picked": 4,
-          "auto_quality": 0.5421,
+          "auto_quality": 0.5412,
           "human_quality": 0.5658,
           "auto_rank_of_human": null,
           "human_eliminated": true
@@ -231,10 +231,10 @@
     {
       "session": "03-breathing-for-anxiety",
       "total_chunks": 31,
-      "exact_match": 7,
-      "exact_match_pct": 22.6,
-      "human_in_auto_top3": 16,
-      "human_in_auto_top3_pct": 51.6,
+      "exact_match": 8,
+      "exact_match_pct": 25.8,
+      "human_in_auto_top3": 18,
+      "human_in_auto_top3_pct": 58.1,
       "human_eliminated": 7,
       "human_eliminated_pct": 22.6,
       "mismatches": [
@@ -267,21 +267,12 @@
         },
         {
           "chunk": 5,
-          "auto_picked": 21,
+          "auto_picked": 17,
           "human_picked": 2,
-          "auto_quality": 1.3152,
+          "auto_quality": 0.8649,
           "human_quality": 0.9246,
           "auto_rank_of_human": null,
           "human_eliminated": true
-        },
-        {
-          "chunk": 6,
-          "auto_picked": 8,
-          "human_picked": 15,
-          "auto_quality": 0.6887,
-          "human_quality": 0.9031,
-          "auto_rank_of_human": 2,
-          "human_eliminated": false
         },
         {
           "chunk": 7,
@@ -330,9 +321,9 @@
         },
         {
           "chunk": 13,
-          "auto_picked": 17,
+          "auto_picked": 19,
           "human_picked": 3,
-          "auto_quality": 0.2784,
+          "auto_quality": 0.5383,
           "human_quality": 1.1099,
           "auto_rank_of_human": null,
           "human_eliminated": null
@@ -361,7 +352,7 @@
           "human_picked": 4,
           "auto_quality": 1.3524,
           "human_quality": 1.0931,
-          "auto_rank_of_human": 14,
+          "auto_rank_of_human": 9,
           "human_eliminated": false
         },
         {
@@ -415,7 +406,7 @@
           "human_picked": 8,
           "auto_quality": 0.7543,
           "human_quality": 0.7176,
-          "auto_rank_of_human": 4,
+          "auto_rank_of_human": 2,
           "human_eliminated": false
         },
         {
@@ -424,7 +415,7 @@
           "human_picked": 9,
           "auto_quality": 1.222,
           "human_quality": 1.0531,
-          "auto_rank_of_human": 4,
+          "auto_rank_of_human": 3,
           "human_eliminated": false
         },
         {
@@ -451,7 +442,7 @@
           "human_picked": 6,
           "auto_quality": 0.9452,
           "human_quality": 0.7974,
-          "auto_rank_of_human": 7,
+          "auto_rank_of_human": 6,
           "human_eliminated": false
         }
       ]
@@ -461,18 +452,18 @@
       "total_chunks": 12,
       "exact_match": 2,
       "exact_match_pct": 16.7,
-      "human_in_auto_top3": 8,
-      "human_in_auto_top3_pct": 66.7,
+      "human_in_auto_top3": 9,
+      "human_in_auto_top3_pct": 75.0,
       "human_eliminated": 1,
       "human_eliminated_pct": 8.3,
       "mismatches": [
         {
           "chunk": 0,
-          "auto_picked": 12,
+          "auto_picked": 13,
           "human_picked": 9,
-          "auto_quality": 0.9982,
+          "auto_quality": 0.9073,
           "human_quality": 0.8845,
-          "auto_rank_of_human": 5,
+          "auto_rank_of_human": 3,
           "human_eliminated": false
         },
         {
@@ -549,9 +540,9 @@
         },
         {
           "chunk": 9,
-          "auto_picked": 13,
+          "auto_picked": 1,
           "human_picked": 7,
-          "auto_quality": 0.9345,
+          "auto_quality": 0.7714,
           "human_quality": 0.8188,
           "auto_rank_of_human": null,
           "human_eliminated": true
@@ -699,12 +690,12 @@
     {
       "session": "32-observing-emotions",
       "total_chunks": 26,
-      "exact_match": 8,
-      "exact_match_pct": 30.8,
-      "human_in_auto_top3": 15,
-      "human_in_auto_top3_pct": 57.7,
-      "human_eliminated": 4,
-      "human_eliminated_pct": 15.4,
+      "exact_match": 6,
+      "exact_match_pct": 23.1,
+      "human_in_auto_top3": 14,
+      "human_in_auto_top3_pct": 53.8,
+      "human_eliminated": 7,
+      "human_eliminated_pct": 26.9,
       "mismatches": [
         {
           "chunk": 0,
@@ -712,8 +703,8 @@
           "human_picked": 16,
           "auto_quality": 0.5233,
           "human_quality": 0.3465,
-          "auto_rank_of_human": 7,
-          "human_eliminated": false
+          "auto_rank_of_human": null,
+          "human_eliminated": true
         },
         {
           "chunk": 1,
@@ -752,6 +743,15 @@
           "human_eliminated": true
         },
         {
+          "chunk": 6,
+          "auto_picked": 2,
+          "human_picked": 4,
+          "auto_quality": 1.192,
+          "human_quality": 1.1464,
+          "auto_rank_of_human": null,
+          "human_eliminated": true
+        },
+        {
           "chunk": 7,
           "auto_picked": 14,
           "human_picked": 7,
@@ -766,7 +766,7 @@
           "human_picked": 13,
           "auto_quality": 0.7406,
           "human_quality": 0.5401,
-          "auto_rank_of_human": 5,
+          "auto_rank_of_human": 3,
           "human_eliminated": false
         },
         {
@@ -784,7 +784,7 @@
           "human_picked": 11,
           "auto_quality": 0.7573,
           "human_quality": 0.5192,
-          "auto_rank_of_human": 10,
+          "auto_rank_of_human": 9,
           "human_eliminated": false
         },
         {
@@ -813,6 +813,15 @@
           "human_quality": 0.6776,
           "auto_rank_of_human": 2,
           "human_eliminated": false
+        },
+        {
+          "chunk": 15,
+          "auto_picked": 6,
+          "human_picked": 7,
+          "auto_quality": 0.5478,
+          "human_quality": 0.5729,
+          "auto_rank_of_human": null,
+          "human_eliminated": true
         },
         {
           "chunk": 16,
@@ -922,7 +931,7 @@
           "human_picked": 28,
           "auto_quality": 1.4885,
           "human_quality": 0.5311,
-          "auto_rank_of_human": 11,
+          "auto_rank_of_human": 8,
           "human_eliminated": false
         },
         {
@@ -940,7 +949,7 @@
           "human_picked": 4,
           "auto_quality": 0.828,
           "human_quality": 0.5701,
-          "auto_rank_of_human": 10,
+          "auto_rank_of_human": 9,
           "human_eliminated": false
         },
         {
@@ -981,11 +990,11 @@
         },
         {
           "chunk": 13,
-          "auto_picked": 9,
+          "auto_picked": 5,
           "human_picked": 12,
-          "auto_quality": 0.7846,
+          "auto_quality": 0.722,
           "human_quality": 0.5488,
-          "auto_rank_of_human": 8,
+          "auto_rank_of_human": 5,
           "human_eliminated": false
         },
         {
@@ -1047,13 +1056,22 @@
     {
       "session": "52-the-court-of-your-mind",
       "total_chunks": 66,
-      "exact_match": 22,
-      "exact_match_pct": 33.3,
-      "human_in_auto_top3": 44,
-      "human_in_auto_top3_pct": 66.7,
-      "human_eliminated": 8,
-      "human_eliminated_pct": 12.1,
+      "exact_match": 21,
+      "exact_match_pct": 31.8,
+      "human_in_auto_top3": 41,
+      "human_in_auto_top3_pct": 62.1,
+      "human_eliminated": 13,
+      "human_eliminated_pct": 19.7,
       "mismatches": [
+        {
+          "chunk": 0,
+          "auto_picked": 22,
+          "human_picked": 16,
+          "auto_quality": 0.8667,
+          "human_quality": 0.9154,
+          "auto_rank_of_human": null,
+          "human_eliminated": true
+        },
         {
           "chunk": 1,
           "auto_picked": 1,
@@ -1109,22 +1127,13 @@
           "human_eliminated": false
         },
         {
-          "chunk": 13,
-          "auto_picked": 42,
-          "human_picked": 2,
-          "auto_quality": 0.804,
-          "human_quality": 0.742,
-          "auto_rank_of_human": 2,
-          "human_eliminated": false
-        },
-        {
           "chunk": 14,
           "auto_picked": 19,
           "human_picked": 10,
           "auto_quality": 0.6646,
           "human_quality": 0.6379,
-          "auto_rank_of_human": 2,
-          "human_eliminated": false
+          "auto_rank_of_human": null,
+          "human_eliminated": true
         },
         {
           "chunk": 18,
@@ -1145,12 +1154,21 @@
           "human_eliminated": true
         },
         {
+          "chunk": 21,
+          "auto_picked": 20,
+          "human_picked": 4,
+          "auto_quality": 0.4724,
+          "human_quality": 0.4815,
+          "auto_rank_of_human": null,
+          "human_eliminated": true
+        },
+        {
           "chunk": 22,
-          "auto_picked": 2,
+          "auto_picked": 17,
           "human_picked": 11,
-          "auto_quality": 0.6958,
+          "auto_quality": 0.6394,
           "human_quality": 0.5007,
-          "auto_rank_of_human": 10,
+          "auto_rank_of_human": 9,
           "human_eliminated": false
         },
         {
@@ -1218,11 +1236,11 @@
         },
         {
           "chunk": 31,
-          "auto_picked": 0,
+          "auto_picked": 13,
           "human_picked": 18,
-          "auto_quality": 1.3424,
+          "auto_quality": 1.0811,
           "human_quality": 1.1713,
-          "auto_rank_of_human": 3,
+          "auto_rank_of_human": 2,
           "human_eliminated": false
         },
         {
@@ -1231,8 +1249,8 @@
           "human_picked": 3,
           "auto_quality": 0.9565,
           "human_quality": 0.8101,
-          "auto_rank_of_human": 4,
-          "human_eliminated": false
+          "auto_rank_of_human": null,
+          "human_eliminated": true
         },
         {
           "chunk": 33,
@@ -1285,8 +1303,8 @@
           "human_picked": 43,
           "auto_quality": 0.8359,
           "human_quality": 0.6998,
-          "auto_rank_of_human": 10,
-          "human_eliminated": false
+          "auto_rank_of_human": null,
+          "human_eliminated": true
         },
         {
           "chunk": 40,
@@ -1317,9 +1335,9 @@
         },
         {
           "chunk": 44,
-          "auto_picked": 5,
+          "auto_picked": 14,
           "human_picked": 18,
-          "auto_quality": 0.895,
+          "auto_quality": 0.9154,
           "human_quality": 0.8378,
           "auto_rank_of_human": null,
           "human_eliminated": true
@@ -1384,7 +1402,7 @@
           "human_picked": 11,
           "auto_quality": 0.3292,
           "human_quality": 0.2601,
-          "auto_rank_of_human": 6,
+          "auto_rank_of_human": 5,
           "human_eliminated": false
         },
         {
@@ -1425,11 +1443,11 @@
         },
         {
           "chunk": 63,
-          "auto_picked": 17,
+          "auto_picked": 18,
           "human_picked": 19,
-          "auto_quality": 1.0444,
+          "auto_quality": 0.9341,
           "human_quality": 0.9483,
-          "auto_rank_of_human": 3,
+          "auto_rank_of_human": 2,
           "human_eliminated": false
         },
         {
@@ -1455,12 +1473,12 @@
     {
       "session": "61-21day-mindfulness-day05",
       "total_chunks": 19,
-      "exact_match": 3,
-      "exact_match_pct": 15.8,
-      "human_in_auto_top3": 7,
-      "human_in_auto_top3_pct": 36.8,
-      "human_eliminated": 1,
-      "human_eliminated_pct": 5.3,
+      "exact_match": 4,
+      "exact_match_pct": 21.1,
+      "human_in_auto_top3": 9,
+      "human_in_auto_top3_pct": 47.4,
+      "human_eliminated": 2,
+      "human_eliminated_pct": 10.5,
       "mismatches": [
         {
           "chunk": 0,
@@ -1486,7 +1504,7 @@
           "human_picked": 17,
           "auto_quality": 0.8286,
           "human_quality": 0.6038,
-          "auto_rank_of_human": 4,
+          "auto_rank_of_human": 2,
           "human_eliminated": false
         },
         {
@@ -1504,7 +1522,7 @@
           "human_picked": 23,
           "auto_quality": 0.5912,
           "human_quality": 0.4446,
-          "auto_rank_of_human": 8,
+          "auto_rank_of_human": 7,
           "human_eliminated": false
         },
         {
@@ -1514,15 +1532,6 @@
           "auto_quality": 0.6515,
           "human_quality": 0.5279,
           "auto_rank_of_human": 7,
-          "human_eliminated": false
-        },
-        {
-          "chunk": 7,
-          "auto_picked": 2,
-          "human_picked": 11,
-          "auto_quality": 0.9128,
-          "human_quality": 0.8867,
-          "auto_rank_of_human": 2,
           "human_eliminated": false
         },
         {
@@ -1549,7 +1558,7 @@
           "human_picked": 13,
           "auto_quality": 0.5133,
           "human_quality": 0.3856,
-          "auto_rank_of_human": 10,
+          "auto_rank_of_human": 9,
           "human_eliminated": false
         },
         {
@@ -1558,7 +1567,7 @@
           "human_picked": 1,
           "auto_quality": 0.6361,
           "human_quality": 0.5999,
-          "auto_rank_of_human": 4,
+          "auto_rank_of_human": 3,
           "human_eliminated": false
         },
         {
@@ -1567,7 +1576,7 @@
           "human_picked": 22,
           "auto_quality": 0.9262,
           "human_quality": 0.5044,
-          "auto_rank_of_human": 17,
+          "auto_rank_of_human": 16,
           "human_eliminated": false
         },
         {
@@ -1603,8 +1612,8 @@
           "human_picked": 1,
           "auto_quality": 0.889,
           "human_quality": 0.5972,
-          "auto_rank_of_human": 5,
-          "human_eliminated": false
+          "auto_rank_of_human": null,
+          "human_eliminated": true
         }
       ]
     },
@@ -1613,10 +1622,10 @@
       "total_chunks": 18,
       "exact_match": 5,
       "exact_match_pct": 27.8,
-      "human_in_auto_top3": 13,
-      "human_in_auto_top3_pct": 72.2,
-      "human_eliminated": 0,
-      "human_eliminated_pct": 0.0,
+      "human_in_auto_top3": 11,
+      "human_in_auto_top3_pct": 61.1,
+      "human_eliminated": 2,
+      "human_eliminated_pct": 11.1,
       "mismatches": [
         {
           "chunk": 0,
@@ -1696,8 +1705,17 @@
           "human_picked": 7,
           "auto_quality": 0.5738,
           "human_quality": 0.3787,
-          "auto_rank_of_human": 10,
+          "auto_rank_of_human": 9,
           "human_eliminated": false
+        },
+        {
+          "chunk": 13,
+          "auto_picked": 23,
+          "human_picked": 12,
+          "auto_quality": 0.5522,
+          "human_quality": 0.7099,
+          "auto_rank_of_human": null,
+          "human_eliminated": true
         },
         {
           "chunk": 14,
@@ -1705,8 +1723,8 @@
           "human_picked": 1,
           "auto_quality": 0.6135,
           "human_quality": 0.576,
-          "auto_rank_of_human": 2,
-          "human_eliminated": false
+          "auto_rank_of_human": null,
+          "human_eliminated": true
         },
         {
           "chunk": 15,
@@ -1715,15 +1733,6 @@
           "auto_quality": 0.8542,
           "human_quality": 0.6329,
           "auto_rank_of_human": 3,
-          "human_eliminated": false
-        },
-        {
-          "chunk": 16,
-          "auto_picked": 6,
-          "human_picked": 14,
-          "auto_quality": 1.0784,
-          "human_quality": 0.9517,
-          "auto_rank_of_human": 2,
           "human_eliminated": false
         },
         {
@@ -1740,12 +1749,12 @@
     {
       "session": "narrator-welcome",
       "total_chunks": 5,
-      "exact_match": 2,
-      "exact_match_pct": 40.0,
-      "human_in_auto_top3": 4,
-      "human_in_auto_top3_pct": 80.0,
-      "human_eliminated": 1,
-      "human_eliminated_pct": 20.0,
+      "exact_match": 1,
+      "exact_match_pct": 20.0,
+      "human_in_auto_top3": 3,
+      "human_in_auto_top3_pct": 60.0,
+      "human_eliminated": 2,
+      "human_eliminated_pct": 40.0,
       "mismatches": [
         {
           "chunk": 0,
@@ -1773,6 +1782,15 @@
           "human_quality": 0.7567,
           "auto_rank_of_human": 3,
           "human_eliminated": false
+        },
+        {
+          "chunk": 3,
+          "auto_picked": 19,
+          "human_picked": 35,
+          "auto_quality": 0.7797,
+          "human_quality": 0.8729,
+          "auto_rank_of_human": null,
+          "human_eliminated": true
         }
       ]
     }
