@@ -156,12 +156,12 @@
 
     // Handle account status
     (async function() {
-      if (typeof SalūsAuth !== 'undefined') {
-        await SalūsAuth.init();
-        if (SalūsAuth.isLoggedIn()) {
+      if (typeof SalusAuth !== 'undefined') {
+        await SalusAuth.init();
+        if (SalusAuth.isLoggedIn()) {
           // Logged in: refresh subscription from Supabase
           setTimeout(async function() {
-            await SalūsAuth.refreshSubscription();
+            await SalusAuth.refreshSubscription();
           }, 2000);
         } else {
           // Not logged in: show account creation prompt

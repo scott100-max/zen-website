@@ -326,18 +326,18 @@
       var contentEl = document.getElementById('dashboardContent');
 
       document.addEventListener('DOMContentLoaded', async function() {
-        await SalūsAuth.init();
+        await SalusAuth.init();
 
         // Check if logged in
-        if (!SalūsAuth.isLoggedIn()) {
+        if (!SalusAuth.isLoggedIn()) {
           window.location.href = 'login.html';
           return;
         }
 
         // Populate dashboard
-        var user = SalūsAuth.getUser();
-        var subscription = SalūsAuth.getSubscription();
-        var isPremium = SalūsAuth.isPremium();
+        var user = SalusAuth.getUser();
+        var subscription = SalusAuth.getSubscription();
+        var isPremium = SalusAuth.isPremium();
 
         // User info
         var fullName = user.user_metadata?.full_name || user.email.split('@')[0];
@@ -391,7 +391,7 @@
 
       // Logout handler
       document.getElementById('logoutBtn').addEventListener('click', async function() {
-        await SalūsAuth.signOut();
+        await SalusAuth.signOut();
         window.location.href = 'index.html';
       });
     })();

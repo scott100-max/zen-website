@@ -396,11 +396,11 @@
 
     // Set client-reference-id on Stripe Pricing Table from Supabase user ID
     (async function() {
-      if (typeof SalūsAuth !== 'undefined') {
-        await SalūsAuth.init();
+      if (typeof SalusAuth !== 'undefined') {
+        await SalusAuth.init();
         var table = document.querySelector('stripe-pricing-table');
-        if (table && SalūsAuth.isLoggedIn()) {
-          var user = SalūsAuth.getUser();
+        if (table && SalusAuth.isLoggedIn()) {
+          var user = SalusAuth.getUser();
           if (user && user.id) {
             table.setAttribute('client-reference-id', user.id);
           }

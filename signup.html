@@ -256,8 +256,8 @@
 
       // Check if already logged in
       document.addEventListener('DOMContentLoaded', async function() {
-        await SalūsAuth.init();
-        if (SalūsAuth.isLoggedIn()) {
+        await SalusAuth.init();
+        if (SalusAuth.isLoggedIn()) {
           window.location.href = redirect;
         }
       });
@@ -287,7 +287,7 @@
         submitBtn.textContent = 'Creating account...';
         submitBtn.disabled = true;
 
-        var result = await SalūsAuth.signUp(email, password, fullName);
+        var result = await SalusAuth.signUp(email, password, fullName);
 
         if (result.error) {
           errorEl.textContent = result.error.message;

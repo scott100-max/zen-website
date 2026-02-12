@@ -250,8 +250,8 @@
 
       // Check if already logged in
       document.addEventListener('DOMContentLoaded', async function() {
-        await SalūsAuth.init();
-        if (SalūsAuth.isLoggedIn()) {
+        await SalusAuth.init();
+        if (SalusAuth.isLoggedIn()) {
           window.location.href = redirect;
         }
       });
@@ -267,7 +267,7 @@
         submitBtn.textContent = 'Logging in...';
         submitBtn.disabled = true;
 
-        var result = await SalūsAuth.signIn(email, password);
+        var result = await SalusAuth.signIn(email, password);
 
         if (result.error) {
           errorEl.textContent = result.error.message;
