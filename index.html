@@ -1189,33 +1189,100 @@
   })();
 
 
-  // Narrator player
+  // Narrator player + Grace ambient fade
   (function(){
-    const audio=document.getElementById('narratorAudio');
-    const btn=document.getElementById('narratorPlayBtn');
-    const bar=document.getElementById('narratorBar');
-    const time=document.getElementById('narratorTime');
-    const iconPlay=btn.querySelector('.hb-narrator__icon-play');
-    const iconPause=btn.querySelector('.hb-narrator__icon-pause');
-    const progress=bar.parentElement;
-    function fmt(s){const m=Math.floor(s/60);return m+':'+(('0'+Math.floor(s%60)).slice(-2));}
-    btn.addEventListener('click',function(){if(audio.paused){audio.play()}else{audio.pause()}});
-    audio.addEventListener('play',function(){iconPlay.style.display='none';iconPause.style.display='block'});
-    audio.addEventListener('pause',function(){iconPlay.style.display='block';iconPause.style.display='none'});
-    audio.addEventListener('ended',function(){iconPlay.style.display='block';iconPause.style.display='none';bar.style.width='0%'});
-    audio.addEventListener('timeupdate',function(){if(audio.duration){bar.style.width=(audio.currentTime/audio.duration*100)+'%';time.textContent=fmt(audio.currentTime)}});
-    progress.addEventListener('click',function(e){if(audio.duration){var rect=progress.getBoundingClientRect();audio.currentTime=(e.clientX-rect.left)/rect.width*audio.duration}});
-  })();
+    var narrator=document.getElementById('narratorAudio');
+    var btn=document.getElementById('narratorPlayBtn');
+    var bar=document.getElementById('narratorBar');
+    var time=document.getElementById('narratorTime');
+    var iconPlay=btn.querySelector('.hb-narrator__icon-play');
+    var iconPause=btn.querySelector('.hb-narrator__icon-pause');
+    var progress=bar.parentElement;
+    var grace=document.getElementById('graceAudio');
+    var graceBtn=document.getElementById('graceBtn');
 
-  // Grace ambient
-  (function(){
-    var audio=document.getElementById('graceAudio');
-    var btn=document.getElementById('graceBtn');
-    if(!audio||!btn)return;
+    var GRACE_TARGET=0.3;        // -10 dB
+    var FADE_IN_MS=10000;        // 10 seconds fade in
+    var FADE_OUT_MS=10000;       // 10 seconds fade out
+    var FADE_STEP=50;            // update every 50ms
+    var fadeTimer=null;
+    var graceManualStop=false;   // true if user manually stopped Grace during narration
+
+    function fmt(s){var m=Math.floor(s/60);return m+':'+(('0'+Math.floor(s%60)).slice(-2));}
+
+    function fadeGrace(from,to,ms){
+      if(fadeTimer){clearInterval(fadeTimer);fadeTimer=null;}
+      if(!grace)return;
+      var steps=Math.max(1,Math.round(ms/FADE_STEP));
+      var delta=(to-from)/steps;
+      var step=0;
+      grace.volume=Math.max(0,Math.min(1,from));
+      fadeTimer=setInterval(function(){
+        step++;
+        if(step>=steps){
+          clearInterval(fadeTimer);fadeTimer=null;
+          grace.volume=Math.max(0,Math.min(1,to));
+          if(to===0){grace.pause();if(graceBtn)graceBtn.classList.remove('playing');}
+          return;
+        }
+        grace.volume=Math.max(0,Math.min(1,from+delta*step));
+      },FADE_STEP);
+    }
+
+    function startGraceWithFade(){
+      if(!grace||!graceBtn||graceManualStop)return;
+      grace.volume=0;
+      grace.play();
+      graceBtn.classList.add('playing');
+      fadeGrace(0,GRACE_TARGET,FADE_IN_MS);
+    }
+
+    function stopGraceWithFade(){
+      if(!grace||grace.paused)return;
+      fadeGrace(grace.volume,0,FADE_OUT_MS);
+    }
+
+    // Narrator controls
     btn.addEventListener('click',function(){
-      if(audio.paused){audio.play();btn.classList.add('playing')}
-      else{audio.pause();btn.classList.remove('playing')}
+      if(narrator.paused){graceManualStop=false;narrator.play();}
+      else{narrator.pause();}
     });
+    narrator.addEventListener('play',function(){
+      iconPlay.style.display='none';iconPause.style.display='block';
+      startGraceWithFade();
+    });
+    narrator.addEventListener('pause',function(){
+      iconPlay.style.display='block';iconPause.style.display='none';
+      stopGraceWithFade();
+    });
+    narrator.addEventListener('ended',function(){
+      iconPlay.style.display='block';iconPause.style.display='none';bar.style.width='0%';
+      stopGraceWithFade();
+    });
+    narrator.addEventListener('timeupdate',function(){
+      if(narrator.duration){bar.style.width=(narrator.currentTime/narrator.duration*100)+'%';time.textContent=fmt(narrator.currentTime);}
+    });
+    progress.addEventListener('click',function(e){
+      if(narrator.duration){var rect=progress.getBoundingClientRect();narrator.currentTime=(e.clientX-rect.left)/rect.width*narrator.duration;}
+    });
+
+    // Grace manual toggle
+    if(grace&&graceBtn){
+      graceBtn.addEventListener('click',function(){
+        if(grace.paused){
+          graceManualStop=false;
+          grace.volume=GRACE_TARGET;
+          grace.play();
+          graceBtn.classList.add('playing');
+          if(fadeTimer){clearInterval(fadeTimer);fadeTimer=null;}
+        }else{
+          if(!narrator.paused)graceManualStop=true;
+          if(fadeTimer){clearInterval(fadeTimer);fadeTimer=null;}
+          grace.pause();
+          graceBtn.classList.remove('playing');
+        }
+      });
+    }
   })();
 
   // Navigation
