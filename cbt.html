@@ -601,12 +601,6 @@
       <div class="sc__meta"><span class="sc__dot"></span>22 min · Cognitive Restructuring</div>
       <h3 class="sc__title">The Court of Your Mind</h3>
       <p class="sc__desc">Challenge your inner critic by putting its case to trial. Hear the prosecution, build the defence, and deliver the verdict.</p>
-      <audio id="courtAudio" preload="none" src="https://media.salus-mind.com/vault/52-the-court-of-your-mind/final/52-the-court-of-your-mind-vault-courtroom-v4-gavel.mp3"></audio>
-      <div class="sp">
-        <button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
-        <div class="sp__track"><div class="sp__bar"></div></div>
-        <span class="sp__time">0:00 / 22:14</span>
-      </div>
       <span class="sc__technique"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> Cognitive Restructuring</span>
     </div>
   </div>
@@ -751,33 +745,15 @@
   burger.addEventListener("click",()=>{burger.classList.toggle("open");drawer.classList.toggle("open");document.body.style.overflow=drawer.classList.contains("open")?"hidden":""});
   drawer.querySelectorAll(".nav-drawer__link").forEach(l=>{l.addEventListener("click",()=>{burger.classList.remove("open");drawer.classList.remove("open");document.body.style.overflow=""})});
 
-  // Court of Your Mind player
-  (function(){
-    var a=document.getElementById("courtAudio");if(!a)return;
-    var card=a.closest(".sc");
-    var btn=card.querySelector(".sp__btn");
-    var bar=card.querySelector(".sp__bar");
-    var time=card.querySelector(".sp__time");
-    var track=bar.parentElement;
-    var playSVG='<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
-    var pauseSVG='<svg viewBox="0 0 24 24" style="width:11px;height:11px;fill:var(--amber)"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>';
-    function fmt(s){var m=Math.floor(s/60);return m+":"+(Math.floor(s%60)+"").padStart(2,"0")}
-    btn.addEventListener("click",function(){if(a.paused)a.play();else a.pause()});
-    a.addEventListener("play",function(){btn.innerHTML=pauseSVG});
-    a.addEventListener("pause",function(){btn.innerHTML=playSVG});
-    a.addEventListener("ended",function(){btn.innerHTML=playSVG;bar.style.width="0%"});
-    a.addEventListener("timeupdate",function(){if(a.duration){bar.style.width=(a.currentTime/a.duration*100)+"%";time.textContent=fmt(a.currentTime)+" / "+fmt(a.duration)}});
-    track.addEventListener("click",function(e){if(a.duration){var r=track.getBoundingClientRect();a.currentTime=(e.clientX-r.left)/r.width*a.duration}});
-  })();
 </script>
   <script src="js/main.js?v=1770564391"></script>
   <script src="js/tracker.js"></script>
 
 <section class="cta-banner">
   <div class="container">
-    <h2 class="fade-in">Unlock the full CBT toolkit</h2>
-    <p class="fade-in">All exercises, techniques, and guided sessions — included with Salus Premium.</p>
-    <a href="apps.html" class="btn fade-in">Subscribe</a>
+    <h2>Unlock the full CBT toolkit</h2>
+    <p>All exercises, techniques, and guided sessions — included with Salus Premium.</p>
+    <a href="apps.html" class="btn">Subscribe</a>
   </div>
 </section>
 
