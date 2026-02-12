@@ -569,7 +569,7 @@
       <a href="#sounds" class="hero__cta-secondary">Explore Sounds</a>
     </div>
     <div class="hero__stats">
-      <strong>14</strong>&thinsp;ambient sounds <span>·</span>
+      <strong>20</strong>&thinsp;ambient sounds <span>·</span>
       Layerable mixer <span>·</span>
       Infinite combinations
     </div>
@@ -582,7 +582,7 @@
   <div class="section-header">
     <p class="section-header__label">Sound Library</p>
     <h2 class="section-header__title">Immersive Soundscapes</h2>
-    <p class="section-header__sub">15 hand-picked environments. Mix, layer, lose yourself.</p>
+    <p class="section-header__sub">20 hand-picked environments. Mix, layer, lose yourself.</p>
   </div>
 
   <div class="filters">
@@ -746,12 +746,12 @@
       { id: 'waterfall',  name: 'Waterfall',   icon: '\u{1F4A6}', category: 'nature',  src: 'https://media.salus-mind.com/content/audio-free/asmr-waterfall.mp3' },
       { id: 'keyboard',   name: 'Keyboard',    icon: '\u2328',    category: 'spaces',  src: 'https://media.salus-mind.com/content/audio-free/asmr-keyboard.mp3' },
       { id: 'court',      name: 'Courtroom',   icon: '\u2696',    category: 'spaces',  src: 'https://media.salus-mind.com/content/audio-free/asmr-court.mp3' },
-      { id: 'wind',       name: 'Wind',        icon: '\u{1F4A8}', category: 'weather', comingSoon: true },
-      { id: 'train',      name: 'Train',       icon: '\u{1F682}', category: 'spaces',  comingSoon: true },
-      { id: 'waves',      name: 'Waves',       icon: '\u{1F3D6}', category: 'nature',  comingSoon: true },
-      { id: 'chimes',     name: 'Wind Chimes', icon: '\u{1F390}', category: 'ambient', comingSoon: true },
-      { id: 'fountain',   name: 'Fountain',    icon: '\u26F2',    category: 'nature',  comingSoon: true },
-      { id: 'snowfall',   name: 'Snowfall',    icon: '\u2744',    category: 'weather', comingSoon: true },
+      { id: 'wind',       name: 'Wind',        icon: '\u{1F4A8}', category: 'weather', src: 'https://media.salus-mind.com/content/audio-free/asmr-wind.mp3' },
+      { id: 'train',      name: 'Train',       icon: '\u{1F682}', category: 'spaces',  src: 'https://media.salus-mind.com/content/audio-free/asmr-train.mp3' },
+      { id: 'waves',      name: 'Waves',       icon: '\u{1F3D6}', category: 'nature',  src: 'https://media.salus-mind.com/content/audio-free/asmr-waves.mp3' },
+      { id: 'chimes',     name: 'Wind Chimes', icon: '\u{1F390}', category: 'ambient', src: 'https://media.salus-mind.com/content/audio-free/asmr-chimes.mp3' },
+      { id: 'fountain',   name: 'Fountain',    icon: '\u26F2',    category: 'nature',  src: 'https://media.salus-mind.com/content/audio-free/asmr-fountain.mp3' },
+      { id: 'snowfall',   name: 'Snowfall',    icon: '\u2744',    category: 'weather', src: 'https://media.salus-mind.com/content/audio-free/asmr-snowfall.mp3' },
       { id: 'harbor',     name: 'Harbour',     icon: '\u2693',    category: 'nature',  comingSoon: true },
       { id: 'cabin',      name: 'Cabin',       icon: '\u{1F3E0}', category: 'spaces',  comingSoon: true },
       { id: 'bowls',      name: 'Singing Bowls', icon: '\u{1F514}', category: 'ambient', comingSoon: true },
@@ -839,6 +839,7 @@
       function createSource(src) {
         const audio = new Audio(src);
         audio.preload = 'auto';
+        audio.loop = true;
         return { audio };
       }
 
