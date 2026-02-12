@@ -551,223 +551,70 @@
   .hb-welcome__cta:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(78,205,196,0.25)}
   .hb-welcome__cta svg{width:14px;height:14px;fill:var(--deep)}
 
-  /* 2. What's Inside — v2 */
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-  :root{
-    --deep:#060810;
-    --ink:#0a0d18;
-    --text-bright:#f2f0fa;
-    --text-muted:rgba(242,240,250,0.45);
-    --text-mid:rgba(242,240,250,0.65);
-    --border:rgba(255,255,255,0.06);
-    /* Category colours */
-    --c-med:#22d3ee;
-    --c-sleep:#a78bfa;
-    --c-asmr:#94a3b8;
-    --c-mind:#4ecdc4;
-    --c-learn:#60a5fa;
-    --c-tools:#34d399;
-  }
-  html{font-size:16px}
-  body{background:var(--deep);color:var(--text-bright);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased}
-
-  /* ═══════════════════════════════════
-     SECTION
-  ═══════════════════════════════════ */
+  /* 2. What's Inside — v3 */
   .inside{padding:60px 24px 80px;position:relative}
   .inside::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 0%,rgba(10,13,24,0.6) 100%)}
   .inside__header{text-align:center;margin-bottom:48px;position:relative;z-index:2}
   .inside__header h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.6rem,3.5vw,2.2rem);margin-bottom:8px}
   .inside__header p{font-weight:200;font-size:.82rem;color:var(--text-muted);max-width:440px;margin:0 auto}
-
   .inside__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1080px;margin:0 auto;position:relative;z-index:2}
 
-  /* ═══════════════════════════════════
-     CARD — outer
-  ═══════════════════════════════════ */
-  .cc{
-    position:relative;border-radius:18px;overflow:hidden;
-    display:flex;flex-direction:column;
-    padding:26px 24px 24px;text-decoration:none;color:#fff;
-    transition:transform .5s cubic-bezier(.22,1,.36,1),box-shadow .5s ease;
-    cursor:pointer;min-height:340px;
-  }
+  .cc{position:relative;border-radius:18px;overflow:hidden;display:flex;flex-direction:column;text-decoration:none;color:#fff;min-height:300px;transition:transform .5s cubic-bezier(.22,1,.36,1),box-shadow .5s ease;cursor:pointer}
   .cc:hover{transform:translateY(-5px)}
-  /* Noise overlay */
   .cc::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");opacity:.5;z-index:2;pointer-events:none}
-
-  /* Orbs */
   .cc__orb{position:absolute;border-radius:50%;pointer-events:none;z-index:0;transition:opacity .5s ease}
   .cc:hover .cc__orb{opacity:.5}
   .cc__orb--1{filter:blur(50px);opacity:.28;width:160px;height:160px;top:-40px;right:-20px}
-  .cc__orb--2{filter:blur(40px);opacity:.12;width:100px;height:100px;bottom:-20px;left:-10px}
-
-  /* Arrow */
+  .cc__orb--2{filter:blur(40px);opacity:.12;width:100px;height:100px;bottom:40px;left:-10px}
   .cc__arrow{position:absolute;top:18px;right:18px;z-index:4;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;transition:all .3s ease}
   .cc:hover .cc__arrow{background:rgba(255,255,255,0.14);border-color:rgba(255,255,255,0.25)}
-  .cc__arrow svg{width:12px;height:12px;fill:rgba(255,255,255,0.6)}
+  .cc__arrow svg{width:12px;height:12px;fill:none;stroke:rgba(255,255,255,0.6);stroke-width:2}
 
-  /* Category gradients — matched to destination pages */
-  .cc--med{
-    background:linear-gradient(155deg,#0d3d4a 0%,#1a5568 45%,#0f4c5c 100%);
-    border:1px solid rgba(34,211,238,0.12);
-    box-shadow:0 6px 28px rgba(0,0,0,0.4),0 0 60px rgba(34,211,238,0.03);
-  }
+  .cc--med{background:linear-gradient(155deg,#0d3d4a 0%,#1a5568 45%,#0f4c5c 100%);border:1px solid rgba(34,211,238,0.12);box-shadow:0 6px 28px rgba(0,0,0,0.4)}
   .cc--med:hover{box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 80px rgba(34,211,238,0.06)}
+  .cc--sleep{background:linear-gradient(155deg,#1e1b4b 0%,#312e81 45%,#3730a3 100%);border:1px solid rgba(129,140,248,0.12);box-shadow:0 6px 28px rgba(0,0,0,0.4)}
+  .cc--sleep:hover{box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 80px rgba(129,140,248,0.08)}
+  .cc--asmr{background:linear-gradient(155deg,#1a1c2e 0%,#252840 45%,#2d3154 100%);border:1px solid rgba(148,163,184,0.1);box-shadow:0 6px 28px rgba(0,0,0,0.4)}
+  .cc--asmr:hover{box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 80px rgba(148,163,184,0.05)}
+  .cc--mind{background:linear-gradient(155deg,#0a3a40 0%,#0d4a52 45%,#0f5c66 100%);border:1px solid rgba(78,205,196,0.12);box-shadow:0 6px 28px rgba(0,0,0,0.4)}
+  .cc--mind:hover{box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 80px rgba(78,205,196,0.06)}
+  .cc--learn{background:linear-gradient(155deg,#1a2332 0%,#243044 45%,#2d3c56 100%);border:1px solid rgba(96,165,250,0.1);box-shadow:0 6px 28px rgba(0,0,0,0.4)}
+  .cc--learn:hover{box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 80px rgba(96,165,250,0.06)}
+  .cc--tools{background:linear-gradient(155deg,#064e3b 0%,#065f46 45%,#047857 100%);border:1px solid rgba(52,211,153,0.12);box-shadow:0 6px 28px rgba(0,0,0,0.4)}
+  .cc--tools:hover{box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 80px rgba(52,211,153,0.06)}
+
   .cc--med .cc__orb--1{background:radial-gradient(circle,rgba(34,211,238,0.5),transparent 70%)}
   .cc--med .cc__orb--2{background:radial-gradient(circle,rgba(6,182,212,0.35),transparent 70%)}
-
-  .cc--sleep{
-    background:linear-gradient(155deg,#1e1b4b 0%,#312e81 45%,#3730a3 100%);
-    border:1px solid rgba(129,140,248,0.12);
-    box-shadow:0 6px 28px rgba(0,0,0,0.4),0 0 60px rgba(129,140,248,0.04);
-  }
-  .cc--sleep:hover{box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 80px rgba(129,140,248,0.08)}
   .cc--sleep .cc__orb--1{background:radial-gradient(circle,rgba(129,140,248,0.55),transparent 70%)}
   .cc--sleep .cc__orb--2{background:radial-gradient(circle,rgba(167,139,250,0.35),transparent 70%)}
-
-  .cc--asmr{
-    background:linear-gradient(155deg,#1a1c2e 0%,#252840 45%,#2d3154 100%);
-    border:1px solid rgba(148,163,184,0.1);
-    box-shadow:0 6px 28px rgba(0,0,0,0.4),0 0 60px rgba(148,163,184,0.02);
-  }
-  .cc--asmr:hover{box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 80px rgba(148,163,184,0.05)}
   .cc--asmr .cc__orb--1{background:radial-gradient(circle,rgba(148,163,184,0.4),transparent 70%)}
   .cc--asmr .cc__orb--2{background:radial-gradient(circle,rgba(100,116,139,0.3),transparent 70%)}
-
-  .cc--mind{
-    background:linear-gradient(155deg,#0a3a40 0%,#0d4a52 45%,#0f5c66 100%);
-    border:1px solid rgba(78,205,196,0.12);
-    box-shadow:0 6px 28px rgba(0,0,0,0.4),0 0 60px rgba(78,205,196,0.03);
-  }
-  .cc--mind:hover{box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 80px rgba(78,205,196,0.06)}
   .cc--mind .cc__orb--1{background:radial-gradient(circle,rgba(45,212,191,0.5),transparent 70%)}
   .cc--mind .cc__orb--2{background:radial-gradient(circle,rgba(78,205,196,0.35),transparent 70%)}
-
-  .cc--learn{
-    background:linear-gradient(155deg,#1a2332 0%,#243044 45%,#2d3c56 100%);
-    border:1px solid rgba(96,165,250,0.1);
-    box-shadow:0 6px 28px rgba(0,0,0,0.4),0 0 60px rgba(96,165,250,0.03);
-  }
-  .cc--learn:hover{box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 80px rgba(96,165,250,0.06)}
   .cc--learn .cc__orb--1{background:radial-gradient(circle,rgba(96,165,250,0.5),transparent 70%)}
   .cc--learn .cc__orb--2{background:radial-gradient(circle,rgba(56,189,248,0.3),transparent 70%)}
-
-  .cc--tools{
-    background:linear-gradient(155deg,#064e3b 0%,#065f46 45%,#047857 100%);
-    border:1px solid rgba(52,211,153,0.12);
-    box-shadow:0 6px 28px rgba(0,0,0,0.4),0 0 60px rgba(52,211,153,0.03);
-  }
-  .cc--tools:hover{box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 80px rgba(52,211,153,0.06)}
   .cc--tools .cc__orb--1{background:radial-gradient(circle,rgba(52,211,153,0.5),transparent 70%)}
   .cc--tools .cc__orb--2{background:radial-gradient(circle,rgba(16,185,129,0.35),transparent 70%)}
 
-  /* ═══════════════════════════════════
-     CARD — header content
-  ═══════════════════════════════════ */
-  .cc__head{position:relative;z-index:3;margin-bottom:16px}
+  .cc__body{position:relative;z-index:3;flex:1;padding:26px 24px 0;display:flex;flex-direction:column}
   .cc__count{font-weight:300;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:5px;display:block}
-  .cc__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.4rem;line-height:1.2;margin-bottom:5px}
-  .cc__desc{font-weight:200;font-size:.74rem;line-height:1.55;color:rgba(255,255,255,0.48)}
+  .cc__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.4rem;line-height:1.2;margin-bottom:7px}
+  .cc__desc{font-weight:200;font-size:.74rem;line-height:1.55;color:rgba(255,255,255,0.48);margin-bottom:auto}
 
-  /* ═══════════════════════════════════
-     INNER TILES — cards within cards
-  ═══════════════════════════════════ */
-  .cc__tiles{
-    position:relative;z-index:3;
-    display:flex;flex-wrap:wrap;gap:6px;
-    margin-top:auto;padding-top:14px;
-  }
+  .cc__strip{position:relative;z-index:3;margin-top:auto;padding:14px 24px 18px;border-top:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .cc__stat{display:flex;align-items:center;gap:6px;font-weight:300;font-size:.68rem;color:rgba(255,255,255,0.45);white-space:nowrap}
+  .cc__stat-num{font-weight:500;font-size:.72rem;font-variant-numeric:tabular-nums}
+  .cc--med .cc__stat-num{color:rgba(34,211,238,0.8)}
+  .cc--sleep .cc__stat-num{color:rgba(167,139,250,0.8)}
+  .cc--asmr .cc__stat-num{color:rgba(148,163,184,0.7)}
+  .cc--mind .cc__stat-num{color:rgba(78,205,196,0.8)}
+  .cc--learn .cc__stat-num{color:rgba(96,165,250,0.8)}
+  .cc--tools .cc__stat-num{color:rgba(52,211,153,0.8)}
+  .cc__stat-sep{width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,0.15);flex-shrink:0}
+  .cc__growing{font-weight:200;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,0.25);font-style:italic;margin-left:auto}
 
-  .tile{
-    display:flex;align-items:center;gap:6px;
-    padding:6px 10px;border-radius:7px;
-    background:#060a14;
-    border:1px solid rgba(255,255,255,0.08);
-    box-shadow:0 2px 6px rgba(0,0,0,0.35);
-    transition:all .3s ease;
-  }
-  .cc:hover .tile{
-    border-color:rgba(255,255,255,0.12);
-    box-shadow:0 3px 10px rgba(0,0,0,0.4);
-  }
-  .tile__dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
-  .tile__label{font-weight:300;font-size:.58rem;letter-spacing:.03em;color:rgba(255,255,255,0.6)}
-  .tile__num{font-weight:400;font-size:.52rem;color:rgba(255,255,255,0.3);margin-left:2px}
-
-  /* Per-category tile dot colours */
-  .cc--med .tile__dot{background:var(--c-med)}
-  .cc--sleep .tile__dot{background:var(--c-sleep)}
-  .cc--asmr .tile__dot{background:var(--c-asmr)}
-  .cc--mind .tile__dot{background:var(--c-mind)}
-  .cc--learn .tile__dot{background:var(--c-learn)}
-  .cc--tools .tile__dot{background:var(--c-tools)}
-
-  /* Variant: accent left bar for emphasis tiles */
-  .tile--accent{
-    border-left:2px solid;
-    padding-left:8px;
-  }
-  .cc--med .tile--accent{border-left-color:rgba(34,211,238,0.5)}
-  .cc--sleep .tile--accent{border-left-color:rgba(167,139,250,0.5)}
-  .cc--asmr .tile--accent{border-left-color:rgba(148,163,184,0.4)}
-  .cc--mind .tile--accent{border-left-color:rgba(78,205,196,0.5)}
-  .cc--learn .tile--accent{border-left-color:rgba(96,165,250,0.5)}
-  .cc--tools .tile--accent{border-left-color:rgba(52,211,153,0.5)}
-
-  /* Tile variants for different content types */
-
-  /* Sound mixer — stacked bars */
-  .tile--sound{
-    flex-direction:column;align-items:flex-start;gap:3px;
-    padding:7px 10px;min-width:70px;
-  }
-  .tile--sound .tile__bar{
-    height:3px;border-radius:2px;width:100%;
-    opacity:.5;
-  }
-
-  /* Day counter tiles */
-  .tile--day{
-    flex-direction:column;align-items:center;gap:2px;
-    padding:6px 4px;min-width:30px;
-  }
-  .tile--day .tile__daynum{font-weight:500;font-size:.64rem;line-height:1}
-  .tile--day .tile__daylabel{font-weight:200;font-size:.42rem;letter-spacing:.03em;text-transform:uppercase;color:rgba(255,255,255,0.35)}
-
-  /* Article tiles */
-  .tile--article{
-    flex-direction:column;align-items:flex-start;gap:2px;
-    padding:7px 10px;
-  }
-  .tile--article .tile__topic{font-weight:400;font-size:.56rem;color:rgba(255,255,255,0.55)}
-  .tile--article .tile__artcount{font-weight:200;font-size:.48rem;color:rgba(255,255,255,0.3)}
-
-  /* ═══════════════════════════════════
-     +MORE PILL
-  ═══════════════════════════════════ */
-  .tile--more{
-    background:transparent;border:1px dashed rgba(255,255,255,0.1);
-    box-shadow:none;
-  }
-  .tile--more .tile__label{color:rgba(255,255,255,0.3);font-style:italic}
-
-  /* ═══════════════════════════════════
-     ANIMATIONS
-  ═══════════════════════════════════ */
-  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-  .inside__header{animation:fadeUp .7s ease-out both}
   @keyframes pulseOrb{0%,100%{opacity:.28}50%{opacity:.42}}
   .cc__orb--1{animation:pulseOrb 7s ease-in-out infinite}
-
-  /* ═══════════════════════════════════
-     RESPONSIVE
-  ═══════════════════════════════════ */
-  @media(max-width:900px){.inside__grid{grid-template-columns:repeat(2,1fr)}}
-  @media(max-width:600px){
-    .inside__grid{grid-template-columns:1fr}
-    .cc{min-height:auto;padding:22px 20px 20px}
-  }
 
   /* 3. Trust */
   .hb-trust{padding:60px 24px 80px;position:relative}
@@ -819,7 +666,7 @@
   }
   @media(max-width:600px){
     .inside__grid{grid-template-columns:1fr}
-    .cc{min-height:auto;padding:22px 20px 20px}
+    .cc{min-height:auto}
     .hb-trust__strip{grid-template-columns:1fr}
     .hb-stats__inner{flex-wrap:wrap;gap:32px 48px}
     .hb-footer__inner{grid-template-columns:1fr}
@@ -1012,122 +859,117 @@
 
   <div class="inside__grid">
 
-    <!-- ═══ 1. GUIDED MEDITATIONS ═══ -->
+    <!-- 1. GUIDED SESSIONS -->
     <a href="mindfulness.html" class="cc cc--med">
       <div class="cc__orb cc__orb--1"></div>
       <div class="cc__orb cc__orb--2"></div>
-      <span class="cc__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke="rgba(255,255,255,0.6)" stroke-width="2" fill="none"/></svg></span>
-      <div class="cc__head">
+      <span class="cc__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      <div class="cc__body">
         <span class="cc__count">Growing by the Week</span>
         <h3 class="cc__title">Mindfulness &amp; Guided Sessions</h3>
         <p class="cc__desc">Sleep, stress, focus, mindfulness, and more — from five-minute resets to hour-long journeys.</p>
       </div>
-      <div class="cc__tiles">
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Sleep</span><span class="tile__num">6</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Stress</span><span class="tile__num">5</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Guided</span><span class="tile__num">4</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Compassion</span><span class="tile__num">2</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">CBT</span><span class="tile__num">1</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Advanced</span><span class="tile__num">2</span></div>
-        <div class="tile tile--more"><span class="tile__label">+more weekly</span></div>
+      <div class="cc__strip">
+        <span class="cc__stat"><span class="cc__stat-num">20+</span> sessions</span>
+        <span class="cc__stat-sep"></span>
+        <span class="cc__stat"><span class="cc__stat-num">7</span> categories</span>
+        <span class="cc__stat-sep"></span>
+        <span class="cc__stat"><span class="cc__stat-num">15+</span> hours</span>
       </div>
     </a>
 
-    <!-- ═══ 2. SLEEP STORIES ═══ -->
+    <!-- 2. SLEEP STORIES -->
     <a href="sleep-stories.html" class="cc cc--sleep">
       <div class="cc__orb cc__orb--1"></div>
       <div class="cc__orb cc__orb--2"></div>
-      <span class="cc__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke="rgba(255,255,255,0.6)" stroke-width="2" fill="none"/></svg></span>
-      <div class="cc__head">
-        <span class="cc__count">52 Stories · 1 per week</span>
+      <span class="cc__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      <div class="cc__body">
+        <span class="cc__count">52 Stories · 1 Per Week</span>
         <h3 class="cc__title">Sleep Stories</h3>
         <p class="cc__desc">Gentle, meandering narratives designed to bore your brain to sleep. No cliffhangers.</p>
       </div>
-      <div class="cc__tiles">
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Rainfall</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Moonlight</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Quiet Shore</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Deep Rest</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Letting Go</span></div>
-        <div class="tile tile--more"><span class="tile__label">+47 more</span></div>
+      <div class="cc__strip">
+        <span class="cc__stat"><span class="cc__stat-num">52</span> stories</span>
+        <span class="cc__stat-sep"></span>
+        <span class="cc__stat"><span class="cc__stat-num">30–45</span> min each</span>
+        <span class="cc__stat-sep"></span>
+        <span class="cc__stat">weekly release</span>
       </div>
     </a>
 
-    <!-- ═══ 3. ASMR & SOUND MIXER ═══ -->
+    <!-- 3. ASMR -->
     <a href="asmr.html" class="cc cc--asmr">
       <div class="cc__orb cc__orb--1"></div>
       <div class="cc__orb cc__orb--2"></div>
-      <span class="cc__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke="rgba(255,255,255,0.6)" stroke-width="2" fill="none"/></svg></span>
-      <div class="cc__head">
+      <span class="cc__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      <div class="cc__body">
         <span class="cc__count">14 Ambient Sounds</span>
         <h3 class="cc__title">ASMR &amp; Sound Mixer</h3>
         <p class="cc__desc">Layer rain, fire, birdsong, and more — build your own ambient environment.</p>
       </div>
-      <div class="cc__tiles">
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Rain</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Fire</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Birdsong</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Ocean</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Wind</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Thunder</span></div>
-        <div class="tile tile--more"><span class="tile__label">+8 more</span></div>
+      <div class="cc__strip">
+        <span class="cc__stat"><span class="cc__stat-num">14</span> sounds</span>
+        <span class="cc__stat-sep"></span>
+        <span class="cc__stat">layerable mixer</span>
+        <span class="cc__stat-sep"></span>
+        <span class="cc__stat">infinite combos</span>
       </div>
     </a>
 
-    <!-- ═══ 4. MINDFULNESS ═══ -->
+    <!-- 4. MINDFULNESS -->
     <a href="mindfulness.html" class="cc cc--mind">
       <div class="cc__orb cc__orb--1"></div>
       <div class="cc__orb cc__orb--2"></div>
-      <span class="cc__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke="rgba(255,255,255,0.6)" stroke-width="2" fill="none"/></svg></span>
-      <div class="cc__head">
+      <span class="cc__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      <div class="cc__body">
         <span class="cc__count">28 Days of Guided Courses</span>
         <h3 class="cc__title">Mindfulness</h3>
         <p class="cc__desc">Structured courses and standalone practices — from first breath to lasting habit.</p>
       </div>
-      <div class="cc__tiles">
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">7-Day Foundation</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">21-Day Programme</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">18 Sessions</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Beginner → Expert</span></div>
+      <div class="cc__strip">
+        <span class="cc__stat"><span class="cc__stat-num">28</span> day courses</span>
+        <span class="cc__stat-sep"></span>
+        <span class="cc__stat"><span class="cc__stat-num">18</span> sessions</span>
+        <span class="cc__stat-sep"></span>
+        <span class="cc__stat">beginner → expert</span>
       </div>
     </a>
 
-    <!-- ═══ 5. LEARN ═══ -->
+    <!-- 5. LEARN -->
     <a href="education.html" class="cc cc--learn">
       <div class="cc__orb cc__orb--1"></div>
       <div class="cc__orb cc__orb--2"></div>
-      <span class="cc__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke="rgba(255,255,255,0.6)" stroke-width="2" fill="none"/></svg></span>
-      <div class="cc__head">
+      <span class="cc__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      <div class="cc__body">
         <span class="cc__count">Articles &amp; Guides</span>
         <h3 class="cc__title">Learn</h3>
         <p class="cc__desc">The science behind the practice — neuroscience, breathwork, sleep architecture, and more.</p>
       </div>
-      <div class="cc__tiles">
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Neuroscience</span><span class="tile__num">4</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Breathwork</span><span class="tile__num">3</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Sleep</span><span class="tile__num">5</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Mindfulness</span><span class="tile__num">3</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">CBT</span><span class="tile__num">2</span></div>
-        <div class="tile tile--more"><span class="tile__label">17 articles</span></div>
+      <div class="cc__strip">
+        <span class="cc__stat"><span class="cc__stat-num">17</span> articles</span>
+        <span class="cc__stat-sep"></span>
+        <span class="cc__stat"><span class="cc__stat-num">5</span> topics</span>
+        <span class="cc__stat-sep"></span>
+        <span class="cc__stat">research-backed</span>
       </div>
     </a>
 
-    <!-- ═══ 6. TOOLS ═══ -->
+    <!-- 6. TOOLS -->
     <a href="tools.html" class="cc cc--tools">
       <div class="cc__orb cc__orb--1"></div>
       <div class="cc__orb cc__orb--2"></div>
-      <span class="cc__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke="rgba(255,255,255,0.6)" stroke-width="2" fill="none"/></svg></span>
-      <div class="cc__head">
+      <span class="cc__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      <div class="cc__body">
         <span class="cc__count">Breathing · Timers · Bells</span>
         <h3 class="cc__title">Tools</h3>
         <p class="cc__desc">Interactive breathing exercises, interval timers, and meditation bells for self-guided practice.</p>
       </div>
-      <div class="cc__tiles">
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">4-7-8 Breathing</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Box Breath</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Interval Timer</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Meditation Bell</span></div>
-        <div class="tile tile--accent"><span class="tile__dot"></span><span class="tile__label">Coherent Breath</span></div>
+      <div class="cc__strip">
+        <span class="cc__stat"><span class="cc__stat-num">5</span> breathing exercises</span>
+        <span class="cc__stat-sep"></span>
+        <span class="cc__stat">timers</span>
+        <span class="cc__stat-sep"></span>
+        <span class="cc__stat">bells</span>
       </div>
     </a>
 
