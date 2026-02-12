@@ -532,13 +532,6 @@
   .hb-narrator__progress{flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;cursor:pointer}
   .hb-narrator__bar{height:100%;width:0%;background:linear-gradient(90deg,var(--teal),#6dd5c8);border-radius:2px;transition:width .1s linear}
   .hb-narrator__time{font-size:.72rem;color:var(--text-muted);min-width:32px;text-align:right;font-variant-numeric:tabular-nums}
-  .hb-narrator__ambient{display:flex;align-items:center;gap:10px;padding-top:16px}
-  .hb-ambient-btn{display:inline-flex;align-items:center;gap:8px;font-family:'Outfit',sans-serif;font-weight:300;font-size:.74rem;letter-spacing:.04em;padding:9px 20px;border-radius:40px;border:1px solid rgba(78,205,196,0.15);background:rgba(78,205,196,0.04);color:var(--text-muted);cursor:pointer;transition:all .4s cubic-bezier(.22,1,.36,1)}
-  .hb-ambient-btn:hover{border-color:rgba(78,205,196,0.3);background:rgba(78,205,196,0.08);color:var(--text-mid)}
-  .hb-ambient-btn.playing{border-color:rgba(78,205,196,0.4);background:rgba(78,205,196,0.12);color:var(--teal);box-shadow:0 0 20px rgba(78,205,196,0.08)}
-  .hb-ambient-btn svg{width:14px;height:14px;fill:currentColor;transition:transform .3s ease}
-  .hb-ambient-btn.playing svg{animation:ambientPulse 3s ease-in-out infinite}
-  @keyframes ambientPulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
 
   /* ═══ HOME BODY ═══ */
   .hb-container{max-width:1080px;margin:0 auto;padding:0 24px}
@@ -842,13 +835,7 @@
         </div>
         <span class="hb-narrator__time" id="narratorTime">0:00</span>
       </div>
-      <div class="hb-narrator__ambient">
-        <audio id="graceAudio" preload="none" src="https://media.salus-mind.com/content/audio-free/asmr-grace.mp3" loop></audio>
-        <button class="hb-ambient-btn" id="graceBtn">
-          <svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1014 17V7h4V3h-6z"/></svg>
-          Grace
-        </button>
-      </div>
+      <audio id="graceAudio" preload="none" src="https://media.salus-mind.com/content/audio-free/asmr-grace.mp3" loop></audio>
     </div>
   </div>
 </section>
@@ -1189,33 +1176,58 @@
   })();
 
 
-  // Narrator player
+  // Narrator player — Grace ambient fades in 10s / out 10s underneath
   (function(){
-    const audio=document.getElementById('narratorAudio');
-    const btn=document.getElementById('narratorPlayBtn');
-    const bar=document.getElementById('narratorBar');
-    const time=document.getElementById('narratorTime');
-    const iconPlay=btn.querySelector('.hb-narrator__icon-play');
-    const iconPause=btn.querySelector('.hb-narrator__icon-pause');
-    const progress=bar.parentElement;
-    function fmt(s){const m=Math.floor(s/60);return m+':'+(('0'+Math.floor(s%60)).slice(-2));}
+    var audio=document.getElementById('narratorAudio');
+    var btn=document.getElementById('narratorPlayBtn');
+    var bar=document.getElementById('narratorBar');
+    var time=document.getElementById('narratorTime');
+    var iconPlay=btn.querySelector('.hb-narrator__icon-play');
+    var iconPause=btn.querySelector('.hb-narrator__icon-pause');
+    var progress=bar.parentElement;
+    var grace=document.getElementById('graceAudio');
+    var GRACE_VOL=0.3;
+    var FADE_MS=10000;
+    var STEP=50;
+    var fadeTimer=null;
+
+    function fmt(s){var m=Math.floor(s/60);return m+':'+(('0'+Math.floor(s%60)).slice(-2));}
+
+    function fadeGrace(from,to,ms,done){
+      if(fadeTimer){clearInterval(fadeTimer);fadeTimer=null;}
+      if(!grace)return;
+      var steps=Math.round(ms/STEP);
+      var delta=(to-from)/steps;
+      var step=0;
+      grace.volume=from;
+      fadeTimer=setInterval(function(){
+        step++;
+        if(step>=steps){
+          clearInterval(fadeTimer);fadeTimer=null;
+          grace.volume=to;
+          if(to===0)grace.pause();
+          if(done)done();
+          return;
+        }
+        grace.volume=Math.max(0,Math.min(1,from+delta*step));
+      },STEP);
+    }
+
     btn.addEventListener('click',function(){if(audio.paused){audio.play()}else{audio.pause()}});
-    audio.addEventListener('play',function(){iconPlay.style.display='none';iconPause.style.display='block'});
-    audio.addEventListener('pause',function(){iconPlay.style.display='block';iconPause.style.display='none'});
-    audio.addEventListener('ended',function(){iconPlay.style.display='block';iconPause.style.display='none';bar.style.width='0%'});
+    audio.addEventListener('play',function(){
+      iconPlay.style.display='none';iconPause.style.display='block';
+      if(grace){grace.volume=0;grace.play();fadeGrace(0,GRACE_VOL,FADE_MS);}
+    });
+    audio.addEventListener('pause',function(){
+      iconPlay.style.display='block';iconPause.style.display='none';
+      if(grace&&!grace.paused)fadeGrace(grace.volume,0,FADE_MS);
+    });
+    audio.addEventListener('ended',function(){
+      iconPlay.style.display='block';iconPause.style.display='none';bar.style.width='0%';
+      if(grace&&!grace.paused)fadeGrace(grace.volume,0,FADE_MS);
+    });
     audio.addEventListener('timeupdate',function(){if(audio.duration){bar.style.width=(audio.currentTime/audio.duration*100)+'%';time.textContent=fmt(audio.currentTime)}});
     progress.addEventListener('click',function(e){if(audio.duration){var rect=progress.getBoundingClientRect();audio.currentTime=(e.clientX-rect.left)/rect.width*audio.duration}});
-  })();
-
-  // Grace ambient
-  (function(){
-    var audio=document.getElementById('graceAudio');
-    var btn=document.getElementById('graceBtn');
-    if(!audio||!btn)return;
-    btn.addEventListener('click',function(){
-      if(audio.paused){audio.play();btn.classList.add('playing')}
-      else{audio.pause();btn.classList.remove('playing')}
-    });
   })();
 
   // Navigation
