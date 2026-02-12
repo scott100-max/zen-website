@@ -30,11 +30,20 @@ fi
 echo "Uploading: $LOCAL_FILE → $BUCKET/$R2_KEY"
 npx wrangler r2 object put "$BUCKET/$R2_KEY" --file="$LOCAL_FILE" --remote --content-type="$CONTENT_TYPE"
 
-echo "Purging CDN cache: $CDN_BASE/$R2_KEY"
+# Purge base URL + find any ?v= query string variants referenced in HTML
+CDN_URL="${CDN_BASE}/${R2_KEY}"
+PURGE_URLS="\"${CDN_URL}\""
+
+# Scan HTML files for ?v= variants of this URL
+for vurl in $(grep -roh "${R2_KEY}?v=[^\"']*" *.html sessions/*.html articles/*.html newsletters/*.html 2>/dev/null | sort -u); do
+  PURGE_URLS="${PURGE_URLS},\"${CDN_BASE}/${vurl}\""
+done
+
+echo "Purging CDN cache: ${CDN_URL} (+ query string variants)"
 PURGE_RESULT=$(curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/purge_cache" \
   -H "Authorization: Bearer ${CF_CACHE_PURGE_TOKEN}" \
   -H "Content-Type: application/json" \
-  -d "{\"files\":[\"${CDN_BASE}/${R2_KEY}\"]}")
+  -d "{\"files\":[${PURGE_URLS}]}")
 
 if echo "$PURGE_RESULT" | grep -q '"success":true'; then
   echo "CDN purge: OK"

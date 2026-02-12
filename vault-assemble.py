@@ -51,13 +51,36 @@ CDN_BASE = "https://media.salus-mind.com"
 
 
 def purge_cdn_cache(r2_key):
-    """Purge a specific file from Cloudflare CDN cache after R2 upload."""
+    """Purge a specific file from Cloudflare CDN cache after R2 upload.
+
+    Purges both the base URL and any ?v= query string variants found in
+    HTML files, since Cloudflare caches each query string as a separate object.
+    """
     if not CF_CACHE_PURGE_TOKEN or not CF_ZONE_ID:
         print("  WARNING: CDN purge skipped — CF_CACHE_PURGE_TOKEN/CF_ZONE_ID not set in .env")
         return False
+
+    # Collect all URLs to purge: base + any ?v= variants in HTML
+    purge_urls = [f"{CDN_BASE}/{r2_key}"]
+    project_root = Path(__file__).parent
+    for html_dir in [project_root, project_root / "sessions", project_root / "articles",
+                     project_root / "newsletters"]:
+        if html_dir.is_dir():
+            for html_file in html_dir.glob("*.html"):
+                try:
+                    content = html_file.read_text()
+                    # Find r2_key?v=... patterns
+                    import re as _re
+                    for match in _re.finditer(_re.escape(r2_key) + r'\?v=[^"\'&\s]+', content):
+                        variant_url = f"{CDN_BASE}/{match.group()}"
+                        if variant_url not in purge_urls:
+                            purge_urls.append(variant_url)
+                except Exception:
+                    pass
+
     import urllib.request
     url = f"https://api.cloudflare.com/client/v4/zones/{CF_ZONE_ID}/purge_cache"
-    data = json.dumps({"files": [f"{CDN_BASE}/{r2_key}"]}).encode()
+    data = json.dumps({"files": purge_urls}).encode()
     req = urllib.request.Request(url, data=data, method='POST', headers={
         'Authorization': f'Bearer {CF_CACHE_PURGE_TOKEN}',
         'Content-Type': 'application/json',
@@ -66,7 +89,7 @@ def purge_cdn_cache(r2_key):
         resp = urllib.request.urlopen(req)
         result = json.loads(resp.read())
         if result.get('success'):
-            print(f"  CDN purge: OK ({CDN_BASE}/{r2_key})")
+            print(f"  CDN purge: OK — {len(purge_urls)} URL(s) purged ({CDN_BASE}/{r2_key})")
             return True
         else:
             print(f"  CDN purge: FAILED — {result}")
