@@ -590,6 +590,18 @@
   .mcat-compassion{background:linear-gradient(145deg,#0d3d4a 0%,#155e5a 35%,#1a6b5c 100%)}
   .mcat-course{background:linear-gradient(145deg,#0a3a40 0%,#0d4a52 35%,#0f5c66 100%)}
   .mcat-beginner{background:linear-gradient(145deg,#0e4250 0%,#1a6070 35%,#147080 100%)}
+  .mcat-stress{background:linear-gradient(145deg,#064e3b 0%,#065f46 35%,#047857 100%)}
+  .mcat-sleep{background:linear-gradient(145deg,#1e1b4b 0%,#312e81 35%,#3730a3 100%)}
+  .mcat-advanced{background:linear-gradient(145deg,#2d1643 0%,#4a1d6b 35%,#5b2180 100%)}
+  .mcat-sample{background:linear-gradient(145deg,#1a1d2e 0%,#22263a 40%,#2a2f48 100%);border:1px solid rgba(148,163,184,0.1)}
+  .mcat-stress .m-card__orb{background:#34d399}.mcat-stress .m-card__orb--2{background:#10b981}
+  .mcat-sleep .m-card__orb{background:#818cf8}.mcat-sleep .m-card__orb--2{background:#a78bfa}
+  .mcat-advanced .m-card__orb{background:#c084fc}.mcat-advanced .m-card__orb--2{background:#a855f7}
+  .mcat-sample .m-card__orb{background:#94a3b8}.mcat-sample .m-card__orb--2{background:#64748b}
+  .mcat-stress .m-player__progress{background:#34d399}
+  .mcat-sleep .m-player__progress{background:#a78bfa}
+  .mcat-advanced .m-player__progress{background:#c084fc}
+  .m-badge--sample{color:#e2e8f0;background:rgba(148,163,184,0.15);border:1px solid rgba(148,163,184,0.3)}
   .m-card__orb{position:absolute;border-radius:50%;filter:blur(40px);opacity:.35;pointer-events:none;transition:opacity .4s ease;background:#22d3ee;width:140px;height:140px;top:-30px;right:-20px}
   .m-card:hover .m-card__orb{opacity:.5}
   .m-card__orb--2{background:#06b6d4;width:100px;height:100px;bottom:-20px;left:-10px;top:auto;right:auto;opacity:.2}
@@ -726,7 +738,6 @@
       <a href="index.html" class="nav-brand">SALUS</a>
       <ul class="nav-primary">
         <li><a href="index.html">Home</a></li>
-        <li><a href="sessions.html">Meditations</a></li>
         <li><a href="mindfulness.html" class="active">Mindfulness</a></li>
         <li><a href="cbt.html">CBT Exercises</a></li>
         <li><a href="asmr.html">ASMR</a></li>
@@ -755,7 +766,6 @@
 <div class="nav-drawer" id="navDrawer">
   <div class="nav-drawer__section-label">Main</div>
   <a href="index.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Home</a>
-  <a href="sessions.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Meditations</a>
   <a href="mindfulness.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Mindfulness</a>
   <a href="cbt.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>CBT Exercises</a>
   <a href="asmr.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>ASMR</a>
@@ -828,7 +838,7 @@
     <div class="m-hero-stats">
       <span class="m-hero-stat"><strong>28</strong> days of courses</span>
       <span class="m-hero-stat-sep"></span>
-      <span class="m-hero-stat"><strong>5+</strong> standalone sessions</span>
+      <span class="m-hero-stat"><strong>17+</strong> standalone sessions</span>
       <span class="m-hero-stat-sep"></span>
       <span class="m-hero-stat">Beginner to advanced</span>
     </div>
@@ -857,9 +867,13 @@
 
 <div class="m-filters">
   <button class="m-filter-btn active" data-filter="all">All</button>
+  <button class="m-filter-btn" data-filter="sample">Sample</button>
   <button class="m-filter-btn" data-filter="beginner">Beginner</button>
   <button class="m-filter-btn" data-filter="guided">Guided</button>
+  <button class="m-filter-btn" data-filter="stress">Stress</button>
+  <button class="m-filter-btn" data-filter="sleep">Sleep</button>
   <button class="m-filter-btn" data-filter="compassion">Compassion</button>
+  <button class="m-filter-btn" data-filter="advanced">Advanced</button>
   <button class="m-filter-btn" data-filter="course">Courses</button>
 </div>
 
@@ -912,6 +926,134 @@
       <h3 class="m-card__title">Non-Dual Awareness</h3>
       <p class="m-card__desc">Rest in the space before thought. An advanced practice in observing consciousness itself — the observer and the observed as one.</p>
       <div class="m-player" data-src="https://media.salus-mind.com/content/audio-free/43-non-dual-awareness.mp3"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 20:06</span></div>
+    </div>
+  </div>
+
+  <!-- ── Sample Sessions (free) ── -->
+
+  <div class="m-card mcat-sample" data-category="sample">
+    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
+    <span class="m-card__badge m-badge--sample">Sample</span>
+    <div class="m-card__content">
+      <h3 class="m-card__title">Morning Meditation</h3>
+      <p class="m-card__desc">Start your day with intention and clarity. A gentle guided practice to ground yourself before the day begins.</p>
+      <div class="m-player" data-src="https://media.salus-mind.com/content/audio-free/01-morning-meditation.mp3"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 0:00</span></div>
+    </div>
+  </div>
+
+  <div class="m-card mcat-sample" data-category="sample">
+    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
+    <span class="m-card__badge m-badge--sample">Sample</span>
+    <div class="m-card__content">
+      <h3 class="m-card__title">Breathing for Anxiety</h3>
+      <p class="m-card__desc">A guided practice to calm your nervous system when anxiety feels heavy.</p>
+      <div class="m-player" data-src="https://media.salus-mind.com/content/audio/03-breathing-for-anxiety-vault-ambient.mp3"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 0:00</span></div>
+    </div>
+  </div>
+
+  <!-- ── Stress ── -->
+
+  <div class="m-card mcat-stress" data-category="stress">
+    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
+    <span class="m-card__badge m-badge--premium">Premium</span>
+    <div class="m-card__content">
+      <h3 class="m-card__title">Calm in Three Minutes</h3>
+      <p class="m-card__desc">When you only have a moment. A rapid grounding exercise to reset your nervous system and find your centre.</p>
+      <div class="m-player" data-src="https://media.salus-mind.com/content/audio/18-calm-in-three-minutes-vault-ambient.mp3"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 0:00</span></div>
+    </div>
+  </div>
+
+  <div class="m-card mcat-stress" data-category="stress">
+    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
+    <span class="m-card__badge m-badge--premium">Premium</span>
+    <div class="m-card__content">
+      <h3 class="m-card__title">The Calm Reset</h3>
+      <p class="m-card__desc">A quick anchor practice. Five minutes to interrupt the stress cycle and return to a state of steady awareness.</p>
+      <div class="m-player" data-src="https://media.salus-mind.com/content/audio/23-the-calm-reset-vault-ambient.mp3"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 0:00</span></div>
+    </div>
+  </div>
+
+  <div class="m-card mcat-stress" data-category="stress">
+    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
+    <span class="m-card__badge m-badge--premium">Premium</span>
+    <div class="m-card__content">
+      <h3 class="m-card__title">Release and Restore</h3>
+      <p class="m-card__desc">Breathwork meets body awareness. Release accumulated tension from the jaw, shoulders, and chest — then rebuild calm from the ground up.</p>
+      <div class="m-player" data-src="https://media.salus-mind.com/content/audio-free/19-release-and-restore.mp3"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 0:00</span></div>
+    </div>
+  </div>
+
+  <div class="m-card mcat-stress" data-category="stress">
+    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
+    <span class="m-card__badge m-badge--premium">Premium</span>
+    <div class="m-card__content">
+      <h3 class="m-card__title">The Court of Your Mind</h3>
+      <p class="m-card__desc">A CBT-inspired session that puts your inner critic on trial. When the prosecution has no evidence, the case collapses.</p>
+      <div class="m-player" data-src="https://media.salus-mind.com/vault/52-the-court-of-your-mind/final/52-the-court-of-your-mind-vault-courtroom-v4-gavel.mp3"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 0:00</span></div>
+    </div>
+  </div>
+
+  <!-- ── Sleep ── -->
+
+  <div class="m-card mcat-sleep" data-category="sleep">
+    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
+    <span class="m-card__badge m-badge--premium">Premium</span>
+    <div class="m-card__content">
+      <h3 class="m-card__title">Rainfall Sleep Journey</h3>
+      <p class="m-card__desc">Fall asleep to the sound of gentle rain. Our benchmark session — the standard by which all others are measured.</p>
+      <div class="m-player" data-src="https://media.salus-mind.com/content/audio-free/09-rainfall-sleep-journey.mp3"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 0:00</span></div>
+    </div>
+  </div>
+
+  <div class="m-card mcat-sleep" data-category="sleep">
+    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
+    <span class="m-card__badge m-badge--premium">Premium</span>
+    <div class="m-card__content">
+      <h3 class="m-card__title">Letting Go of the Day</h3>
+      <p class="m-card__desc">Unwind the threads of your day one by one. A gentle practice for releasing what no longer serves you before rest.</p>
+      <div class="m-player"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 38:30</span></div>
+    </div>
+  </div>
+
+  <div class="m-card mcat-sleep" data-category="sleep">
+    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
+    <span class="m-card__badge m-badge--premium">Premium</span>
+    <div class="m-card__content">
+      <h3 class="m-card__title">Body Scan for Deep Rest</h3>
+      <p class="m-card__desc">A slow, deliberate journey through every part of your body — releasing tension layer by layer until sleep arrives naturally.</p>
+      <div class="m-player"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 50:12</span></div>
+    </div>
+  </div>
+
+  <div class="m-card mcat-sleep" data-category="sleep">
+    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
+    <span class="m-card__badge m-badge--premium">Premium</span>
+    <div class="m-card__content">
+      <h3 class="m-card__title">Moonlight Drift</h3>
+      <p class="m-card__desc">Guided imagery under a canopy of stars. Let the quiet of the night carry you into deep, unbroken sleep.</p>
+      <div class="m-player"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 52:00</span></div>
+    </div>
+  </div>
+
+  <div class="m-card mcat-sleep" data-category="sleep">
+    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
+    <span class="m-card__badge m-badge--premium">Premium</span>
+    <div class="m-card__content">
+      <h3 class="m-card__title">The Quiet Shore</h3>
+      <p class="m-card__desc">An extended journey to a calm shoreline. Waves, warmth, and a voice that fades as sleep deepens.</p>
+      <div class="m-player"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 63:24</span></div>
+    </div>
+  </div>
+
+  <!-- ── Advanced ── -->
+
+  <div class="m-card mcat-advanced" data-category="advanced">
+    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
+    <span class="m-card__badge m-badge--premium">Premium</span>
+    <div class="m-card__content">
+      <h3 class="m-card__title">Lucid Dream Preparation</h3>
+      <p class="m-card__desc">A guided practice to strengthen awareness at the threshold of sleep — techniques for recognising and entering lucid states.</p>
+      <div class="m-player"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 56:12</span></div>
     </div>
   </div>
 
@@ -993,7 +1135,7 @@
       <h2 class="fade-in">Join the Salus family</h2>
       <p class="fade-in">We're a family, not a corporation. Try guided mindfulness sessions and breathing tools — with Salus Premium.</p>
       <div class="fade-in" style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
-        <a href="sessions.html" class="btn">Explore Sessions</a>
+        <a href="apps.html" class="btn">Go Premium</a>
         <a href="breathe.html" class="btn" style="background:transparent;border:2px solid #f0eefc;color:#f0eefc;">Breathing Timer</a>
       </div>
     </div>
@@ -1004,12 +1146,11 @@
   <div class="hb-footer__inner">
     <div class="hb-footer__brand">
       <span class="hb-footer__logo">Salus</span>
-      <p class="hb-footer__tagline">A quieter kind of self-care. Guided meditations, sleep stories, ASMR, and mindfulness tools &mdash; built by a family.</p>
+      <p class="hb-footer__tagline">A quieter kind of self-care. Guided practices, sleep stories, ASMR, and mindfulness tools &mdash; built by a family.</p>
     </div>
     <div>
       <h4 class="hb-footer__col-title">Practice</h4>
       <ul class="hb-footer__links">
-        <li><a href="sessions.html">Meditation Exercises</a></li>
         <li><a href="mindfulness.html">Mindfulness</a></li>
         <li><a href="cbt.html">CBT Exercises</a></li>
         <li><a href="asmr.html">ASMR &amp; Sounds</a></li>
