@@ -119,7 +119,8 @@ function initABState(chunkIdx, reset) {
     // All rejected — full reset
     abState[chunkIdx] = { top5: top5, champion: top5[0], challengerIdx: 1, winner: null, rejected: [], done: false, notes: notes, round: 1 };
   } else if (available.length === 1) {
-    abState[chunkIdx] = { top5: top5, winner: available[0].v, rejected: rejected, done: true, notes: notes, round: 0 };
+    // Last candidate — show in solo mode for accept/reject, do NOT auto-pick
+    abState[chunkIdx] = { top5: top5, champion: available[0], challengerIdx: -1, winner: null, rejected: rejected, done: false, soloMode: true, notes: notes, round: 1 };
   } else {
     var challIdx = -1;
     for (var i = 0; i < top5.length; i++) {
@@ -168,6 +169,33 @@ function renderChunk() {
     var a = state.champion;
     var bIdx = state.challengerIdx;
     var b = (bIdx >= 0 && bIdx < state.top5.length) ? state.top5[bIdx] : null;
+
+    // Solo mode: last candidate standing, accept or reject
+    if (state.soloMode && a && !b) {
+      html += '<div class="round-info" style="color:#ef4444;font-weight:700">Last candidate — accept or reject</div>';
+      html += '<div class="ab-compare" id="abCompare">';
+      html += '<div class="ab-side" style="border:2px solid #ef4444;border-radius:12px;padding:1rem;">';
+      html += '<div class="ab-label label-a">LAST <span style="font-size:.6em;opacity:.7">(v' + a.v + ')</span></div>';
+      html += '<audio controls preload="auto" src="' + basePath + '/' + a.file + '"></audio>';
+      html += '<div class="ab-stats"><span class="score">' + a.score.toFixed(3) + '</span><span class="dur">' + a.dur.toFixed(1) + 's</span>';
+      if (chunk.idx > 0) html += '<span class="tone">t' + a.tone.toFixed(4) + '</span>';
+      html += '</div></div>';
+      html += '</div>';
+      html += '<div class="ab-actions">';
+      html += '<button class="btn-a" onclick="pickSide(\'a\')" style="flex:1">Accept (A)</button>';
+      html += '<button class="btn-same" onclick="pickSide(\'same\')" style="flex:1;background:rgba(239,68,68,0.2);color:#ef4444;border-color:#ef4444">Reject all (S)</button>';
+      html += '</div>';
+      html += '<div class="shortcuts">Keyboard: <kbd>A</kbd> Accept \u00b7 <kbd>S</kbd> Reject (no winner)</div>';
+      area.innerHTML = html;
+      var cmp = document.getElementById('abCompare');
+      if (cmp) { cmp.style.opacity = '0.5'; setTimeout(function() { cmp.style.opacity = '1'; }, 50); }
+      var navBtns = document.querySelectorAll('.chunk-nav button');
+      for (var i = 0; i < navBtns.length; i++) navBtns[i].classList.remove('current');
+      var navBtn = document.getElementById('nav-' + chunk.idx);
+      if (navBtn) navBtn.classList.add('current');
+      logDebug('Solo mode: chunk ' + chunk.idx + ', last candidate v' + a.v);
+      return;
+    }
 
     if (!a || !b) {
       html += '<p style="color:#ef4444">Not enough candidates (a=' + !!a + ', b=' + !!b + ', challIdx=' + bIdx + ')</p>';
@@ -237,9 +265,49 @@ function pickSide(side) {
   var a = state.champion;
   var b = state.top5[state.challengerIdx];
 
-  if (!a || !b) { logDebug('pickSide: missing a or b'); return; }
-
   pickCounter++;
+
+  // Solo mode handling (must come before a/b guard — b is null in solo mode)
+  if (state.soloMode) {
+    if (side === 'a') {
+      // Accept the last candidate
+      state.winner = a.v;
+      state.done = true;
+      state.soloMode = false;
+      state.round = 0;
+      pickedThisSession[chunk.idx] = 'a';
+      logDebug('Accepted last candidate v' + a.v + ' for chunk ' + chunk.idx);
+      showToast('PICKED: v' + a.v);
+      try { saveState(); } catch (e) { logDebug('saveState error: ' + e.message); }
+      renderChunk();
+      if (state.done && state.winner != null) {
+        setTimeout(function() {
+          for (var i = currentChunkArrayIdx + 1; i < chunkData.length; i++) {
+            if (abState[chunkData[i].idx] && !abState[chunkData[i].idx].done) {
+              currentChunkArrayIdx = i;
+              renderChunk();
+              return;
+            }
+          }
+        }, 800);
+      }
+      return;
+    } else {
+      // Reject last candidate — no winner
+      state.rejected.push(a.v);
+      state.done = true;
+      state.winner = null;
+      state.soloMode = false;
+      state.round = 0;
+      logDebug('All candidates rejected for chunk ' + chunk.idx);
+      showToast('No winner \u2014 all rejected');
+      try { saveState(); } catch (e) { logDebug('saveState error: ' + e.message); }
+      renderChunk();
+      return;
+    }
+  }
+
+  if (!a || !b) { logDebug('pickSide: missing a or b'); return; }
 
   if (side === 'same') {
     // REJECT BOTH — neither wins
@@ -261,13 +329,13 @@ function pickSide(side) {
       logDebug('All candidates rejected for chunk ' + chunk.idx);
       showToast('No winner \u2014 all rejected');
     } else if (remaining.length === 1) {
-      // Only one left — auto-wins
-      state.winner = state.top5[remaining[0]].v;
-      state.done = true;
-      state.round = 0;
-      pickedThisSession[chunk.idx] = 'a';
-      logDebug('Last candidate wins chunk ' + chunk.idx + ': v' + state.winner);
-      showToast('PICKED: v' + state.winner + ' (last standing)');
+      // Only one left — show it solo for accept/reject, do NOT auto-pick
+      state.champion = state.top5[remaining[0]];
+      state.challengerIdx = -1;
+      state.soloMode = true;
+      state.round = (state.round || 0) + 1;
+      logDebug('Last candidate v' + state.champion.v + ' — accept or reject');
+      showToast('Last candidate — accept or reject');
     } else {
       // Remaining candidates exist — load next pair on same chunk
       state.champion = state.top5[remaining[0]];
