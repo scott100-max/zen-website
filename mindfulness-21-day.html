@@ -577,7 +577,7 @@
       detailContent.classList.add('switching');
 
       setTimeout(() => {
-        if (data.free) {
+        if (data.free || (typeof SalusAuth !== 'undefined' && SalusAuth.isPremium())) {
           detailContent.style.display = '';
           detailLocked.style.display = 'none';
           document.getElementById('detailDayLabel').textContent = 'Day ' + data.day;
@@ -606,6 +606,19 @@
 
     allNodes.forEach(node => {
       node.addEventListener('click', () => selectDay(parseInt(node.dataset.day)));
+    });
+
+    // Unlock all days for premium users
+    document.addEventListener('DOMContentLoaded', async function() {
+      if (typeof SalusAuth !== 'undefined') {
+        await SalusAuth.init();
+        if (SalusAuth.isPremium()) {
+          allNodes.forEach(n => n.classList.add('unlocked'));
+          // Re-select current day to refresh locked/unlocked view
+          var activeNode = document.querySelector('.day-node.active');
+          if (activeNode) selectDay(parseInt(activeNode.dataset.day));
+        }
+      }
     });
   </script>
 

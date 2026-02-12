@@ -364,7 +364,7 @@
       detailContent.classList.add('switching');
       detailLocked.style.display = 'none';
       setTimeout(function() {
-        if (data.free) {
+        if (data.free || (typeof SalusAuth !== 'undefined' && SalusAuth.isPremium())) {
           detailContent.style.display = '';
           detailLocked.style.display = 'none';
           document.getElementById('detailDayLabel').textContent = 'Day ' + data.day;
@@ -390,6 +390,18 @@
       node.addEventListener('click', function() {
         selectDay(parseInt(node.dataset.day));
       });
+    });
+
+    // Unlock all days for premium users
+    document.addEventListener('DOMContentLoaded', async function() {
+      if (typeof SalusAuth !== 'undefined') {
+        await SalusAuth.init();
+        if (SalusAuth.isPremium()) {
+          nodes.forEach(function(n) { n.classList.add('unlocked'); });
+          var activeNode = document.querySelector('.day-node.active');
+          if (activeNode) selectDay(parseInt(activeNode.dataset.day));
+        }
+      }
     });
   </script>
 
