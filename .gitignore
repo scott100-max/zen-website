@@ -1,10 +1,14 @@
-# Media files (served from GitHub Releases)
+# Media files (served from Cloudflare R2)
 *.mp3
 *.mp4
 *.wav
 *.m4a
 *.ogg
 *.webm
+
+# Allow media files in the R2 upload staging directory
+!media-upload/
+!media-upload/**
 
 # Media directories
 content/audio/
