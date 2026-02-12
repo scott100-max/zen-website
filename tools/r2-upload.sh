@@ -28,7 +28,7 @@ if [ ! -f "$LOCAL_FILE" ]; then
 fi
 
 echo "Uploading: $LOCAL_FILE → $BUCKET/$R2_KEY"
-npx wrangler r2 object put "$BUCKET/$R2_KEY" --file="$LOCAL_FILE" --remote --content-type="$CONTENT_TYPE"
+npx wrangler r2 object put "$BUCKET/$R2_KEY" --file="$LOCAL_FILE" --remote --content-type="$CONTENT_TYPE" --cache-control="no-cache"
 
 # Purge base URL + find any ?v= query string variants referenced in HTML
 CDN_URL="${CDN_BASE}/${R2_KEY}"
