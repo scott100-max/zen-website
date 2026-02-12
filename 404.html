@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page Not Found — Salus</title>
+  <meta name="description" content="The page you're looking for doesn't exist. Head back to Salus and explore guided meditations, sleep stories, ASMR, and more.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=1770564391">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/auth.js?v=1770564391"></script>
+  <style>
+    .notfound { min-height: 70vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 80px 24px; background: transparent; }
+    .notfound__code { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(5rem, 15vw, 10rem); line-height: 1; color: rgba(240,238,252,0.06); margin-bottom: 8px; }
+    .notfound h1 { font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 2rem; color: #f0eefc; margin-bottom: 12px; }
+    .notfound p { font-size: 1rem; color: var(--mid-gray); line-height: 1.7; max-width: 440px; margin: 0 auto 32px; }
+    .notfound__links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .notfound__links a { font-size: 0.88rem; padding: 12px 28px; border-radius: 40px; text-decoration: none; transition: all 0.3s ease; }
+    .notfound__links .btn-primary { background: #f0eefc; color: var(--accent); }
+    .notfound__links .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(240,238,252,0.15); }
+    .notfound__links .btn-outline { color: rgba(240,238,252,0.6); border: 1px solid rgba(255,255,255,0.1); }
+    .notfound__links .btn-outline:hover { color: #f0eefc; border-color: rgba(255,255,255,0.22); background: rgba(255,255,255,0.04); }
+    .notfound__latin { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 0.88rem; color: rgba(255,255,255,0.18); margin-top: 48px; }
+  </style>
+</head>
+<body>
+
+<nav class="nav-wrap" id="navWrap">
+  <div class="nav-inner">
+    <div class="nav-row-1">
+      <a href="index.html" class="nav-brand">SALUS</a>
+      <ul class="nav-primary">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="mindfulness.html">Mindfulness</a></li>
+        <li><a href="cbt.html">CBT Exercises</a></li>
+        <li><a href="asmr.html">ASMR</a></li>
+        <li><a href="sleep-stories.html">Sleep Stories</a></li>
+        <li><a href="education.html">Learn</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <div class="nav-ctas">
+        <a href="apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+        <a href="login.html" class="nav-cta nav-cta--login nav-auth-btn">Log In</a>
+      </div>
+      <button class="nav-burger" id="burgerBtn" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav-row-2">
+      <a href="tools.html">Tools</a>
+      <a href="reading.html">Reading</a>
+      <a href="applied-psychology.html">Applied Psychology</a>
+      <a href="newsletter.html">Newsletter</a>
+      <a href="contact.html">Contact</a>
+      <a href="lend-your-voice.html">Lend Your Voice</a>
+    </div>
+  </div>
+</nav>
+<div class="nav-drawer" id="navDrawer">
+  <div class="nav-drawer__section-label">Main</div>
+  <a href="index.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Home</a>
+  <a href="mindfulness.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Mindfulness</a>
+  <a href="cbt.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>CBT Exercises</a>
+  <a href="asmr.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>ASMR</a>
+  <a href="sleep-stories.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Sleep Stories</a>
+  <a href="education.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Learn</a>
+  <a href="about.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>About</a>
+
+  <div class="nav-drawer__section-label">More</div>
+  <a href="tools.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Tools</a>
+  <a href="reading.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Reading</a>
+  <a href="applied-psychology.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Applied Psychology</a>
+  <a href="newsletter.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Newsletter</a>
+  <a href="contact.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Contact</a>
+  <a href="lend-your-voice.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Lend Your Voice</a>
+
+  <div class="nav-drawer__ctas">
+    <a href="apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+    <a href="login.html" class="nav-cta nav-cta--login nav-auth-btn">Log In</a>
+  </div>
+</div>
+
+<section class="notfound">
+  <div class="container">
+    <div class="notfound__code">404</div>
+    <h1>This page doesn't exist</h1>
+    <p>The page you're looking for may have been moved or removed. Let's get you back on track.</p>
+    <div class="notfound__links">
+      <a href="index.html" class="btn-primary">Go Home</a>
+      <a href="mindfulness.html" class="btn-outline">Explore Sessions</a>
+    </div>
+    <p class="notfound__latin">Sal&#363;s — Latin: health, safety, well-being</p>
+  </div>
+</section>
+
+<footer class="hb-footer">
+  <div class="hb-footer__inner">
+    <div class="hb-footer__brand">
+      <span class="hb-footer__logo">Salus</span>
+      <p class="hb-footer__tagline">A quieter kind of self-care. Guided practices, sleep stories, ASMR, and mindfulness tools &mdash; built by a family.</p>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Practice</h4>
+      <ul class="hb-footer__links">
+        <li><a href="mindfulness.html">Mindfulness</a></li>
+        <li><a href="asmr.html">ASMR &amp; Sounds</a></li>
+        <li><a href="sleep-stories.html">Sleep Stories</a></li>
+        <li><a href="cbt.html">CBT Exercises</a></li>
+        <li><a href="tools.html">Tools</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Discover</h4>
+      <ul class="hb-footer__links">
+        <li><a href="education.html">Learn</a></li>
+        <li><a href="reading.html">Reading</a></li>
+        <li><a href="applied-psychology.html">Applied Psychology</a></li>
+        <li><a href="newsletter.html">Newsletter</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Salus</h4>
+      <ul class="hb-footer__links">
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="apps.html">Go Premium</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="footer-disclaimer">Salus does not provide medical advice. Content is for general wellbeing and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified health provider with any health concerns.</p>
+  <div class="hb-footer__bottom">
+    <span class="hb-footer__copy">&copy; 2026 Salus Mind. All rights reserved.</span>
+    <a href="#" class="hb-footer__back-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">
+      Back to top
+      <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+    </a>
+  </div>
+</footer>
+
+<script src="js/main.js?v=1770564391"></script>
+<script src="js/tracker.js"></script>
+<script>
+  const navWrap=document.getElementById("navWrap");
+  if(navWrap){window.addEventListener("scroll",()=>{navWrap.classList.toggle("scrolled",window.scrollY>30)},{passive:true});}
+  const burger=document.getElementById("burgerBtn");
+  const drawer=document.getElementById("navDrawer");
+  if(burger&&drawer){burger.addEventListener("click",()=>{burger.classList.toggle("open");drawer.classList.toggle("open");document.body.style.overflow=drawer.classList.contains("open")?"hidden":""});
+  drawer.querySelectorAll(".nav-drawer__link").forEach(l=>{l.addEventListener("click",()=>{burger.classList.remove("open");drawer.classList.remove("open");document.body.style.overflow=""})});}
+</script>
+</body>
+</html>
