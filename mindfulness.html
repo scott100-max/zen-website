@@ -575,16 +575,15 @@
   .course-banner__badge{display:inline-flex;align-items:center;gap:6px;font-weight:400;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:#4ecdc4;background:rgba(78,205,196,0.1);border:1px solid rgba(78,205,196,0.2);padding:4px 12px;border-radius:20px;margin-bottom:12px}
   .course-banner__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.5rem;line-height:1.2;color:#fff;margin-bottom:6px}
   .course-banner__desc{font-weight:200;font-size:.82rem;line-height:1.6;color:rgba(255,255,255,0.55);max-width:520px}
-  .course-banner__progress{display:flex;align-items:center;gap:8px;margin-top:14px}
-  .course-banner__dots{display:flex;gap:4px}
-  .course-banner__dot{width:8px;height:8px;border-radius:50%;background:rgba(78,205,196,0.15);border:1px solid rgba(78,205,196,0.2)}
-  .course-banner__dot--active{background:#4ecdc4;border-color:#4ecdc4}
-  .course-banner__progress-label{font-weight:200;font-size:.68rem;color:rgba(255,255,255,0.4)}
+  .course-banner__days{display:flex;flex-wrap:wrap;gap:4px;margin-top:14px}
+  .course-day{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono','Outfit',sans-serif;font-weight:400;font-size:.58rem;color:rgba(78,205,196,0.5);background:rgba(78,205,196,0.06);border:1px solid rgba(78,205,196,0.12);transition:all .3s ease}
+  .course-day:hover{background:rgba(78,205,196,0.15);border-color:rgba(78,205,196,0.3);color:#4ecdc4;transform:translateY(-1px)}
+  .course-banner__progress-label{font-weight:200;font-size:.68rem;color:rgba(255,255,255,0.4);margin-top:8px}
   .course-banner__cta{flex-shrink:0;font-family:'Outfit',sans-serif;font-weight:400;font-size:.78rem;letter-spacing:.04em;padding:10px 24px;border-radius:40px;color:#060810;background:linear-gradient(135deg,#4ecdc4,#6dd5c8);border:none;cursor:pointer;text-decoration:none;transition:all .35s cubic-bezier(.22,1,.36,1)}
   .course-banner__cta:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(78,205,196,0.25)}
-  .m-card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;max-width:980px;margin:0 auto}
-  .m-card{position:relative;border-radius:18px;padding:30px 30px 24px;overflow:hidden;transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s ease;cursor:default;min-height:260px;display:flex;flex-direction:column}
-  .m-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.35)}
+  .m-card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:980px;margin:0 auto}
+  .m-card{position:relative;border-radius:14px;padding:20px 20px 16px;overflow:hidden;transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s ease;cursor:default;min-height:180px;display:flex;flex-direction:column}
+  .m-card:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(0,0,0,0.3)}
   .m-card::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:.5;pointer-events:none;border-radius:inherit}
   .mcat-mindfulness{background:linear-gradient(145deg,#0d3d4a 0%,#1a5568 35%,#0f4c5c 100%)}
   .mcat-compassion{background:linear-gradient(145deg,#0d3d4a 0%,#155e5a 35%,#1a6b5c 100%)}
@@ -602,28 +601,29 @@
   .mcat-sleep .m-player__progress{background:#a78bfa}
   .mcat-advanced .m-player__progress{background:#c084fc}
   .m-badge--sample{color:#e2e8f0;background:rgba(148,163,184,0.15);border:1px solid rgba(148,163,184,0.3)}
-  .m-card__orb{position:absolute;border-radius:50%;filter:blur(40px);opacity:.35;pointer-events:none;transition:opacity .4s ease;background:#22d3ee;width:140px;height:140px;top:-30px;right:-20px}
+  .m-card__orb{position:absolute;border-radius:50%;filter:blur(35px);opacity:.3;pointer-events:none;transition:opacity .4s ease;background:#22d3ee;width:100px;height:100px;top:-20px;right:-15px}
   .m-card:hover .m-card__orb{opacity:.5}
-  .m-card__orb--2{background:#06b6d4;width:100px;height:100px;bottom:-20px;left:-10px;top:auto;right:auto;opacity:.2}
+  .m-card__orb--2{background:#06b6d4;width:70px;height:70px;bottom:-15px;left:-8px;top:auto;right:auto;opacity:.15}
   .mcat-compassion .m-card__orb{background:#2dd4bf}
   .mcat-compassion .m-card__orb--2{background:#14b8a6}
-  .m-card__badge{position:absolute;top:18px;right:20px;z-index:4;font-weight:400;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  .m-card__badge{position:absolute;top:12px;right:14px;z-index:4;font-weight:400;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:20px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
   .m-badge--premium{color:rgba(255,255,255,0.85);background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15)}
   .m-badge--type{color:#4ecdc4;background:rgba(78,205,196,0.1);border:1px solid rgba(78,205,196,0.2)}
   .m-card__content{position:relative;z-index:3;flex:1;display:flex;flex-direction:column}
   .m-card__meta{display:flex;align-items:center;gap:6px;margin-bottom:10px;font-weight:300;font-size:.78rem;color:rgba(255,255,255,0.55)}
   .m-card__cat-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;background:#4ecdc4}
-  .m-card__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.6rem;line-height:1.2;color:#fff;margin-bottom:10px}
-  .m-card__desc{font-weight:200;font-size:.84rem;line-height:1.65;color:rgba(255,255,255,0.6);margin-bottom:auto;padding-bottom:18px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .m-player{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:10px 18px 10px 10px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);position:relative;z-index:3}
-  .m-player__btn{width:40px;height:40px;border-radius:50%;flex-shrink:0;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s ease}
+  .m-card__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.2rem;line-height:1.2;color:#fff;margin-bottom:6px}
+  .m-card__desc{font-weight:200;font-size:.76rem;line-height:1.55;color:rgba(255,255,255,0.55);margin-bottom:auto;padding-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .m-player{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:7px 12px 7px 7px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);position:relative;z-index:3}
+  .m-player__btn{width:30px;height:30px;border-radius:50%;flex-shrink:0;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s ease}
   .m-player__btn:hover{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.25);transform:scale(1.05)}
-  .m-player__btn svg{width:14px;height:14px;fill:#fff;margin-left:2px}
+  .m-player__btn svg{width:11px;height:11px;fill:#fff;margin-left:1px}
   .m-player__track{flex:1;height:3px;background:rgba(255,255,255,0.12);border-radius:2px;overflow:hidden;cursor:pointer}
   .m-player__progress{height:100%;width:0%;border-radius:2px;background:#4ecdc4;transition:width .1s linear}
-  .m-player__time{font-weight:300;font-size:.7rem;color:rgba(255,255,255,0.45);white-space:nowrap;min-width:72px;text-align:right;font-variant-numeric:tabular-nums}
-  @media(max-width:768px){.m-card-grid{grid-template-columns:1fr}.m-card{padding:24px 24px 20px;min-height:auto}.m-card__title{font-size:1.4rem}.m-sub-hook,.course-banner{flex-direction:column;text-align:center;gap:12px}.course-banner__content{flex-direction:column;text-align:center}.course-banner__progress{justify-content:center}}
-  @media(max-width:480px){.m-card{padding:22px 20px 18px}}
+  .m-player__time{font-weight:300;font-size:.62rem;color:rgba(255,255,255,0.4);white-space:nowrap;min-width:62px;text-align:right;font-variant-numeric:tabular-nums}
+  @media(max-width:860px){.m-card-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:768px){.m-card-grid{grid-template-columns:1fr}.m-card{padding:18px 18px 14px;min-height:auto}.m-card__title{font-size:1.15rem}.m-sub-hook,.course-banner{flex-direction:column;text-align:center;gap:12px}.course-banner__content{flex-direction:column;text-align:center}.course-banner__days{justify-content:center}}
+  @media(max-width:480px){.m-card{padding:16px 14px 12px}}
 
     .practice-grid {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;
@@ -879,57 +879,7 @@
 
 <div class="m-card-grid" id="mSessionGrid">
 
-  <div class="m-card mcat-beginner" data-category="beginner">
-    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
-    <span class="m-card__badge m-badge--premium">Premium</span>
-    <div class="m-card__content">
-      <h3 class="m-card__title">Introduction to Mindfulness</h3>
-      <p class="m-card__desc">Your starting point. A warm, unhurried introduction to the basics — breath, attention, and the art of simply being present.</p>
-      <div class="m-player" data-src="https://media.salus-mind.com/content/audio-free/25-introduction-to-mindfulness.mp3"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 0:00</span></div>
-    </div>
-  </div>
-
-  <div class="m-card mcat-mindfulness" data-category="guided">
-    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
-    <span class="m-card__badge m-badge--premium">Premium</span>
-    <div class="m-card__content">
-      <h3 class="m-card__title">Observing Emotions</h3>
-      <p class="m-card__desc">Learn to sit with feelings without being swept away. A practice in noticing, naming, and letting emotions pass through.</p>
-      <div class="m-player" data-src="https://media.salus-mind.com/content/audio/sessions/32-observing-emotions-vault-ambient.mp3"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 0:00</span></div>
-    </div>
-  </div>
-
-  <div class="m-card mcat-mindfulness" data-category="guided">
-    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
-    <span class="m-card__badge m-badge--premium">Premium</span>
-    <div class="m-card__content">
-      <h3 class="m-card__title">Open Awareness</h3>
-      <p class="m-card__desc">Move beyond the breath. Expand your attention to hold everything — sounds, sensations, thoughts — without grasping.</p>
-      <div class="m-player"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 11:24</span></div>
-    </div>
-  </div>
-
-  <div class="m-card mcat-compassion" data-category="compassion">
-    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
-    <span class="m-card__badge m-badge--premium">Premium</span>
-    <div class="m-card__content">
-      <h3 class="m-card__title">Loving-Kindness Introduction</h3>
-      <p class="m-card__desc">The traditional metta practice — extending warmth first to yourself, then outward. A gentle entry point into compassion meditation.</p>
-      <div class="m-player" data-src="https://media.salus-mind.com/content/audio-free/36-loving-kindness-intro-v3.mp3"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 10:28</span></div>
-    </div>
-  </div>
-
-  <div class="m-card mcat-mindfulness" data-category="guided">
-    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
-    <span class="m-card__badge m-badge--premium">Premium</span>
-    <div class="m-card__content">
-      <h3 class="m-card__title">Non-Dual Awareness</h3>
-      <p class="m-card__desc">Rest in the space before thought. An advanced practice in observing consciousness itself — the observer and the observed as one.</p>
-      <div class="m-player" data-src="https://media.salus-mind.com/content/audio-free/43-non-dual-awareness.mp3"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 20:06</span></div>
-    </div>
-  </div>
-
-  <!-- ── Sample Sessions (free) ── -->
+  <!-- ── Beginner / Sample ── -->
 
   <div class="m-card mcat-sample" data-category="sample">
     <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
@@ -948,6 +898,16 @@
       <h3 class="m-card__title">Breathing for Anxiety</h3>
       <p class="m-card__desc">A guided practice to calm your nervous system when anxiety feels heavy.</p>
       <div class="m-player" data-src="https://media.salus-mind.com/content/audio/03-breathing-for-anxiety-vault-ambient.mp3"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 0:00</span></div>
+    </div>
+  </div>
+
+  <div class="m-card mcat-beginner" data-category="beginner">
+    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
+    <span class="m-card__badge m-badge--premium">Premium</span>
+    <div class="m-card__content">
+      <h3 class="m-card__title">Introduction to Mindfulness</h3>
+      <p class="m-card__desc">Your starting point. A warm, unhurried introduction to the basics — breath, attention, and the art of simply being present.</p>
+      <div class="m-player" data-src="https://media.salus-mind.com/content/audio-free/25-introduction-to-mindfulness.mp3"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 0:00</span></div>
     </div>
   </div>
 
@@ -978,8 +938,40 @@
     <span class="m-card__badge m-badge--premium">Premium</span>
     <div class="m-card__content">
       <h3 class="m-card__title">Release and Restore</h3>
-      <p class="m-card__desc">Breathwork meets body awareness. Release accumulated tension from the jaw, shoulders, and chest — then rebuild calm from the ground up.</p>
+      <p class="m-card__desc">Breathwork meets body awareness. Release accumulated tension from the jaw, shoulders, and chest — then rebuild calm.</p>
       <div class="m-player" data-src="https://media.salus-mind.com/content/audio-free/19-release-and-restore.mp3"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 0:00</span></div>
+    </div>
+  </div>
+
+  <!-- ── Guided / Intermediate ── -->
+
+  <div class="m-card mcat-mindfulness" data-category="guided">
+    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
+    <span class="m-card__badge m-badge--premium">Premium</span>
+    <div class="m-card__content">
+      <h3 class="m-card__title">Observing Emotions</h3>
+      <p class="m-card__desc">Learn to sit with feelings without being swept away. A practice in noticing, naming, and letting emotions pass through.</p>
+      <div class="m-player" data-src="https://media.salus-mind.com/content/audio/sessions/32-observing-emotions-vault-ambient.mp3"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 0:00</span></div>
+    </div>
+  </div>
+
+  <div class="m-card mcat-mindfulness" data-category="guided">
+    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
+    <span class="m-card__badge m-badge--premium">Premium</span>
+    <div class="m-card__content">
+      <h3 class="m-card__title">Open Awareness</h3>
+      <p class="m-card__desc">Move beyond the breath. Expand your attention to hold everything — sounds, sensations, thoughts — without grasping.</p>
+      <div class="m-player"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 11:24</span></div>
+    </div>
+  </div>
+
+  <div class="m-card mcat-compassion" data-category="compassion">
+    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
+    <span class="m-card__badge m-badge--premium">Premium</span>
+    <div class="m-card__content">
+      <h3 class="m-card__title">Loving-Kindness Introduction</h3>
+      <p class="m-card__desc">The traditional metta practice — extending warmth first to yourself, then outward. A gentle entry point into compassion.</p>
+      <div class="m-player" data-src="https://media.salus-mind.com/content/audio-free/36-loving-kindness-intro-v3.mp3"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 10:28</span></div>
     </div>
   </div>
 
@@ -1020,7 +1012,7 @@
     <span class="m-card__badge m-badge--premium">Premium</span>
     <div class="m-card__content">
       <h3 class="m-card__title">Body Scan for Deep Rest</h3>
-      <p class="m-card__desc">A slow, deliberate journey through every part of your body — releasing tension layer by layer until sleep arrives naturally.</p>
+      <p class="m-card__desc">A slow, deliberate journey through every part of your body — releasing tension layer by layer until sleep arrives.</p>
       <div class="m-player"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 50:12</span></div>
     </div>
   </div>
@@ -1047,12 +1039,22 @@
 
   <!-- ── Advanced ── -->
 
+  <div class="m-card mcat-mindfulness" data-category="advanced">
+    <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
+    <span class="m-card__badge m-badge--premium">Premium</span>
+    <div class="m-card__content">
+      <h3 class="m-card__title">Non-Dual Awareness</h3>
+      <p class="m-card__desc">Rest in the space before thought. An advanced practice in observing consciousness itself — the observer and the observed as one.</p>
+      <div class="m-player" data-src="https://media.salus-mind.com/content/audio-free/43-non-dual-awareness.mp3"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 20:06</span></div>
+    </div>
+  </div>
+
   <div class="m-card mcat-advanced" data-category="advanced">
     <div class="m-card__orb"></div><div class="m-card__orb m-card__orb--2"></div>
     <span class="m-card__badge m-badge--premium">Premium</span>
     <div class="m-card__content">
       <h3 class="m-card__title">Lucid Dream Preparation</h3>
-      <p class="m-card__desc">A guided practice to strengthen awareness at the threshold of sleep — techniques for recognising and entering lucid states.</p>
+      <p class="m-card__desc">Strengthen awareness at the threshold of sleep — techniques for recognising and entering lucid states.</p>
       <div class="m-player"><button class="m-player__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="m-player__track"><div class="m-player__progress"></div></div><span class="m-player__time">0:00 / 56:12</span></div>
     </div>
   </div>
@@ -1071,21 +1073,19 @@
   <div class="course-banner__orb course-banner__orb--2"></div>
   <div class="course-banner__content">
     <div class="course-banner__left">
-      <div class="course-banner__badge">7-Day Course</div>
+      <div class="course-banner__badge">7 Sessions &middot; 7 Days</div>
       <h3 class="course-banner__title">7-Day Mindfulness Foundation</h3>
-      <p class="course-banner__desc">A week-long introduction to mindfulness. One session per day — settling into stillness, finding the breath, and learning to simply notice.</p>
-      <div class="course-banner__progress">
-        <div class="course-banner__dots">
-          <span class="course-banner__dot course-banner__dot--active"></span>
-          <span class="course-banner__dot"></span>
-          <span class="course-banner__dot"></span>
-          <span class="course-banner__dot"></span>
-          <span class="course-banner__dot"></span>
-          <span class="course-banner__dot"></span>
-          <span class="course-banner__dot"></span>
-        </div>
-        <span class="course-banner__progress-label">1 day available · 7 total</span>
+      <p class="course-banner__desc">One session per day for a week. Settling into stillness, finding the breath, and learning to simply notice. No experience needed.</p>
+      <div class="course-banner__days">
+        <span class="course-day">1</span>
+        <span class="course-day">2</span>
+        <span class="course-day">3</span>
+        <span class="course-day">4</span>
+        <span class="course-day">5</span>
+        <span class="course-day">6</span>
+        <span class="course-day">7</span>
       </div>
+      <span class="course-banner__progress-label">7 guided sessions &middot; 10&ndash;18 min each</span>
     </div>
     <a href="sessions/seven-day-mindfulness-course.html" class="course-banner__cta">Start Day 1</a>
   </div>
@@ -1096,21 +1096,33 @@
   <div class="course-banner__orb course-banner__orb--2"></div>
   <div class="course-banner__content">
     <div class="course-banner__left">
-      <div class="course-banner__badge">Structured Course</div>
+      <div class="course-banner__badge">21 Sessions &middot; 3 Weeks</div>
       <h3 class="course-banner__title">21-Day Mindfulness Programme</h3>
-      <p class="course-banner__desc">A complete guided journey from first breath to lasting habit. One session per day, building progressively — no experience needed.</p>
-      <div class="course-banner__progress">
-        <div class="course-banner__dots">
-          <span class="course-banner__dot course-banner__dot--active"></span>
-          <span class="course-banner__dot"></span>
-          <span class="course-banner__dot"></span>
-          <span class="course-banner__dot"></span>
-          <span class="course-banner__dot"></span>
-          <span class="course-banner__dot"></span>
-          <span class="course-banner__dot"></span>
-        </div>
-        <span class="course-banner__progress-label">7 days available · 21 total</span>
+      <p class="course-banner__desc">A complete guided journey from first breath to lasting habit. Progressive — 10 minutes on day one, 45 minutes by day twenty-one. Research-grounded techniques throughout.</p>
+      <div class="course-banner__days">
+        <span class="course-day">1</span>
+        <span class="course-day">2</span>
+        <span class="course-day">3</span>
+        <span class="course-day">4</span>
+        <span class="course-day">5</span>
+        <span class="course-day">6</span>
+        <span class="course-day">7</span>
+        <span class="course-day">8</span>
+        <span class="course-day">9</span>
+        <span class="course-day">10</span>
+        <span class="course-day">11</span>
+        <span class="course-day">12</span>
+        <span class="course-day">13</span>
+        <span class="course-day">14</span>
+        <span class="course-day">15</span>
+        <span class="course-day">16</span>
+        <span class="course-day">17</span>
+        <span class="course-day">18</span>
+        <span class="course-day">19</span>
+        <span class="course-day">20</span>
+        <span class="course-day">21</span>
       </div>
+      <span class="course-banner__progress-label">21 guided sessions &middot; 10&ndash;45 min &middot; over 8 hours of material</span>
     </div>
     <a href="mindfulness-21-day.html" class="course-banner__cta">Start Day 1</a>
   </div>
