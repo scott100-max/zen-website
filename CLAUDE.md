@@ -41,6 +41,10 @@ npx wrangler r2 object put salus-mind/content/video/FILENAME.mp4 --file=./FILENA
 
 FISH_API_KEY: (stored in GitHub repository secrets — retrieve from GitHub Actions if needed for TTS tasks)
 
+## Git Workflow
+
+Always push directly to main. Do not create branches or PRs. The GitHub API is blocked by the network proxy.
+
 ## Critical Rules
 
 1. **NEVER commit audio or video files to Git.** All media goes to Cloudflare R2. The .gitignore excludes *.mp3, *.mp4, *.wav and media directories.
