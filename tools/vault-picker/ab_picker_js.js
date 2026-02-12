@@ -7,6 +7,16 @@ var abState = {};
 var currentChunkArrayIdx = 0;
 var pickCounter = 0;
 var pickedThisSession = {}; // chunkIdx -> 'a' or 'b'
+var rejectionReasons = {}; // chunkIdx -> { version: ['echo','hiss',...] }
+var REASON_TAGS = [
+  { key: 'e', label: 'Echo', color: '#f87171' },
+  { key: 'h', label: 'Hiss', color: '#fbbf24' },
+  { key: 'c', label: 'Cut Short', color: '#fb923c' },
+  { key: 'v', label: 'Voice Shift', color: '#a78bfa' },
+  { key: 'p', label: 'Pace', color: '#60a5fa' },
+  { key: 'x', label: 'Other', color: '#7c809a' }
+];
+var pendingRejectTag = null; // { chunkIdx, versions: [v1,v2], callback }
 
 // --- Load state: MERGE remote + localStorage ---
 async function loadState() {
@@ -22,6 +32,7 @@ async function loadState() {
           for (var i = 0; i < data.picks.length; i++) {
             var p = data.picks[i];
             serverState[p.chunk] = { picked: p.picked, rejected: p.rejected || [], notes: p.notes || '', side: p.side || null };
+            if (p.rejection_reasons) rejectionReasons[p.chunk] = p.rejection_reasons;
           }
         }
       }
@@ -344,9 +355,12 @@ function pickSide(side) {
       logDebug('Both rejected, ' + remaining.length + ' remain. Loading next pair.');
     }
 
-    // Stay on current chunk — show next pair (no auto-advance)
+    // Save, render, then show tag bar for rejected pair
     try { saveState(); } catch (e) { logDebug('saveState error: ' + e.message); }
     renderChunk();
+    showRejectTagBar(chunk.idx, [a.v, b.v], function() {
+      try { saveState(); } catch (e) {}
+    });
     return;
   } else {
     // A wins or B wins — PICK IMMEDIATELY
@@ -368,9 +382,12 @@ function pickSide(side) {
   // Always render regardless of save success
   renderChunk();
 
-  // Auto-advance to next unpicked chunk after tournament completes
-  if (state.done && state.winner != null) {
-    setTimeout(function() {
+  // Show tag bar for the loser, then auto-advance
+  var _loser = (side === 'a') ? b : a;
+  var _state = state;
+  showRejectTagBar(chunk.idx, [_loser.v], function() {
+    try { saveState(); } catch (e) {}
+    if (_state.done && _state.winner != null) {
       for (var i = currentChunkArrayIdx + 1; i < chunkData.length; i++) {
         if (abState[chunkData[i].idx] && !abState[chunkData[i].idx].done) {
           currentChunkArrayIdx = i;
@@ -378,8 +395,58 @@ function pickSide(side) {
           return;
         }
       }
-    }, 800);
+    }
+  });
+}
+
+// --- Rejection reason tag bar ---
+function showRejectTagBar(chunkIdx, versions, callback) {
+  pendingRejectTag = { chunkIdx: chunkIdx, versions: versions, callback: callback };
+  if (!rejectionReasons[chunkIdx]) rejectionReasons[chunkIdx] = {};
+  for (var i = 0; i < versions.length; i++) {
+    if (!rejectionReasons[chunkIdx][versions[i]]) rejectionReasons[chunkIdx][versions[i]] = [];
   }
+  var bar = document.getElementById('rejectTagBar');
+  if (!bar) {
+    bar = document.createElement('div');
+    bar.id = 'rejectTagBar';
+    bar.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#1e2030;border-top:2px solid #ef4444;padding:12px 20px;z-index:999;display:flex;align-items:center;gap:10px;flex-wrap:wrap;';
+    document.body.appendChild(bar);
+  }
+  var vLabel = versions.map(function(v) { return 'v' + v; }).join(' + ');
+  var html = '<span style="color:#ef4444;font-weight:700;font-size:0.85rem;">Tag ' + vLabel + ':</span>';
+  for (var i = 0; i < REASON_TAGS.length; i++) {
+    var t = REASON_TAGS[i];
+    html += '<button onclick="tagReason(\'' + t.label + '\')" style="background:rgba(255,255,255,0.08);border:1px solid ' + t.color + ';color:' + t.color + ';padding:6px 14px;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer;">';
+    html += '<kbd style="opacity:0.6;margin-right:4px">' + t.key.toUpperCase() + '</kbd>' + t.label + '</button>';
+  }
+  html += '<button onclick="dismissTagBar()" style="background:rgba(255,255,255,0.05);border:1px solid #7c809a;color:#7c809a;padding:6px 14px;border-radius:6px;font-size:0.8rem;cursor:pointer;">';
+  html += '<kbd style="opacity:0.6;margin-right:4px">SPACE</kbd>Skip</button>';
+  bar.innerHTML = html;
+  bar.style.display = 'flex';
+}
+
+function tagReason(reason) {
+  if (!pendingRejectTag) return;
+  var ci = pendingRejectTag.chunkIdx;
+  var versions = pendingRejectTag.versions;
+  if (!rejectionReasons[ci]) rejectionReasons[ci] = {};
+  for (var i = 0; i < versions.length; i++) {
+    if (!rejectionReasons[ci][versions[i]]) rejectionReasons[ci][versions[i]] = [];
+    if (rejectionReasons[ci][versions[i]].indexOf(reason) === -1) {
+      rejectionReasons[ci][versions[i]].push(reason);
+    }
+  }
+  showToast('Tagged: ' + reason);
+  dismissTagBar();
+}
+
+function dismissTagBar() {
+  var bar = document.getElementById('rejectTagBar');
+  if (bar) bar.style.display = 'none';
+  var cb = pendingRejectTag ? pendingRejectTag.callback : null;
+  pendingRejectTag = null;
+  if (cb) cb();
 }
 
 function resetChunk(chunkIdx) {
@@ -429,6 +496,7 @@ function collectPicks() {
       picked: s.winner != null ? s.winner : null,
       picked_file: winnerFile,
       rejected: s.rejected || [],
+      rejection_reasons: rejectionReasons[c.idx] || {},
       notes: s.notes || '',
       side: pickedThisSession[c.idx] || s.side || null
     });
@@ -549,6 +617,15 @@ async function playAllPicks() {
 // --- Keyboard shortcuts ---
 document.addEventListener('keydown', function(e) {
   if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
+  // Tag bar intercepts keys when visible
+  if (pendingRejectTag) {
+    var k = e.key.toLowerCase();
+    if (k === ' ') { e.preventDefault(); dismissTagBar(); return; }
+    for (var i = 0; i < REASON_TAGS.length; i++) {
+      if (k === REASON_TAGS[i].key) { tagReason(REASON_TAGS[i].label); return; }
+    }
+    return; // swallow other keys while tag bar is open
+  }
   if (e.key === 'a' || e.key === 'A') pickSide('a');
   else if (e.key === 'b' || e.key === 'B') pickSide('b');
   else if (e.key === 's' || e.key === 'S') pickSide('same');
