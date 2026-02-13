@@ -235,7 +235,7 @@
     border-radius: 14px;
     padding: 14px 16px 12px;
     transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-    overflow: hidden;
+    overflow: visible;
     user-select: none;
     opacity: 0;
     transform: translateY(16px);
@@ -397,10 +397,14 @@
     border-radius: 2px; background: rgba(255,255,255,0.08); outline: none; cursor: pointer;
     padding: 10px 0; touch-action: none;
   }
+  .sound-card__slider::-webkit-slider-runnable-track {
+    height: 3px; border-radius: 2px; background: rgba(255,255,255,0.08); cursor: pointer;
+  }
   .sound-card__slider::-webkit-slider-thumb {
     -webkit-appearance: none; appearance: none; width: 22px; height: 22px; border-radius: 50%;
     background: var(--card-accent, var(--accent)); border: 2px solid #0a0a12;
     cursor: pointer; transition: transform 0.2s ease;
+    margin-top: -9.5px;
   }
   .sound-card__slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
   .sound-card__slider::-moz-range-thumb {
