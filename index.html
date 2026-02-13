@@ -564,8 +564,8 @@
   .cc--sleep:hover{box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 40px rgba(129,140,248,0.06)}
   .cc--asmr{background:linear-gradient(155deg,#1a1c2e 0%,#252840 45%,#2d3154 100%);border:1px solid rgba(148,163,184,0.1);box-shadow:0 6px 28px rgba(0,0,0,0.4)}
   .cc--asmr:hover{box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 80px rgba(148,163,184,0.05)}
-  .cc--mind{background:linear-gradient(155deg,#0a3a40 0%,#0d4a52 45%,#0f5c66 100%);border:1px solid rgba(78,205,196,0.12);box-shadow:0 6px 28px rgba(0,0,0,0.4)}
-  .cc--mind:hover{box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 80px rgba(78,205,196,0.06)}
+  .cc--cbt{background:linear-gradient(155deg,#1a1530 0%,#251e42 45%,#2d2450 100%);border:1px solid rgba(167,139,250,0.12);box-shadow:0 6px 28px rgba(0,0,0,0.4)}
+  .cc--cbt:hover{box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 80px rgba(167,139,250,0.06)}
   .cc--learn{background:linear-gradient(155deg,#1a2332 0%,#243044 45%,#2d3c56 100%);border:1px solid rgba(96,165,250,0.1);box-shadow:0 6px 28px rgba(0,0,0,0.4)}
   .cc--learn:hover{box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 80px rgba(96,165,250,0.06)}
   .cc--tools{background:linear-gradient(155deg,#064e3b 0%,#065f46 45%,#047857 100%);border:1px solid rgba(52,211,153,0.12);box-shadow:0 6px 28px rgba(0,0,0,0.4)}
@@ -577,13 +577,14 @@
   .cc--sleep .cc__orb--2{background:radial-gradient(circle,rgba(167,139,250,0.35),transparent 70%)}
   .cc--asmr .cc__orb--1{background:radial-gradient(circle,rgba(148,163,184,0.4),transparent 70%)}
   .cc--asmr .cc__orb--2{background:radial-gradient(circle,rgba(100,116,139,0.3),transparent 70%)}
-  .cc--mind .cc__orb--1{background:radial-gradient(circle,rgba(45,212,191,0.5),transparent 70%)}
-  .cc--mind .cc__orb--2{background:radial-gradient(circle,rgba(78,205,196,0.35),transparent 70%)}
+  .cc--cbt .cc__orb--1{background:radial-gradient(circle,rgba(167,139,250,0.45),transparent 70%)}
+  .cc--cbt .cc__orb--2{background:radial-gradient(circle,rgba(139,92,246,0.3),transparent 70%)}
   .cc--learn .cc__orb--1{background:radial-gradient(circle,rgba(96,165,250,0.5),transparent 70%)}
   .cc--learn .cc__orb--2{background:radial-gradient(circle,rgba(56,189,248,0.3),transparent 70%)}
   .cc--tools .cc__orb--1{background:radial-gradient(circle,rgba(52,211,153,0.5),transparent 70%)}
   .cc--tools .cc__orb--2{background:radial-gradient(circle,rgba(16,185,129,0.35),transparent 70%)}
 
+  .cc__cbt-triangle{position:relative;z-index:2;width:180px;max-width:60%;margin:8px auto 0;display:block;opacity:0.7}
   .cc__body{position:relative;z-index:3;flex:1;padding:26px 24px 0;display:flex;flex-direction:column}
   .cc__count{font-weight:300;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:5px;display:block}
   .cc__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.4rem;line-height:1.2;margin-bottom:7px}
@@ -595,7 +596,7 @@
   .cc--med .cc__stat-num{color:rgba(34,211,238,0.8)}
   .cc--sleep .cc__stat-num{color:rgba(167,139,250,0.8)}
   .cc--asmr .cc__stat-num{color:rgba(148,163,184,0.7)}
-  .cc--mind .cc__stat-num{color:rgba(78,205,196,0.8)}
+  .cc--cbt .cc__stat-num{color:rgba(167,139,250,0.8)}
   .cc--learn .cc__stat-num{color:rgba(96,165,250,0.8)}
   .cc--tools .cc__stat-num{color:rgba(52,211,153,0.8)}
   .cc__stat-sep{width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,0.15);flex-shrink:0}
@@ -921,22 +922,33 @@
       </div>
     </a>
 
-    <!-- 4. MINDFULNESS -->
-    <a href="mindfulness.html" class="cc cc--mind">
+    <!-- 4. CBT -->
+    <a href="cbt.html" class="cc cc--cbt">
       <div class="cc__orb cc__orb--1"></div>
       <div class="cc__orb cc__orb--2"></div>
       <span class="cc__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
       <div class="cc__body">
-        <span class="cc__count">28 Days of Guided Courses</span>
-        <h3 class="cc__title">Mindfulness Exercises</h3>
-        <p class="cc__desc">Structured courses and standalone practices — from first breath to lasting habit.</p>
+        <span class="cc__count">Cognitive Behavioural Therapy</span>
+        <h3 class="cc__title">CBT Exercises</h3>
+        <p class="cc__desc">Guided exercises to challenge unhelpful thoughts, manage emotions, and build healthier patterns.</p>
       </div>
+      <svg class="cc__cbt-triangle" viewBox="0 0 240 200" fill="none">
+        <line x1="120" y1="48" x2="42" y2="168" stroke="rgba(167,139,250,0.35)" stroke-width="2"/>
+        <line x1="120" y1="48" x2="198" y2="168" stroke="rgba(167,139,250,0.35)" stroke-width="2"/>
+        <line x1="42" y1="168" x2="198" y2="168" stroke="rgba(167,139,250,0.35)" stroke-width="2"/>
+        <ellipse cx="120" cy="36" rx="52" ry="20" stroke="rgba(167,139,250,0.5)" stroke-width="1.5" fill="rgba(167,139,250,0.06)"/>
+        <text x="120" y="41" text-anchor="middle" fill="rgba(242,240,250,0.55)" font-size="14" font-family="Outfit,sans-serif" font-weight="300">Thought</text>
+        <ellipse cx="42" cy="180" rx="46" ry="20" stroke="rgba(167,139,250,0.5)" stroke-width="1.5" fill="rgba(167,139,250,0.06)"/>
+        <text x="42" y="185" text-anchor="middle" fill="rgba(242,240,250,0.55)" font-size="14" font-family="Outfit,sans-serif" font-weight="300">Emotion</text>
+        <ellipse cx="198" cy="180" rx="46" ry="20" stroke="rgba(167,139,250,0.5)" stroke-width="1.5" fill="rgba(167,139,250,0.06)"/>
+        <text x="198" y="185" text-anchor="middle" fill="rgba(242,240,250,0.55)" font-size="14" font-family="Outfit,sans-serif" font-weight="300">Behaviour</text>
+      </svg>
       <div class="cc__strip">
-        <span class="cc__stat"><span class="cc__stat-num">28</span> day courses</span>
+        <span class="cc__stat"><span class="cc__stat-num">6</span> exercises</span>
         <span class="cc__stat-sep"></span>
-        <span class="cc__stat"><span class="cc__stat-num">18</span> sessions</span>
+        <span class="cc__stat"><span class="cc__stat-num">3</span> techniques</span>
         <span class="cc__stat-sep"></span>
-        <span class="cc__stat">beginner → expert</span>
+        <span class="cc__stat">evidence-based</span>
       </div>
     </a>
 
@@ -1183,7 +1195,7 @@
   })();
 
 
-  // Narrator player — compact hero tile
+  // Narrator player — compact hero tile (homepage only)
   (function(){
     var audio=document.getElementById('narratorAudio');
     var btn=document.getElementById('narratorPlayBtn');
@@ -1196,6 +1208,21 @@
 
     function fmt(s){var m=Math.floor(s/60);return m+':'+(('0'+Math.floor(s%60)).slice(-2));}
 
+    // Mark this page as owning the narrator (so main.js doesn't double-inject)
+    window.__narratorHome=true;
+
+    // Resume if returning to homepage while it was playing
+    var saved=sessionStorage.getItem('narrator');
+    if(saved){
+      var st=JSON.parse(saved);
+      if(st.playing&&st.time>0){
+        audio.currentTime=st.time;
+        audio.play();
+        iconPlay.style.display='none';iconPause.style.display='block';
+        sessionStorage.removeItem('narrator');
+      }
+    }
+
     btn.addEventListener('click',function(){
       if(audio.paused){
         audio.play();
@@ -1207,9 +1234,17 @@
     });
     audio.addEventListener('ended',function(){
       iconPlay.style.display='block';iconPause.style.display='none';bar.style.width='0%';time.textContent='0:00';
+      sessionStorage.removeItem('narrator');
     });
     audio.addEventListener('timeupdate',function(){if(audio.duration){bar.style.width=(audio.currentTime/audio.duration*100)+'%';time.textContent=fmt(audio.currentTime)}});
     track.addEventListener('click',function(e){if(audio.duration){var rect=track.getBoundingClientRect();audio.currentTime=(e.clientX-rect.left)/rect.width*audio.duration}});
+
+    // Save state before navigating away
+    window.addEventListener('beforeunload',function(){
+      if(!audio.paused&&audio.currentTime>0){
+        sessionStorage.setItem('narrator',JSON.stringify({playing:true,time:audio.currentTime}));
+      }
+    });
   })();
 
   // Navigation
