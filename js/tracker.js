@@ -58,17 +58,17 @@
     if (cachedGeo) {
       geoPromise = Promise.resolve(JSON.parse(cachedGeo));
     } else {
-      geoPromise = fetch('https://ipapi.co/json/')
+      geoPromise = fetch('http://ip-api.com/json/?fields=status,country,city,regionName,timezone,lat,lon')
         .then(function(res) { return res.json(); })
         .then(function(data) {
-          if (data && !data.error) {
+          if (data && data.status === 'success') {
             var geo = {
-              country: data.country_name || null,
+              country: data.country || null,
               city: data.city || null,
-              region: data.region || null,
+              region: data.regionName || null,
               timezone: data.timezone || null,
-              latitude: data.latitude || null,
-              longitude: data.longitude || null
+              latitude: data.lat || null,
+              longitude: data.lon || null
             };
             sessionStorage.setItem('salus_geo', JSON.stringify(geo));
             return geo;
