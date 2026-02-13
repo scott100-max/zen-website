@@ -142,8 +142,10 @@
       }
 
       // Wait for visitor record to exist, then insert page view
+      pageViewId = genUUID();
       visitorReady.then(function() {
         sb.from('page_views').insert({
+          id: pageViewId,
           visitor_id: visitorId,
           session_id: sessionId,
           page_path: window.location.pathname,
@@ -159,11 +161,7 @@
           region: geo.region,
           latitude: geo.latitude,
           longitude: geo.longitude
-        }).select('id').then(function(result) {
-          if (result.data && result.data[0]) {
-            pageViewId = result.data[0].id;
-          }
-        }).catch(function() {});
+        }).then(function() {}).catch(function() {});
       }).catch(function() {});
     });
 
