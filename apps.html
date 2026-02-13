@@ -394,16 +394,25 @@
       });
     });
 
-    // Set client-reference-id on Stripe Pricing Table from Supabase user ID
+    // Set client-reference-id and customer-email on Stripe Pricing Table
     (async function() {
       if (typeof SalusAuth !== 'undefined') {
         await SalusAuth.init();
         var table = document.querySelector('stripe-pricing-table');
         if (table && SalusAuth.isLoggedIn()) {
           var user = SalusAuth.getUser();
-          if (user && user.id) {
-            table.setAttribute('client-reference-id', user.id);
+          if (user) {
+            if (user.id) table.setAttribute('client-reference-id', user.id);
+            if (user.email) table.setAttribute('customer-email', user.email);
           }
+        } else if (table) {
+          // Not logged in — show nudge to create account first
+          var nudge = document.createElement('div');
+          nudge.style.cssText = 'text-align:center;padding:16px 24px;margin-bottom:20px;border:1px solid rgba(78,205,196,0.15);border-radius:12px;background:rgba(78,205,196,0.04);';
+          nudge.innerHTML = '<p style="margin:0;font-size:.84rem;color:var(--text-mid);line-height:1.6;">' +
+            '<a href="signup.html" style="color:#4ecdc4;text-decoration:underline;">Create a free account</a> or ' +
+            '<a href="login.html" style="color:#4ecdc4;text-decoration:underline;">log in</a> first to sync your subscription across devices.</p>';
+          table.parentNode.insertBefore(nudge, table);
         }
       }
     })();

@@ -20,7 +20,7 @@
 44-seven-day-mindfulness-day7 | "This is your seventh day. Welcome to the final session." | Milestone acknowledgement
 43-non-dual-awareness | "This meditation is for experienced practitioners." | Audience qualifier
 52-the-court-of-your-mind | "Your mind has been busy building a case against you." | Mid-action start / metaphor
-53-the-gardeners-almanac | "There is a garden." | Scene-setting
+53-the-gardeners-almanac | "Welcome to The Gardener's Almanac." | Direct address + warm invitation
 54-the-slow-train-north | "The platform is almost empty." | Scene-setting
 55-the-bookshop-at-the-end-of-the-lane | "You almost walked past it." | Mid-action start
 56-the-lighthouse-keepers-log | "The path to the lighthouse runs along the cliff edge." | Scene-setting

@@ -657,7 +657,7 @@
 <script src="js/tracker.js?v=1770917123"></script>
 <script>
 const stories = [
-  { w:1,  t:"The Gardener's Almanac",       c:"nature",  m:"moon-garden", img:"https://media.salus-mind.com/sleep-stories/covers/week-01-gardeners-almanac.jpg", src:"https://media.salus-mind.com/content/audio-free/53-the-gardeners-almanac.mp3" },
+  { w:1,  t:"The Gardener's Almanac",       c:"nature",  m:"moon-garden", img:"https://media.salus-mind.com/sleep-stories/covers/week-01-gardeners-almanac.jpg", src:"https://media.salus-mind.com/content/audio-free/53-the-gardeners-almanac.mp3", page:"the-gardeners-almanac.html" },
   { w:2,  t:"The Slow Train North",         c:"journey", m:"horizon-lights", img:"https://media.salus-mind.com/sleep-stories/covers/week-02-slow-train-north.jpg" },
   { w:3,  t:"The Bookshop at the End of the Lane", c:"comfort", m:"books", img:"https://media.salus-mind.com/sleep-stories/covers/week-03-bookshop-at-the-end-of-the-lane.jpg" },
   { w:4,  t:"The Lighthouse Keeper's Log",  c:"nature",  m:"lighthouse", img:"https://media.salus-mind.com/sleep-stories/covers/week-04-lighthouse-keepers-log.jpg" },
@@ -997,7 +997,9 @@ function render(filter) {
       <div class="ss-book-border"></div>
     `;
 
-    if (s.src) {
+    if (s.page) {
+      el.addEventListener('click', () => { window.location.href = s.page; });
+    } else if (s.src) {
       el.addEventListener('click', () => openPlayer(s));
     }
 

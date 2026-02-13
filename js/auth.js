@@ -223,7 +223,7 @@ var SalusAuth = (function() {
 
   // Check if user has premium access
   function isPremium() {
-    // Check Supabase subscription first
+    // Check Supabase subscription
     if (subscription && subscription.status === 'active') {
       // Verify subscription hasn't expired
       if (subscription.current_period_end) {
@@ -237,23 +237,28 @@ var SalusAuth = (function() {
       }
     }
 
-    // Fallback: Check localStorage for legacy premium users (migration period)
-    if (localStorage.getItem('salus_premium') === 'true') {
-      return true;
-    }
-
     return false;
   }
 
   // Check if user should see migration banner
   function shouldShowMigrationBanner() {
-    // Show banner if they have localStorage premium but no account
+    // Show banner if they have localStorage premium but no Supabase subscription
     var hasLocalPremium = localStorage.getItem('salus_premium') === 'true';
-    var hasAccount = currentUser !== null;
     var hasSupabaseSubscription = subscription !== null;
     var bannerDismissed = localStorage.getItem('salus_migration_dismissed') === 'true';
 
-    return hasLocalPremium && !hasSupabaseSubscription && !bannerDismissed;
+    // If they have local premium but no real subscription, prompt them
+    if (hasLocalPremium && !hasSupabaseSubscription && !bannerDismissed) {
+      return true;
+    }
+
+    // If they now have a real subscription, clean up the localStorage flag
+    if (hasSupabaseSubscription && hasLocalPremium) {
+      localStorage.removeItem('salus_premium');
+      localStorage.removeItem('salus_premium_date');
+    }
+
+    return false;
   }
 
   // Dismiss migration banner

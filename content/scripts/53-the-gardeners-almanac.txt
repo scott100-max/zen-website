@@ -4,6 +4,20 @@ Category: story
 Ambient: garden
 API-Emotion: calm
 ---
+Welcome to The Gardener's Almanac.
+
+...
+
+Lay back and relax. Allow your mind to sleepily wander, while I gently read you this bedtime story.
+
+...
+
+......
+
+......
+
+......
+
 There is a garden. It sits behind a stone wall, at the end of a lane that nobody drives down any more.
 
 ...
