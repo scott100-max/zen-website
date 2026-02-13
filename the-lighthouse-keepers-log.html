@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>The Lighthouse Keeper's Log — Week 4</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Raleway:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :root {
+    --text-primary: rgba(210, 220, 230, 0.92);
+    --text-dim: rgba(210, 220, 230, 0.5);
+    --accent: rgba(130, 175, 190, 0.7);
+    --glass: rgba(6, 10, 16, 0.45);
+    --glass-border: rgba(130, 175, 190, 0.15);
+  }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: #060a10;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    cursor: default;
+  }
+
+  .story-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  .story-canvas .artwork {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  .story-canvas::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to bottom,
+        rgba(6, 10, 16, 0.3) 0%,
+        rgba(6, 10, 16, 0.05) 25%,
+        rgba(6, 10, 16, 0.0) 40%,
+        rgba(6, 10, 16, 0.15) 60%,
+        rgba(6, 10, 16, 0.75) 85%,
+        rgba(6, 10, 16, 0.95) 100%
+      ),
+      linear-gradient(to right,
+        rgba(6, 10, 16, 0.4) 0%,
+        rgba(6, 10, 16, 0.0) 40%,
+        rgba(6, 10, 16, 0.0) 100%
+      );
+    z-index: 1;
+  }
+
+  .placeholder-bg {
+    width: 100%;
+    height: 100%;
+    background:
+      radial-gradient(ellipse at 60% 55%, rgba(40, 70, 90, 0.35) 0%, transparent 50%),
+      radial-gradient(ellipse at 35% 40%, rgba(25, 45, 65, 0.4) 0%, transparent 45%),
+      radial-gradient(ellipse at 75% 75%, rgba(60, 90, 110, 0.15) 0%, transparent 35%),
+      linear-gradient(175deg, #0a1018 0%, #080e16 30%, #060a12 60%, #04080e 100%);
+  }
+
+  .back-btn {
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    z-index: 100;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--glass-border);
+    background: var(--glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.6s ease, background 0.3s ease, transform 0.2s ease;
+    text-decoration: none;
+  }
+
+  .back-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke: var(--text-primary);
+    stroke-width: 1.5;
+    fill: none;
+    transition: stroke 0.3s ease;
+  }
+
+  .back-btn:hover {
+    background: rgba(6, 10, 16, 0.65);
+    transform: scale(1.05);
+  }
+
+  .show-controls .back-btn { opacity: 1; }
+
+  .story-text {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 140px;
+    z-index: 10;
+    padding: 0 clamp(24px, 8vw, 80px);
+    max-width: 720px;
+    opacity: 0;
+    animation: fadeIn 2s ease 0.5s forwards;
+    transition: opacity 3s ease;
+  }
+
+  .story-text.fade-away {
+    opacity: 0 !important;
+    animation: none;
+  }
+
+  .story-week {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .story-title {
+    font-weight: 300;
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    line-height: 1.2;
+    margin-bottom: 20px;
+    letter-spacing: 0.01em;
+  }
+
+  .story-body {
+    font-weight: 300;
+    font-size: clamp(0.95rem, 2.5vw, 1.12rem);
+    line-height: 1.85;
+    color: rgba(200, 210, 220, 0.8);
+    max-height: 30vh;
+    overflow-y: auto;
+    padding-right: 8px;
+    mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+  }
+
+  .story-body::-webkit-scrollbar { width: 3px; }
+  .story-body::-webkit-scrollbar-track { background: transparent; }
+  .story-body::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 3px; }
+
+  .story-body p { margin-bottom: 1em; }
+  .story-body p:last-child { margin-bottom: 0; }
+
+  .audio-player {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    padding: 20px clamp(24px, 8vw, 80px) max(20px, env(safe-area-inset-bottom, 20px));
+    background: linear-gradient(to top, rgba(6, 10, 16, 0.95) 0%, rgba(6, 10, 16, 0.7) 60%, transparent 100%);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    opacity: 0;
+    animation: fadeIn 2s ease 1s forwards;
+  }
+
+  .player-progress {
+    width: 100%;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+
+  .time-label {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+    min-width: 38px;
+    user-select: none;
+  }
+
+  .time-label.end { text-align: right; }
+
+  .progress-bar-container {
+    flex: 1;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .progress-track {
+    width: 100%;
+    height: 2px;
+    background: rgba(210, 220, 230, 0.12);
+    border-radius: 2px;
+    position: relative;
+    overflow: visible;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    width: 0%;
+    position: relative;
+    transition: width 0.1s linear;
+  }
+
+  .progress-handle {
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    background: var(--text-primary);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+  }
+
+  .progress-bar-container:hover .progress-handle { opacity: 1; }
+  .progress-bar-container:hover .progress-track { height: 3px; }
+
+  .player-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .controls-left, .controls-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 80px;
+  }
+
+  .controls-right { justify-content: flex-end; }
+
+  .controls-centre {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .player-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    transition: transform 0.2s ease, opacity 0.3s ease;
+  }
+
+  .player-btn svg {
+    stroke: var(--text-primary);
+    fill: none;
+    stroke-width: 1.5;
+    transition: stroke 0.3s ease;
+  }
+
+  .player-btn:hover { transform: scale(1.1); }
+  .player-btn:active { transform: scale(0.95); }
+
+  .btn-skip svg { width: 20px; height: 20px; }
+
+  .btn-play {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 1px solid var(--glass-border);
+    background: var(--glass);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .btn-play svg { width: 24px; height: 24px; }
+
+  .btn-play:hover {
+    background: rgba(6, 10, 16, 0.65);
+    border-color: rgba(130, 175, 190, 0.3);
+  }
+
+  .btn-small svg { width: 18px; height: 18px; stroke: var(--text-dim); }
+  .btn-small:hover svg { stroke: var(--text-primary); }
+
+  .timer-pill {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    border: 1px solid rgba(210, 220, 230, 0.1);
+    border-radius: 20px;
+    padding: 4px 12px;
+    background: none;
+    cursor: pointer;
+    transition: border-color 0.3s ease, color 0.3s ease;
+  }
+
+  .timer-pill:hover {
+    border-color: var(--glass-border);
+    color: var(--text-primary);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .particles {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: rgba(170, 200, 220, 0.1);
+    border-radius: 50%;
+    animation: drift linear infinite;
+  }
+
+  @keyframes drift {
+    0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-10vh) translateX(-50px); opacity: 0; }
+  }
+
+  @media (max-width: 480px) {
+    .story-text { bottom: 130px; }
+    .story-body { max-height: 22vh; }
+    .controls-centre { gap: 20px; }
+    .btn-play { width: 48px; height: 48px; }
+    .back-btn { top: 16px; left: 16px; width: 38px; height: 38px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="story-canvas">
+  <!-- REPLACE: swap placeholder-bg div for an <img> tag with your artwork -->
+  <!-- <img class="artwork" src="your-artwork.jpg" alt="The Lighthouse Keeper's Log — Week 4"> -->
+  <div class="placeholder-bg"></div>
+</div>
+
+<div class="particles" id="particles"></div>
+
+<a href="#" class="back-btn" id="backBtn" title="Back to library">
+  <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+</a>
+
+<div class="story-text">
+  <div class="story-week">Week 4</div>
+  <h1 class="story-title">The Lighthouse Keeper's Log</h1>
+  <div class="story-body">
+    <p>The lighthouse stands at the end of a causeway that disappears twice a day beneath the tide. Tonight, the water is high and the path is gone. You are here, and the sea is everywhere else.</p>
+    <p>The door is heavy. Iron-studded oak, swollen with salt air. It closes behind you with a sound like a full stop at the end of a long sentence.</p>
+    <p>Inside, a spiral staircase climbs the full height of the tower. The walls are whitewashed stone, two feet thick, and they hold the cold of the Atlantic in them like a memory.</p>
+    <p>You climb. The steps are worn smooth in the centre where a century of boots have passed. At the top, a small round room with windows on every side.</p>
+    <p>The sea stretches out in all directions. Dark and restless and vast. And somewhere below this room, somewhere deep in the walls, the lighthouse hums — a low, steady vibration that you feel in your chest more than hear.</p>
+  </div>
+</div>
+
+<div class="audio-player">
+  <div class="player-progress">
+    <span class="time-label" id="timeCurrent">0:00</span>
+    <div class="progress-bar-container" id="progressBar">
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill">
+          <div class="progress-handle"></div>
+        </div>
+      </div>
+    </div>
+    <span class="time-label end" id="timeTotal">28:00</span>
+  </div>
+
+  <div class="player-controls">
+    <div class="controls-left">
+      <button class="player-btn btn-small" id="btnSleepTimer" title="Sleep timer">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15 15"></polyline></svg>
+      </button>
+      <button class="timer-pill" id="timerPill">Timer</button>
+    </div>
+
+    <div class="controls-centre">
+      <button class="player-btn btn-skip" id="btnRewind" title="Rewind 15s">
+        <svg viewBox="0 0 24 24">
+          <path d="M1 4v6h6"></path>
+          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+          <text x="12" y="15.5" text-anchor="middle" font-family="Raleway, sans-serif" font-size="7" fill="currentColor" stroke="none" style="fill: var(--text-primary)">15</text>
+        </svg>
+      </button>
+
+      <button class="player-btn btn-play" id="btnPlay" title="Play">
+        <svg viewBox="0 0 24 24" id="playIcon">
+          <polygon points="8,5 20,12 8,19" fill="var(--text-primary)" stroke="none"></polygon>
+        </svg>
+      </button>
+
+      <button class="player-btn btn-skip" id="btnForward" title="Forward 15s">
+        <svg viewBox="0 0 24 24">
+          <path d="M23 4v6h-6"></path>
+          <path d="M20.49 15a9 9 0 1 1-2.13-9.36L23 10"></path>
+          <text x="12" y="15.5" text-anchor="middle" font-family="Raleway, sans-serif" font-size="7" fill="currentColor" stroke="none" style="fill: var(--text-primary)">15</text>
+        </svg>
+      </button>
+    </div>
+
+    <div class="controls-right">
+      <button class="player-btn btn-small" id="btnVolume" title="Volume">
+        <svg viewBox="0 0 24 24">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="none"></polygon>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let controlTimer;
+  const body = document.body;
+
+  function showControls() {
+    body.classList.add('show-controls');
+    clearTimeout(controlTimer);
+    controlTimer = setTimeout(() => {
+      body.classList.remove('show-controls');
+    }, 3500);
+  }
+
+  document.addEventListener('mousemove', showControls);
+  document.addEventListener('touchstart', showControls);
+  showControls();
+
+  let isPlaying = false;
+  const btnPlay = document.getElementById('btnPlay');
+  const playIcon = document.getElementById('playIcon');
+
+  let progress = 0;
+  const totalSeconds = 28 * 60;
+  const progressFill = document.getElementById('progressFill');
+  const timeCurrent = document.getElementById('timeCurrent');
+  const storyText = document.querySelector('.story-text');
+
+  let textFadeTimer = null;
+  let textFaded = false;
+
+  btnPlay.addEventListener('click', () => {
+    isPlaying = !isPlaying;
+    if (isPlaying) {
+      playIcon.innerHTML = `
+        <rect x="7" y="5" width="3" height="14" rx="1" fill="var(--text-primary)" stroke="none"></rect>
+        <rect x="14" y="5" width="3" height="14" rx="1" fill="var(--text-primary)" stroke="none"></rect>
+      `;
+      btnPlay.title = 'Pause';
+      simulateProgress();
+      if (!textFaded) {
+        textFadeTimer = setTimeout(() => {
+          storyText.classList.add('fade-away');
+          textFaded = true;
+        }, 45000);
+      }
+    } else {
+      playIcon.innerHTML = `<polygon points="8,5 20,12 8,19" fill="var(--text-primary)" stroke="none"></polygon>`;
+      btnPlay.title = 'Play';
+      if (textFadeTimer && !textFaded) {
+        clearTimeout(textFadeTimer);
+      }
+    }
+  });
+
+  function formatTime(seconds) {
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  }
+
+  function simulateProgress() {
+    if (!isPlaying) return;
+    progress += 1;
+    if (progress > totalSeconds) progress = totalSeconds;
+    const pct = (progress / totalSeconds) * 100;
+    progressFill.style.width = pct + '%';
+    timeCurrent.textContent = formatTime(progress);
+    if (progress < totalSeconds) {
+      setTimeout(simulateProgress, 1000);
+    }
+  }
+
+  const progressBar = document.getElementById('progressBar');
+  progressBar.addEventListener('click', (e) => {
+    const rect = progressBar.getBoundingClientRect();
+    const pct = (e.clientX - rect.left) / rect.width;
+    progress = Math.floor(pct * totalSeconds);
+    progressFill.style.width = (pct * 100) + '%';
+    timeCurrent.textContent = formatTime(progress);
+  });
+
+  document.getElementById('btnRewind').addEventListener('click', () => {
+    progress = Math.max(0, progress - 15);
+    progressFill.style.width = ((progress / totalSeconds) * 100) + '%';
+    timeCurrent.textContent = formatTime(progress);
+  });
+
+  document.getElementById('btnForward').addEventListener('click', () => {
+    progress = Math.min(totalSeconds, progress + 15);
+    progressFill.style.width = ((progress / totalSeconds) * 100) + '%';
+    timeCurrent.textContent = formatTime(progress);
+  });
+
+  const particlesEl = document.getElementById('particles');
+  for (let i = 0; i < 25; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (12 + Math.random() * 20) + 's';
+    p.style.animationDelay = (Math.random() * 15) + 's';
+    p.style.width = (1 + Math.random() * 2.5) + 'px';
+    p.style.height = p.style.width;
+    particlesEl.appendChild(p);
+  }
+</script>
+
+</body>
+</html>
