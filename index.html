@@ -821,7 +821,6 @@
         </div>
         <span class="hb-narrator__time" id="narratorTime">0:00</span>
       </div>
-      <audio id="graceAudio" preload="auto" src="https://media.salus-mind.com/content/audio-free/asmr-grace.mp3" loop></audio>
     </div>
   </div>
 </section>
@@ -1162,7 +1161,7 @@
   })();
 
 
-  // Narrator player — Grace ambient fades in 10s / out 10s underneath
+  // Narrator player — ambient pre-mixed into single audio file
   (function(){
     var audio=document.getElementById('narratorAudio');
     var btn=document.getElementById('narratorPlayBtn');
@@ -1171,48 +1170,20 @@
     var iconPlay=btn.querySelector('.hb-narrator__icon-play');
     var iconPause=btn.querySelector('.hb-narrator__icon-pause');
     var progress=bar.parentElement;
-    var grace=document.getElementById('graceAudio');
-    var GRACE_VOL=0.3;
-    var FADE_MS=10000;
-    var STEP=50;
-    var fadeTimer=null;
 
     function fmt(s){var m=Math.floor(s/60);return m+':'+(('0'+Math.floor(s%60)).slice(-2));}
-
-    function fadeGrace(from,to,ms,done){
-      if(fadeTimer){clearInterval(fadeTimer);fadeTimer=null;}
-      if(!grace)return;
-      var steps=Math.round(ms/STEP);
-      var delta=(to-from)/steps;
-      var step=0;
-      grace.volume=from;
-      fadeTimer=setInterval(function(){
-        step++;
-        if(step>=steps){
-          clearInterval(fadeTimer);fadeTimer=null;
-          grace.volume=to;
-          if(to===0)grace.pause();
-          if(done)done();
-          return;
-        }
-        grace.volume=Math.max(0,Math.min(1,from+delta*step));
-      },STEP);
-    }
 
     btn.addEventListener('click',function(){
       if(audio.paused){
         audio.play();
         iconPlay.style.display='none';iconPause.style.display='block';
-        if(grace){grace.volume=0;grace.play().catch(function(){});fadeGrace(0,GRACE_VOL,FADE_MS);}
       }else{
         audio.pause();
         iconPlay.style.display='block';iconPause.style.display='none';
-        if(grace&&!grace.paused)fadeGrace(grace.volume,0,FADE_MS);
       }
     });
     audio.addEventListener('ended',function(){
-      iconPlay.style.display='block';iconPause.style.display='none';bar.style.width='0%';
-      if(grace&&!grace.paused)fadeGrace(grace.volume,0,FADE_MS);
+      iconPlay.style.display='block';iconPause.style.display='none';bar.style.width='0%';time.textContent='0:00';
     });
     audio.addEventListener('timeupdate',function(){if(audio.duration){bar.style.width=(audio.currentTime/audio.duration*100)+'%';time.textContent=fmt(audio.currentTime)}});
     progress.addEventListener('click',function(e){if(audio.duration){var rect=progress.getBoundingClientRect();audio.currentTime=(e.clientX-rect.left)/rect.width*audio.duration}});
