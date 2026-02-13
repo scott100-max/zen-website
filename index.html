@@ -514,24 +514,16 @@
   @media(max-width:860px){.nav-primary,.nav-row-2,.nav-ctas{display:none}.nav-burger{display:flex}.nav-row-1{height:56px}}
 
   /* ═══ NARRATOR ═══ */
-  .hb-narrator{padding:60px 24px 80px;position:relative;overflow:hidden}
-  .hb-narrator::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 40% at 50% 50%,rgba(78,205,196,0.03) 0%,transparent 70%)}
-  .hb-narrator__inner{max-width:640px;margin:0 auto;position:relative;z-index:2}
-  .hb-narrator__label{display:inline-flex;align-items:center;gap:10px;font-weight:300;font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(78,205,196,0.6);margin-bottom:24px;width:100%;justify-content:center}
-  .hb-narrator__label::before,.hb-narrator__label::after{content:'';width:24px;height:1px;background:linear-gradient(90deg,transparent,rgba(78,205,196,0.35),transparent)}
-  .hb-narrator__card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:18px;padding:36px 32px 28px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
-  .hb-narrator__text{margin-bottom:24px}
-  .hb-narrator__text p{font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:1.05rem;line-height:1.7;color:var(--text-mid);margin-bottom:10px}
-  .hb-narrator__text p:first-child{color:var(--text-bright)}
-  .hb-narrator__text p:last-child{margin-bottom:0}
-  .hb-narrator__closing{color:var(--teal) !important;font-style:italic}
-  .hb-narrator__player{display:flex;align-items:center;gap:14px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.06)}
-  .hb-narrator__play{width:44px;height:44px;border-radius:50%;background:rgba(78,205,196,0.1);border:1px solid rgba(78,205,196,0.2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s ease;flex-shrink:0}
-  .hb-narrator__play:hover{background:rgba(78,205,196,0.18);border-color:rgba(78,205,196,0.35);transform:scale(1.05)}
-  .hb-narrator__play svg{width:18px;height:18px;fill:var(--teal)}
-  .hb-narrator__progress{flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;cursor:pointer}
-  .hb-narrator__bar{height:100%;width:0%;background:linear-gradient(90deg,var(--teal),#6dd5c8);border-radius:2px;transition:width .1s linear}
-  .hb-narrator__time{font-size:.72rem;color:var(--text-muted);min-width:32px;text-align:right;font-variant-numeric:tabular-nums}
+  /* ═══ COMPACT HERO NARRATOR ═══ */
+  .hero-narrator{display:flex;align-items:center;gap:12px;margin:28px auto 0;max-width:360px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:40px;padding:8px 16px 8px 8px;position:relative;z-index:2}
+  .hero-narrator__play{width:38px;height:38px;border-radius:50%;background:rgba(78,205,196,0.1);border:1px solid rgba(78,205,196,0.2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s ease;flex-shrink:0}
+  .hero-narrator__play:hover{background:rgba(78,205,196,0.18);border-color:rgba(78,205,196,0.35);transform:scale(1.05)}
+  .hero-narrator__play svg{width:16px;height:16px;fill:var(--teal)}
+  .hero-narrator__info{flex:1;min-width:0}
+  .hero-narrator__label{display:block;font-size:.68rem;font-weight:300;color:var(--text-muted);letter-spacing:.02em;margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .hero-narrator__track{height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;cursor:pointer}
+  .hero-narrator__bar{height:100%;width:0%;background:linear-gradient(90deg,var(--teal),#6dd5c8);border-radius:2px;transition:width .1s linear}
+  .hero-narrator__time{font-size:.68rem;color:var(--text-muted);min-width:28px;text-align:right;font-variant-numeric:tabular-nums;flex-shrink:0}
 
   /* ═══ HOME BODY ═══ */
   .hb-container{max-width:1080px;margin:0 auto;padding:0 24px}
@@ -790,6 +782,22 @@
     </div>
 
     <p class="latin-phrase">Salūs — Latin: health, safety, well-being</p>
+
+    <!-- Compact narrator player -->
+    <div class="hero-narrator">
+      <audio id="narratorAudio" preload="auto" src="https://media.salus-mind.com/content/audio-free/narrator-welcome.mp3"></audio>
+      <button class="hero-narrator__play" id="narratorPlayBtn" aria-label="Play narrator welcome">
+        <svg class="hb-narrator__icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        <svg class="hb-narrator__icon-pause" viewBox="0 0 24 24" style="display:none"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+      </button>
+      <div class="hero-narrator__info">
+        <span class="hero-narrator__label">A word from Marco, your narrator</span>
+        <div class="hero-narrator__track">
+          <div class="hero-narrator__bar" id="narratorBar"></div>
+        </div>
+      </div>
+      <span class="hero-narrator__time" id="narratorTime">0:00</span>
+    </div>
   </div>
 
   <div class="hero-fade"></div>
@@ -808,32 +816,6 @@
 </section>
 
 <!-- ═══ THIS WEEK'S RELEASE ═══ -->
-<!-- ═══ A WORD FROM OUR NARRATOR ═══ -->
-<section class="hb-narrator">
-  <div class="hb-narrator__inner">
-    <div class="hb-narrator__label"><span></span>A Word from Our Narrator<span></span></div>
-    <div class="hb-narrator__card">
-      <div class="hb-narrator__text">
-        <p>"Welcome to Salūs. I'm Marco, and I'll be your guide.</p>
-        <p>In a world built for speed, this place was built to slow your mind down. A small team created it with one aim. To help you pause, take a breath, and come back to yourself.</p>
-        <p>New material is added each and every week to help you sleep, relax, and restore.</p>
-        <p>Do get in touch if there is something you would like to see or hear. We are here to support you, genuinely.</p>
-        <p class="hb-narrator__closing">I'm so glad you found us. Take care, and I hope to see you in our sessions."</p>
-      </div>
-      <div class="hb-narrator__player">
-        <audio id="narratorAudio" preload="auto" src="https://media.salus-mind.com/content/audio-free/narrator-welcome.mp3"></audio>
-        <button class="hb-narrator__play" id="narratorPlayBtn" aria-label="Play narrator welcome">
-          <svg class="hb-narrator__icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-          <svg class="hb-narrator__icon-pause" viewBox="0 0 24 24" style="display:none"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
-        </button>
-        <div class="hb-narrator__progress">
-          <div class="hb-narrator__bar" id="narratorBar"></div>
-        </div>
-        <span class="hb-narrator__time" id="narratorTime">0:00</span>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ═══ 2. WHAT'S INSIDE ═══ -->
 <section class="inside" id="explore">
@@ -1201,15 +1183,16 @@
   })();
 
 
-  // Narrator player — ambient pre-mixed into single audio file
+  // Narrator player — compact hero tile
   (function(){
     var audio=document.getElementById('narratorAudio');
     var btn=document.getElementById('narratorPlayBtn');
     var bar=document.getElementById('narratorBar');
     var time=document.getElementById('narratorTime');
+    if(!btn)return;
     var iconPlay=btn.querySelector('.hb-narrator__icon-play');
     var iconPause=btn.querySelector('.hb-narrator__icon-pause');
-    var progress=bar.parentElement;
+    var track=bar.parentElement;
 
     function fmt(s){var m=Math.floor(s/60);return m+':'+(('0'+Math.floor(s%60)).slice(-2));}
 
@@ -1226,7 +1209,7 @@
       iconPlay.style.display='block';iconPause.style.display='none';bar.style.width='0%';time.textContent='0:00';
     });
     audio.addEventListener('timeupdate',function(){if(audio.duration){bar.style.width=(audio.currentTime/audio.duration*100)+'%';time.textContent=fmt(audio.currentTime)}});
-    progress.addEventListener('click',function(e){if(audio.duration){var rect=progress.getBoundingClientRect();audio.currentTime=(e.clientX-rect.left)/rect.width*audio.duration}});
+    track.addEventListener('click',function(e){if(audio.duration){var rect=track.getBoundingClientRect();audio.currentTime=(e.clientX-rect.left)/rect.width*audio.duration}});
   })();
 
   // Navigation

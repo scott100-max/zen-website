@@ -59,6 +59,7 @@ SCORE_FILTER_THRESHOLD = 0.30  # Below this = pre-filter flagged (kept, not dele
 # Chunk 0 conditioning: use a clean human-picked chunk from a deployed session
 # instead of marco-master WAV (per 12 Feb 2026 debrief — mid-sentence conditioning)
 CHUNK0_REFERENCE_WAV = Path(__file__).parent / "content/audio-free/vault/42-seven-day-mindfulness-day5/c04/c04_v19.wav"
+CHUNK0_REFERENCE_TEXT = "Start with the breath for a minute or two, just as you have practised. Let it anchor you here before we move outward."
 MARCO_MASTER_WAV = CHUNK0_REFERENCE_WAV if CHUNK0_REFERENCE_WAV.exists() else (
     Path(__file__).parent / "content/audio/marco-master/marco-master-v1.wav"
 )
@@ -1368,7 +1369,7 @@ async def build_session(script_path, dry_run=False, extra=0, only_chunks=None):
             if ci == 0:
                 # Chunk 0: condition on marco-master to avoid cold-start
                 ref_audio = str(MARCO_MASTER_WAV) if MARCO_MASTER_WAV.exists() else None
-                ref_text_val = "Welcome to Salus. I will be your guide through this practice."
+                ref_text_val = CHUNK0_REFERENCE_TEXT
                 if ref_audio:
                     print(f"  Chunk 0: conditioning on marco-master reference")
             else:
