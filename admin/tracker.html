@@ -460,14 +460,36 @@
       updateAllDisplays();
     }
 
+    function mergeGeoSources(pvData, legData) {
+      var seen = {};
+      var merged = [];
+      // Add page_views with geo first
+      pvData.forEach(function(r) {
+        if (r.latitude && r.longitude) {
+          var key = r.session_id || r.id;
+          seen[key] = true;
+          merged.push(r);
+        }
+      });
+      // Add legacy records (may have geo from before ipapi broke)
+      legData.forEach(function(r) {
+        var key = r.session_id || r.id;
+        if (!seen[key]) {
+          merged.push(r);
+        }
+      });
+      // If no geo from either, return page_views so tables still show counts
+      return merged.length > 0 ? merged : pvData;
+    }
+
     function updateAllDisplays() {
       var filtered = applyExclusion(filterByRange(pageViewsData, currentRange));
       var filteredEvents = filterByRange(eventsData, currentRange);
       var filteredLegacy = applyExclusion(filterByRange(legacyData, currentRange));
 
       updateStats(filtered, filteredEvents);
-      // Map: use page_views if available, fall back to legacy
-      var mapSource = filtered.length > 0 ? filtered : filteredLegacy;
+      // Map: merge page_views + legacy (deduplicate by session)
+      var mapSource = mergeGeoSources(filtered, filteredLegacy);
       updateMap(mapSource);
       updateCountries(mapSource);
       updateCities(mapSource);
