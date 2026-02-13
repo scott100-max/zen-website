@@ -849,7 +849,6 @@
       function createSource(src) {
         const audio = new Audio(src);
         audio.preload = 'auto';
-        audio.loop = true;
         return { audio };
       }
 
@@ -864,7 +863,13 @@
           a.audio.volume = vol;
           b.audio.volume = 0;
           let active = a, standby = b, fading = false;
+          let currentTargetVol = vol;
           const XFADE = 5; // crossfade seconds before end
+
+          // Safety net: if crossfade misses the loop point, restart manually
+          a.audio.addEventListener('ended', () => { if (!fading) { a.audio.currentTime = 0; a.audio.play(); } });
+          b.audio.addEventListener('ended', () => { if (!fading) { b.audio.currentTime = 0; b.audio.play(); } });
+
           function checkCrossfade() {
             if (!fading && active.audio.duration && active.audio.currentTime > active.audio.duration - XFADE) {
               fading = true;
@@ -873,13 +878,13 @@
               standby.audio.play();
               const steps = 50;
               const interval = (XFADE * 1000) / steps;
-              const targetVol = parseFloat(card.querySelector('.sound-card__slider').value) / 100;
               let step = 0;
               const fade = setInterval(() => {
                 step++;
                 const t = step / steps;
-                active.audio.volume = targetVol * (1 - t);
-                standby.audio.volume = targetVol * t;
+                const tv = currentTargetVol;
+                active.audio.volume = tv * (1 - t);
+                standby.audio.volume = tv * t;
                 if (step >= steps) {
                   clearInterval(fade);
                   active.audio.pause();
@@ -890,7 +895,7 @@
                   fading = false;
                   audioElements[s.id].active = active;
                   audioElements[s.id].standby = standby;
-                  active.audio.volume = parseFloat(card.querySelector('.sound-card__slider').value) / 100;
+                  active.audio.volume = currentTargetVol;
                 }
               }, interval);
             }
@@ -899,7 +904,10 @@
           audioElements[s.id] = { active: a, standby: b, timer: timer,
             play() { this.active.audio.play(); },
             pause() { this.active.audio.pause(); this.standby.audio.pause(); },
-            setVolume(v) { this.active.audio.volume = v; }
+            setVolume(v) {
+              currentTargetVol = v;
+              if (!fading) this.active.audio.volume = v;
+            }
           };
         }
         if (isPlaying) {
