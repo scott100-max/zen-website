@@ -576,10 +576,20 @@ def generate_html(sessions_data, asmr_data, sounds_data, cdn_results, run_time, 
     total = len(sessions_data)
     stages = {}
     issue_counts = {"error": 0, "warn": 0, "info": 0}
+    flag_counts = {"green": 0, "amber": 0, "red": 0}
     for s in sessions_data:
         st = s.get("stage", "outstanding")
         stages[st] = stages.get(st, 0) + 1
-        for sev, _ in s.get("issues", []):
+        issues = s.get("issues", [])
+        has_error = any(sv == "error" for sv, _ in issues)
+        has_warn = any(sv == "warn" for sv, _ in issues)
+        if has_error or (st == "legacy" and has_warn):
+            flag_counts["red"] += 1
+        elif has_warn or st in ("picked", "generated", "legacy", "vault-built"):
+            flag_counts["amber"] += 1
+        else:
+            flag_counts["green"] += 1
+        for sev, _ in issues:
             issue_counts[sev] = issue_counts.get(sev, 0) + 1
 
     html = f"""<!DOCTYPE html>
@@ -638,6 +648,10 @@ h2 {{ color:#1A1817; font-size:16px; font-weight:700; margin:28px 0 12px; }}
 .match {{ color:#0D7680; }}
 .mismatch {{ color:#CC0000; }}
 .skipped {{ color:#998F85; font-style:italic; }}
+.flag {{ display:inline-block; width:10px; height:10px; border-radius:50%; }}
+.flag-green {{ background:#1B5E20; }}
+.flag-amber {{ background:#A64D00; }}
+.flag-red {{ background:#CC0000; }}
 </style>
 </head>
 <body>
@@ -653,6 +667,9 @@ h2 {{ color:#1A1817; font-size:16px; font-weight:700; margin:28px 0 12px; }}
   <div class="stat"><div class="stat-num">{stages.get('outstanding', 0)}</div><div class="stat-label">Outstanding</div></div>
   <div class="stat stat-error"><div class="stat-num">{issue_counts['error']}</div><div class="stat-label">Errors</div></div>
   <div class="stat stat-warn"><div class="stat-num">{issue_counts['warn']}</div><div class="stat-label">Warnings</div></div>
+  <div class="stat"><div class="stat-num" style="color:#1B5E20">{flag_counts['green']}</div><div class="stat-label"><span class="flag flag-green"></span> No Action</div></div>
+  <div class="stat"><div class="stat-num" style="color:#A64D00">{flag_counts['amber']}</div><div class="stat-label"><span class="flag flag-amber"></span> Needs Work</div></div>
+  <div class="stat"><div class="stat-num" style="color:#CC0000">{flag_counts['red']}</div><div class="stat-label"><span class="flag flag-red"></span> Action Req</div></div>
 </div>
 
 <div class="controls">
@@ -678,11 +695,18 @@ h2 {{ color:#1A1817; font-size:16px; font-weight:700; margin:28px 0 12px; }}
     <option value="has-issues">Has Any Issues</option>
     <option value="no-issues">No Issues</option>
   </select>
+  <select id="flagFilter" onchange="filterTable()">
+    <option value="">All Flags</option>
+    <option value="red">Red</option>
+    <option value="amber">Amber</option>
+    <option value="green">Green</option>
+  </select>
   <input type="text" id="searchBox" placeholder="Search name or ID..." oninput="filterTable()">
 </div>
 
 <table id="mainTable">
 <colgroup>
+  <col style="width:20px">
   <col style="width:36px">
   <col style="width:150px">
   <col style="width:80px">
@@ -702,22 +726,23 @@ h2 {{ color:#1A1817; font-size:16px; font-weight:700; margin:28px 0 12px; }}
 </colgroup>
 <thead>
 <tr>
-  <th data-col="0" onclick="sortTable(0,'num')"># <span class="arrow"></span></th>
-  <th data-col="1" onclick="sortTable(1,'str')">Name <span class="arrow"></span></th>
-  <th data-col="2" onclick="sortTable(2,'str')">Category <span class="arrow"></span></th>
-  <th data-col="3" onclick="sortTable(3,'num')">Chunks <span class="arrow"></span></th>
-  <th data-col="4" onclick="sortTable(4,'num')">In Vault <span class="arrow"></span></th>
-  <th data-col="5" onclick="sortTable(5,'str')">Last Edit <span class="arrow"></span></th>
-  <th data-col="6" onclick="sortTable(6,'str')">Duration <span class="arrow"></span></th>
-  <th data-col="7" onclick="sortTable(7,'str')">Ambient <span class="arrow"></span></th>
-  <th data-col="8" onclick="sortTable(8,'str')">Fades <span class="arrow"></span></th>
-  <th data-col="9" onclick="sortTable(9,'str')">Local Files <span class="arrow"></span></th>
-  <th data-col="10" onclick="sortTable(10,'str')">R2 URL <span class="arrow"></span></th>
-  <th data-col="11" onclick="sortTable(11,'str')">R2 Status <span class="arrow"></span></th>
-  <th data-col="12" onclick="sortTable(12,'str')">Local=R2? <span class="arrow"></span></th>
-  <th data-col="13" onclick="sortTable(13,'str')">QA <span class="arrow"></span></th>
-  <th data-col="14" onclick="sortTable(14,'str')">Stage <span class="arrow"></span></th>
-  <th data-col="15" onclick="sortTable(15,'str')">Issues <span class="arrow"></span></th>
+  <th data-col="0" onclick="sortTable(0,'str')"><span class="arrow"></span></th>
+  <th data-col="1" onclick="sortTable(1,'num')"># <span class="arrow"></span></th>
+  <th data-col="2" onclick="sortTable(2,'str')">Name <span class="arrow"></span></th>
+  <th data-col="3" onclick="sortTable(3,'str')">Category <span class="arrow"></span></th>
+  <th data-col="4" onclick="sortTable(4,'num')">Chunks <span class="arrow"></span></th>
+  <th data-col="5" onclick="sortTable(5,'num')">In Vault <span class="arrow"></span></th>
+  <th data-col="6" onclick="sortTable(6,'str')">Last Edit <span class="arrow"></span></th>
+  <th data-col="7" onclick="sortTable(7,'str')">Duration <span class="arrow"></span></th>
+  <th data-col="8" onclick="sortTable(8,'str')">Ambient <span class="arrow"></span></th>
+  <th data-col="9" onclick="sortTable(9,'str')">Fades <span class="arrow"></span></th>
+  <th data-col="10" onclick="sortTable(10,'str')">Local Files <span class="arrow"></span></th>
+  <th data-col="11" onclick="sortTable(11,'str')">R2 URL <span class="arrow"></span></th>
+  <th data-col="12" onclick="sortTable(12,'str')">R2 Status <span class="arrow"></span></th>
+  <th data-col="13" onclick="sortTable(13,'str')">Local=R2? <span class="arrow"></span></th>
+  <th data-col="14" onclick="sortTable(14,'str')">QA <span class="arrow"></span></th>
+  <th data-col="15" onclick="sortTable(15,'str')">Stage <span class="arrow"></span></th>
+  <th data-col="16" onclick="sortTable(16,'str')">Issues <span class="arrow"></span></th>
 </tr>
 </thead>
 <tbody>
@@ -847,7 +872,16 @@ h2 {{ color:#1A1817; font-size:16px; font-weight:700; margin:28px 0 12px; }}
         has_issues = len(issues) > 0
         issue_attr = "error" if has_error else ("warn" if has_warn else ("info" if has_issues else "none"))
 
-        html += f"""<tr data-stage="{stage}" data-cat="{cat}" data-issues="{issue_attr}" data-search="{num} {name.lower()} {sid.lower()} {cat}">
+        # Traffic light flag
+        if has_error or (stage == "legacy" and has_warn):
+            flag = "red"
+        elif has_warn or stage in ("picked", "generated", "legacy", "vault-built"):
+            flag = "amber"
+        else:
+            flag = "green"
+
+        html += f"""<tr data-stage="{stage}" data-cat="{cat}" data-issues="{issue_attr}" data-flag="{flag}" data-search="{num} {name.lower()} {sid.lower()} {cat}">
+  <td style="text-align:center"><span class="flag flag-{flag}"></span></td>
   <td>{num}</td>
   <td>{name}</td>
   <td>{cat or '—'}</td>
@@ -994,6 +1028,7 @@ function filterTable() {
   const stage = document.getElementById('stageFilter').value;
   const cat = document.getElementById('catFilter').value;
   const issue = document.getElementById('issueFilter').value;
+  const flag = document.getElementById('flagFilter').value;
   const search = document.getElementById('searchBox').value.toLowerCase();
   const rows = document.querySelectorAll('#mainTable tbody tr');
 
@@ -1001,6 +1036,7 @@ function filterTable() {
     let show = true;
     if (stage && row.dataset.stage !== stage) show = false;
     if (cat && row.dataset.cat !== cat) show = false;
+    if (flag && row.dataset.flag !== flag) show = false;
     if (issue) {
       const ri = row.dataset.issues;
       if (issue === 'has-error' && ri !== 'error') show = false;
