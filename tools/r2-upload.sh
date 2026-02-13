@@ -64,6 +64,13 @@ else
   echo "WARNING: CDN md5 ($SERVED_MD5) != local md5 ($LOCAL_MD5) — may need time to propagate"
 fi
 
+# Gate 15: Post-deploy audio scan
+if [ -f "$SCRIPT_DIR/tools/gate15-post-deploy.py" ] && [[ "$R2_KEY" == *.mp3 ]]; then
+  echo ""
+  python3 "$SCRIPT_DIR/tools/gate15-post-deploy.py" "$R2_KEY" || \
+    echo "WARNING: Gate 15 FAILED — flagged for human review"
+fi
+
 # Auto-regenerate R2 audit reports
 if [ -f "$SCRIPT_DIR/tools/r2-audit.py" ]; then
   echo "Regenerating audit reports..."
