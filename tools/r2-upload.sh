@@ -64,10 +64,11 @@ else
   echo "WARNING: CDN md5 ($SERVED_MD5) != local md5 ($LOCAL_MD5) — may need time to propagate"
 fi
 
-# Auto-regenerate R2 audit report
+# Auto-regenerate R2 audit reports
 if [ -f "$SCRIPT_DIR/tools/r2-audit.py" ]; then
-  echo "Regenerating R2 audit report..."
+  echo "Regenerating audit reports..."
   python3 "$SCRIPT_DIR/tools/r2-audit.py" -o "$SCRIPT_DIR/r2-audit-report.html" 2>/dev/null && \
-    echo "Audit report updated: r2-audit-report.html" || \
-    echo "Audit report: skipped (non-fatal)"
+    echo "  V1 report updated" || echo "  V1 report: skipped"
+  python3 "$SCRIPT_DIR/tools/r2-audit-v2.py" -o "$SCRIPT_DIR/r2-audit-report-v2.html" 2>/dev/null && \
+    echo "  V2 report updated" || echo "  V2 report: skipped"
 fi

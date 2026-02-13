@@ -10,6 +10,7 @@ Usage:
     python3 vault-builder.py content/scripts/52-the-court-of-your-mind.txt
     python3 vault-builder.py --batch content/scripts/
     python3 vault-builder.py --dry-run content/scripts/52-the-court-of-your-mind.txt
+    python3 vault-builder.py 01-morning-meditation --regen-chunks 3,11 --count 50
 """
 
 import asyncio
@@ -1306,6 +1307,45 @@ async def build_session(script_path, dry_run=False, extra=0, only_chunks=None):
     print(f"  Blocks <50 chars: {short_blocks} (chunk 0s exempt up to 60)")
     print(f"  Blocks >300 chars: {long_blocks}")
 
+    # --- Trigger Word Pre-Flight Scan ---
+    trigger_words_path = Path(__file__).parent / 'content' / 'trigger-words.json'
+    if trigger_words_path.exists():
+        tw_data = json.loads(trigger_words_path.read_text())
+        tw_list = [(w['word'].lower(), w.get('defect', '?'), w.get('alternatives', []), w.get('notes', ''))
+                   for w in tw_data.get('words', [])]
+        tw_patterns = [(re.compile(p['pattern'], re.IGNORECASE), p.get('defect', '?'),
+                        p.get('alternatives', []), p.get('description', ''))
+                       for p in tw_data.get('patterns', [])]
+
+        flagged = []
+        for ci, (text, pause) in enumerate(blocks):
+            text_lower = text.lower()
+            matches = []
+            for word, defect, alts, notes in tw_list:
+                if ' ' in word:
+                    if word in text_lower:
+                        matches.append((word, defect, alts, notes))
+                else:
+                    if re.search(r'\b' + re.escape(word) + r'\w*\b', text_lower):
+                        matches.append((word, defect, alts, notes))
+            for pat, defect, alts, desc in tw_patterns:
+                if pat.search(text):
+                    matches.append((desc, defect, alts, ''))
+            if matches:
+                flagged.append((ci, text, matches))
+
+        if flagged:
+            print(f"\n  ⚠ TRIGGER WORD SCAN — {len(flagged)} chunks flagged:")
+            for ci, text, matches in flagged:
+                for word, defect, alts, notes in matches:
+                    alt_str = ', '.join(alts) if alts else 'none'
+                    print(f"    c{ci:02d}: \"{word}\" → {defect.upper()} — try: {alt_str}")
+            print(f"\n  Replace trigger words in the script before building to avoid")
+            print(f"  burning API credits on chunks that will likely need rechunking.")
+            print(f"  This is a WARNING — build will proceed if not in dry-run mode.\n")
+        else:
+            print(f"\n  ✓ Trigger word scan: CLEAN ({len(tw_list)} words checked)\n")
+
     if dry_run:
         print(f"\n  DRY RUN — block detail:")
         for ci, (text, pause) in enumerate(blocks):
@@ -1472,6 +1512,225 @@ async def build_session(script_path, dry_run=False, extra=0, only_chunks=None):
     return manifest
 
 
+async def regen_chunks(session_id, chunk_indices, count):
+    """Generate additional candidates for specific chunks without rebuilding the whole session.
+
+    For each chunk: finds highest existing version, generates `count` new candidates
+    starting from that+1, computes all metrics, appends to existing meta, uploads to R2.
+    """
+    if not FISH_API_KEY:
+        print("ERROR: FISH_API_KEY not set in .env")
+        return None
+
+    session_dir = VAULT_DIR / session_id
+    if not session_dir.exists():
+        print(f"ERROR: Session directory not found: {session_dir}")
+        return None
+
+    # Load session manifest to get emotion
+    manifest_path = session_dir / 'session-manifest.json'
+    emotion = 'calm'
+    if manifest_path.exists():
+        manifest = json.loads(manifest_path.read_text())
+        emotion = manifest.get('emotion', 'calm')
+
+    print(f"\n{'='*70}")
+    print(f"  VAULT REGEN — {session_id}")
+    print(f"  Chunks: {sorted(chunk_indices)} | Count: {count} per chunk")
+    print(f"{'='*70}")
+
+    semaphore = asyncio.Semaphore(MAX_CONCURRENT)
+    executor = ThreadPoolExecutor(max_workers=4)
+    api_log = []
+    total_generated = 0
+    regen_start_versions = {}  # chunk_idx → first new version number
+
+    async with aiohttp.ClientSession() as http_session:
+        for ci in sorted(chunk_indices):
+            chunk_dir = session_dir / f"c{ci:02d}"
+            prefix = f"c{ci:02d}"
+            meta_path = chunk_dir / f"{prefix}_meta.json"
+
+            if not meta_path.exists():
+                print(f"\n  c{ci:02d}: ERROR — no meta file found, skipping")
+                continue
+
+            meta = json.loads(meta_path.read_text())
+            text = meta['text']
+            char_count = meta.get('char_count', len(text))
+
+            # Find highest existing version
+            existing_wavs = sorted(chunk_dir.glob(f"{prefix}_v*.wav"))
+            if existing_wavs:
+                last_v = int(existing_wavs[-1].stem.split('_v')[1])
+            else:
+                last_v = -1
+            start_v = last_v + 1
+
+            regen_start_versions[ci] = start_v
+
+            print(f"\n  c{ci:02d}: \"{text[:60]}{'...' if len(text) > 60 else ''}\" "
+                  f"({char_count} chars, {len(existing_wavs)} existing, generating v{start_v:02d}-v{start_v+count-1:02d})")
+
+            # Determine conditioning reference + prev_best_mfcc for tonal distance
+            ref_audio = None
+            ref_text_val = None
+            prev_best_mfcc = None
+            if ci > 0:
+                prev_dir = session_dir / f"c{ci-1:02d}"
+                prev_scores = prev_dir / f"c{ci-1:02d}_scores.json"
+                if prev_scores.exists():
+                    sd = json.loads(prev_scores.read_text())
+                    best_v = sd.get('best_version')
+                    if best_v is not None:
+                        best_wav = prev_dir / f"c{ci-1:02d}_v{best_v:02d}.wav"
+                        if best_wav.exists():
+                            ref_audio = str(best_wav)
+                            prev_best_mfcc = build.compute_mfcc_profile(str(best_wav))
+                            prev_meta_path = prev_dir / f"c{ci-1:02d}_meta.json"
+                            if prev_meta_path.exists():
+                                ref_text_val = json.loads(prev_meta_path.read_text()).get('text', '')
+                            print(f"    Conditioning on c{ci-1:02d}_v{best_v:02d}.wav")
+            else:
+                if MARCO_MASTER_WAV.exists():
+                    ref_audio = str(MARCO_MASTER_WAV)
+                    ref_text_val = CHUNK0_REFERENCE_TEXT
+                    print(f"    Conditioning on marco-master reference")
+
+            # Generate new candidates
+            gen_tasks = []
+            for v in range(start_v, start_v + count):
+                wav_path = chunk_dir / f"{prefix}_v{v:02d}.wav"
+                gen_tasks.append(
+                    _generate_one(http_session, text, wav_path, ci,
+                                  semaphore, emotion, api_log,
+                                  ref_audio_path=ref_audio, ref_text=ref_text_val)
+                )
+
+            results = await asyncio.gather(*gen_tasks, return_exceptions=True)
+            failures = sum(1 for r in results if isinstance(r, Exception))
+            successes = count - failures
+            if failures:
+                print(f"    {failures} generation(s) failed")
+                for r in results:
+                    if isinstance(r, Exception):
+                        print(f"      → {r}")
+
+            # Score new candidates and append to meta
+            loop = asyncio.get_event_loop()
+            new_candidates = []
+            for v in range(start_v, start_v + count):
+                wav_path = chunk_dir / f"{prefix}_v{v:02d}.wav"
+                if not wav_path.exists():
+                    continue
+                try:
+                    details, mfcc = await loop.run_in_executor(
+                        executor, _score_wav, str(wav_path), prev_best_mfcc
+                    )
+                    details['_char_count'] = char_count
+                    status = "FILTERED" if details.get('filtered') else "OK"
+                    print(f"    v{v:02d}: {details['combined_score']:.3f} "
+                          f"(q={details['score']:.3f} dur={details['duration']:.1f}s) {status}")
+
+                    entry = {
+                        'version': v,
+                        'filename': wav_path.name,
+                        'duration_seconds': details['duration'],
+                        'composite_score': details['combined_score'],
+                        'quality_score': details['score'],
+                        'echo_risk': details['echo_risk'],
+                        'hiss_risk': details['hiss_risk'],
+                        'sp_contrast': details['sp_contrast'],
+                        'sp_flatness': details['sp_flatness'],
+                        'tonal_distance_to_prev': details['tone_dist'],
+                        'filtered': details.get('filtered', False),
+                        'filter_reason': details.get('filter_reason', ''),
+                        'generated_at': _now_iso(),
+                    }
+                    new_candidates.append(entry)
+                except Exception as e:
+                    print(f"    v{v:02d}: SCORE FAILED — {e}")
+                    new_candidates.append({
+                        'version': v, 'filename': wav_path.name,
+                        'error': str(e), 'filtered': True,
+                    })
+
+            # Append new candidates to existing meta
+            meta['candidates'].extend(new_candidates)
+            meta_path.write_text(json.dumps(meta, indent=2))
+            total_generated += successes
+
+            # Update scores file
+            scores_path = chunk_dir / f"{prefix}_scores.json"
+            all_scores = [{
+                'version': c['version'],
+                'composite_score': c.get('composite_score'),
+                'quality_score': c.get('quality_score'),
+                'tonal_distance': c.get('tonal_distance_to_prev'),
+                'duration': c.get('duration_seconds'),
+                'filtered': c.get('filtered', False),
+            } for c in meta['candidates'] if not c.get('error')]
+
+            best = max(
+                [c for c in meta['candidates'] if not c.get('filtered') and not c.get('error')],
+                key=lambda c: c.get('composite_score', 0),
+                default=None
+            )
+            scores_data = {
+                'chunk_index': ci,
+                'best_version': best['version'] if best else None,
+                'best_score': best.get('composite_score') if best else None,
+                'total_candidates': len(meta['candidates']),
+                'filtered_count': sum(1 for c in meta['candidates'] if c.get('filtered')),
+                'scores': all_scores,
+            }
+            scores_path.write_text(json.dumps(scores_data, indent=2))
+
+            print(f"    → {successes} new candidates added (total now: {len(meta['candidates'])})")
+
+    executor.shutdown(wait=False)
+
+    # Upload only NEW WAVs to R2
+    print(f"\n  Uploading new candidates to R2...")
+    uploaded = 0
+    errors = 0
+    r2_prefix = f"vault/{session_id}"
+    for ci in sorted(chunk_indices):
+        start_v = regen_start_versions.get(ci)
+        if start_v is None:
+            continue
+        chunk_dir = session_dir / f"c{ci:02d}"
+        prefix = f"c{ci:02d}"
+        for wav_path in sorted(chunk_dir.glob(f"{prefix}_v*.wav")):
+            v = int(wav_path.stem.split('_v')[1])
+            if v < start_v:
+                continue  # Skip pre-existing versions
+            r2_key = f"{r2_prefix}/c{ci:02d}/{wav_path.name}"
+            try:
+                subprocess.run([
+                    "npx", "wrangler", "r2", "object", "put",
+                    f"{R2_BUCKET}/{r2_key}",
+                    f"--file={wav_path}",
+                    "--remote",
+                    "--content-type=audio/wav",
+                ], capture_output=True, check=True, timeout=120)
+                uploaded += 1
+            except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as e:
+                print(f"    FAILED: {r2_key} — {e}")
+                errors += 1
+
+    print(f"  R2 upload: {uploaded} uploaded, {errors} failed")
+
+    print(f"\n{'='*70}")
+    print(f"  REGEN COMPLETE — {session_id}")
+    print(f"  New candidates: {total_generated}")
+    print(f"  R2: {uploaded} uploaded, {errors} errors")
+    print(f"  NEXT: Run auto-picker.py {session_id} --rechunk {','.join(str(c) for c in sorted(chunk_indices))}")
+    print(f"{'='*70}")
+
+    return {'generated': total_generated, 'uploaded': uploaded, 'errors': errors}
+
+
 async def main():
     parser = argparse.ArgumentParser(
         description='Vault Builder — Generate TTS candidates for human review')
@@ -1489,10 +1748,27 @@ async def main():
                         help='Generate N extra candidates per chunk (on top of standard count)')
     parser.add_argument('--only-chunks', metavar='LIST',
                         help='Only process these chunk indices (comma-separated, e.g. 13,27,28)')
+    parser.add_argument('--regen-chunks', metavar='LIST',
+                        help='Generate additional candidates for these chunks only (comma-separated). '
+                             'Appends to existing pool without rebuilding whole session.')
+    parser.add_argument('--count', type=int, default=50,
+                        help='Number of new candidates per chunk for --regen-chunks (default: 50)')
     args = parser.parse_args()
 
     # Ensure vault directory exists
     VAULT_DIR.mkdir(parents=True, exist_ok=True)
+
+    # --regen-chunks mode: targeted pool expansion
+    if args.regen_chunks:
+        # Accept either a session directory name or a script path
+        if args.script:
+            session_id = Path(args.script).stem
+        else:
+            print("ERROR: --regen-chunks requires a session ID or script path as positional argument")
+            return
+        chunk_indices = [int(x.strip()) for x in args.regen_chunks.split(',')]
+        await regen_chunks(session_id, chunk_indices, args.count)
+        return
 
     if args.inventory_only:
         inv = generate_inventory("content/scripts", VAULT_DIR / "inventory.json")
@@ -1550,6 +1826,22 @@ async def main():
             )
     else:
         parser.print_help()
+
+    # Auto-regenerate the audit report after any build
+    if args.script or args.batch:
+        try:
+            import subprocess
+            audit_script = str(Path(__file__).resolve().parent / "tools" / "r2-audit-v2.py")
+            report_path = str(Path(__file__).resolve().parent / "r2-audit-report-v2.html")
+            print(f"\nRegenerating audit report...")
+            subprocess.run(
+                [sys.executable, audit_script, "--skip-cdn", "-o", report_path],
+                cwd=str(Path(__file__).resolve().parent),
+                timeout=30,
+            )
+            print(f"  Report updated: {report_path}")
+        except Exception as e:
+            print(f"  (Audit report skipped: {e})")
 
 
 if __name__ == '__main__':

@@ -44,6 +44,18 @@ VAULT_IGNORE = {
     "validation-sweep-v3.json", "validation-sweep-v5.json",
 }
 
+# Session approvals — manually signed-off sessions skip QA/assembly warnings
+APPROVALS_FILE = PROJECT_ROOT / "content" / "session-approvals.json"
+
+def load_approvals():
+    """Load session-approvals.json. Returns dict of sid -> approval info."""
+    if APPROVALS_FILE.exists():
+        try:
+            return json.loads(APPROVALS_FILE.read_text())
+        except (json.JSONDecodeError, OSError):
+            return {}
+    return {}
+
 
 # ---------------------------------------------------------------------------
 # Script parsing (mirrors build-session-v3.py:163-223)
@@ -273,6 +285,16 @@ def read_vault_metadata():
                         pass
                     break
 
+        # Assembly verdicts (human review of assembled audio)
+        verdicts_path = vdir / "assembly-verdicts.json"
+        if verdicts_path.exists():
+            try:
+                vdata = json.loads(verdicts_path.read_text())
+                entry["has_assembly_verdicts"] = True
+                entry["assembly_verdicts"] = vdata
+            except (json.JSONDecodeError, OSError):
+                pass
+
         vault_data[vdir.name] = entry
     return vault_data
 
@@ -358,11 +380,16 @@ def md5_file(path):
 # ---------------------------------------------------------------------------
 
 def detect_issues(session, script_meta, vault_meta, local_files, html_refs,
-                  cdn_results, vault_finals):
+                  cdn_results, vault_finals, approvals=None):
     """Auto-detect problems for a session. Returns list of (severity, message)."""
     issues = []
     sid = session["id"]
     primary_mp3 = f"{sid}.mp3"
+    approved = (approvals or {}).get(sid)
+
+    # If session is approved, skip QA/assembly/duration warnings
+    if approved:
+        issues.append(("info", f"Approved ({approved.get('date', '?')})"))
 
     # Ambient configured but no fade-in
     if script_meta:
@@ -406,8 +433,8 @@ def detect_issues(session, script_meta, vault_meta, local_files, html_refs,
             diff_kb = abs(local["size"] - cdn_res["size"]) / 1024
             issues.append(("warn", f"Local/R2 size mismatch ({diff_kb:.0f} KB diff)"))
 
-    # QA failures
-    if vault_meta and vault_meta.get("has_build_report"):
+    # QA failures (skip if approved)
+    if not approved and vault_meta and vault_meta.get("has_build_report"):
         if vault_meta.get("qa_passed") is False:
             failed_gates = []
             for gate_num, gate_info in vault_meta.get("qa_summary", {}).items():
@@ -417,8 +444,8 @@ def detect_issues(session, script_meta, vault_meta, local_files, html_refs,
             if failed_gates:
                 issues.append(("warn", f"QA failed: {', '.join(failed_gates)}"))
 
-    # Duration drift (target vs actual)
-    if script_meta and vault_meta and vault_meta.get("build_duration_m"):
+    # Duration drift (skip if approved)
+    if not approved and script_meta and vault_meta and vault_meta.get("build_duration_m"):
         target = None
         if script_meta.get("duration"):
             m = re.search(r"(\d+)", script_meta["duration"])
@@ -445,6 +472,26 @@ def detect_issues(session, script_meta, vault_meta, local_files, html_refs,
     if script_meta and not vault_meta:
         if primary_mp3 not in local_files:
             issues.append(("info", "Script exists, no audio generated"))
+
+    # Assembly verdicts (skip if approved)
+    if not approved and vault_meta and vault_meta.get("has_assembly_verdicts"):
+        av = vault_meta["assembly_verdicts"]
+        ok = av.get("ok", 0)
+        fail = av.get("fail", 0)
+        total_rev = av.get("reviewed", ok + fail)
+        if fail > 0:
+            # Collect fail types
+            fail_types = {}
+            for cid, cdata in av.get("chunks", {}).items():
+                if not cdata.get("passed", True):
+                    for v in cdata.get("verdict", []):
+                        fail_types[v] = fail_types.get(v, 0) + 1
+            type_str = ", ".join(f"{cnt} {t}" for t, cnt in
+                                sorted(fail_types.items(), key=lambda x: -x[1]))
+            issues.append(("warn",
+                f"Assembly review: {ok}/{total_rev} pass ({type_str})"))
+        else:
+            issues.append(("info", f"Assembly review: {ok}/{total_rev} pass"))
 
     return issues
 
@@ -905,6 +952,73 @@ h2 {{ color:#1A1817; font-size:16px; font-weight:700; margin:28px 0 12px; }}
 </table>
 """
 
+    # Assembly Reviews section — chunk-level verdicts from human review
+    review_sessions = [s for s in sessions_data
+                       if (s.get("vault_meta") or {}).get("has_assembly_verdicts")]
+    if review_sessions:
+        html += """<hr class="section-sep">
+<h2>Assembly Reviews</h2>
+"""
+        for s in review_sessions:
+            av = s["vault_meta"]["assembly_verdicts"]
+            sid = s["id"]
+            ok = av.get("ok", 0)
+            fail = av.get("fail", 0)
+            total_rev = av.get("reviewed", ok + fail)
+            pct = (ok / total_rev * 100) if total_rev else 0
+            date = av.get("date", "—")
+            notes = av.get("notes", "")
+            run = av.get("run", "")
+
+            html += f"""<h3 style="margin:16px 0 4px;font-size:14px">{sid} <span style="font-weight:400;color:#807973">— {date} — {run}</span></h3>
+<div style="font-size:12px;color:#807973;margin-bottom:8px">{notes} &middot; <strong>{ok}/{total_rev} pass ({pct:.0f}%)</strong></div>
+<table style="max-width:900px">
+<thead>
+<tr>
+  <th style="width:50px">Chunk</th>
+  <th style="width:50px">Ver</th>
+  <th style="width:60px">Time</th>
+  <th style="width:60px">Result</th>
+  <th style="width:120px">Issue</th>
+  <th>Comment</th>
+</tr>
+</thead>
+<tbody>
+"""
+            chunks = av.get("chunks", {})
+            for cid in sorted(chunks.keys(), key=lambda x: int(x)):
+                cdata = chunks[cid]
+                passed = cdata.get("passed", True)
+                ver = cdata.get("version", "—")
+                ts = cdata.get("timestamp", "")
+                verdict = cdata.get("verdict", [])
+                comment = cdata.get("comment", "")
+
+                if passed:
+                    result_html = '<span class="cell-ok">PASS</span>'
+                    verdict_html = ""
+                    comment_html = ""
+                else:
+                    result_html = '<span class="cell-error">FAIL</span>'
+                    verdict_tags = " ".join(
+                        f'<span class="cell-{"error" if v in ("VOICE","CUTOFF","BAD") else "warn"}">{v}</span>'
+                        for v in verdict)
+                    verdict_html = verdict_tags
+                    comment_html = f'<span style="color:#33302E">{comment}</span>'
+
+                html += f"""<tr{"" if not passed else ' style="opacity:0.5"'}>
+  <td>c{int(cid):02d}</td>
+  <td>{ver if ver != "—" else "—"}</td>
+  <td>{ts or "—"}</td>
+  <td>{result_html}</td>
+  <td>{verdict_html}</td>
+  <td>{comment_html}</td>
+</tr>
+"""
+            html += """</tbody>
+</table>
+"""
+
     # ASMR section
     html += """<hr class="section-sep">
 <h2>ASMR / Ambient Tracks</h2>
@@ -1133,7 +1247,12 @@ def main():
         cdn_results = {}
         print("  CDN checks skipped")
 
-    # 8. Assemble per-session data
+    # 8. Load approvals
+    approvals = load_approvals()
+    if approvals:
+        print(f"  {len(approvals)} session(s) approved")
+
+    # 9. Assemble per-session data
     print("Assembling report data...")
     sessions_data = []
     for sid, sinfo in sorted(sessions.items(), key=lambda x: x[1]["num"]):
@@ -1161,7 +1280,7 @@ def main():
         stage = detect_stage(sid, vm, local_files, html_refs, cdn_results)
         issues = detect_issues(
             sinfo, sm, vm, local_files, session_refs,
-            cdn_results, vault_finals,
+            cdn_results, vault_finals, approvals=approvals,
         )
 
         sessions_data.append({

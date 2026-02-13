@@ -559,6 +559,22 @@ def main():
     args = parser.parse_args()
 
     success = assemble(args.session_id, skip_qa=args.skip_qa, no_humanize=args.no_humanize)
+
+    # Auto-regenerate the audit report
+    try:
+        audit_script = Path(__file__).resolve().parent / "tools" / "r2-audit-v2.py"
+        report_path = Path(__file__).resolve().parent / "r2-audit-report-v2.html"
+        print(f"\nRegenerating audit report...")
+        import subprocess
+        subprocess.run(
+            [sys.executable, str(audit_script), "--skip-cdn", "-o", str(report_path)],
+            cwd=str(Path(__file__).resolve().parent),
+            timeout=30,
+        )
+        print(f"  Report updated: {report_path}")
+    except Exception as e:
+        print(f"  (Audit report skipped: {e})")
+
     sys.exit(0 if success else 1)
 
 

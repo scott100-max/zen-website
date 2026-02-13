@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""R2 Audio Audit V2 — "For Kids" simplified report.
+"""R2 Audio Audit V2 — "Five-Year-Old" report.
 
-Same data collection as r2-audit.py, but the HTML output is radically simplified:
-  - 6 columns instead of 17
-  - Plain-English stage names and issue descriptions
-  - Big friendly summary cards
-  - No jargon (R2, CDN, vault, chunks, ambient, fades, QA gates...)
+Ultra-simplified visual report:
+  - Giant progress bar at the top
+  - Card tiles grouped by status (not a table)
+  - One emoji + one sentence per session
+  - Zero jargon
 
 Usage:
     python3 tools/r2-audit-v2.py                          # default output
@@ -41,6 +41,7 @@ build_session_list = _v1.build_session_list
 build_asmr_list = _v1.build_asmr_list
 detect_stage = _v1.detect_stage
 detect_issues = _v1.detect_issues
+load_approvals = _v1.load_approvals
 fmt_size = _v1.fmt_size
 SCRIPTS_DIR = _v1.SCRIPTS_DIR
 AUDIO_DIR = _v1.AUDIO_DIR
@@ -56,70 +57,72 @@ PROJECT_ROOT = _v1.PROJECT_ROOT
 # ---------------------------------------------------------------------------
 
 STAGE_FRIENDLY = {
-    "live":        ("On the website", "People can listen to this right now."),
-    "vault-built": ("Built, not uploaded", "The audio is ready but hasn't been put on the website yet."),
-    "picked":      ("Voices chosen", "The best voice recordings have been picked. Needs to be stitched together."),
-    "generated":   ("Recordings made", "The computer has made voice recordings but nobody has picked the best ones yet."),
-    "legacy":      ("Old version", "This was made with an older method. Might need rebuilding."),
-    "outstanding": ("Not started", "There's a script written but no audio has been made yet."),
+    "live":        ("Done!", "People can listen to this right now."),
+    "vault-built": ("Almost done", "Just needs uploading."),
+    "picked":      ("Halfway there", "Best voices picked — needs stitching."),
+    "generated":   ("Early days", "Voices recorded — need picking."),
+    "legacy":      ("Old one", "Made the old way."),
+    "outstanding": ("Not started", "Just a script so far."),
 }
 
-STAGE_EMOJI = {
-    "live":        "&#x1F7E2;",  # green circle
-    "vault-built": "&#x1F535;",  # blue circle
-    "picked":      "&#x1F7E1;",  # yellow circle
-    "generated":   "&#x1F7E3;",  # purple circle
-    "legacy":      "&#x1F7E0;",  # orange circle
-    "outstanding": "&#x26AA;",   # white circle
+# Simple 3-bucket grouping for the visual layout
+BUCKET_ORDER = ["done", "working", "todo"]
+BUCKET_INFO = {
+    "done":    {"label": "Done",        "emoji": "&#x2705;", "color": "#1B7A3D", "bg": "#D4EDDA", "border": "#A3D9A5"},
+    "working": {"label": "Working on it", "emoji": "&#x1F528;", "color": "#B45309", "bg": "#FEF3C7", "border": "#FCD34D"},
+    "todo":    {"label": "To do",       "emoji": "&#x1F4DD;", "color": "#6B7280", "bg": "#F3F4F6", "border": "#D1D5DB"},
 }
 
+def stage_to_bucket(stage):
+    if stage == "live":
+        return "done"
+    elif stage in ("vault-built", "picked", "generated", "legacy"):
+        return "working"
+    else:
+        return "todo"
 
-def simplify_issue(sev, msg):
-    """Turn a technical issue message into plain English."""
+
+def simplify_issue_v2(sev, msg):
+    """Turn a technical issue into one tiny sentence a kid could understand."""
     m = msg.lower()
 
     if "no ambient fade-in" in m:
-        return sev, "Background music starts too suddenly"
+        return "warn", "Music starts too suddenly"
     if "no ambient fade-out" in m:
-        return sev, "Background music ends too suddenly"
+        return "warn", "Music ends too suddenly"
     if "no ambient-db" in m:
-        return sev, "Background music volume not set"
+        return "warn", "Music volume not set"
     if "duration drift" in m:
         match = re.search(r"target (\d+)m, actual ([\d.]+)m", msg)
         if match:
-            target, actual = match.group(1), match.group(2)
-            return sev, f"Should be {target} min but came out as {actual} min"
-        return sev, "Length doesn't match what was planned"
+            return "warn", f"Too short ({match.group(2)} min, wanted {match.group(1)})"
+        return "warn", "Wrong length"
     if "local/r2 size mismatch" in m:
-        return "warn", "Computer version doesn't match website version"
+        return "warn", "Local file doesn't match website"
     if "r2 404" in m and "html" in m:
-        return "error", "Website page links to a file that doesn't exist!"
+        return "error", "Broken link on website!"
     if "not on r2" in m:
-        return "info", "Not uploaded to the website yet"
+        return "info", "Not uploaded yet"
     if "qa failed" in m:
-        return sev, "Didn't pass the quality check"
+        return "warn", "Didn't pass quality check"
     if "vault built but no html" in m:
-        return sev, "Audio is built but no page on the website links to it"
+        return "info", "Built but no page links to it"
     if "html references file missing" in m:
-        return "error", "Website links to a file that's missing from the computer"
+        return "error", "Website points to missing file!"
     if "mp3 variants" in m:
-        match = re.search(r"(\d+) mp3", m)
-        n = match.group(1) if match else "multiple"
-        return "info", f"{n} different versions sitting around (only need 1)"
+        return "info", "Extra copies lying around"
     if "assembly review" in m:
         match = re.search(r"(\d+)/(\d+) pass", msg)
         if match:
-            ok, total = match.group(1), match.group(2)
-            return sev, f"{ok} out of {total} voice clips sound good"
-        return sev, "Some voice clips need replacing"
+            return "warn", f"{match.group(1)}/{match.group(2)} clips OK"
+        return "warn", "Some clips need replacing"
     if "script exists, no audio" in m:
-        return "info", "Script is written but audio hasn't been made yet"
-    if "r2 http" in m:
-        return "error", "Something went wrong checking the website"
-    if "r2 check failed" in m:
-        return "error", "Couldn't reach the website to check"
+        return "info", "Script only — no audio yet"
+    if "r2 http" in m or "r2 check failed" in m:
+        return "error", "Couldn't check website"
+    if m.startswith("approved"):
+        return "approved", msg
 
-    # Fallback — return as-is
     return sev, msg
 
 
@@ -129,285 +132,277 @@ def simplify_issue(sev, msg):
 
 def generate_simple_html(sessions_data, cdn_results, run_time, skip_cdn):
     total = len(sessions_data)
-    stages = {}
-    problem_count = 0
-    ok_count = 0
+
+    # Count buckets
+    buckets = {"done": [], "working": [], "todo": []}
+    problem_sessions = []
 
     for s in sessions_data:
-        st = s.get("stage", "outstanding")
-        stages[st] = stages.get(st, 0) + 1
+        stage = s.get("stage", "outstanding")
+        bucket = stage_to_bucket(stage)
         issues = s.get("issues", [])
-        has_real_problem = any(sv in ("error", "warn") for sv, _ in issues)
-        if has_real_problem:
-            problem_count += 1
-        elif st == "live":
-            ok_count += 1
 
-    live = stages.get("live", 0)
-    in_progress = stages.get("vault-built", 0) + stages.get("picked", 0) + stages.get("generated", 0)
-    not_started = stages.get("outstanding", 0)
-    old = stages.get("legacy", 0)
+        # Simplify issues
+        simple = []
+        seen = set()
+        for sev, msg in issues:
+            new_sev, new_msg = simplify_issue_v2(sev, msg)
+            if new_msg not in seen:
+                seen.add(new_msg)
+                simple.append((new_sev, new_msg))
+
+        important = [(sv, m) for sv, m in simple if sv in ("error", "warn")]
+        has_problem = len(important) > 0
+
+        s["_bucket"] = bucket
+        s["_simple_issues"] = simple
+        s["_has_problem"] = has_problem
+        s["_important"] = important
+
+        buckets[bucket].append(s)
+        if has_problem:
+            problem_sessions.append(s)
+
+    done_count = len(buckets["done"])
+    working_count = len(buckets["working"])
+    todo_count = len(buckets["todo"])
+    pct = round(done_count / total * 100) if total else 0
+
+    # Count "done and clean" vs "done but has issues"
+    done_clean = sum(1 for s in buckets["done"] if not s["_has_problem"])
+    done_issues = done_count - done_clean
+
+    # Sub-stage counts for "working on it"
+    working_stages = {}
+    for s in buckets["working"]:
+        st = s.get("stage", "?")
+        friendly, _ = STAGE_FRIENDLY.get(st, (st, ""))
+        working_stages[friendly] = working_stages.get(friendly, 0) + 1
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Audio Report (Simple) — {datetime.now().strftime('%d %b %Y')}</title>
+<title>Audio Report &mdash; {datetime.now().strftime('%d %b %Y')}</title>
 <style>
 * {{ margin:0; padding:0; box-sizing:border-box; }}
-body {{ background:#FFF1E5; color:#33302E; font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; font-size:14px; padding:24px; max-width:1200px; margin:0 auto; }}
+body {{ background:#FFF1E5; color:#33302E; font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; padding:24px; max-width:960px; margin:0 auto; }}
 
-h1 {{ color:#1A1817; font-size:24px; font-weight:700; margin-bottom:4px; }}
-.subtitle {{ color:#807973; font-size:13px; margin-bottom:24px; }}
+h1 {{ font-size:28px; font-weight:800; margin-bottom:4px; }}
+.sub {{ color:#807973; font-size:13px; margin-bottom:28px; }}
 
-/* Big summary cards */
-.cards {{ display:flex; gap:16px; flex-wrap:wrap; margin-bottom:32px; }}
-.card {{ background:#fff; border:1px solid #E0CDBF; border-radius:12px; padding:20px 24px; min-width:140px; flex:1; text-align:center; }}
-.card-num {{ font-size:42px; font-weight:800; line-height:1; }}
-.card-label {{ font-size:13px; color:#807973; margin-top:6px; }}
-.card-desc {{ font-size:11px; color:#B0A89F; margin-top:2px; }}
-.card-green .card-num {{ color:#1B7A3D; }}
-.card-blue .card-num {{ color:#2563EB; }}
-.card-grey .card-num {{ color:#807973; }}
-.card-orange .card-num {{ color:#B45309; }}
-.card-red .card-num {{ color:#CC0000; }}
+/* === Big progress bar === */
+.progress-wrap {{ background:#fff; border:1px solid #E0CDBF; border-radius:16px; padding:24px; margin-bottom:28px; }}
+.progress-title {{ font-size:18px; font-weight:700; margin-bottom:4px; }}
+.progress-subtitle {{ font-size:13px; color:#807973; margin-bottom:14px; }}
+.bar-outer {{ background:#F0E6DC; border-radius:12px; height:40px; overflow:hidden; display:flex; }}
+.bar-done {{ background:linear-gradient(135deg, #22C55E, #16A34A); height:100%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:15px; min-width:40px; transition:width 0.5s; }}
+.bar-working {{ background:linear-gradient(135deg, #FBBF24, #F59E0B); height:100%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:15px; min-width:40px; transition:width 0.5s; }}
+.bar-todo {{ height:100%; display:flex; align-items:center; justify-content:center; color:#9CA3AF; font-weight:700; font-size:14px; min-width:30px; }}
+.bar-labels {{ display:flex; justify-content:space-between; margin-top:10px; font-size:13px; }}
+.bar-labels span {{ display:flex; align-items:center; gap:5px; }}
+.dot {{ width:10px; height:10px; border-radius:50%; display:inline-block; }}
 
-/* Legend */
-.legend {{ background:#fff; border:1px solid #E0CDBF; border-radius:12px; padding:16px 20px; margin-bottom:24px; display:flex; flex-wrap:wrap; gap:8px 24px; }}
-.legend-item {{ display:flex; align-items:center; gap:6px; font-size:13px; }}
-.legend-dot {{ width:10px; height:10px; border-radius:50%; flex-shrink:0; }}
+/* === Three big number cards === */
+.three-cards {{ display:flex; gap:16px; margin-bottom:28px; }}
+.big-card {{ flex:1; background:#fff; border-radius:14px; padding:20px; text-align:center; border:2px solid #E0CDBF; }}
+.big-card-emoji {{ font-size:36px; line-height:1; }}
+.big-card-num {{ font-size:48px; font-weight:900; line-height:1.1; }}
+.big-card-label {{ font-size:14px; font-weight:600; margin-top:4px; }}
+.big-card-detail {{ font-size:11px; color:#807973; margin-top:2px; }}
+.bc-done {{ border-color:#A3D9A5; }}
+.bc-done .big-card-num {{ color:#16A34A; }}
+.bc-working {{ border-color:#FCD34D; }}
+.bc-working .big-card-num {{ color:#D97706; }}
+.bc-todo {{ border-color:#D1D5DB; }}
+.bc-todo .big-card-num {{ color:#9CA3AF; }}
 
-/* Filters */
-.controls {{ display:flex; gap:12px; align-items:center; margin-bottom:16px; flex-wrap:wrap; }}
-.controls select, .controls input {{ background:#fff; border:1px solid #E0CDBF; color:#33302E; padding:8px 12px; border-radius:8px; font-size:14px; }}
-.controls input {{ width:240px; }}
+/* === Pipeline (how it works) === */
+.pipeline-box {{ background:#fff; border:1px solid #E0CDBF; border-radius:14px; padding:20px; margin-bottom:28px; text-align:center; }}
+.pipeline-box h2 {{ font-size:15px; font-weight:700; margin-bottom:14px; }}
+.pipe {{ display:flex; align-items:center; justify-content:center; gap:0; flex-wrap:wrap; }}
+.pipe-step {{ display:flex; flex-direction:column; align-items:center; padding:8px 10px; }}
+.pipe-step .pe {{ font-size:28px; }}
+.pipe-step .pl {{ font-size:11px; font-weight:700; margin-top:2px; }}
+.pipe-arrow {{ font-size:22px; color:#D1D5DB; }}
 
-/* Table */
-table {{ width:100%; border-collapse:separate; border-spacing:0; margin-bottom:32px; }}
-th {{ background:#F2DFCE; color:#807973; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; padding:10px 12px; text-align:left; border-bottom:2px solid #E0CDBF; cursor:pointer; user-select:none; white-space:nowrap; }}
-th:first-child {{ border-radius:8px 0 0 0; }}
-th:last-child {{ border-radius:0 8px 0 0; }}
-th:hover {{ color:#1A1817; }}
-td {{ padding:10px 12px; border-bottom:1px solid #F0E6DC; font-size:13px; }}
-tr:hover td {{ background:#FFF7F0; }}
-.col-num {{ width:44px; text-align:center; }}
-.col-name {{ width:220px; font-weight:600; }}
-.col-type {{ width:100px; }}
-.col-status {{ width:200px; }}
-.col-whats-wrong {{ min-width:280px; }}
+/* === Section groups === */
+.section {{ margin-bottom:28px; }}
+.section-head {{ display:flex; align-items:center; gap:10px; margin-bottom:12px; }}
+.section-head h2 {{ font-size:18px; font-weight:700; }}
+.section-count {{ background:#F0E6DC; color:#807973; font-size:12px; font-weight:700; padding:2px 10px; border-radius:10px; }}
 
-/* Stage badges */
-.badge {{ display:inline-block; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600; white-space:nowrap; }}
-.badge-live {{ background:#D4EDDA; color:#1B5E20; }}
-.badge-vault-built {{ background:#DBEAFE; color:#1E40AF; }}
-.badge-picked {{ background:#FEF3C7; color:#92400E; }}
-.badge-generated {{ background:#EDE9FE; color:#5B21B6; }}
-.badge-legacy {{ background:#FFEDD5; color:#9A3412; }}
-.badge-outstanding {{ background:#F3F4F6; color:#6B7280; }}
+/* === Session tiles === */
+.tiles {{ display:flex; flex-wrap:wrap; gap:10px; }}
+.tile {{ background:#fff; border:2px solid #E0CDBF; border-radius:10px; padding:10px 14px; width:calc(50% - 5px); display:flex; align-items:flex-start; gap:10px; transition:border-color 0.2s; }}
+.tile:hover {{ border-color:#B0A89F; }}
+.tile-emoji {{ font-size:24px; flex-shrink:0; padding-top:1px; }}
+.tile-body {{ flex:1; min-width:0; }}
+.tile-name {{ font-size:14px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }}
+.tile-num {{ color:#B0A89F; font-size:12px; font-weight:600; }}
+.tile-stage {{ font-size:11px; color:#807973; margin-top:1px; }}
+.tile-issue {{ font-size:11px; margin-top:3px; display:flex; align-items:center; gap:4px; }}
+.tile-issue .idot {{ width:6px; height:6px; border-radius:50%; flex-shrink:0; }}
+.idot-error {{ background:#DC2626; }}
+.idot-warn {{ background:#F59E0B; }}
+.idot-info {{ background:#D1D5DB; }}
+.tile-ok {{ font-size:11px; color:#16A34A; font-weight:600; margin-top:3px; }}
 
-/* Issues */
-.issue {{ display:inline-block; margin:2px 0; font-size:12px; line-height:1.5; }}
-.issue::before {{ content:''; display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:5px; vertical-align:middle; }}
-.issue-error::before {{ background:#CC0000; }}
-.issue-warn::before {{ background:#D97706; }}
-.issue-info::before {{ background:#B0A89F; }}
-.all-good {{ color:#1B7A3D; font-weight:600; font-size:12px; }}
+.tile-done {{ border-color:#A3D9A5; }}
+.tile-done.has-problem {{ border-color:#FCD34D; }}
+.tile-working {{ border-color:#FCD34D; }}
+.tile-todo {{ border-color:#D1D5DB; }}
 
-/* How it works */
-.how-it-works {{ background:#fff; border:1px solid #E0CDBF; border-radius:12px; padding:20px 24px; margin-bottom:24px; }}
-.how-it-works h2 {{ font-size:16px; margin-bottom:12px; }}
-.pipeline {{ display:flex; align-items:center; gap:0; flex-wrap:wrap; justify-content:center; }}
-.pipe-step {{ background:#F9FAFB; border:1px solid #E0CDBF; border-radius:8px; padding:10px 14px; text-align:center; min-width:120px; }}
-.pipe-step .step-emoji {{ font-size:24px; }}
-.pipe-step .step-label {{ font-size:12px; font-weight:600; margin-top:4px; }}
-.pipe-step .step-desc {{ font-size:11px; color:#807973; }}
-.pipe-arrow {{ font-size:20px; color:#B0A89F; padding:0 4px; }}
+/* === Footer === */
+.foot {{ text-align:center; color:#B0A89F; font-size:11px; padding:16px 0; }}
+
+/* Responsive */
+@media (max-width: 640px) {{
+  .three-cards {{ flex-direction:column; }}
+  .tile {{ width:100%; }}
+}}
 </style>
 </head>
 <body>
 
 <h1>Audio Report</h1>
-<div class="subtitle">The simple version &middot; {datetime.now().strftime('%d %b %Y')} &middot; {total} sessions{' &middot; website checks skipped' if skip_cdn else ''}</div>
+<div class="sub">{datetime.now().strftime('%d %b %Y')} &middot; {total} sessions total{' &middot; website checks skipped' if skip_cdn else ''}</div>
 
-<div class="cards">
-  <div class="card card-green">
-    <div class="card-num">{live}</div>
-    <div class="card-label">On the Website</div>
-    <div class="card-desc">People can listen now</div>
+<!-- PROGRESS BAR -->
+<div class="progress-wrap">
+  <div class="progress-title">{pct}% done</div>
+  <div class="progress-subtitle">{done_count} finished, {working_count} being worked on, {todo_count} still to do</div>
+  <div class="bar-outer">
+    <div class="bar-done" style="width:{done_count/total*100 if total else 0:.1f}%">{done_count}</div>
+    <div class="bar-working" style="width:{working_count/total*100 if total else 0:.1f}%">{working_count}</div>
+    <div class="bar-todo" style="width:{todo_count/total*100 if total else 0:.1f}%">{todo_count}</div>
   </div>
-  <div class="card card-blue">
-    <div class="card-num">{in_progress}</div>
-    <div class="card-label">Work in Progress</div>
-    <div class="card-desc">Being built</div>
-  </div>
-  <div class="card card-grey">
-    <div class="card-num">{not_started}</div>
-    <div class="card-label">Not Started</div>
-    <div class="card-desc">Script only</div>
-  </div>
-  <div class="card card-orange">
-    <div class="card-num">{old}</div>
-    <div class="card-label">Old Version</div>
-    <div class="card-desc">Might need redoing</div>
-  </div>
-  <div class="card card-red">
-    <div class="card-num">{problem_count}</div>
-    <div class="card-label">Need Attention</div>
-    <div class="card-desc">Something to fix</div>
+  <div class="bar-labels">
+    <span><span class="dot" style="background:#16A34A"></span> Done</span>
+    <span><span class="dot" style="background:#F59E0B"></span> Working on it</span>
+    <span><span class="dot" style="background:#D1D5DB"></span> To do</span>
   </div>
 </div>
 
-<div class="how-it-works">
-<h2>How a session gets made</h2>
-<div class="pipeline">
-  <div class="pipe-step"><div class="step-emoji">&#x1F4DD;</div><div class="step-label">Write Script</div><div class="step-desc">Words to say</div></div>
-  <span class="pipe-arrow">&#x27A1;</span>
-  <div class="pipe-step"><div class="step-emoji">&#x1F399;</div><div class="step-label">Record Voices</div><div class="step-desc">Computer reads it</div></div>
-  <span class="pipe-arrow">&#x27A1;</span>
-  <div class="pipe-step"><div class="step-emoji">&#x1F44D;</div><div class="step-label">Pick the Best</div><div class="step-desc">Choose good takes</div></div>
-  <span class="pipe-arrow">&#x27A1;</span>
-  <div class="pipe-step"><div class="step-emoji">&#x1F3B5;</div><div class="step-label">Build Audio</div><div class="step-desc">Stitch + add music</div></div>
-  <span class="pipe-arrow">&#x27A1;</span>
-  <div class="pipe-step"><div class="step-emoji">&#x1F310;</div><div class="step-label">Upload</div><div class="step-desc">Put on website</div></div>
-  <span class="pipe-arrow">&#x27A1;</span>
-  <div class="pipe-step"><div class="step-emoji">&#x2705;</div><div class="step-label">Live!</div><div class="step-desc">People listen</div></div>
-</div>
-</div>
-
-<div class="legend">
-  <div class="legend-item"><div class="legend-dot" style="background:#1B7A3D"></div> On the Website</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#2563EB"></div> Built, Not Uploaded</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#D97706"></div> Voices Chosen</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#7C3AED"></div> Recordings Made</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#EA580C"></div> Old Version</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#9CA3AF"></div> Not Started</div>
+<!-- THREE BIG CARDS -->
+<div class="three-cards">
+  <div class="big-card bc-done">
+    <div class="big-card-emoji">&#x2705;</div>
+    <div class="big-card-num">{done_count}</div>
+    <div class="big-card-label">Done</div>
+    <div class="big-card-detail">{done_clean} perfect, {done_issues} have small issues</div>
+  </div>
+  <div class="big-card bc-working">
+    <div class="big-card-emoji">&#x1F528;</div>
+    <div class="big-card-num">{working_count}</div>
+    <div class="big-card-label">Working on it</div>
+    <div class="big-card-detail">{', '.join(f'{v} {k.lower()}' for k, v in working_stages.items()) if working_stages else 'None right now'}</div>
+  </div>
+  <div class="big-card bc-todo">
+    <div class="big-card-emoji">&#x1F4DD;</div>
+    <div class="big-card-num">{todo_count}</div>
+    <div class="big-card-label">To do</div>
+    <div class="big-card-detail">Script written, nothing else yet</div>
+  </div>
 </div>
 
-<div class="controls">
-  <select id="stageFilter" onchange="filterTable()">
-    <option value="">Show All</option>
-    <option value="live">On the Website</option>
-    <option value="vault-built">Built, Not Uploaded</option>
-    <option value="picked">Voices Chosen</option>
-    <option value="generated">Recordings Made</option>
-    <option value="legacy">Old Version</option>
-    <option value="outstanding">Not Started</option>
-  </select>
-  <select id="problemFilter" onchange="filterTable()">
-    <option value="">All Sessions</option>
-    <option value="problems">Only with Problems</option>
-    <option value="ok">Only OK ones</option>
-  </select>
-  <input type="text" id="searchBox" placeholder="Search by name..." oninput="filterTable()">
+<!-- HOW IT WORKS -->
+<div class="pipeline-box">
+<h2>How each session gets made</h2>
+<div class="pipe">
+  <div class="pipe-step"><div class="pe">&#x1F4DD;</div><div class="pl">Write it</div></div>
+  <span class="pipe-arrow">&#x27A1;&#xFE0F;</span>
+  <div class="pipe-step"><div class="pe">&#x1F399;&#xFE0F;</div><div class="pl">Record it</div></div>
+  <span class="pipe-arrow">&#x27A1;&#xFE0F;</span>
+  <div class="pipe-step"><div class="pe">&#x1F44D;</div><div class="pl">Pick best</div></div>
+  <span class="pipe-arrow">&#x27A1;&#xFE0F;</span>
+  <div class="pipe-step"><div class="pe">&#x1F3B5;</div><div class="pl">Build it</div></div>
+  <span class="pipe-arrow">&#x27A1;&#xFE0F;</span>
+  <div class="pipe-step"><div class="pe">&#x1F680;</div><div class="pl">Upload</div></div>
+  <span class="pipe-arrow">&#x27A1;&#xFE0F;</span>
+  <div class="pipe-step"><div class="pe">&#x2705;</div><div class="pl">Live!</div></div>
 </div>
-
-<table id="mainTable">
-<thead>
-<tr>
-  <th class="col-num" data-col="0" onclick="sortTable(0,'num')">#</th>
-  <th class="col-name" data-col="1" onclick="sortTable(1,'str')">Name</th>
-  <th class="col-type" data-col="2" onclick="sortTable(2,'str')">Type</th>
-  <th class="col-status" data-col="3" onclick="sortTable(3,'str')">Where Is It?</th>
-  <th class="col-whats-wrong" data-col="4" onclick="sortTable(4,'str')">What's Going On?</th>
-</tr>
-</thead>
-<tbody>
+</div>
 """
 
-    for s in sessions_data:
-        sid = s["id"]
-        num = s["num"]
-        sm = s.get("script_meta") or {}
-        stage = s.get("stage", "outstanding")
-        issues = s.get("issues", [])
+    # Render each bucket as a section of tiles
+    for bucket_key in BUCKET_ORDER:
+        items = buckets[bucket_key]
+        if not items:
+            continue
 
-        name = sm.get("title", sid)
-        cat = sm.get("category", "").capitalize() or "—"
+        info = BUCKET_INFO[bucket_key]
+        html += f"""
+<div class="section">
+  <div class="section-head">
+    <h2>{info['emoji']} {info['label']}</h2>
+    <span class="section-count">{len(items)}</span>
+  </div>
+  <div class="tiles">
+"""
+        for s in items:
+            sm = s.get("script_meta") or {}
+            name = sm.get("title", s["id"])
+            num = s["num"]
+            stage = s.get("stage", "outstanding")
+            stage_label, _ = STAGE_FRIENDLY.get(stage, (stage, ""))
+            has_problem = s["_has_problem"]
+            important = s["_important"]
+            simple = s["_simple_issues"]
 
-        stage_label, _ = STAGE_FRIENDLY.get(stage, (stage, ""))
+            is_approved = any(sv == "approved" for sv, _ in simple)
 
-        # Simplify issues
-        simple_issues = []
-        seen = set()
-        for sev, msg in issues:
-            new_sev, new_msg = simplify_issue(sev, msg)
-            if new_msg not in seen:
-                seen.add(new_msg)
-                simple_issues.append((new_sev, new_msg))
+            # Pick tile emoji based on stage
+            if stage == "live" and not has_problem:
+                emoji = "&#x2705;"
+            elif stage == "live" and has_problem:
+                emoji = "&#x26A0;&#xFE0F;"
+            elif stage == "vault-built":
+                emoji = "&#x1F4E6;"
+            elif stage == "picked":
+                emoji = "&#x1F44D;"
+            elif stage == "generated":
+                emoji = "&#x1F399;&#xFE0F;"
+            elif stage == "legacy":
+                emoji = "&#x1F504;"
+            else:
+                emoji = "&#x1F4DD;"
 
-        # Only show warn/error issues — skip info unless there's nothing else
-        important = [(sv, m) for sv, m in simple_issues if sv in ("error", "warn")]
-        info_only = [(sv, m) for sv, m in simple_issues if sv == "info"]
+            problem_class = " has-problem" if has_problem else ""
+            tile_class = f"tile tile-{bucket_key}{problem_class}"
 
-        has_problems = len(important) > 0
-        problem_attr = "problems" if has_problems else "ok"
+            # Build issue HTML — max 2 issues shown
+            if important:
+                issue_html = ""
+                for sv, m in important[:2]:
+                    issue_html += f'<div class="tile-issue"><span class="idot idot-{sv}"></span> {m}</div>'
+                if len(important) > 2:
+                    issue_html += f'<div class="tile-issue" style="color:#B0A89F;">+{len(important)-2} more</div>'
+            elif bucket_key == "done" and is_approved:
+                issue_html = '<div class="tile-ok">Approved &#x2714;&#xFE0F;</div>'
+            elif bucket_key == "done":
+                issue_html = '<div class="tile-ok">All good!</div>'
+            else:
+                # For working/todo, show the stage as a hint
+                issue_html = f'<div class="tile-stage">{stage_label}</div>'
 
-        if important:
-            issues_html = "<br>".join(
-                f'<span class="issue issue-{sv}">{m}</span>' for sv, m in important
-            )
-            # Add info items collapsed if there are important ones too
-            if info_only:
-                issues_html += "<br>" + "<br>".join(
-                    f'<span class="issue issue-info">{m}</span>' for _, m in info_only
-                )
-        elif info_only:
-            issues_html = "<br>".join(
-                f'<span class="issue issue-info">{m}</span>' for _, m in info_only
-            )
-        else:
-            issues_html = '<span class="all-good">All good!</span>'
-
-        html += f"""<tr data-stage="{stage}" data-problems="{problem_attr}" data-search="{num} {name.lower()} {cat.lower()}">
-  <td class="col-num">{num}</td>
-  <td class="col-name">{name}</td>
-  <td class="col-type">{cat}</td>
-  <td><span class="badge badge-{stage}">{stage_label}</span></td>
-  <td>{issues_html}</td>
-</tr>
+            html += f"""    <div class="{tile_class}">
+      <div class="tile-emoji">{emoji}</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">{num}.</span> {name}</div>
+        {issue_html}
+      </div>
+    </div>
 """
 
-    html += """</tbody>
-</table>
+        html += """  </div>
+</div>
+"""
 
-<script>
-let sortCol = 0, sortAsc = true;
+    html += f"""
+<div class="foot">Generated {datetime.now().strftime('%d %b %Y at %H:%M')} in {run_time:.1f}s</div>
 
-function sortTable(col, type) {
-  const table = document.getElementById('mainTable');
-  const tbody = table.tBodies[0];
-  const rows = Array.from(tbody.rows);
-  if (col === sortCol) sortAsc = !sortAsc;
-  else { sortCol = col; sortAsc = true; }
-
-  rows.sort((a, b) => {
-    let va = a.cells[col].textContent.trim();
-    let vb = b.cells[col].textContent.trim();
-    if (type === 'num') { va = parseInt(va) || 0; vb = parseInt(vb) || 0; }
-    else { va = va.toLowerCase(); vb = vb.toLowerCase(); }
-    if (va < vb) return sortAsc ? -1 : 1;
-    if (va > vb) return sortAsc ? 1 : -1;
-    return 0;
-  });
-  rows.forEach(r => tbody.appendChild(r));
-}
-
-function filterTable() {
-  const stage = document.getElementById('stageFilter').value;
-  const prob = document.getElementById('problemFilter').value;
-  const search = document.getElementById('searchBox').value.toLowerCase();
-  const rows = document.querySelectorAll('#mainTable tbody tr');
-
-  rows.forEach(row => {
-    let show = true;
-    if (stage && row.dataset.stage !== stage) show = false;
-    if (prob && row.dataset.problems !== prob) show = false;
-    if (search && !row.dataset.search.includes(search)) show = false;
-    row.style.display = show ? '' : 'none';
-  });
-}
-</script>
 </body>
 </html>"""
 
@@ -477,7 +472,12 @@ def main():
         cdn_results = {}
         print("  Website checks skipped")
 
-    # 7. Assemble per-session data
+    # 7. Load approvals
+    approvals = load_approvals()
+    if approvals:
+        print(f"  {len(approvals)} session(s) approved")
+
+    # 8. Assemble per-session data
     print("Putting it all together...")
     sessions_data = []
     for sid, sinfo in sorted(sessions.items(), key=lambda x: x[1]["num"]):
@@ -500,7 +500,7 @@ def main():
 
         stage = detect_stage(sid, vm, local_files, html_refs, cdn_results)
         issues = detect_issues(sinfo, sm, vm, local_files, session_refs,
-                               cdn_results, vault_finals)
+                               cdn_results, vault_finals, approvals=approvals)
 
         sessions_data.append({
             "id": sid,
