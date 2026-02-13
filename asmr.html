@@ -216,6 +216,47 @@
     background: rgba(124, 108, 240, 0.08);
   }
 
+  /* Preset Button */
+  .presets {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 36px;
+  }
+  .preset-btn {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: var(--accent-amber);
+    background: rgba(251, 191, 36, 0.06);
+    border: 1px solid rgba(251, 191, 36, 0.2);
+    padding: 8px 20px;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .preset-btn:hover {
+    background: rgba(251, 191, 36, 0.12);
+    border-color: rgba(251, 191, 36, 0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(251, 191, 36, 0.1);
+  }
+  .preset-btn.preset-active {
+    color: var(--deep);
+    background: linear-gradient(135deg, var(--accent-amber), #f59e0b);
+    border-color: var(--accent-amber);
+    box-shadow: 0 4px 20px rgba(251, 191, 36, 0.25);
+  }
+  .preset-btn svg {
+    width: 13px;
+    height: 13px;
+    fill: currentColor;
+  }
+
   /* Sound Grid */
   .sound-grid {
     display: grid;
@@ -602,6 +643,13 @@
     <button class="filter-btn" data-filter="ambient">Ambient</button>
   </div>
 
+  <div class="presets">
+    <button class="preset-btn" id="presetFounder">
+      <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Founder's Favourite
+    </button>
+  </div>
+
   <div class="sound-grid" id="soundGrid"></div>
 </section>
 
@@ -963,6 +1011,58 @@
             card.style.opacity = '0';
           }
         });
+      });
+    });
+
+    // Preset: Founder's Favourite
+    const presetBtn = document.getElementById('presetFounder');
+    const founderMix = { birds: 53, 'childhood-memories': 89, thunder: 14, stream: 13 };
+
+    presetBtn.addEventListener('click', () => {
+      const isActive = presetBtn.classList.toggle('preset-active');
+
+      if (!isActive) {
+        // Deactivate: stop only the preset sounds
+        Object.keys(founderMix).forEach(id => {
+          const card = document.querySelector(`.sound-card[data-sound="${id}"]`);
+          if (card && card.classList.contains('playing')) {
+            card.querySelector('.sound-card__top').click();
+          }
+        });
+        return;
+      }
+
+      // Switch to "All" filter so preset cards are visible
+      const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
+      if (allBtn && !allBtn.classList.contains('active')) allBtn.click();
+
+      // Stop every currently playing sound first
+      document.querySelectorAll('.sound-card.playing').forEach(card => {
+        card.querySelector('.sound-card__top').click();
+      });
+
+      // Start the 4 preset sounds at specified volumes
+      Object.entries(founderMix).forEach(([id, vol]) => {
+        const card = document.querySelector(`.sound-card[data-sound="${id}"]`);
+        if (!card) return;
+        // Set slider value before starting so audio initialises at correct volume
+        const slider = card.querySelector('.sound-card__slider');
+        const valLabel = card.querySelector('.sound-card__vol-value');
+        slider.value = vol;
+        valLabel.textContent = vol + '%';
+        // Start playback
+        card.querySelector('.sound-card__top').click();
+        // Ensure audio element gets the right volume
+        if (audioElements[id]) audioElements[id].setVolume(vol / 100);
+      });
+    });
+
+    // Clear preset-active state if user manually toggles any sound
+    document.querySelectorAll('.sound-card__top').forEach(top => {
+      top.addEventListener('click', () => {
+        if (presetBtn.classList.contains('preset-active')) {
+          presetBtn.classList.remove('preset-active');
+        }
       });
     });
   })();
