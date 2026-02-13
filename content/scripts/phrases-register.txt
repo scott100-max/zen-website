@@ -238,3 +238,26 @@
 77 | "One last time. Notice three things." | Day 1 callback
 77 | "They are skills you have practised, and they live in your nervous system now." | Skills-in-body claim
 77 | "The course is done, but the practice is not. The practice is the rest of your life." | Course completion statement
+
+# === CBT CORE BELIEFS SERIES (Sessions 88-90) ===
+
+# Session 88 — The Tabletop
+88 | "A belief only feels certain because it has legs to stand on." | Core metaphor introduction
+88 | "What is holding this up?" | Portable tool (repeating question)
+88 | "It is furniture. And furniture can be examined, repaired, or removed." | Belief-as-furniture
+88 | "A crack means light gets in." | Crack metaphor
+88 | "The papers were blank" → 52 callback. Here: "The legs were installed when you were a child." | Childhood installation
+
+# Session 89 — The Downward Arrow
+89 | "And what would that mean?" | Core technique question (repeated)
+89 | "Most surface worries, when you trace them far enough, lead to the same two or three beliefs." | Convergence insight
+89 | "That is not logic. It is survival." | Childhood belief reframe
+89 | "Something that has been seen cannot go back to being invisible." | Seeing-as-irreversible
+89 | "Follow the chain. See where it leads." | Portable instruction
+
+# Session 90 — Rewriting the Rule
+90 | "The belief manufactures its own evidence." | Self-fulfilling insight
+90 | "Accuracy is more powerful than inspiration because you can actually believe it." | Anti-affirmation stance
+90 | "They erode, the way water wears stone." | Erosion metaphor
+90 | "It was never permanent. It was just unexamined." | Closing line
+90 | "Every time you act from the new belief, even in a small way, you add a leg to a new table." | Tabletop callback
