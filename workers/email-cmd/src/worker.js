@@ -70,6 +70,8 @@ function stripQuotedReply(text) {
     if (/^From:/.test(line.trim())) break;
     // Stop at horizontal rule separators
     if (/^[-_]{3,}$/.test(line.trim())) break;
+    // Stop at mobile signatures
+    if (/^Sent from (Outlook|my iPhone|Mail)/i.test(line.trim())) break;
     cleaned.push(line);
   }
   return cleaned.join('\n').trim();
@@ -86,19 +88,37 @@ async function handleInbound(request, env) {
 
   const payload = await request.json();
 
-  // Resend sends { type: "email.received", data: { from, subject, text, ... } }
+  // Resend webhook sends metadata only — need to fetch full email via API
   const data = payload.data || payload;
+  const emailId = data.email_id || data.id || '';
   const from = data.from || '';
   const subject = data.subject || '(no subject)';
-  const text = data.text || data.html || '';
 
   // Validate sender
   if (!from.toLowerCase().includes(env.ALLOWED_SENDER.toLowerCase())) {
-    // Silently discard — don't reveal we exist
     return jsonResponse({ ok: true }, 200);
   }
 
-  // Strip quoted reply text
+  // Fetch full email content from Resend API
+  let text = '';
+  if (emailId && env.RESEND_API_KEY) {
+    try {
+      const res = await fetch(`https://api.resend.com/emails/receiving/${emailId}`, {
+        headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY}` },
+      });
+      if (res.ok) {
+        const full = await res.json();
+        text = full.text || '';
+      }
+    } catch (e) {
+      console.log('Failed to fetch email content:', e.message);
+    }
+  }
+
+  // Fallback: use text/html from webhook payload if available
+  if (!text) text = data.text || data.html || '';
+
+  // Strip quoted reply text and email signatures
   const instruction = stripQuotedReply(text);
   if (!instruction) {
     return jsonResponse({ ok: true, note: 'empty instruction' }, 200);
