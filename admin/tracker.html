@@ -205,7 +205,7 @@
       <button class="filter-btn" data-range="7">Last 7 Days</button>
       <button class="filter-btn" data-range="1">Today</button>
       <span style="width:1px;height:20px;background:#2a2d3a;margin:0 4px;"></span>
-      <button class="filter-btn" id="exclude-me-btn">Exclude My Region</button>
+      <button class="filter-btn active" id="exclude-me-btn">Exclude My Region</button>
     </div>
 
     <div id="map"></div>
@@ -332,7 +332,7 @@
     var map, markerGroup;
     var currentRange = 'all';
     var refreshTimer = null;
-    var excludeMyRegion = false;
+    var excludeMyRegion = true;
 
     // Owner region — West Yorkshire bounding box + country fallback
     var MY_REGION = { latMin: 53.6, latMax: 53.85, lngMin: -1.7, lngMax: -1.2 };
