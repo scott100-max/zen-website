@@ -827,6 +827,14 @@
     const audioElements = {};
     const grid = document.getElementById('soundGrid');
 
+    // Shared AudioContext for GainNode volume control (iOS ignores audio.volume)
+    let audioCtx = null;
+    function getAudioCtx() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
     // Media Session API — shows lock-screen controls on mobile
     function updateMediaSession() {
       if (!('mediaSession' in navigator)) return;
@@ -896,15 +904,21 @@
         </div>
       `;
 
-      // Plain HTML5 Audio — allows background playback on mobile (no AudioContext)
+      // Audio source with GainNode volume control (iOS ignores audio.volume)
       function createSource(src) {
         const audio = new Audio(src);
         audio.preload = 'auto';
         audio.loop = true;
+        audio.crossOrigin = 'anonymous';
         audio.addEventListener('error', () => {
           card.classList.remove('playing');
         });
-        return { audio };
+        const ctx = getAudioCtx();
+        const srcNode = ctx.createMediaElementSource(audio);
+        const gain = ctx.createGain();
+        srcNode.connect(gain);
+        gain.connect(ctx.destination);
+        return { audio, gain };
       }
 
       // Seamless crossfade loop — two Audio elements per sound
@@ -915,15 +929,15 @@
           const a = createSource(s.src);
           const b = createSource(s.src);
           const vol = card.querySelector('.sound-card__slider').value / 100;
-          a.audio.volume = vol;
-          b.audio.volume = 0;
+          a.gain.gain.value = vol;
+          b.gain.gain.value = 0;
           let active = a, standby = b, fading = false;
           const XFADE = 5; // crossfade seconds before end
           function checkCrossfade() {
             if (!fading && active.audio.duration && active.audio.currentTime > active.audio.duration - XFADE) {
               fading = true;
               standby.audio.currentTime = 0;
-              standby.audio.volume = 0;
+              standby.gain.gain.value = 0;
               standby.audio.play();
               const steps = 50;
               const interval = (XFADE * 1000) / steps;
@@ -932,8 +946,8 @@
               const fade = setInterval(() => {
                 step++;
                 const t = step / steps;
-                active.audio.volume = targetVol * (1 - t);
-                standby.audio.volume = targetVol * t;
+                active.gain.gain.value = targetVol * (1 - t);
+                standby.gain.gain.value = targetVol * t;
                 if (step >= steps) {
                   clearInterval(fade);
                   active.audio.pause();
@@ -944,16 +958,16 @@
                   fading = false;
                   audioElements[s.id].active = active;
                   audioElements[s.id].standby = standby;
-                  active.audio.volume = parseFloat(card.querySelector('.sound-card__slider').value) / 100;
+                  active.gain.gain.value = parseFloat(card.querySelector('.sound-card__slider').value) / 100;
                 }
               }, interval);
             }
           }
           const timer = setInterval(checkCrossfade, 500);
           audioElements[s.id] = { active: a, standby: b, timer: timer,
-            play() { return this.active.audio.play(); },
+            play() { getAudioCtx(); return this.active.audio.play(); },
             pause() { this.active.audio.pause(); this.standby.audio.pause(); },
-            setVolume(v) { this.active.audio.volume = v; if (!this.standby.audio.paused) this.standby.audio.volume = v; }
+            setVolume(v) { this.active.gain.gain.value = v; if (!this.standby.audio.paused) this.standby.gain.gain.value = v; }
           };
         }
         if (isPlaying) {
@@ -1076,6 +1090,7 @@
     // Background tab recovery — fix stuck volumes from throttled crossfade timers
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) return;
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
       document.querySelectorAll('.sound-card.playing').forEach(card => {
         const id = card.dataset.sound;
         if (!audioElements[id]) return;
