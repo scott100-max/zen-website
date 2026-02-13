@@ -148,8 +148,8 @@
       if (p.charAt(0) !== '/') p = '/' + p;
       // Strip .html extension
       p = p.replace(/\.html$/, '');
-      // /index → /
-      if (p === '/index') p = '/';
+      // /index → Home
+      if (p === '/index' || p === '/') p = 'Home';
       return p;
     }
 
