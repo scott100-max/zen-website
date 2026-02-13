@@ -204,10 +204,30 @@ def read_vault_metadata():
                  "has_picks": False, "has_auto_picks": False, "has_final": False,
                  "vault_candidates": 0}
 
-        # Count total candidate WAVs across all chunk directories
+        # Count total candidate WAVs and track latest modification
+        latest_mtime = 0
         for child in vdir.iterdir():
             if child.is_dir() and re.match(r"c\d{2}$", child.name):
-                entry["vault_candidates"] += sum(1 for f in child.glob("c*_v*.wav"))
+                for wav in child.glob("c*_v*.wav"):
+                    entry["vault_candidates"] += 1
+                    mt = wav.stat().st_mtime
+                    if mt > latest_mtime:
+                        latest_mtime = mt
+        # Also check final/ and manifest
+        for check in [vdir / "session-manifest.json",
+                      vdir / "picks-auto.json"]:
+            if check.exists():
+                mt = check.stat().st_mtime
+                if mt > latest_mtime:
+                    latest_mtime = mt
+        final_dir = vdir / "final"
+        if final_dir.exists():
+            for f in final_dir.iterdir():
+                mt = f.stat().st_mtime
+                if mt > latest_mtime:
+                    latest_mtime = mt
+        if latest_mtime:
+            entry["last_modified"] = datetime.fromtimestamp(latest_mtime, tz=timezone.utc)
 
         # Session manifest
         manifest_path = vdir / "session-manifest.json"
@@ -668,6 +688,7 @@ h2 {{ color:#1A1817; font-size:16px; font-weight:700; margin:28px 0 12px; }}
   <col style="width:80px">
   <col style="width:50px">
   <col style="width:50px">
+  <col style="width:70px">
   <col style="width:110px">
   <col style="width:90px">
   <col style="width:90px">
@@ -686,16 +707,17 @@ h2 {{ color:#1A1817; font-size:16px; font-weight:700; margin:28px 0 12px; }}
   <th data-col="2" onclick="sortTable(2,'str')">Category <span class="arrow"></span></th>
   <th data-col="3" onclick="sortTable(3,'num')">Chunks <span class="arrow"></span></th>
   <th data-col="4" onclick="sortTable(4,'num')">In Vault <span class="arrow"></span></th>
-  <th data-col="5" onclick="sortTable(5,'str')">Duration <span class="arrow"></span></th>
-  <th data-col="6" onclick="sortTable(6,'str')">Ambient <span class="arrow"></span></th>
-  <th data-col="7" onclick="sortTable(7,'str')">Fades <span class="arrow"></span></th>
-  <th data-col="8" onclick="sortTable(8,'str')">Local Files <span class="arrow"></span></th>
-  <th data-col="9" onclick="sortTable(9,'str')">R2 URL <span class="arrow"></span></th>
-  <th data-col="10" onclick="sortTable(10,'str')">R2 Status <span class="arrow"></span></th>
-  <th data-col="11" onclick="sortTable(11,'str')">Local=R2? <span class="arrow"></span></th>
-  <th data-col="12" onclick="sortTable(12,'str')">QA <span class="arrow"></span></th>
-  <th data-col="13" onclick="sortTable(13,'str')">Stage <span class="arrow"></span></th>
-  <th data-col="14" onclick="sortTable(14,'str')">Issues <span class="arrow"></span></th>
+  <th data-col="5" onclick="sortTable(5,'str')">Last Edit <span class="arrow"></span></th>
+  <th data-col="6" onclick="sortTable(6,'str')">Duration <span class="arrow"></span></th>
+  <th data-col="7" onclick="sortTable(7,'str')">Ambient <span class="arrow"></span></th>
+  <th data-col="8" onclick="sortTable(8,'str')">Fades <span class="arrow"></span></th>
+  <th data-col="9" onclick="sortTable(9,'str')">Local Files <span class="arrow"></span></th>
+  <th data-col="10" onclick="sortTable(10,'str')">R2 URL <span class="arrow"></span></th>
+  <th data-col="11" onclick="sortTable(11,'str')">R2 Status <span class="arrow"></span></th>
+  <th data-col="12" onclick="sortTable(12,'str')">Local=R2? <span class="arrow"></span></th>
+  <th data-col="13" onclick="sortTable(13,'str')">QA <span class="arrow"></span></th>
+  <th data-col="14" onclick="sortTable(14,'str')">Stage <span class="arrow"></span></th>
+  <th data-col="15" onclick="sortTable(15,'str')">Issues <span class="arrow"></span></th>
 </tr>
 </thead>
 <tbody>
@@ -718,9 +740,10 @@ h2 {{ color:#1A1817; font-size:16px; font-weight:700; margin:28px 0 12px; }}
         # Category
         cat = sm.get("category", "")
 
-        # Chunks required (from script) and candidates in vault
+        # Chunks required (from script), candidates in vault, last edit
         chunks_required = sm.get("chunk_count") if sm else None
         vault_candidates = vm.get("vault_candidates", 0) if vm else 0
+        last_edit = fmt_date(vm.get("last_modified")) if vm and vm.get("last_modified") else "—"
 
         # Duration
         dur_target = sm.get("duration") or sm.get("duration_target") or "—"
@@ -830,6 +853,7 @@ h2 {{ color:#1A1817; font-size:16px; font-weight:700; margin:28px 0 12px; }}
   <td>{cat or '—'}</td>
   <td style="text-align:right">{chunks_required or '—'}</td>
   <td style="text-align:right">{vault_candidates or '—'}</td>
+  <td>{last_edit}</td>
   <td>{dur_str}</td>
   <td>{amb}</td>
   <td>{fades}</td>
