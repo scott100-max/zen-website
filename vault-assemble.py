@@ -19,7 +19,10 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import wave
 from pathlib import Path
+
+import numpy as np
 
 # ---------------------------------------------------------------------------
 # Load build-session-v3.py
@@ -35,7 +38,25 @@ _build_spec.loader.exec_module(build)
 # Configuration
 # ---------------------------------------------------------------------------
 VAULT_DIR = Path("content/audio-free/vault")
+AMBIENT_DIR = Path("content/audio/ambient")
 SAMPLE_RATE = 44100
+
+# Per-source ambient gain (Bible v4.6 Section 11)
+DEFAULT_AMBIENT_GAINS = {
+    'grace': -14,
+    'rain-8hr': -19,
+    'rain': -19,
+    'garden-8hr': -19,
+    'garden': -19,
+    'birds-8hr': -14,
+    'birds': -14,
+    'stream': -8,
+    'stream-3hr': -8,
+    'stream-extended': -8,
+}
+
+# Garden ambient has 9.5s dead silence at start (Bible Production Rule 16)
+GARDEN_OFFSET_SEC = 10
 
 # CDN cache purge — load from .env
 _env_path = Path(__file__).parent / ".env"
@@ -214,6 +235,24 @@ def loudnorm(input_path, output_path):
     return output_path
 
 
+def apply_closing_tail_fade(wav_path, output_path, fade_ms=150):
+    """Apply 150ms fade-out to closing chunk WAV (Bible Section 13).
+
+    Fish truncates final generations regardless of text. The tail fade
+    smooths any abrupt ending on the last chunk of a session.
+    """
+    fade_sec = fade_ms / 1000
+    duration = build.get_audio_duration(str(wav_path))
+    fade_out_start = max(0, duration - fade_sec)
+    subprocess.run([
+        'ffmpeg', '-y', '-i', str(wav_path),
+        '-af', f'afade=t=out:st={fade_out_start}:d={fade_sec}:curve=hsin',
+        '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE),
+        str(output_path)
+    ], capture_output=True, check=True)
+    return output_path
+
+
 def encode_mp3(input_wav, output_mp3):
     """Encode WAV to 128kbps MP3 (the ONLY lossy step)."""
     subprocess.run([
@@ -222,6 +261,242 @@ def encode_mp3(input_wav, output_mp3):
         str(output_mp3)
     ], capture_output=True, check=True)
     return output_mp3
+
+
+def _read_wav_as_int16(wav_path):
+    """Read a WAV file and return (samples_int16, sample_rate, n_channels)."""
+    with wave.open(str(wav_path), 'rb') as wf:
+        sr = wf.getframerate()
+        nc = wf.getnchannels()
+        frames = wf.readframes(wf.getnframes())
+    samples = np.frombuffer(frames, dtype=np.int16)
+    return samples, sr, nc
+
+
+def _write_wav_int16(samples, sample_rate, n_channels, output_path):
+    """Write int16 samples to a WAV file."""
+    with wave.open(str(output_path), 'wb') as wf:
+        wf.setnchannels(n_channels)
+        wf.setsampwidth(2)  # 16-bit
+        wf.setframerate(sample_rate)
+        wf.writeframes(samples.astype(np.int16).tobytes())
+
+
+def _load_ambient_as_mono_int16(ambient_path, offset_sec=0):
+    """Load an ambient file (MP3 or WAV) as mono int16 numpy array.
+
+    Uses ffmpeg to decode to raw PCM, skipping offset_sec from start.
+    """
+    cmd = ['ffmpeg', '-y']
+    if offset_sec > 0:
+        cmd += ['-ss', str(offset_sec)]
+    cmd += [
+        '-i', str(ambient_path),
+        '-ac', '1', '-ar', str(SAMPLE_RATE),
+        '-f', 's16le', '-acodec', 'pcm_s16le',
+        'pipe:1'
+    ]
+    result = subprocess.run(cmd, capture_output=True)
+    if result.returncode != 0:
+        raise RuntimeError(f"Failed to decode ambient: {result.stderr[:500]}")
+    return np.frombuffer(result.stdout, dtype=np.int16)
+
+
+def find_ambient_file(ambient_name):
+    """Find an ambient file by name, preferring 8hr versions then extended."""
+    project_root = Path(__file__).parent
+    ambient_dir = project_root / AMBIENT_DIR
+
+    # Search order per Bible: -8hr → -extended → base name. WAV before MP3.
+    candidates = [
+        f"{ambient_name}-8hr.wav", f"{ambient_name}-8hr.mp3",
+        f"{ambient_name}-extended.wav", f"{ambient_name}-extended.mp3",
+        f"{ambient_name}.wav", f"{ambient_name}.mp3",
+    ]
+    for fname in candidates:
+        path = ambient_dir / fname
+        if path.exists():
+            return path
+
+    # Also check youtube-downloads
+    yt_dir = ambient_dir / "youtube-downloads"
+    if yt_dir.is_dir():
+        for fname in candidates:
+            path = yt_dir / fname
+            if path.exists():
+                return path
+
+    return None
+
+
+def mix_ambient(voice_wav, ambient_name, output_wav, gain_db=None,
+                fade_in_sec=30, fade_out_sec=60):
+    """Mix ambient into voice track using numpy direct addition.
+
+    Bible v4.6 pipeline (Section 11, Section 16D):
+      voice WAV → prepend 30s silence → loudnorm voice-only → mix ambient → MP3
+
+    This function handles: prepend silence + mix ambient (post-loudnorm).
+    The input voice_wav should ALREADY be loudnormed.
+
+    Args:
+        voice_wav: Path to loudnormed voice-only WAV
+        ambient_name: Name of ambient source (e.g. 'grace', 'rain', 'garden')
+        output_wav: Path for mixed output WAV
+        gain_db: Ambient gain in dB (negative). If None, uses DEFAULT_AMBIENT_GAINS.
+        fade_in_sec: Ambient fade-in duration (structural pre-roll). Default 30s.
+        fade_out_sec: Ambient fade-out duration. Default 60s.
+    """
+    # Find ambient file
+    ambient_path = find_ambient_file(ambient_name)
+    if ambient_path is None:
+        raise FileNotFoundError(
+            f"No ambient file found for '{ambient_name}' in {AMBIENT_DIR}")
+
+    # Determine gain
+    if gain_db is None:
+        gain_db = DEFAULT_AMBIENT_GAINS.get(ambient_name, -14)
+    gain_linear = 10 ** (gain_db / 20.0)
+
+    # Determine garden offset
+    offset_sec = GARDEN_OFFSET_SEC if 'garden' in ambient_name else 0
+
+    print(f"  Ambient: {ambient_path.name} @ {gain_db}dB"
+          f" (fade-in={fade_in_sec}s, fade-out={fade_out_sec}s)")
+    if offset_sec:
+        print(f"  Garden offset: skipping first {offset_sec}s")
+
+    # Load voice (already loudnormed)
+    voice_samples, sr, nc = _read_wav_as_int16(voice_wav)
+    voice_len = len(voice_samples)
+
+    # Prepend structural pre-roll silence (voice delayed by fade_in_sec)
+    preroll_samples = int(fade_in_sec * sr)
+    silence_preroll = np.zeros(preroll_samples, dtype=np.int16)
+    voice_with_preroll = np.concatenate([silence_preroll, voice_samples])
+    total_len = len(voice_with_preroll)
+
+    voice_dur = voice_len / sr
+    total_dur = total_len / sr
+    print(f"  Voice: {voice_dur:.1f}s → with {fade_in_sec}s pre-roll: {total_dur:.1f}s")
+
+    # Load ambient
+    ambient_raw = _load_ambient_as_mono_int16(ambient_path, offset_sec=offset_sec)
+    if len(ambient_raw) < total_len:
+        raise ValueError(
+            f"Ambient too short ({len(ambient_raw)/sr:.0f}s) for voice "
+            f"({total_dur:.0f}s). Bible: ambient must be longer than voice, NEVER loop.")
+
+    # Trim ambient to match voice length
+    ambient = ambient_raw[:total_len].astype(np.float64)
+
+    # Apply gain
+    ambient *= gain_linear
+
+    # Apply fade-in ramp (linear, over first fade_in_sec)
+    fade_in_samples = int(fade_in_sec * sr)
+    if fade_in_samples > 0 and fade_in_samples <= len(ambient):
+        fade_in_ramp = np.linspace(0.0, 1.0, fade_in_samples)
+        ambient[:fade_in_samples] *= fade_in_ramp
+
+    # Apply fade-out ramp (linear, over last fade_out_sec)
+    fade_out_samples = int(fade_out_sec * sr)
+    if fade_out_samples > 0 and fade_out_samples <= len(ambient):
+        fade_out_ramp = np.linspace(1.0, 0.0, fade_out_samples)
+        ambient[-fade_out_samples:] *= fade_out_ramp
+
+    # Mix using numpy direct addition (Bible: NEVER use ffmpeg amix)
+    voice_float = voice_with_preroll.astype(np.float64)
+    mixed = np.clip(voice_float + ambient, -32768, 32767).astype(np.int16)
+
+    # Write output
+    _write_wav_int16(mixed, sr, 1, output_wav)
+
+    # Verification checklist (Bible Section 11)
+    _verify_mix(mixed, sr, fade_in_sec, voice_dur)
+
+    mixed_dur = len(mixed) / sr
+    print(f"  Mixed output: {mixed_dur:.1f}s ({mixed_dur/60:.1f} min)")
+    return output_wav
+
+
+def _verify_mix(mixed, sr, fade_in_sec, voice_dur):
+    """Run Bible verification checklist on the mixed audio."""
+    def rms_db(samples):
+        rms = np.sqrt(np.mean(samples.astype(np.float64) ** 2))
+        return 20 * np.log10(max(rms, 1e-10) / 32768)
+
+    # Check 1: Pre-roll RMS should rise from ~-76dB to ~-38dB over fade_in_sec
+    window = int(5 * sr)  # 5s windows
+    preroll_end = int(fade_in_sec * sr)
+    if preroll_end > window:
+        rms_start = rms_db(mixed[:window])
+        rms_end = rms_db(mixed[preroll_end - window:preroll_end])
+        print(f"  Verify: Pre-roll RMS 0-5s={rms_start:.1f}dB, "
+              f"{fade_in_sec-5}-{fade_in_sec}s={rms_end:.1f}dB "
+              f"(should rise)")
+        if rms_end <= rms_start:
+            print(f"  WARNING: Pre-roll RMS not rising — check ambient mix")
+
+    # Check 2: Voice entry should show >20dB RMS jump
+    voice_start = preroll_end
+    if voice_start + window < len(mixed):
+        rms_before = rms_db(mixed[voice_start - window:voice_start])
+        rms_after = rms_db(mixed[voice_start:voice_start + window])
+        jump = rms_after - rms_before
+        print(f"  Verify: Voice entry RMS jump={jump:.1f}dB (should be >20dB)")
+
+    # Check 3: Tail should fade
+    tail_5s = int(5 * sr)
+    if len(mixed) > tail_5s:
+        rms_tail = rms_db(mixed[-tail_5s:])
+        print(f"  Verify: Tail 5s RMS={rms_tail:.1f}dB (should be < -60dB)")
+
+
+def conditioning_chain_hf_scan(wav_path, window_sec=10, threshold_db=-36):
+    """Post-assembly sequential HF scan for conditioning chain contamination (L-30).
+
+    Bible Production Rule 19: No vault-assembled session deploys without this scan.
+    Scans 10-second windows for HF energy above threshold. A single hissy chunk
+    can cascade through the entire session via Fish conditioning.
+
+    Returns (passed, flagged_windows) where flagged_windows is a list of
+    (start_sec, end_sec, hf_db) tuples.
+    """
+    samples, sr, nc = _read_wav_as_int16(wav_path)
+    samples_float = samples.astype(np.float64) / 32768.0
+
+    window_samples = int(window_sec * sr)
+    total_samples = len(samples_float)
+    flagged = []
+
+    for start in range(0, total_samples - window_samples, window_samples):
+        chunk = samples_float[start:start + window_samples]
+
+        # Compute FFT and get HF energy (above 4kHz)
+        fft = np.fft.rfft(chunk)
+        freqs = np.fft.rfftfreq(len(chunk), 1.0 / sr)
+        hf_mask = freqs >= 4000
+        hf_energy = np.mean(np.abs(fft[hf_mask]) ** 2)
+        hf_db = 10 * np.log10(max(hf_energy, 1e-20))
+
+        start_sec = start / sr
+        end_sec = (start + window_samples) / sr
+
+        if hf_db > threshold_db:
+            flagged.append((start_sec, end_sec, hf_db))
+
+    passed = len(flagged) == 0
+    if passed:
+        print(f"  HF scan: PASS — no windows above {threshold_db}dB")
+    else:
+        print(f"  HF scan: FAIL — {len(flagged)} window(s) above {threshold_db}dB")
+        for s, e, db in flagged[:5]:
+            print(f"    {s:.0f}-{e:.0f}s: HF={db:.1f}dB")
+        if len(flagged) > 5:
+            print(f"    ... and {len(flagged) - 5} more")
+
+    return passed, flagged
 
 
 def run_vault_qa(session_id, final_wav, raw_wav, final_mp3, assembly_manifest,
@@ -341,8 +616,14 @@ def run_vault_qa(session_id, final_wav, raw_wav, final_mp3, assembly_manifest,
     return not any_failed, gate_results
 
 
-def assemble(session_id, skip_qa=False, no_humanize=False):
-    """Full assembly pipeline for a vault session."""
+def assemble(session_id, skip_qa=False, no_humanize=False,
+             ambient=None, ambient_gain=None, fade_in=30, fade_out=60):
+    """Full assembly pipeline for a vault session.
+
+    Bible v4.6 Section 16D pipeline:
+      voice WAV → prepend silence → loudnorm voice-only →
+      mix ambient (post-loudnorm, numpy) → MP3 (no second loudnorm)
+    """
     session_dir = VAULT_DIR / session_id
 
     if not session_dir.exists():
@@ -403,8 +684,17 @@ def assemble(session_id, skip_qa=False, no_humanize=False):
         segments = []
         current_time = 0.0
 
+        is_last_chunk = {copied[-1][0]} if copied else set()
+
         for i, (ci, pick_wav) in enumerate(copied):
             text, pause = humanized[i]
+
+            # Apply 150ms closing tail fade on final chunk (Bible Section 13)
+            if ci in is_last_chunk:
+                tail_faded = tmp / f"c{ci:02d}_tailfade.wav"
+                apply_closing_tail_fade(pick_wav, tail_faded, fade_ms=150)
+                pick_wav = tail_faded
+                print(f"  c{ci:02d}: 150ms closing tail fade applied")
 
             # Apply edge fades
             faded = tmp / f"c{ci:02d}_faded.wav"
@@ -453,17 +743,40 @@ def assemble(session_id, skip_qa=False, no_humanize=False):
         final_dir = session_dir / "final"
         final_dir.mkdir(exist_ok=True)
 
-        final_wav = final_dir / f"{session_id}-vault.wav"
-        final_mp3 = final_dir / f"{session_id}-vault.mp3"
-
-        shutil.copy2(normed, final_wav)
-        print(f"  Final WAV: {final_wav}")
+        # Save voice-only loudnormed WAV (always useful for re-mixing)
+        voice_wav = final_dir / f"{session_id}-vault-voice.wav"
+        shutil.copy2(normed, voice_wav)
+        print(f"  Voice WAV (loudnormed): {voice_wav}")
 
         # Also save raw concat for QA (click scanner needs pre-loudnorm)
         raw_copy = final_dir / f"{session_id}-vault-raw.wav"
         shutil.copy2(raw_concat, raw_copy)
 
-        # Encode MP3
+        # Post-assembly HF scan for conditioning chain contamination (L-30)
+        print(f"\n  --- Conditioning Chain HF Scan (Production Rule 19) ---")
+        hf_passed, hf_flagged = conditioning_chain_hf_scan(voice_wav)
+        if not hf_passed:
+            print(f"  WARNING: HF scan flagged {len(hf_flagged)} windows — "
+                  f"review for conditioning chain contamination before deploy")
+
+        # Ambient mixing (Bible v4.6: voice-first loudnorm, then ambient)
+        if ambient:
+            print(f"\n  --- Ambient Mixing (voice-first loudnorm pipeline) ---")
+            mixed_wav = final_dir / f"{session_id}-vault.wav"
+            mix_ambient(voice_wav, ambient, mixed_wav,
+                        gain_db=ambient_gain, fade_in_sec=fade_in,
+                        fade_out_sec=fade_out)
+            final_wav = mixed_wav
+        else:
+            # No ambient — just copy voice-only as final
+            final_wav = final_dir / f"{session_id}-vault.wav"
+            if final_wav != voice_wav:
+                shutil.copy2(voice_wav, final_wav)
+            print(f"  No ambient specified — voice-only output")
+
+        final_mp3 = final_dir / f"{session_id}-vault.mp3"
+
+        # Encode MP3 (the ONLY lossy step — no second loudnorm)
         encode_mp3(final_wav, final_mp3)
         mp3_size = final_mp3.stat().st_size / (1024 * 1024)
         print(f"  Final MP3: {final_mp3} ({mp3_size:.1f} MB)")
@@ -556,9 +869,20 @@ def main():
                         help='Skip 14-gate QA (for testing)')
     parser.add_argument('--no-humanize', action='store_true',
                         help='Skip pause humanization (for stories — raw pause durations)')
+    parser.add_argument('--ambient', type=str, default=None,
+                        help='Ambient source name (e.g. grace, rain, garden, birds, stream)')
+    parser.add_argument('--ambient-gain', type=float, default=None,
+                        help='Ambient gain in dB (e.g. -14, -19). Default: per-source Bible values.')
+    parser.add_argument('--fade-in', type=float, default=30,
+                        help='Ambient fade-in / structural pre-roll in seconds (default: 30)')
+    parser.add_argument('--fade-out', type=float, default=60,
+                        help='Ambient fade-out in seconds (default: 60)')
     args = parser.parse_args()
 
-    success = assemble(args.session_id, skip_qa=args.skip_qa, no_humanize=args.no_humanize)
+    success = assemble(args.session_id, skip_qa=args.skip_qa,
+                       no_humanize=args.no_humanize, ambient=args.ambient,
+                       ambient_gain=args.ambient_gain,
+                       fade_in=args.fade_in, fade_out=args.fade_out)
 
     # Auto-regenerate the audit report
     try:

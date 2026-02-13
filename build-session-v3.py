@@ -64,7 +64,7 @@ MASTER_HF_HISS_DB = -40.0      # Max RMS >6kHz in silence (master: -45.0, Fish f
 MASTER_REF_WAV = Path("content/audio/marco-master/marco-master-v1.wav")
 
 # Marco master voice comparison thresholds (calibrated 2026-02-07)
-# Derived from 5 Fish + 3 Resemble calibration set with human GOOD/BAD labels
+# Derived from 8-sample calibration set with human GOOD/BAD labels
 # See content/audio/marco-master/marco-master-v1-calibration.json
 #
 # IMPORTANT: MFCC cosine distance is CONTENT-DEPENDENT. The calibration threshold
@@ -74,7 +74,7 @@ MASTER_REF_WAV = Path("content/audio/marco-master/marco-master-v1.wav")
 # for content variance while still catching a fundamentally wrong voice.
 # F0 deviation is content-independent and uses the tight calibration threshold.
 MASTER_MFCC_COSINE_MAX = 0.06      # Production threshold (same-voice diff-text: ~0.035, wrong-voice: >0.10)
-MASTER_F0_DEVIATION_MAX = 10.0     # Max F0 deviation percent (GOOD Fish: ≤5.6%, BAD Resemble: ≥14.8%)
+MASTER_F0_DEVIATION_MAX = 10.0     # Max F0 deviation percent (GOOD Fish: ≤5.6%)
 MASTER_MEASUREMENTS = Path("content/audio/marco-master/marco-master-v1-measurements.json")
 
 # Fish TTS API
@@ -120,15 +120,6 @@ LALAL_API_BASE = "https://www.lalal.ai/api/v1"
 LALAL_NOISE_LEVEL = 1  # 0=mild, 1=normal, 2=aggressive
 LALAL_DEREVERB = True   # Enable de-echo/de-reverb
 
-# Resemble AI TTS API
-RESEMBLE_API_KEY = os.getenv("RESEMBLE_API_KEY")
-RESEMBLE_SYNTH_URL = "https://f.cluster.resemble.ai/synthesize"
-RESEMBLE_API_URL = "https://app.resemble.ai/api/v2"
-RESEMBLE_VOICE_ID = "da18eeca"  # Marco T2 — master narration voice
-RESEMBLE_CHUNK_MAX = 2500  # Stay under 3000 char API limit
-RESEMBLE_DELAY_MS = 500  # Rate limiting between API calls
-RESEMBLE_VOICE_SETTINGS_PRESET = "6199a148-cd33-4ad7-b452-f067fdff3894"  # pace=0.85, exaggeration=0.75
-
 # Audio settings
 SAMPLE_RATE = 44100
 MAX_DURATION_SECONDS = 45 * 60  # 45 minutes max (sleep stories)
@@ -141,6 +132,7 @@ CROSSFADE_MS = 150  # crossfade duration between chunks
 # Pause durations by category (seconds)
 PAUSE_PROFILES = {
     'sleep': {1: 8, 2: 30, 3: 60},
+    'sleep-story': {1: 12, 2: 35, 3: 60},
     'story': {1: 1.5, 2: 3, 3: 5},
     'focus': {1: 4, 2: 12, 3: 20},
     'stress': {1: 6, 2: 20, 3: 40},
@@ -930,117 +922,8 @@ def get_audio_duration(audio_path):
     return float(result.stdout.strip())
 
 
-# ============================================================================
-# RESEMBLE AI TTS API
-# ============================================================================
-
-def merge_blocks_for_resemble(blocks, category='default'):
-    """Merge adjacent blocks into chunks under RESEMBLE_CHUNK_MAX chars.
-
-    SSML <break> tags are inserted between merged paragraphs using the ORIGINAL
-    pause durations from the script (capped at 5s for SSML compatibility).
-    Blocks separated by long pauses (>= 10s) are NOT merged — those gaps stay
-    as separate silence files for precise control.
-    """
-    merge_threshold = 10
-    merged = []
-    current_items = []  # List of (text, pause) tuples
-    current_chars = 0
-
-    for text, pause in blocks:
-        if current_items and (pause >= merge_threshold or current_chars + len(text) + 50 > RESEMBLE_CHUNK_MAX):
-            # Flush current chunk
-            merged_text = _join_with_ssml_breaks(current_items)
-            merged.append((merged_text, current_items[-1][1]))
-            current_items = [(text, pause)]
-            current_chars = len(text)
-        else:
-            current_items.append((text, pause))
-            current_chars += len(text) + 50  # Account for SSML break tags
-
-    if current_items:
-        merged_text = _join_with_ssml_breaks(current_items)
-        merged.append((merged_text, current_items[-1][1]))
-
-    return merged
-
-
-def _join_with_ssml_breaks(items):
-    """Join text blocks with SSML break tags using original pause durations.
-
-    Uses the actual pause value from the script (capped at 5s for SSML).
-    This preserves meditation pacing instead of randomizing to 1-3s.
-    """
-    if len(items) == 1:
-        return items[0][0]
-    parts = []
-    for i, (text, pause) in enumerate(items):
-        parts.append(text)
-        if i < len(items) - 1:
-            break_ms = min(int(pause * 1000), 5000)
-            break_ms = max(break_ms, 500)
-            parts.append(f'<break time="{break_ms}ms" />')
-    return ' '.join(parts)
-
-
-def generate_tts_chunk_resemble(text, output_path, chunk_num=0, voice_id=None):
-    """Generate TTS for a single chunk using Resemble AI.
-
-    LOSSLESS: Saves native WAV from API — NO intermediate MP3 conversion.
-    Returns output_path (WAV) on success.
-    """
-    import requests
-    import base64
-
-    if not RESEMBLE_API_KEY:
-        raise ValueError("RESEMBLE_API_KEY not set in .env")
-
-    voice = voice_id or RESEMBLE_VOICE_ID
-
-    headers = {
-        "Authorization": f"Bearer {RESEMBLE_API_KEY}",
-        "Content-Type": "application/json",
-    }
-
-    payload = {
-        "voice_uuid": voice,
-        "data": text,
-        "output_format": "wav",
-        "sample_rate": SAMPLE_RATE,
-        "voice_settings_preset_uuid": RESEMBLE_VOICE_SETTINGS_PRESET,
-    }
-
-    print(f"    Chunk {chunk_num + 1}: {len(text)} chars...", end=" ", flush=True)
-
-    # Retry logic for transient errors
-    for attempt in range(3):
-        response = requests.post(RESEMBLE_SYNTH_URL, json=payload, headers=headers, timeout=120)
-        data = response.json()
-
-        if data.get("success"):
-            audio_bytes = base64.b64decode(data["audio_content"])
-            # Write native WAV directly — ZERO lossy steps
-            Path(output_path).write_bytes(audio_bytes)
-            duration = data.get("duration", 0)
-            print(f"{duration:.1f}s")
-            time.sleep(RESEMBLE_DELAY_MS / 1000)
-            return output_path
-
-        error = data.get("message", "Unknown error")
-        if response.status_code == 429:
-            wait = (attempt + 1) * 5
-            print(f"rate limited, waiting {wait}s...", end=" ", flush=True)
-            time.sleep(wait)
-        else:
-            raise Exception(f"Resemble API error: {response.status_code} - {error}")
-
-    raise Exception("Resemble API: max retries exceeded")
-
-
 def generate_silence(duration, output_path, channels=1):
-    """Generate silence audio file (WAV for lossless pipeline).
-    Channels must match voice chunks (mono for Fish, stereo for Resemble).
-    """
+    """Generate silence audio file (WAV for lossless pipeline)."""
     cl = 'stereo' if channels == 2 else 'mono'
     cmd = [
         'ffmpeg', '-y',
@@ -1088,31 +971,6 @@ def cleanup_audio(input_path, output_path):
     cleaner output with less hiss and no echo.
     """
     filter_chain = 'loudnorm=I=-26:TP=-2:LRA=11'
-    cmd = [
-        'ffmpeg', '-y', '-i', input_path,
-        '-af', filter_chain,
-        '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE),
-        output_path
-    ]
-    subprocess.run(cmd, capture_output=True, check=True)
-    return output_path
-
-
-def cleanup_audio_resemble(input_path, output_path):
-    """Resemble-specific cleanup — matches moonlit garden master chain.
-
-    Chain: highpass 80 Hz (rumble) + lowpass 10 kHz (super-voice noise) +
-    spectral denoise afftdn=-25 + loudnorm I=-26.
-    loudnorm target -26 LUFS keeps noise floor at -27 dB in silence regions,
-    matching the moonlit garden master. Higher targets (e.g. -24) raise the
-    noise floor above the QA threshold.
-    """
-    filter_chain = ','.join([
-        'highpass=f=80',
-        'lowpass=f=10000',
-        'afftdn=nf=-25',
-        'loudnorm=I=-26:TP=-2:LRA=11',
-    ])
     cmd = [
         'ffmpeg', '-y', '-i', input_path,
         '-af', filter_chain,
@@ -1238,9 +1096,6 @@ def concatenate_with_silences(voice_chunks, silences, output_path, temp_dir, cle
     if cleanup_mode == 'full':
         print("  Cleaning up audio (full Fish chain)...")
         cleanup_audio(concat_output, output_path)
-    elif cleanup_mode == 'resemble':
-        print("  Cleaning up audio (Resemble HD: spectral denoise + loudnorm)...")
-        cleanup_audio_resemble(concat_output, output_path)
     elif cleanup_mode == 'medium':
         print("  Cleaning up audio (de-hiss, no lowpass)...")
         cleanup_audio_medium(concat_output, output_path)
@@ -1577,7 +1432,7 @@ def qa_master_voice_check(raw_narration_path):
     """QA GATE 4: Master voice comparison — MFCC cosine + F0 deviation.
 
     Compares the raw narration against the Marco master reference WAV.
-    Catches provider-level voice failures (e.g. Resemble on short content).
+    Catches provider-level voice failures.
     Does NOT catch subtle within-provider prosody issues — human ear required.
 
     Returns (passed, details_dict).
@@ -3539,8 +3394,6 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
     if provider == 'elevenlabs':
         print(f"  Model: {model}")
         print(f"  Voice: {voice_id or ELEVENLABS_VOICE_ID}")
-    elif provider == 'resemble':
-        print(f"  Voice: {voice_id or RESEMBLE_VOICE_ID}")
     print(f"  Cleanup: {cleanup_mode}")
     print(f"  Deploy: {'OFF' if no_deploy else 'AUTO → R2'}")
 
@@ -3561,9 +3414,6 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
         combined_blocks = merge_short_blocks(blocks)
         if len(combined_blocks) != len(blocks):
             print(f"  After merging short blocks: {len(combined_blocks)} (from {len(blocks)} raw)")
-    elif provider == 'resemble':
-        combined_blocks = merge_blocks_for_resemble(blocks, category=category)
-        print(f"  Resemble chunks: {len(combined_blocks)} (from {len(blocks)} raw)")
     else:
         # Fish: merge blocks under 10 chars only (Fish handles short chunks natively)
         combined_blocks = merge_short_blocks(blocks, min_chars=10)
@@ -3571,7 +3421,7 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
             print(f"  After merging short blocks (<50 chars): {len(combined_blocks)} (from {len(blocks)} raw)")
 
     # Humanize pauses
-    if provider in ('elevenlabs', 'resemble'):
+    if provider == 'elevenlabs':
         combined_blocks = humanize_pauses(combined_blocks)
         humanized_silence = sum(pause for _, pause in combined_blocks)
         print(f"  Humanized silence: {humanized_silence/60:.1f} min")
@@ -3599,10 +3449,7 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
         print(f"\n  Generating TTS chunks ({provider})...")
 
         for i, (text, pause) in enumerate(combined_blocks):
-            if provider == 'resemble':
-                block_path = os.path.join(temp_dir, f"block_{i}.wav")
-                generate_tts_chunk_resemble(text, block_path, i, voice_id=voice_id)
-            elif provider == 'elevenlabs':
+            if provider == 'elevenlabs':
                 block_path = os.path.join(temp_dir, f"block_{i}.mp3")
                 _, req_id = generate_tts_chunk_elevenlabs(
                     text, block_path, i,
@@ -3819,7 +3666,7 @@ def main():
     parser = argparse.ArgumentParser(description="Salus Audio Builder v3 (chunked)")
     parser.add_argument('session', help='Session name to build')
     parser.add_argument('--dry-run', action='store_true', help='Show plan without generating')
-    parser.add_argument('--provider', choices=['fish', 'elevenlabs', 'resemble'], default='fish',
+    parser.add_argument('--provider', choices=['fish', 'elevenlabs'], default='fish',
                         help='TTS provider (default: fish)')
     parser.add_argument('--voice', dest='voice_id', default=None,
                         help='Override voice ID for the chosen provider')
@@ -3827,8 +3674,8 @@ def main():
                         help='ElevenLabs model (default: v2, ignored for Fish)')
     parser.add_argument('--no-cleanup', action='store_true',
                         help='Skip audio cleanup for raw quality testing')
-    parser.add_argument('--cleanup', choices=['full', 'resemble', 'medium', 'light', 'none'], default=None,
-                        help='Override cleanup mode (default: full for fish, resemble for resemble)')
+    parser.add_argument('--cleanup', choices=['full', 'medium', 'light', 'none'], default=None,
+                        help='Override cleanup mode (default: full for fish, light for elevenlabs)')
     parser.add_argument('--no-deploy', action='store_true',
                         help='Build and QA only — do not upload to R2')
     parser.add_argument('--focus-chunks', default=None,
@@ -3850,8 +3697,6 @@ def main():
         cleanup_mode = 'none'
     elif args.provider == 'elevenlabs':
         cleanup_mode = 'light'
-    elif args.provider == 'resemble':
-        cleanup_mode = 'resemble'
     else:
         cleanup_mode = 'full'
 

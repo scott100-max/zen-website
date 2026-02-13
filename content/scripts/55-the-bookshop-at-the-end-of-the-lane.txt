@@ -1,6 +1,6 @@
 The Bookshop at the End of the Lane
 Duration-Target: 28
-Category: story
+Category: sleep-story
 Ambient: rain
 API-Emotion: calm
 ---

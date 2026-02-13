@@ -1,6 +1,6 @@
 The Lighthouse Keeper's Log
 Duration-Target: 28
-Category: story
+Category: sleep-story
 Ambient: rain
 API-Emotion: calm
 ---

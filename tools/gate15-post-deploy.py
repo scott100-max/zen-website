@@ -297,18 +297,30 @@ def check_ambient_fade_in(samples, sr, fade_in_sec=30.0, verbose=False):
         return False, {"reason": f"Voice detected at {first_t:.0f}s (expected silence until ~{fade_in_sec:.0f}s)",
                        "speech_windows": len(early_speech)}
 
-    # Sub-check B: FAIL if first 5s has zero audio (no ambient at all)
-    first_5s = [(t, level) for t, level in window_levels if t < 5.0]
-    all_dead = all(level < AMBIENT_FLOOR_DB for _, level in first_5s)
-    if all_dead:
-        # Edge case: session with no ambient — pass with note
-        # Check if the WHOLE pre-roll is dead (= no ambient track at all)
-        pre_roll = [(t, level) for t, level in window_levels if t < fade_in_sec]
-        all_preroll_dead = all(level < AMBIENT_FLOOR_DB for _, level in pre_roll)
-        if all_preroll_dead:
-            return True, {"note": "No ambient detected — session may use Ambient: none",
-                          "skipped_ambient_checks": True}
-        return False, {"reason": "First 5s has no audio (< -70 dBFS) — ambient may not be mixed in"}
+    # Sub-check B: Verify ambient is PRESENT and RISING across pre-roll.
+    # A 30s linear fade-in starts from silence, so first 5s may legitimately be
+    # below -70 dBFS. Instead of an absolute threshold at t=0-5s, check:
+    #  (a) the whole pre-roll is not dead (= no ambient at all)
+    #  (b) RMS is rising across the pre-roll (proves fade-in is working)
+    pre_roll = [(t, level) for t, level in window_levels if t < fade_in_sec]
+    all_preroll_dead = all(level < AMBIENT_FLOOR_DB for _, level in pre_roll)
+    if all_preroll_dead:
+        return True, {"note": "No ambient detected — session may use Ambient: none",
+                      "skipped_ambient_checks": True}
+
+    # Check rising trend: compare first-quarter mean to last-quarter mean
+    if len(pre_roll) >= 4:
+        q_len = len(pre_roll) // 4
+        first_q = [level for _, level in pre_roll[:q_len]]
+        last_q = [level for _, level in pre_roll[-q_len:]]
+        rise = np.mean(last_q) - np.mean(first_q)
+        if verbose:
+            print(f"    Pre-roll rise (Q1→Q4): {rise:.1f} dB")
+        # Expect at least 6 dB rise across the fade-in (a 30s linear fade
+        # from silence to -19 dBFS produces ~15-20 dB rise)
+        if rise < 6.0:
+            return False, {"reason": f"Pre-roll RMS not rising enough ({rise:.1f} dB, need ≥6 dB) — "
+                                     "ambient fade-in may be broken"}
 
     # Sub-check C: Ambient volume should increase over 0-30s (~15-20 dB rise)
     pre_roll_windows = [(t, level) for t, level in window_levels if t < fade_in_sec]

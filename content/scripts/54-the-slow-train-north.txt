@@ -1,6 +1,6 @@
 The Slow Train North
 Duration-Target: 30
-Category: story
+Category: sleep-story
 Ambient: rain
 API-Emotion: calm
 ---
