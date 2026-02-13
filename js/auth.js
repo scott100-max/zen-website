@@ -425,18 +425,6 @@ var SalusAuth = (function() {
     updateNavUI();
   }
 
-  // Get Stripe checkout URL with user info
-  function getStripeCheckoutUrl(baseUrl) {
-    if (!currentUser) {
-      return baseUrl;
-    }
-
-    var separator = baseUrl.includes('?') ? '&' : '?';
-    return baseUrl +
-      separator + 'client_reference_id=' + encodeURIComponent(currentUser.id) +
-      '&prefilled_email=' + encodeURIComponent(currentUser.email);
-  }
-
   // Initialize on DOM ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
@@ -457,7 +445,6 @@ var SalusAuth = (function() {
     getUser: getUser,
     getSubscription: getSubscription,
     refreshSubscription: refreshSubscription,
-    getStripeCheckoutUrl: getStripeCheckoutUrl,
     shouldShowMigrationBanner: shouldShowMigrationBanner,
     dismissMigrationBanner: dismissMigrationBanner,
     updateNavUI: updateNavUI

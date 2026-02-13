@@ -1,14 +1,5 @@
 // ===== Salus — Main JS =====
 
-// Mobile nav toggle
-const navToggle = document.querySelector('.nav-toggle');
-if (navToggle) {
-  navToggle.addEventListener('click', () => {
-    const nav = navToggle.closest('.nav');
-    if (nav) nav.classList.toggle('nav-open');
-  });
-}
-
 // Scroll fade-in animation
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
@@ -19,14 +10,6 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.1 });
 
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-// Active nav link highlight
-const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-document.querySelectorAll('.nav-links a').forEach(link => {
-  if (link.getAttribute('href') === currentPage) {
-    link.classList.add('active');
-  }
-});
 
 // Contact form handling
 const contactForm = document.getElementById('contact-form');

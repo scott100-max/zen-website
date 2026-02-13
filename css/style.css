@@ -59,11 +59,6 @@ img { max-width: 100%; display: block; }
 }
 .latin-def { font-style: italic; opacity: 0.5; font-size: 0.75rem; margin-left: 12px; }
 @media (max-width: 900px) { .latin-def { display: none; } }
-.nav-icon { height: 64px; width: auto; }
-.nav-links { display: flex; gap: 18px; list-style: none; flex-wrap: nowrap; margin: 0 auto; }
-.nav-links a { color: rgba(240,238,252,0.6); font-size: 0.85rem; font-weight: 500; white-space: nowrap; }
-.nav-links a:hover, .nav-links a.active { color: #f0eefc; }
-.nav-toggle { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; }
 
 /* ---- New 2-Row Nav ---- */
 .nav-wrap{position:fixed;top:0;left:0;right:0;z-index:1000;transition:background .4s ease,box-shadow .4s ease;background:rgba(6,8,16,0.5);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
@@ -487,8 +482,6 @@ body.is-premium .premium-player .unlock-cta{display:none}
     align-items: center !important;
     padding: 16px 0 !important;
   }
-  .nav-toggle { display: block !important; }
-
   /* -- All inline grids stack on mobile -- */
   [style*="grid-template-columns"] {
     grid-template-columns: 1fr !important;
