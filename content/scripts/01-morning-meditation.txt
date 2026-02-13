@@ -1,8 +1,10 @@
 Morning Meditation
 Duration: 25 minutes
 Category: mindfulness
-Ambient: birds
+Ambient: grace
 Ambient-dB: -16
+Ambient-Fade-In: 10
+Ambient-Fade-Out: 30
 Style: Warm, grounded male narrator
 ---
 
