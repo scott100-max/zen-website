@@ -901,6 +901,9 @@
         const audio = new Audio(src);
         audio.preload = 'auto';
         audio.loop = true;
+        audio.addEventListener('error', () => {
+          card.classList.remove('playing');
+        });
         return { audio };
       }
 
@@ -948,13 +951,15 @@
           }
           const timer = setInterval(checkCrossfade, 500);
           audioElements[s.id] = { active: a, standby: b, timer: timer,
-            play() { this.active.audio.play(); },
+            play() { return this.active.audio.play(); },
             pause() { this.active.audio.pause(); this.standby.audio.pause(); },
-            setVolume(v) { this.active.audio.volume = v; }
+            setVolume(v) { this.active.audio.volume = v; if (!this.standby.audio.paused) this.standby.audio.volume = v; }
           };
         }
         if (isPlaying) {
-          audioElements[s.id].play();
+          audioElements[s.id].play().catch(() => {
+            card.classList.remove('playing');
+          });
         } else {
           audioElements[s.id].pause();
         }
@@ -1017,18 +1022,21 @@
     // Preset: Founder's Favourite
     const presetBtn = document.getElementById('presetFounder');
     const founderMix = { birds: 53, 'childhood-memories': 89, thunder: 14, stream: 13 };
+    let activatingPreset = false;
 
     presetBtn.addEventListener('click', () => {
       const isActive = presetBtn.classList.toggle('preset-active');
 
       if (!isActive) {
         // Deactivate: stop only the preset sounds
+        activatingPreset = true;
         Object.keys(founderMix).forEach(id => {
           const card = document.querySelector(`.sound-card[data-sound="${id}"]`);
           if (card && card.classList.contains('playing')) {
             card.querySelector('.sound-card__top').click();
           }
         });
+        activatingPreset = false;
         return;
       }
 
@@ -1037,6 +1045,7 @@
       if (allBtn && !allBtn.classList.contains('active')) allBtn.click();
 
       // Stop every currently playing sound first
+      activatingPreset = true;
       document.querySelectorAll('.sound-card.playing').forEach(card => {
         card.querySelector('.sound-card__top').click();
       });
@@ -1045,23 +1054,37 @@
       Object.entries(founderMix).forEach(([id, vol]) => {
         const card = document.querySelector(`.sound-card[data-sound="${id}"]`);
         if (!card) return;
-        // Set slider value before starting so audio initialises at correct volume
         const slider = card.querySelector('.sound-card__slider');
         const valLabel = card.querySelector('.sound-card__vol-value');
         slider.value = vol;
         valLabel.textContent = vol + '%';
-        // Start playback
         card.querySelector('.sound-card__top').click();
-        // Ensure audio element gets the right volume
         if (audioElements[id]) audioElements[id].setVolume(vol / 100);
       });
+      activatingPreset = false;
     });
 
     // Clear preset-active state if user manually toggles any sound
     document.querySelectorAll('.sound-card__top').forEach(top => {
       top.addEventListener('click', () => {
-        if (presetBtn.classList.contains('preset-active')) {
+        if (!activatingPreset && presetBtn.classList.contains('preset-active')) {
           presetBtn.classList.remove('preset-active');
+        }
+      });
+    });
+
+    // Background tab recovery — fix stuck volumes from throttled crossfade timers
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) return;
+      document.querySelectorAll('.sound-card.playing').forEach(card => {
+        const id = card.dataset.sound;
+        if (!audioElements[id]) return;
+        const vol = parseFloat(card.querySelector('.sound-card__slider').value) / 100;
+        audioElements[id].setVolume(vol);
+        if (audioElements[id].active.audio.paused) {
+          audioElements[id].play().catch(() => {
+            card.classList.remove('playing');
+          });
         }
       });
     });
