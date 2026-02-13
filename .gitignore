@@ -23,6 +23,7 @@ content/video/backgrounds/
 # System files
 .DS_Store
 .env
+.mcp.json
 
 # Research screenshots (not for public repo)
 calm/
