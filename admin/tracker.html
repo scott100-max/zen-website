@@ -281,7 +281,9 @@
     }
 
     function render() {
-      var filtered = applyExclusion(allSessions);
+      var filtered = applyExclusion(allSessions).filter(function(s) {
+        return s.city || s.country;
+      });
 
       // Visitor count
       document.getElementById('visitor-count').textContent = '(' + filtered.length + ' sessions)';
