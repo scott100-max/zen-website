@@ -1,6 +1,8 @@
 Narrator Welcome
 Category: mindfulness
 Ambient: grace
+Ambient-Fade-In: 30
+Ambient-Fade-Out: 60
 API-Emotion: calm
 ---
 Welcome to Salus. I'm Marco, and I'll be your guide.

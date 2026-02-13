@@ -656,17 +656,14 @@
   .hb-footer__back-top svg{width:12px;height:12px;fill:currentColor}
 
   /* Sleep Stories preview grid */
-  .ss-prev{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr);gap:3px;padding:10px 10px 4px;position:relative;z-index:3;flex:1;min-height:0}
-  .ss-prev__card{border-radius:5px;background-size:cover;background-position:center;position:relative;overflow:hidden}
-  .ss-prev__card::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(0,0,0,0.4) 100%)}
-  .ss-prev__wk{position:absolute;top:3px;left:3px;z-index:2;font-size:.38rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;padding:1px 4px;border-radius:2px;background:rgba(180,210,205,0.18);backdrop-filter:blur(4px);color:rgba(255,255,255,0.75)}
-  .ss-prev__lock{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;width:16px;height:16px;border-radius:50%;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center}
+  .ss-prev{display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:1fr 1fr;gap:2px;position:relative;z-index:1;flex:1;min-height:0}
+  .ss-prev__card{background-size:cover;background-position:center;position:relative;overflow:hidden}
+  .ss-prev__wk{position:absolute;top:4px;left:4px;z-index:2;font-size:.4rem;font-weight:500;letter-spacing:.05em;text-transform:uppercase;padding:2px 5px;border-radius:3px;background:rgba(180,210,205,0.18);backdrop-filter:blur(4px);color:rgba(255,255,255,0.8)}
+  .ss-prev__lock{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center}
   .ss-prev__lock svg{width:8px;height:8px;fill:none;stroke:rgba(255,255,255,0.4);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  .ss-prev__card--placeholder{background:linear-gradient(155deg,#1a1e30 0%,#252a40 100%)}
-  .cc--sleep .cc__body{padding:6px 12px 0}
-  .cc--sleep .cc__title{font-size:1.1rem;margin-bottom:3px}
-  .cc--sleep .cc__desc{font-size:.68rem}
-  .cc--sleep .cc__strip{padding:8px 12px 12px}
+  .cc--sleep__overlay{position:absolute;bottom:0;left:0;right:0;z-index:5;padding:32px 16px 14px;background:linear-gradient(to bottom,transparent 0%,rgba(10,12,20,0.8) 45%,rgba(10,12,20,0.95) 100%)}
+  .cc--sleep__overlay .cc__title{font-size:1.1rem;margin-bottom:0}
+  .cc--sleep__overlay .cc__strip{padding:6px 0 0;border-top:none}
 
   @media(max-width:900px){
     .inside__grid{grid-template-columns:repeat(2,1fr)}
@@ -910,23 +907,16 @@
           <span class="ss-prev__wk">Week 10</span>
           <div class="ss-prev__lock"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
         </div>
-        <div class="ss-prev__card ss-prev__card--placeholder">
-          <div class="ss-prev__lock"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        </div>
-        <div class="ss-prev__card ss-prev__card--placeholder">
-          <div class="ss-prev__lock"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        </div>
       </div>
-      <div class="cc__body">
+      <div class="cc--sleep__overlay">
         <h3 class="cc__title">Sleep Stories</h3>
-        <p class="cc__desc">Gentle, meandering narratives designed to bore your brain to sleep.</p>
-      </div>
-      <div class="cc__strip">
-        <span class="cc__stat"><span class="cc__stat-num">52</span> stories</span>
-        <span class="cc__stat-sep"></span>
-        <span class="cc__stat"><span class="cc__stat-num">30–45</span> min each</span>
-        <span class="cc__stat-sep"></span>
-        <span class="cc__stat">weekly release</span>
+        <div class="cc__strip">
+          <span class="cc__stat"><span class="cc__stat-num">52</span> stories</span>
+          <span class="cc__stat-sep"></span>
+          <span class="cc__stat"><span class="cc__stat-num">30–45</span> min each</span>
+          <span class="cc__stat-sep"></span>
+          <span class="cc__stat">weekly release</span>
+        </div>
       </div>
     </a>
 
