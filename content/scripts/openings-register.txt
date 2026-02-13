@@ -2,7 +2,7 @@
 # Format: [Session #] | [Opening line] | [Opening technique]
 # Updated: 11 February 2026
 
-01-morning-meditation | "This is your morning meditation." | Theme statement
+01-morning-meditation | "Good morning. You made time for yourself." | Warm affirmation
 03-breathing-for-anxiety | "This is a gentle breathing session." | Theme statement
 09-rainfall-sleep-journey | "Tonight, it's raining." | Environmental observation
 18-calm-in-three-minutes | "Right now, wherever you are, you are safe enough to take three minutes." | Reassurance + time contract

@@ -153,7 +153,7 @@ PAUSE_PROFILES = {
 AMBIENT_VOLUME_DB = -14          # Standard ambient level for mindfulness/meditation
 AMBIENT_VOLUME_SILENCE_DB = -13  # Raise 1dB during 30s+ pauses (per spec)
 AMBIENT_FADE_IN_START = 0        # Start fade immediately
-AMBIENT_FADE_IN_DURATION = 10    # 10 seconds fade-in
+AMBIENT_FADE_IN_DURATION = 30    # 30 seconds fade-in (Bible — confirmed by Scott 13 Feb)
 AMBIENT_FADE_OUT_DURATION = 60   # 60 seconds fade-out (Bible v4.5 locked)
 
 # ============================================================================

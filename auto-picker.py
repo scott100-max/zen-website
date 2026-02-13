@@ -36,6 +36,7 @@ v2 changes (12 Feb 2026):
 
 Usage:
     python3 auto-picker.py 01-morning-meditation
+    python3 auto-picker.py 01-morning-meditation --rechunk 3,7,11
     python3 auto-picker.py 01-morning-meditation --validate
     python3 auto-picker.py --validate-all
 """
@@ -233,6 +234,64 @@ def load_verdict_history(session_id):
         except Exception:
             continue
 
+    # Load assembly verdicts (human review of assembled audio)
+    # Assembly verdicts are AUTHORITATIVE — human ears on assembled audio are the gold standard.
+    # Neither API nor auto-trial data may override an assembly failure verdict.
+    assembly_verdicts_path = session_dir / 'assembly-verdicts.json'
+    assembly_failed = set()  # (chunk_idx, version) tuples — protected from override
+    if assembly_verdicts_path.exists():
+        try:
+            av_data = json.loads(assembly_verdicts_path.read_text())
+            # Also load picks-auto.json to map chunk index → picked version
+            picks_auto_path = session_dir / 'picks-auto.json'
+            version_map = {}  # chunk_idx → version
+            if picks_auto_path.exists():
+                pa_data = json.loads(picks_auto_path.read_text())
+                for p in pa_data.get('picks', []):
+                    if p.get('picked') is not None:
+                        version_map[p['chunk']] = p['picked']
+
+            av_chunks = av_data.get('chunks', {})
+            av_loaded = 0
+            for cstr, ch in av_chunks.items():
+                ci = int(cstr)
+                # Version comes from the verdict itself, or from picks-auto.json
+                ver = ch.get('version') or version_map.get(ci)
+                if ver is None:
+                    continue
+
+                if ch.get('passed', False):
+                    history[ci]['pass_versions'].add(ver)
+                else:
+                    # verdict can be a string or list of strings
+                    raw_verdict = ch.get('verdict', '')
+                    if isinstance(raw_verdict, list):
+                        verdict_types = [v.upper() for v in raw_verdict]
+                    else:
+                        verdict_types = [raw_verdict.upper()] if raw_verdict else []
+
+                    # Classify: any hard type makes it hard, otherwise soft
+                    hard_types = {'ECHO', 'CUTOFF', 'BAD'}
+                    soft_types = {'HISS', 'VOICE'}
+                    if any(v in hard_types for v in verdict_types):
+                        history[ci]['hard_versions'].add(ver)
+                    elif any(v in soft_types for v in verdict_types):
+                        history[ci]['soft_versions'].add(ver)
+                    else:
+                        history[ci]['hard_versions'].add(ver)
+
+                    # Assembly verdict overrides older auto-trial "pass" verdict
+                    history[ci]['pass_versions'].discard(ver)
+                    # Lock this decision — no later source can re-add to pass_versions
+                    assembly_failed.add((ci, ver))
+                av_loaded += 1
+            if av_loaded:
+                print(f"  Loaded {av_loaded} assembly verdicts from {assembly_verdicts_path.name}")
+                if assembly_failed:
+                    print(f"  Protected {len(assembly_failed)} assembly-failed versions from override")
+        except Exception as e:
+            print(f"  WARNING: Could not load assembly verdicts: {e}")
+
     # Also check API for latest verdicts
     try:
         result = subprocess.run([
@@ -244,6 +303,9 @@ def load_verdict_history(session_id):
             ci = int(cstr)
             ver = ch.get('version')
             sev = ch.get('severity', 'pass')
+            # Never let API override an assembly failure verdict
+            if (ci, ver) in assembly_failed:
+                continue
             if ch.get('passed'):
                 history[ci]['pass_versions'].add(ver)
             elif sev == 'hard':
@@ -328,6 +390,55 @@ def soft_fail_penalty(candidate, soft_profiles):
             max_similarity = max(max_similarity, sim / count)
 
     return max_similarity * SOFT_FAIL_PENALTY
+
+
+def detect_pool_contamination(session_dir, rechunk_indices, rechunk_history):
+    """Detect chunks with persistent same-defect failures across rechunk rounds.
+
+    Reads _defect_log from rechunk-history.json (accumulated across prior --rechunk calls).
+    If the same defect type appears in 2+ entries for a chunk, that pool is contaminated —
+    re-rolling from the same candidates is unlikely to fix it.
+
+    Returns dict: {chunk_idx: {'persistent_defect': str, 'rounds_failed': int,
+                                'prior_versions': list, 'recommendation': str}}
+    """
+    contaminated = {}
+    defect_log = rechunk_history.get('_defect_log', {})
+
+    for ci in rechunk_indices:
+        ci_key = str(ci)
+        prior_entries = defect_log.get(ci_key, [])
+        if len(prior_entries) < 2:
+            continue
+
+        # Count ALL defect types across ALL entries (not just the latest round)
+        defect_versions = {}  # defect_type -> [versions that had it]
+        for entry in prior_entries:
+            for defect in entry.get('defects', []):
+                if defect not in defect_versions:
+                    defect_versions[defect] = []
+                defect_versions[defect].append(entry.get('version'))
+
+        # Find the most persistent defect (highest count, break ties alphabetically)
+        for defect, versions in sorted(defect_versions.items(),
+                                       key=lambda x: (-len(x[1]), x[0])):
+            if len(versions) >= 2:
+                if len(versions) >= 3:
+                    rec = (f'SCRIPT REWRITE recommended — {defect} persisted '
+                           f'{len(versions)} rounds. Pool exhausted for this defect type.')
+                else:
+                    rec = (f'--regen-chunks {ci} --count 50 — {defect} persisted '
+                           f'{len(versions)} rounds. Fresh candidates may escape tonal pocket.')
+
+                contaminated[ci] = {
+                    'persistent_defect': defect,
+                    'rounds_failed': len(versions),
+                    'prior_versions': versions,
+                    'recommendation': rec,
+                }
+                break  # One finding per chunk is enough
+
+    return contaminated
 
 
 def fetch_human_picks(session_id):
@@ -616,11 +727,12 @@ def select_candidate(chunk_idx, chunk_data, prev_best_mfcc=None, session_log=Non
 
 
 def _load_existing_picks(session_id):
-    """Load existing picks.json if present. Returns dict of chunk_idx → pick entry, or empty dict."""
+    """Load existing picks. Prefers picks-auto.json (auto-picker output) over picks/picks.json
+    (assembly copy) so that rechunk correctly blocks the most recent pick, not a stale one."""
     session_dir = VAULT_DIR / session_id
-    picks_path = session_dir / "picks" / "picks.json"
+    picks_path = session_dir / "picks-auto.json"
     if not picks_path.exists():
-        picks_path = session_dir / "picks-auto.json"
+        picks_path = session_dir / "picks" / "picks.json"
     if not picks_path.exists():
         return {}
     try:
@@ -631,12 +743,16 @@ def _load_existing_picks(session_id):
         return {}
 
 
-def auto_pick_session(session_id, chunks_data=None):
+def auto_pick_session(session_id, chunks_data=None, rechunk_indices=None):
     """Run the automated picker on a session.
 
     FAILSAFE: If a chunk's text is unchanged and has an existing deployed/verified
     pick, that pick is preserved (locked) — the auto-picker will NOT re-pick it.
     Only chunks with no prior pick or changed text get re-picked.
+
+    If rechunk_indices is provided (set of ints), ONLY those chunks are re-picked.
+    All other chunks are LOCKED with their existing picks preserved. Previously-picked
+    versions for rechunk chunks are added to hard_versions (so they're avoided).
 
     Returns (picks_dict, selection_logs).
     """
@@ -655,6 +771,107 @@ def auto_pick_session(session_id, chunks_data=None):
     existing_picks = _load_existing_picks(session_id)
     locked_count = 0
 
+    # --rechunk mode: add previously-picked versions to hard_versions so they're avoided
+    # Also load accumulated rechunk history — versions that failed in ANY previous round
+    rechunk_history_path = VAULT_DIR / session_id / 'rechunk-history.json'
+    rechunk_history = {}  # chunk_idx -> list of blocked versions
+    if rechunk_history_path.exists():
+        try:
+            rechunk_history = json.loads(rechunk_history_path.read_text())
+        except Exception:
+            rechunk_history = {}
+
+    if rechunk_indices is not None:
+        print(f"  RECHUNK mode: re-picking chunks {sorted(rechunk_indices)}")
+        for ci in rechunk_indices:
+            if ci not in verdict_history:
+                verdict_history[ci] = {
+                    'hard_versions': set(), 'soft_versions': set(),
+                    'pass_versions': set(), 'hard_profiles': [], 'soft_profiles': [],
+                }
+
+            # Block current pick
+            existing = existing_picks.get(ci)
+            if existing and existing.get('picked') is not None:
+                prev_ver = existing['picked']
+                verdict_history[ci]['hard_versions'].add(prev_ver)
+                verdict_history[ci].get('pass_versions', set()).discard(prev_ver)
+                # Save to rechunk history for future rounds
+                ci_key = str(ci)
+                if ci_key not in rechunk_history:
+                    rechunk_history[ci_key] = []
+                if prev_ver not in rechunk_history[ci_key]:
+                    rechunk_history[ci_key].append(prev_ver)
+                print(f"    c{ci:02d}: previous pick v{prev_ver:02d} added to hard_versions")
+
+            # Also block ALL versions from rechunk history (accumulated across rounds)
+            ci_key = str(ci)
+            if ci_key in rechunk_history:
+                for hist_ver in rechunk_history[ci_key]:
+                    verdict_history[ci]['hard_versions'].add(hist_ver)
+                    verdict_history[ci].get('pass_versions', set()).discard(hist_ver)
+                n_hist = len(rechunk_history[ci_key])
+                print(f"    c{ci:02d}: {n_hist} versions blocked from rechunk history")
+
+        # --- Pool contamination detection ---
+        # Build defect log from current assembly-verdicts (the round that just failed)
+        session_dir = VAULT_DIR / session_id
+        av_path = session_dir / 'assembly-verdicts.json'
+        if av_path.exists():
+            try:
+                av_data = json.loads(av_path.read_text())
+                defect_log = rechunk_history.get('_defect_log', {})
+                for ci in rechunk_indices:
+                    ci_key = str(ci)
+                    ch = av_data.get('chunks', {}).get(ci_key, {})
+                    if not ch.get('passed', False) and ch.get('verdict'):
+                        raw = ch.get('verdict', [])
+                        if isinstance(raw, str):
+                            raw = [raw]
+                        defects = [v.upper() for v in raw if v]
+                        ver = ch.get('version') or (existing_picks.get(ci, {}).get('picked'))
+                        if defects and ver is not None:
+                            if ci_key not in defect_log:
+                                defect_log[ci_key] = []
+                            # Avoid duplicate entries for same version
+                            existing_versions = {e.get('version') for e in defect_log[ci_key]}
+                            if ver not in existing_versions:
+                                defect_log[ci_key].append({
+                                    'version': ver,
+                                    'defects': defects,
+                                    'round': av_data.get('run', 'unknown'),
+                                })
+                rechunk_history['_defect_log'] = defect_log
+            except Exception as e:
+                print(f"  WARNING: Could not build defect log: {e}")
+
+        # Detect pool contamination (needs 2+ rounds of defect data)
+        contamination = detect_pool_contamination(
+            VAULT_DIR / session_id, rechunk_indices, rechunk_history)
+        if contamination:
+            print(f"\n  {'='*60}")
+            print(f"  *** POOL CONTAMINATION DETECTED ***")
+            print(f"  {'='*60}")
+            for ci, info in sorted(contamination.items()):
+                print(f"    c{ci:02d}: {info['persistent_defect']} persisted "
+                      f"{info['rounds_failed']} rounds "
+                      f"(versions: {info['prior_versions']})")
+                print(f"          -> {info['recommendation']}")
+            regen_chunks = ','.join(str(ci) for ci in sorted(contamination.keys()))
+            print(f"\n  Rechunk will proceed, but contaminated chunks have LOW")
+            print(f"  probability of improvement from same pool.")
+            print(f"  Consider: python3 vault-builder.py {session_id} "
+                  f"--regen-chunks {regen_chunks} --count 50")
+            print(f"  {'='*60}\n")
+
+        # Persist updated rechunk history (now includes _defect_log)
+        rechunk_history_path.write_text(json.dumps(rechunk_history, indent=2))
+        print(f"  Rechunk history saved: {rechunk_history_path.name}")
+
+    # Initialize contamination dict (populated in rechunk mode, empty otherwise)
+    if rechunk_indices is None:
+        contamination = {}
+
     picks = {
         'session': session_id,
         'reviewed': _now_iso(),
@@ -667,9 +884,27 @@ def auto_pick_session(session_id, chunks_data=None):
     for ci in chunk_indices:
         chunk = chunks_data[ci]
 
+        # --rechunk mode: LOCK all chunks NOT in the rechunk set
+        if rechunk_indices is not None and ci not in rechunk_indices:
+            existing = existing_picks.get(ci)
+            if existing and existing.get('picked') is not None:
+                locked_entry = dict(existing)
+                locked_entry['notes'] = f"LOCKED — not in rechunk set (v{existing['picked']:02d} preserved)"
+                locked_entry['locked'] = True
+                picks['picks'].append(locked_entry)
+                selection_logs.append({
+                    'chunk': ci, 'text': chunk['text'][:80],
+                    'locked': True, 'locked_version': existing['picked'],
+                    'reason': 'not in rechunk set, existing pick preserved',
+                })
+                locked_count += 1
+                continue
+            # No existing pick for this non-rechunk chunk — still need to pick it
+            # (fall through to normal selection)
+
         # FAILSAFE: Check if this chunk has an existing pick with matching text
         existing = existing_picks.get(ci)
-        if existing and existing.get('picked') is not None:
+        if existing and existing.get('picked') is not None and rechunk_indices is None:
             existing_text = existing.get('text', '').strip()
             current_text = chunk['text'].strip()
             # Text match check (normalise Salus/Salūs)
@@ -691,6 +926,10 @@ def auto_pick_session(session_id, chunks_data=None):
 
         version, log = select_candidate(ci, chunk, verdict_history=verdict_history)
 
+        # Tag contaminated chunks in log
+        if rechunk_indices is not None and ci in contamination:
+            log['contaminated'] = contamination[ci]
+
         is_unresolvable = log.get('unresolvable', False)
         pick_entry = {
             'chunk': ci,
@@ -703,6 +942,11 @@ def auto_pick_session(session_id, chunks_data=None):
         if is_unresolvable:
             pick_entry['notes'] = 'UNRESOLVABLE — all candidates eliminated, needs script split + regen'
             pick_entry['unresolvable'] = True
+        elif rechunk_indices is not None and ci in contamination:
+            info = contamination[ci]
+            pick_entry['notes'] = (f"auto-picked (confidence: {log.get('confidence', 'unknown')}) "
+                                   f"— CONTAMINATED: {info['persistent_defect']} x{info['rounds_failed']} rounds")
+            pick_entry['contaminated'] = True
         else:
             pick_entry['notes'] = f"auto-picked (confidence: {log.get('confidence', 'unknown')})"
         picks['picks'].append(pick_entry)
@@ -817,6 +1061,9 @@ def main():
                         help='Validate auto-picks against human picks for this session')
     parser.add_argument('--validate-all', action='store_true',
                         help='Validate auto-picks against human picks for ALL sessions')
+    parser.add_argument('--rechunk', metavar='INDICES',
+                        help='Re-pick only these chunk indices (comma-separated, e.g. 3,7,11). '
+                             'All other chunks are LOCKED with existing picks preserved.')
     parser.add_argument('--output', metavar='PATH',
                         help='Output path for picks JSON (default: vault dir)')
     parser.add_argument('--log', metavar='PATH',
@@ -912,9 +1159,15 @@ def main():
     print(f"  Found {len(chunks)} chunks, "
           f"{sum(len(c['candidates']) for c in chunks.values())} candidates")
 
+    # Parse --rechunk indices
+    rechunk_indices = None
+    if args.rechunk:
+        rechunk_indices = set(int(x.strip()) for x in args.rechunk.split(','))
+        print(f"  RECHUNK mode: re-picking chunks {sorted(rechunk_indices)}")
+
     # Run auto-picker
     print(f"\n  Running automated picker...")
-    picks, logs = auto_pick_session(session_id, chunks)
+    picks, logs = auto_pick_session(session_id, chunks, rechunk_indices=rechunk_indices)
 
     # Summary
     picked = sum(1 for p in picks['picks'] if p['picked'] is not None)

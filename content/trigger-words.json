@@ -1,0 +1,126 @@
+{
+  "version": "1.0",
+  "updated": "2026-02-13",
+  "source": "PROJECT-BIBLE Section 13 + session 01/40 training",
+  "words": [
+    {
+      "word": "settling",
+      "defect": "echo",
+      "alternatives": ["resting", "arriving", "easing"],
+      "source": "Session 36 review"
+    },
+    {
+      "word": "stillness",
+      "defect": "echo",
+      "alternatives": ["quiet", "calm", "silence"],
+      "source": "Session 36 review"
+    },
+    {
+      "word": "feel",
+      "defect": "echo",
+      "alternatives": ["notice", "sense", "become aware of"],
+      "notes": "Also catches 'feeling'",
+      "source": "Session 36 review"
+    },
+    {
+      "word": "peace",
+      "defect": "echo",
+      "alternatives": ["calm", "tranquillity", "serenity"],
+      "source": "Session 36 review"
+    },
+    {
+      "word": "ease",
+      "defect": "echo",
+      "alternatives": ["comfort", "gentleness", "softness"],
+      "source": "Session 36 review"
+    },
+    {
+      "word": "deeply",
+      "defect": "echo",
+      "alternatives": ["gently", "fully", "completely"],
+      "notes": "'more deeply now' in 100+ char block is usually OK",
+      "source": "Session 36 review"
+    },
+    {
+      "word": "hollow",
+      "defect": "echo",
+      "alternatives": ["open", "spacious", "empty"],
+      "source": "Session 36 review"
+    },
+    {
+      "word": "simply",
+      "defect": "echo",
+      "alternatives": ["just", "only", "quietly"],
+      "source": "Session 36 review"
+    },
+    {
+      "word": "family",
+      "defect": "hiss",
+      "alternatives": ["loved ones", "those close to you"],
+      "source": "Session 36 review"
+    },
+    {
+      "word": "joyful",
+      "defect": "hiss",
+      "alternatives": ["happy", "glad", "filled with joy"],
+      "source": "Session 36 review"
+    },
+    {
+      "word": "breath in",
+      "defect": "hiss",
+      "alternatives": ["breathe in", "inhale", "draw a breath"],
+      "source": "Session 36 review"
+    },
+    {
+      "word": "filling your lungs completely",
+      "defect": "hiss",
+      "alternatives": ["breathe in fully"],
+      "source": "Session 36 review"
+    },
+    {
+      "word": "nowhere else",
+      "defect": "voice_shift",
+      "alternatives": ["right here", "all you need is to be here"],
+      "source": "Session 25 rebuild"
+    },
+    {
+      "word": "pulse",
+      "defect": "echo",
+      "alternatives": ["beat", "rhythm", "throb"],
+      "source": "Session 40 c08 — echoed across 3 versions",
+      "added": "2026-02-13"
+    },
+    {
+      "word": "close",
+      "defect": "hiss",
+      "alternatives": ["end", "finish", "wrap up"],
+      "notes": "As verb — sibilant 'closssseee'. 'close your eyes' in 100+ char block may be OK.",
+      "source": "Session 40 c22",
+      "added": "2026-02-13"
+    },
+    {
+      "word": "soft lift",
+      "defect": "hiss",
+      "alternatives": ["gentle rise", "slight rise"],
+      "source": "Session 01 c11 — hiss across 3 versions (v02, v65, v51)",
+      "added": "2026-02-13"
+    },
+    {
+      "word": "soften",
+      "defect": "echo",
+      "alternatives": ["relax", "release", "loosen"],
+      "notes": "Marginal — some versions pass. Higher risk in short blocks.",
+      "source": "Session 01 c06, Session 40",
+      "added": "2026-02-13"
+    }
+  ],
+  "patterns": [
+    {
+      "pattern": "(?:^|[.!?]\\s+)(?:just |simply |let yourself |allow yourself to )?be[.!?\\s]*$",
+      "defect": "voice_shift",
+      "description": "Isolated 'be' at end of sentence — embed in longer phrases",
+      "alternatives": ["Rewrite to avoid isolated 'be'"],
+      "source": "Session 36 review"
+    }
+  ]
+}

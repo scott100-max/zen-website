@@ -3,12 +3,12 @@ Duration: 25 minutes
 Category: mindfulness
 Ambient: grace
 Ambient-dB: -16
-Ambient-Fade-In: 10
-Ambient-Fade-Out: 30
+Ambient-Fade-In: 30
+Ambient-Fade-Out: 60
 Style: Warm, grounded male narrator
 ---
 
-This is your morning meditation.
+Good morning. You made time for yourself.
 
 ...
 
