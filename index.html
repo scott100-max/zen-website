@@ -589,9 +589,8 @@
   .cc__asmr-grid{position:relative;z-index:2;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:12px 20px 0;pointer-events:none}
   .cc__asmr-btn{display:flex;align-items:center;justify-content:center;gap:5px;font-size:.58rem;font-weight:300;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:6px 4px;white-space:nowrap}
   .cc--asmr:hover .cc__asmr-btn{border-color:rgba(255,255,255,0.12);background:rgba(255,255,255,0.06)}
-  .cc__cbt-pills{position:relative;z-index:2;display:flex;justify-content:center;gap:8px;padding:16px 20px 0;flex-wrap:wrap}
-  .cc__cbt-pill{font-size:.62rem;font-weight:300;letter-spacing:.04em;color:rgba(167,139,250,0.7);background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.18);border-radius:20px;padding:6px 14px}
-  .cc--cbt:hover .cc__cbt-pill{border-color:rgba(167,139,250,0.3);background:rgba(167,139,250,0.1)}
+  .cc__cbt-cycle{position:relative;z-index:2;width:200px;max-width:70%;margin:4px auto 0;display:block;opacity:0.65;pointer-events:none}
+  .cc--cbt:hover .cc__cbt-cycle{opacity:0.85}
   .cc__body{position:relative;z-index:3;flex:1;padding:26px 24px 0;display:flex;flex-direction:column}
   .cc__count{font-weight:300;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:5px;display:block}
   .cc__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.4rem;line-height:1.2;margin-bottom:7px}
@@ -950,11 +949,25 @@
         <h3 class="cc__title">CBT Exercises</h3>
         <p class="cc__desc">Guided exercises to challenge unhelpful thoughts, manage emotions, and build healthier patterns.</p>
       </div>
-      <div class="cc__cbt-pills">
-        <span class="cc__cbt-pill">Thoughts</span>
-        <span class="cc__cbt-pill">Emotions</span>
-        <span class="cc__cbt-pill">Behaviour</span>
-      </div>
+      <svg class="cc__cbt-cycle" viewBox="0 0 260 230" fill="none">
+        <defs>
+          <marker id="cbtArrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="rgba(167,139,250,0.4)" stroke-width="1.5"/></marker>
+        </defs>
+        <!-- Curved arrows -->
+        <path d="M155 52 Q210 10 210 80" stroke="rgba(167,139,250,0.3)" stroke-width="1.5" marker-end="url(#cbtArrow)"/>
+        <path d="M185 175 Q130 220 75 175" stroke="rgba(167,139,250,0.3)" stroke-width="1.5" marker-end="url(#cbtArrow)"/>
+        <path d="M55 120 Q45 50 105 42" stroke="rgba(167,139,250,0.3)" stroke-width="1.5" marker-end="url(#cbtArrow)"/>
+        <!-- Circles -->
+        <circle cx="135" cy="48" r="34" stroke="rgba(167,139,250,0.45)" stroke-width="1.5" fill="rgba(167,139,250,0.06)"/>
+        <text x="135" y="44" text-anchor="middle" fill="rgba(242,240,250,0.6)" font-size="11" font-family="Outfit,sans-serif" font-weight="300">Thoughts</text>
+        <text x="135" y="58" text-anchor="middle" fill="rgba(242,240,250,0.35)" font-size="8" font-family="Outfit,sans-serif" font-weight="200">create feelings</text>
+        <circle cx="205" cy="148" r="34" stroke="rgba(167,139,250,0.45)" stroke-width="1.5" fill="rgba(167,139,250,0.06)"/>
+        <text x="205" y="144" text-anchor="middle" fill="rgba(242,240,250,0.6)" font-size="11" font-family="Outfit,sans-serif" font-weight="300">Feelings</text>
+        <text x="205" y="158" text-anchor="middle" fill="rgba(242,240,250,0.35)" font-size="8" font-family="Outfit,sans-serif" font-weight="200">create behaviour</text>
+        <circle cx="60" cy="148" r="34" stroke="rgba(167,139,250,0.45)" stroke-width="1.5" fill="rgba(167,139,250,0.06)"/>
+        <text x="60" y="144" text-anchor="middle" fill="rgba(242,240,250,0.6)" font-size="11" font-family="Outfit,sans-serif" font-weight="300">Behaviour</text>
+        <text x="60" y="158" text-anchor="middle" fill="rgba(242,240,250,0.35)" font-size="8" font-family="Outfit,sans-serif" font-weight="200">reinforces thoughts</text>
+      </svg>
       <div class="cc__strip">
         <span class="cc__stat"><span class="cc__stat-num">6</span> exercises</span>
         <span class="cc__stat-sep"></span>
