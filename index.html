@@ -559,7 +559,9 @@
   .cc__arrow svg{width:12px;height:12px;fill:none;stroke:rgba(255,255,255,0.6);stroke-width:2}
 
   .cc--med{background:linear-gradient(155deg,#0d3d4a 0%,#1a5568 45%,#0f4c5c 100%);border:1px solid rgba(34,211,238,0.12);box-shadow:0 6px 28px rgba(0,0,0,0.4)}
+  .cc--med::after{content:'';position:absolute;inset:0;background:url('https://media.salus-mind.com/images/mindfulness-tile.jpeg') center/cover no-repeat;opacity:0.25;z-index:0;pointer-events:none}
   .cc--med:hover{box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 80px rgba(34,211,238,0.06)}
+  .cc--med:hover::after{opacity:0.35}
   .cc--sleep{background:#0e1018;border:1px solid rgba(255,255,255,0.07);box-shadow:0 6px 28px rgba(0,0,0,0.4)}
   .cc--sleep:hover{box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 40px rgba(129,140,248,0.06)}
   .cc--asmr{background:linear-gradient(155deg,#1a1c2e 0%,#252840 45%,#2d3154 100%);border:1px solid rgba(148,163,184,0.1);box-shadow:0 6px 28px rgba(0,0,0,0.4)}
@@ -584,7 +586,8 @@
   .cc--tools .cc__orb--1{background:radial-gradient(circle,rgba(52,211,153,0.5),transparent 70%)}
   .cc--tools .cc__orb--2{background:radial-gradient(circle,rgba(16,185,129,0.35),transparent 70%)}
 
-  .cc__cbt-triangle{position:relative;z-index:2;width:180px;max-width:60%;margin:8px auto 0;display:block;opacity:0.7}
+  .cc__cbt-triangle{position:absolute;z-index:1;width:280px;bottom:40px;left:50%;transform:translateX(-50%);display:block;opacity:0.55;pointer-events:none}
+  .cc--cbt:hover .cc__cbt-triangle{opacity:0.75}
   .cc__body{position:relative;z-index:3;flex:1;padding:26px 24px 0;display:flex;flex-direction:column}
   .cc__count{font-weight:300;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:5px;display:block}
   .cc__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.4rem;line-height:1.2;margin-bottom:7px}
@@ -932,16 +935,21 @@
         <h3 class="cc__title">CBT Exercises</h3>
         <p class="cc__desc">Guided exercises to challenge unhelpful thoughts, manage emotions, and build healthier patterns.</p>
       </div>
-      <svg class="cc__cbt-triangle" viewBox="0 0 240 200" fill="none">
-        <line x1="120" y1="48" x2="42" y2="168" stroke="rgba(167,139,250,0.35)" stroke-width="2"/>
-        <line x1="120" y1="48" x2="198" y2="168" stroke="rgba(167,139,250,0.35)" stroke-width="2"/>
-        <line x1="42" y1="168" x2="198" y2="168" stroke="rgba(167,139,250,0.35)" stroke-width="2"/>
-        <ellipse cx="120" cy="36" rx="52" ry="20" stroke="rgba(167,139,250,0.5)" stroke-width="1.5" fill="rgba(167,139,250,0.06)"/>
-        <text x="120" y="41" text-anchor="middle" fill="rgba(242,240,250,0.55)" font-size="14" font-family="Outfit,sans-serif" font-weight="300">Thought</text>
-        <ellipse cx="42" cy="180" rx="46" ry="20" stroke="rgba(167,139,250,0.5)" stroke-width="1.5" fill="rgba(167,139,250,0.06)"/>
-        <text x="42" y="185" text-anchor="middle" fill="rgba(242,240,250,0.55)" font-size="14" font-family="Outfit,sans-serif" font-weight="300">Emotion</text>
-        <ellipse cx="198" cy="180" rx="46" ry="20" stroke="rgba(167,139,250,0.5)" stroke-width="1.5" fill="rgba(167,139,250,0.06)"/>
-        <text x="198" y="185" text-anchor="middle" fill="rgba(242,240,250,0.55)" font-size="14" font-family="Outfit,sans-serif" font-weight="300">Behaviour</text>
+      <svg class="cc__cbt-triangle" viewBox="0 0 260 220" fill="none">
+        <defs>
+          <filter id="cbtGlow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <g filter="url(#cbtGlow)">
+          <line x1="130" y1="52" x2="48" y2="172" stroke="rgba(167,139,250,0.4)" stroke-width="1.5"/>
+          <line x1="130" y1="52" x2="212" y2="172" stroke="rgba(167,139,250,0.4)" stroke-width="1.5"/>
+          <line x1="48" y1="172" x2="212" y2="172" stroke="rgba(167,139,250,0.4)" stroke-width="1.5"/>
+        </g>
+        <ellipse cx="130" cy="38" rx="56" ry="22" stroke="rgba(167,139,250,0.55)" stroke-width="1.5" fill="rgba(167,139,250,0.08)"/>
+        <text x="130" y="44" text-anchor="middle" fill="rgba(242,240,250,0.65)" font-size="16" font-family="Outfit,sans-serif" font-weight="300">Thought</text>
+        <ellipse cx="48" cy="186" rx="50" ry="22" stroke="rgba(167,139,250,0.55)" stroke-width="1.5" fill="rgba(167,139,250,0.08)"/>
+        <text x="48" y="192" text-anchor="middle" fill="rgba(242,240,250,0.65)" font-size="16" font-family="Outfit,sans-serif" font-weight="300">Emotion</text>
+        <ellipse cx="212" cy="186" rx="50" ry="22" stroke="rgba(167,139,250,0.55)" stroke-width="1.5" fill="rgba(167,139,250,0.08)"/>
+        <text x="212" y="192" text-anchor="middle" fill="rgba(242,240,250,0.65)" font-size="16" font-family="Outfit,sans-serif" font-weight="300">Behaviour</text>
       </svg>
       <div class="cc__strip">
         <span class="cc__stat"><span class="cc__stat-num">6</span> exercises</span>
