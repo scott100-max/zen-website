@@ -83,9 +83,10 @@
     geoPromise.then(function(geo) {
       geo = geo || {};
 
-      // Upsert visitor record
+      // Ensure visitor record exists before inserting page view (FK constraint)
+      var visitorReady;
       if (isNewVisitor) {
-        sb.from('visitors').insert({
+        visitorReady = sb.from('visitors').insert({
           id: visitorId,
           total_sessions: 1,
           country: geo.country,
@@ -96,20 +97,19 @@
         }).then(function() {}).catch(function() {});
       } else if (isNewSession) {
         // Returning visitor, new session — update last_seen + increment sessions
-        sb.rpc('increment_visitor_session', { vid: visitorId }).then(function(result) {
-          // If RPC doesn't exist, fall back to direct update
+        visitorReady = sb.rpc('increment_visitor_session', { vid: visitorId }).then(function(result) {
           if (result.error) {
-            sb.from('visitors')
+            return sb.from('visitors')
               .update({ last_seen: new Date().toISOString() })
-              .eq('id', visitorId)
-              .then(function() {}).catch(function() {});
+              .eq('id', visitorId);
           }
         }).catch(function() {
-          sb.from('visitors')
+          return sb.from('visitors')
             .update({ last_seen: new Date().toISOString() })
-            .eq('id', visitorId)
-            .then(function() {}).catch(function() {});
+            .eq('id', visitorId);
         });
+      } else {
+        visitorReady = Promise.resolve();
       }
 
       // Also write to legacy visitor_logs (first page view per session only)
@@ -141,27 +141,29 @@
         catch(e) { ref = ''; }
       }
 
-      // Insert page view
-      sb.from('page_views').insert({
-        visitor_id: visitorId,
-        session_id: sessionId,
-        page_path: window.location.pathname,
-        page_title: document.title,
-        referrer: ref || null,
-        utm_source: utmSource,
-        utm_medium: utmMedium,
-        utm_campaign: utmCampaign,
-        utm_content: utmContent,
-        utm_term: utmTerm,
-        country: geo.country,
-        city: geo.city,
-        region: geo.region,
-        latitude: geo.latitude,
-        longitude: geo.longitude
-      }).select('id').then(function(result) {
-        if (result.data && result.data[0]) {
-          pageViewId = result.data[0].id;
-        }
+      // Wait for visitor record to exist, then insert page view
+      visitorReady.then(function() {
+        sb.from('page_views').insert({
+          visitor_id: visitorId,
+          session_id: sessionId,
+          page_path: window.location.pathname,
+          page_title: document.title,
+          referrer: ref || null,
+          utm_source: utmSource,
+          utm_medium: utmMedium,
+          utm_campaign: utmCampaign,
+          utm_content: utmContent,
+          utm_term: utmTerm,
+          country: geo.country,
+          city: geo.city,
+          region: geo.region,
+          latitude: geo.latitude,
+          longitude: geo.longitude
+        }).select('id').then(function(result) {
+          if (result.data && result.data[0]) {
+            pageViewId = result.data[0].id;
+          }
+        }).catch(function() {});
       }).catch(function() {});
     });
 
