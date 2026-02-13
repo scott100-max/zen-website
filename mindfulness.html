@@ -755,24 +755,24 @@
   
     .day-tile{
       border-radius:8px;padding:12px 8px 10px;text-align:center;
-      background:#0c1220;
-      border:1px solid rgba(255,255,255,0.1);
+      background:rgba(78,205,196,0.08);
+      border:1px solid rgba(78,205,196,0.15);
       border-left:3px solid rgba(78,205,196,0.6);
       transition:all .35s cubic-bezier(.22,1,.36,1);cursor:default;
-      box-shadow:0 2px 8px rgba(0,0,0,0.4);
+      box-shadow:0 2px 8px rgba(0,0,0,0.25);
       position:relative;overflow:hidden;
     }
     .day-tile--active{
-      background:linear-gradient(160deg,#0e2028,#0a1a22);
+      background:rgba(78,205,196,0.12);
       border-color:rgba(78,205,196,0.3);
       border-left-color:#4ecdc4;
-      box-shadow:0 0 18px rgba(78,205,196,0.12),0 3px 10px rgba(0,0,0,0.4);
+      box-shadow:0 0 18px rgba(78,205,196,0.12),0 3px 10px rgba(0,0,0,0.3);
     }
     .day-tile--locked{
-      background:#090e18;
-      border-color:rgba(255,255,255,0.05);
+      background:rgba(78,205,196,0.05);
+      border-color:rgba(78,205,196,0.08);
       border-left-color:rgba(78,205,196,0.2);
-      box-shadow:0 1px 4px rgba(0,0,0,0.3);
+      box-shadow:0 1px 4px rgba(0,0,0,0.2);
     }
   
     /* Phase 2 tiles — green-teal accent */
@@ -1098,94 +1098,6 @@
 
 
 <!-- ═══════════════════════════════
-     COURSES — prominent, first
-═══════════════════════════════ -->
-<div class="m-divider" id="courseDivider">
-  <div class="m-divider__line"></div>
-  <div class="m-divider__label">Structured Courses
-    <span class="m-divider__sub">28 days of mindfulness — two guided journeys</span>
-  </div>
-</div>
-
-<!-- 7-Day -->
-<div class="course course--7" id="course7" data-section="course">
-  <div class="course__orb course__orb--1"></div>
-  <div class="course__orb course__orb--2"></div>
-  <div class="course__orb course__orb--3"></div>
-  <div class="course__top">
-    <div class="course__info">
-      <div class="course__badge">7-Day Course</div>
-      <h3 class="course__title">7-Day Mindfulness Foundation</h3>
-      <p class="course__desc">A week-long introduction to mindfulness. One session per day — settling into stillness, finding the breath, and learning to simply notice.</p>
-    </div>
-    <a href="sessions/seven-day-mindfulness-course.html" class="course__cta">Start Day 1</a>
-  </div>
-  <div class="course__days">
-    <div class="day-tile day-tile--active"><span class="day-tile__num">1</span><span class="day-tile__label">Breath</span><span class="day-tile__dot"></span></div>
-    <div class="day-tile day-tile--locked"><span class="day-tile__num">2</span><span class="day-tile__label">Body</span></div>
-    <div class="day-tile day-tile--locked"><span class="day-tile__num">3</span><span class="day-tile__label">Sound</span></div>
-    <div class="day-tile day-tile--locked"><span class="day-tile__num">4</span><span class="day-tile__label">Thought</span></div>
-    <div class="day-tile day-tile--locked"><span class="day-tile__num">5</span><span class="day-tile__label">Emotion</span></div>
-    <div class="day-tile day-tile--locked"><span class="day-tile__num">6</span><span class="day-tile__label">Space</span></div>
-    <div class="day-tile day-tile--locked"><span class="day-tile__num">7</span><span class="day-tile__label">Review</span></div>
-  </div>
-  <div class="course__progress">1 day available · 7 total</div>
-</div>
-
-<!-- 21-Day -->
-<div class="course course--21" id="course21" data-section="course">
-  <div class="course__orb course__orb--1"></div>
-  <div class="course__orb course__orb--2"></div>
-  <div class="course__orb course__orb--3"></div>
-  <div class="course__top">
-    <div class="course__info">
-      <div class="course__badge">Structured Course</div>
-      <h3 class="course__title">21-Day Mindfulness Programme</h3>
-      <p class="course__desc">A complete guided journey from first breath to lasting habit. One session per day, building progressively — no experience needed.</p>
-    </div>
-    <a href="mindfulness-21-day.html" class="course__cta">Start Day 1</a>
-  </div>
-
-  <!-- Phase 1 — Foundation -->
-  <div class="course__phase"><span class="course__phase-dot course__phase-dot--1"></span><span class="course__phase-name">Foundation</span><span class="course__phase-line"></span></div>
-  <div class="course__days">
-    <div class="day-tile day-tile--active"><span class="day-tile__num">1</span><span class="day-tile__label">Instrument</span><span class="day-tile__dot"></span></div>
-    <div class="day-tile day-tile--locked"><span class="day-tile__num">2</span><span class="day-tile__label">Anchor</span></div>
-    <div class="day-tile day-tile--locked"><span class="day-tile__num">3</span><span class="day-tile__label">Map</span></div>
-    <div class="day-tile day-tile--locked"><span class="day-tile__num">4</span><span class="day-tile__label">Stream</span></div>
-    <div class="day-tile day-tile--locked"><span class="day-tile__num">5</span><span class="day-tile__label">Sound</span></div>
-    <div class="day-tile day-tile--locked"><span class="day-tile__num">6</span><span class="day-tile__label">Pause</span></div>
-    <div class="day-tile day-tile--locked"><span class="day-tile__num">7</span><span class="day-tile__label">Review</span></div>
-  </div>
-
-  <!-- Phase 2 — Expansion -->
-  <div class="course__phase"><span class="course__phase-dot course__phase-dot--2"></span><span class="course__phase-name">Expansion</span><span class="course__phase-line"></span></div>
-  <div class="course__days">
-    <div class="day-tile day-tile--p2 day-tile--locked"><span class="day-tile__num">8</span><span class="day-tile__label">Weather</span></div>
-    <div class="day-tile day-tile--p2 day-tile--locked"><span class="day-tile__num">9</span><span class="day-tile__label">Narrator</span></div>
-    <div class="day-tile day-tile--p2 day-tile--locked"><span class="day-tile__num">10</span><span class="day-tile__label">Stories</span></div>
-    <div class="day-tile day-tile--p2 day-tile--locked"><span class="day-tile__num">11</span><span class="day-tile__label">Body</span></div>
-    <div class="day-tile day-tile--p2 day-tile--locked"><span class="day-tile__num">12</span><span class="day-tile__label">Guest</span></div>
-    <div class="day-tile day-tile--p2 day-tile--locked"><span class="day-tile__num">13</span><span class="day-tile__label">Walk</span></div>
-    <div class="day-tile day-tile--p2 day-tile--locked"><span class="day-tile__num">14</span><span class="day-tile__label">Ground</span></div>
-  </div>
-
-  <!-- Phase 3 — Integration -->
-  <div class="course__phase"><span class="course__phase-dot course__phase-dot--3"></span><span class="course__phase-name">Integration</span><span class="course__phase-line"></span></div>
-  <div class="course__days">
-    <div class="day-tile day-tile--p3 day-tile--locked"><span class="day-tile__num">15</span><span class="day-tile__label">Compassion</span></div>
-    <div class="day-tile day-tile--p3 day-tile--locked"><span class="day-tile__num">16</span><span class="day-tile__label">Forgive</span></div>
-    <div class="day-tile day-tile--p3 day-tile--locked"><span class="day-tile__num">17</span><span class="day-tile__label">Space</span></div>
-    <div class="day-tile day-tile--p3 day-tile--locked"><span class="day-tile__num">18</span><span class="day-tile__label">Dialogue</span></div>
-    <div class="day-tile day-tile--p3 day-tile--locked"><span class="day-tile__num">19</span><span class="day-tile__label">Gratitude</span></div>
-    <div class="day-tile day-tile--p3 day-tile--locked"><span class="day-tile__num">20</span><span class="day-tile__label">Long Sit</span></div>
-    <div class="day-tile day-tile--p3 day-tile--locked"><span class="day-tile__num">21</span><span class="day-tile__label">Return</span></div>
-  </div>
-  <div class="course__progress">7 days available · 21 total</div>
-</div>
-
-
-<!-- ═══════════════════════════════
      SESSIONS — beginner → expert
 ═══════════════════════════════ -->
 <div class="m-divider" id="sessionDivider">
@@ -1395,6 +1307,94 @@
     <div class="m-hook__desc">Walking mindfulness, body scan, gratitude, self-compassion, and more — all arriving with Salūs Premium</div>
   </div>
   <a href="apps.html" class="m-hook__cta">Go Premium</a>
+</div>
+
+
+<!-- ═══════════════════════════════
+     COURSES
+═══════════════════════════════ -->
+<div class="m-divider" id="courseDivider">
+  <div class="m-divider__line"></div>
+  <div class="m-divider__label">Structured Courses
+    <span class="m-divider__sub">28 days of mindfulness — two guided journeys</span>
+  </div>
+</div>
+
+<!-- 7-Day -->
+<div class="course course--7" id="course7" data-section="course">
+  <div class="course__orb course__orb--1"></div>
+  <div class="course__orb course__orb--2"></div>
+  <div class="course__orb course__orb--3"></div>
+  <div class="course__top">
+    <div class="course__info">
+      <div class="course__badge">7-Day Course</div>
+      <h3 class="course__title">7-Day Mindfulness Foundation</h3>
+      <p class="course__desc">A week-long introduction to mindfulness. One session per day — settling into stillness, finding the breath, and learning to simply notice.</p>
+    </div>
+    <a href="sessions/seven-day-mindfulness-course.html" class="course__cta">Start Day 1</a>
+  </div>
+  <div class="course__days">
+    <div class="day-tile day-tile--active"><span class="day-tile__num">1</span><span class="day-tile__label">Breath</span><span class="day-tile__dot"></span></div>
+    <div class="day-tile day-tile--locked"><span class="day-tile__num">2</span><span class="day-tile__label">Body</span></div>
+    <div class="day-tile day-tile--locked"><span class="day-tile__num">3</span><span class="day-tile__label">Sound</span></div>
+    <div class="day-tile day-tile--locked"><span class="day-tile__num">4</span><span class="day-tile__label">Thought</span></div>
+    <div class="day-tile day-tile--locked"><span class="day-tile__num">5</span><span class="day-tile__label">Emotion</span></div>
+    <div class="day-tile day-tile--locked"><span class="day-tile__num">6</span><span class="day-tile__label">Space</span></div>
+    <div class="day-tile day-tile--locked"><span class="day-tile__num">7</span><span class="day-tile__label">Review</span></div>
+  </div>
+  <div class="course__progress">1 day available · 7 total</div>
+</div>
+
+<!-- 21-Day -->
+<div class="course course--21" id="course21" data-section="course">
+  <div class="course__orb course__orb--1"></div>
+  <div class="course__orb course__orb--2"></div>
+  <div class="course__orb course__orb--3"></div>
+  <div class="course__top">
+    <div class="course__info">
+      <div class="course__badge">Structured Course</div>
+      <h3 class="course__title">21-Day Mindfulness Programme</h3>
+      <p class="course__desc">A complete guided journey from first breath to lasting habit. One session per day, building progressively — no experience needed.</p>
+    </div>
+    <a href="mindfulness-21-day.html" class="course__cta">Start Day 1</a>
+  </div>
+
+  <!-- Phase 1 — Foundation -->
+  <div class="course__phase"><span class="course__phase-dot course__phase-dot--1"></span><span class="course__phase-name">Foundation</span><span class="course__phase-line"></span></div>
+  <div class="course__days">
+    <div class="day-tile day-tile--active"><span class="day-tile__num">1</span><span class="day-tile__label">Instrument</span><span class="day-tile__dot"></span></div>
+    <div class="day-tile day-tile--locked"><span class="day-tile__num">2</span><span class="day-tile__label">Anchor</span></div>
+    <div class="day-tile day-tile--locked"><span class="day-tile__num">3</span><span class="day-tile__label">Map</span></div>
+    <div class="day-tile day-tile--locked"><span class="day-tile__num">4</span><span class="day-tile__label">Stream</span></div>
+    <div class="day-tile day-tile--locked"><span class="day-tile__num">5</span><span class="day-tile__label">Sound</span></div>
+    <div class="day-tile day-tile--locked"><span class="day-tile__num">6</span><span class="day-tile__label">Pause</span></div>
+    <div class="day-tile day-tile--locked"><span class="day-tile__num">7</span><span class="day-tile__label">Review</span></div>
+  </div>
+
+  <!-- Phase 2 — Expansion -->
+  <div class="course__phase"><span class="course__phase-dot course__phase-dot--2"></span><span class="course__phase-name">Expansion</span><span class="course__phase-line"></span></div>
+  <div class="course__days">
+    <div class="day-tile day-tile--p2 day-tile--locked"><span class="day-tile__num">8</span><span class="day-tile__label">Weather</span></div>
+    <div class="day-tile day-tile--p2 day-tile--locked"><span class="day-tile__num">9</span><span class="day-tile__label">Narrator</span></div>
+    <div class="day-tile day-tile--p2 day-tile--locked"><span class="day-tile__num">10</span><span class="day-tile__label">Stories</span></div>
+    <div class="day-tile day-tile--p2 day-tile--locked"><span class="day-tile__num">11</span><span class="day-tile__label">Body</span></div>
+    <div class="day-tile day-tile--p2 day-tile--locked"><span class="day-tile__num">12</span><span class="day-tile__label">Guest</span></div>
+    <div class="day-tile day-tile--p2 day-tile--locked"><span class="day-tile__num">13</span><span class="day-tile__label">Walk</span></div>
+    <div class="day-tile day-tile--p2 day-tile--locked"><span class="day-tile__num">14</span><span class="day-tile__label">Ground</span></div>
+  </div>
+
+  <!-- Phase 3 — Integration -->
+  <div class="course__phase"><span class="course__phase-dot course__phase-dot--3"></span><span class="course__phase-name">Integration</span><span class="course__phase-line"></span></div>
+  <div class="course__days">
+    <div class="day-tile day-tile--p3 day-tile--locked"><span class="day-tile__num">15</span><span class="day-tile__label">Compassion</span></div>
+    <div class="day-tile day-tile--p3 day-tile--locked"><span class="day-tile__num">16</span><span class="day-tile__label">Forgive</span></div>
+    <div class="day-tile day-tile--p3 day-tile--locked"><span class="day-tile__num">17</span><span class="day-tile__label">Space</span></div>
+    <div class="day-tile day-tile--p3 day-tile--locked"><span class="day-tile__num">18</span><span class="day-tile__label">Dialogue</span></div>
+    <div class="day-tile day-tile--p3 day-tile--locked"><span class="day-tile__num">19</span><span class="day-tile__label">Gratitude</span></div>
+    <div class="day-tile day-tile--p3 day-tile--locked"><span class="day-tile__num">20</span><span class="day-tile__label">Long Sit</span></div>
+    <div class="day-tile day-tile--p3 day-tile--locked"><span class="day-tile__num">21</span><span class="day-tile__label">Return</span></div>
+  </div>
+  <div class="course__progress">7 days available · 21 total</div>
 </div>
 
   </section>
