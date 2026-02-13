@@ -194,12 +194,22 @@ def parse_script(script_path):
             key, value = line.split(':', 1)
             key = key.strip().lower()
             value = value.strip()
-            if key in ['duration', 'category', 'ambient', 'ambient-db', 'style', 'api-emotion', 'expected-repetitions']:
+            if key in ['duration', 'category', 'ambient', 'ambient-db', 'ambient-fade-in', 'ambient-fade-out', 'style', 'api-emotion', 'expected-repetitions']:
                 if key == 'ambient':
                     metadata[key] = value.lower() if value.lower() != 'none' else None
                 elif key == 'ambient-db':
                     try:
                         metadata['ambient_db'] = float(value)
+                    except ValueError:
+                        pass
+                elif key == 'ambient-fade-in':
+                    try:
+                        metadata['ambient_fade_in'] = float(value)
+                    except ValueError:
+                        pass
+                elif key == 'ambient-fade-out':
+                    try:
+                        metadata['ambient_fade_out'] = float(value)
                     except ValueError:
                         pass
                 elif key == 'api-emotion':
@@ -1243,9 +1253,11 @@ def concatenate_with_silences(voice_chunks, silences, output_path, temp_dir, cle
     return output_path
 
 
-def mix_ambient(voice_path, ambient_name, output_path, volume_db=None):
+def mix_ambient(voice_path, ambient_name, output_path, volume_db=None, fade_in=None, fade_out=None):
     """Mix ambient background with voice (WAV output for lossless pipeline)."""
     volume_db = volume_db if volume_db is not None else AMBIENT_VOLUME_DB
+    fade_in = fade_in if fade_in is not None else AMBIENT_FADE_IN_DURATION
+    fade_out = fade_out if fade_out is not None else AMBIENT_FADE_OUT_DURATION
     # Try WAV first, then MP3 variants
     ambient_path = None
     for ext in ['wav', 'mp3']:
@@ -1270,7 +1282,7 @@ def mix_ambient(voice_path, ambient_name, output_path, volume_db=None):
     if ambient_duration < voice_duration:
         print(f"  WARNING: Ambient shorter than voice! Need longer ambient file.")
 
-    fade_out_start = max(0, voice_duration - AMBIENT_FADE_OUT_DURATION)
+    fade_out_start = max(0, voice_duration - fade_out)
 
     # Garden ambient has 9.5s dead silence at start — skip with -ss 10
     ambient_input = ['-i', str(ambient_path)]
@@ -1278,14 +1290,15 @@ def mix_ambient(voice_path, ambient_name, output_path, volume_db=None):
         ambient_input = ['-ss', '10', '-i', str(ambient_path)]
 
     print(f"  Ambient volume: {volume_db}dB" + (f" (override from script)" if volume_db != AMBIENT_VOLUME_DB else ""))
+    print(f"  Ambient fade-in: {fade_in}s, fade-out: {fade_out}s")
     cmd = [
         'ffmpeg', '-y',
         '-i', voice_path,
         *ambient_input,
         '-filter_complex', (
             f"[1:a]volume={volume_db}dB,"
-            f"afade=t=in:st={AMBIENT_FADE_IN_START}:d={AMBIENT_FADE_IN_DURATION},"
-            f"afade=t=out:st={fade_out_start}:d={AMBIENT_FADE_OUT_DURATION}[amb];"
+            f"afade=t=in:st={AMBIENT_FADE_IN_START}:d={fade_in},"
+            f"afade=t=out:st={fade_out_start}:d={fade_out}[amb];"
             f"[0:a][amb]amix=inputs=2:duration=first:dropout_transition=2:normalize=0"
         ),
         '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE),
@@ -3512,6 +3525,8 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
     category = metadata['category']
     ambient = metadata['ambient']
     ambient_db = metadata.get('ambient_db')
+    ambient_fade_in = metadata.get('ambient_fade_in')
+    ambient_fade_out = metadata.get('ambient_fade_out')
     api_emotion = metadata.get('api_emotion', 'calm')
 
     print(f"  Title: {metadata['title']}")
@@ -3720,7 +3735,7 @@ def build_session(session_name, dry_run=False, provider='fish', voice_id=None, m
         mixed_wav = os.path.join(temp_dir, "mixed_complete.wav")
         if ambient:
             print(f"\n  Mixing ambient '{ambient}'...")
-            mix_ambient(voice_path, ambient, mixed_wav, volume_db=ambient_db)
+            mix_ambient(voice_path, ambient, mixed_wav, volume_db=ambient_db, fade_in=ambient_fade_in, fade_out=ambient_fade_out)
         else:
             shutil.copy(voice_path, mixed_wav)
 
