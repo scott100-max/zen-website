@@ -586,12 +586,12 @@
   .cc--tools .cc__orb--1{background:radial-gradient(circle,rgba(52,211,153,0.5),transparent 70%)}
   .cc--tools .cc__orb--2{background:radial-gradient(circle,rgba(16,185,129,0.35),transparent 70%)}
 
-  .cc__asmr-eq{position:absolute;z-index:1;bottom:44px;left:50%;transform:translateX(-50%);display:flex;align-items:flex-end;gap:6px;height:80px;opacity:0.3;pointer-events:none}
-  .cc--asmr:hover .cc__asmr-eq{opacity:0.5}
-  .cc__asmr-eq span{width:4px;border-radius:2px;background:linear-gradient(to top,rgba(148,163,184,0.6),rgba(148,163,184,0.15));animation:eqPulse 1.4s ease-in-out infinite alternate;animation-delay:var(--d);height:var(--h)}
-  @keyframes eqPulse{0%{transform:scaleY(0.4)}100%{transform:scaleY(1)}}
-  .cc__cbt-triangle{position:absolute;z-index:1;width:280px;bottom:40px;left:50%;transform:translateX(-50%);display:block;opacity:0.55;pointer-events:none}
-  .cc--cbt:hover .cc__cbt-triangle{opacity:0.75}
+  .cc__asmr-grid{position:relative;z-index:2;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:12px 20px 0;pointer-events:none}
+  .cc__asmr-btn{display:flex;align-items:center;justify-content:center;gap:5px;font-size:.58rem;font-weight:300;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:6px 4px;white-space:nowrap}
+  .cc--asmr:hover .cc__asmr-btn{border-color:rgba(255,255,255,0.12);background:rgba(255,255,255,0.06)}
+  .cc__cbt-pills{position:relative;z-index:2;display:flex;justify-content:center;gap:8px;padding:16px 20px 0;flex-wrap:wrap}
+  .cc__cbt-pill{font-size:.62rem;font-weight:300;letter-spacing:.04em;color:rgba(167,139,250,0.7);background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.18);border-radius:20px;padding:6px 14px}
+  .cc--cbt:hover .cc__cbt-pill{border-color:rgba(167,139,250,0.3);background:rgba(167,139,250,0.1)}
   .cc__body{position:relative;z-index:3;flex:1;padding:26px 24px 0;display:flex;flex-direction:column}
   .cc__count{font-weight:300;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:5px;display:block}
   .cc__title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.4rem;line-height:1.2;margin-bottom:7px}
