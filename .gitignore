@@ -49,3 +49,16 @@ reference/
 # Other
 transcripts by others/
 audio-analysis/
+
+# Backup files
+*.bak_*
+
+# Build logs
+*.log
+
+# Audio QA reports
+Audio Quality Analysis/
+
+# One-off scripts
+auto-picker-compare.py
+auto-picker-report.py
