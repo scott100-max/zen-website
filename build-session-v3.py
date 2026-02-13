@@ -3461,8 +3461,9 @@ def send_build_email(session_name, duration_min, qa_passed, r2_url):
     )
 
     payload = json.dumps({
-        "from": "Salus Build <onboarding@resend.dev>",
+        "from": "Salus Build <claude@salus-mind.com>",
         "to": ["scottripley@icloud.com"],
+        "reply_to": "claude@salus-mind.com",
         "subject": f"{session_name} — LIVE",
         "text": body
     })

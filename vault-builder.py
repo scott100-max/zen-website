@@ -130,11 +130,11 @@ def preprocess_blocks(blocks):
         if (len(text) < 50 and i > 0 and backward
                 and i != 0  # Never merge into chunk 0
                 and backward[-1][1] >= 0  # Previous pause is not SILENCE
+                and backward[-1][1] < 5   # Previous pause is small (don't absorb meaningful pauses)
                 and pause >= 0  # Current block's pause is not SILENCE
                 and len(backward[-1][0]) + len(text) + 1 <= 200):
             prev_text, prev_pause = backward[-1]
             # Only backward-merge if the previous block's pause was small
-            # (the short block was after a big pause, so we attach to previous section)
             combined = prev_text + " " + text
             merge_log.append(
                 f"MERGE←: block {i} ({len(text)}ch \"{text[:40]}\") "
@@ -1210,8 +1210,9 @@ def send_notification(subject, body):
         return
 
     payload = json.dumps({
-        "from": "onboarding@resend.dev",
+        "from": "Claude <claude@salus-mind.com>",
         "to": ["scottripley@icloud.com"],
+        "reply_to": "claude@salus-mind.com",
         "subject": subject,
         "text": body,
     })
