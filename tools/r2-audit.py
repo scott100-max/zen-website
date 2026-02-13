@@ -564,54 +564,54 @@ def generate_html(sessions_data, asmr_data, sounds_data, cdn_results, run_time, 
 <title>R2 Audio Audit — {datetime.now().strftime('%d %b %Y %H:%M')}</title>
 <style>
 * {{ margin:0; padding:0; box-sizing:border-box; }}
-body {{ background:#0f1419; color:#c7d5e0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,monospace; font-size:13px; padding:20px; }}
-h1 {{ color:#e8eaed; font-size:22px; margin-bottom:4px; }}
-.subtitle {{ color:#8899a6; font-size:13px; margin-bottom:20px; }}
+body {{ background:#FFF1E5; color:#33302E; font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; font-size:13px; padding:20px; }}
+h1 {{ color:#1A1817; font-size:22px; font-weight:700; margin-bottom:4px; }}
+.subtitle {{ color:#807973; font-size:13px; margin-bottom:20px; }}
 .summary {{ display:flex; gap:16px; flex-wrap:wrap; margin-bottom:24px; }}
-.stat {{ background:#1a2332; border:1px solid #2a3a4a; border-radius:8px; padding:12px 18px; min-width:120px; }}
-.stat-num {{ font-size:28px; font-weight:700; color:#e8eaed; }}
-.stat-label {{ font-size:11px; color:#8899a6; text-transform:uppercase; letter-spacing:0.5px; margin-top:2px; }}
-.stat-live .stat-num {{ color:#4ecdc4; }}
-.stat-error .stat-num {{ color:#ff6b6b; }}
-.stat-warn .stat-num {{ color:#ffd93d; }}
+.stat {{ background:#F2DFCE; border:1px solid #E0CDBF; border-radius:4px; padding:12px 18px; min-width:120px; }}
+.stat-num {{ font-size:28px; font-weight:700; color:#1A1817; }}
+.stat-label {{ font-size:11px; color:#807973; text-transform:uppercase; letter-spacing:0.5px; margin-top:2px; }}
+.stat-live .stat-num {{ color:#0D7680; }}
+.stat-error .stat-num {{ color:#CC0000; }}
+.stat-warn .stat-num {{ color:#A64D00; }}
 .controls {{ display:flex; gap:12px; align-items:center; margin-bottom:16px; flex-wrap:wrap; }}
-.controls select, .controls input {{ background:#1a2332; border:1px solid #2a3a4a; color:#c7d5e0; padding:6px 10px; border-radius:4px; font-size:13px; }}
+.controls select, .controls input {{ background:#FFF7F0; border:1px solid #E0CDBF; color:#33302E; padding:6px 10px; border-radius:4px; font-size:13px; }}
 .controls input {{ width:220px; }}
-table {{ width:100%; border-collapse:collapse; margin-bottom:32px; border:1px solid #2a3a4a; }}
+table {{ width:100%; border-collapse:collapse; margin-bottom:32px; border:1px solid #E0CDBF; }}
 #mainTable {{ table-layout:fixed; }}
 #mainTable colgroup {{ display:table-column-group; }}
-td {{ padding:6px 8px; border:1px solid #2a3a4a; vertical-align:middle; font-size:12px; overflow:hidden; text-overflow:ellipsis; }}
-th {{ background:#1a2332; color:#8899a6; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; padding:8px; text-align:left; border:1px solid #2a3a4a; cursor:pointer; user-select:none; white-space:nowrap; }}
-th:hover {{ color:#c7d5e0; }}
+td {{ padding:6px 8px; border:1px solid #E0CDBF; vertical-align:middle; font-size:12px; overflow:hidden; text-overflow:ellipsis; }}
+th {{ background:#F2DFCE; color:#807973; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; padding:8px; text-align:left; border:1px solid #E0CDBF; cursor:pointer; user-select:none; white-space:nowrap; }}
+th:hover {{ color:#1A1817; }}
 th .arrow {{ font-size:10px; margin-left:4px; }}
-tr:hover {{ background:#151e28; }}
-tr:nth-child(even) {{ background:#111820; }}
-.cell-error {{ color:#ff6b6b; font-weight:600; }}
-.cell-warn {{ color:#ffd93d; }}
-.cell-info {{ color:#8899a6; }}
-.cell-ok {{ color:#4ecdc4; }}
-.stage-live {{ background:#1a3a2a; color:#4ecdc4; padding:2px 8px; border-radius:3px; font-size:11px; font-weight:600; }}
-.stage-built {{ background:#1a2a3a; color:#64b5f6; padding:2px 8px; border-radius:3px; font-size:11px; }}
-.stage-picked {{ background:#2a2a1a; color:#ffd93d; padding:2px 8px; border-radius:3px; font-size:11px; }}
-.stage-generated {{ background:#1a1a2a; color:#b39ddb; padding:2px 8px; border-radius:3px; font-size:11px; }}
-.stage-legacy {{ background:#2a1a1a; color:#ef9a9a; padding:2px 8px; border-radius:3px; font-size:11px; }}
-.stage-outstanding {{ background:#1a1a1a; color:#616161; padding:2px 8px; border-radius:3px; font-size:11px; }}
-.r2-200 {{ color:#4ecdc4; }}
-.r2-404 {{ color:#ff6b6b; }}
+tr:hover {{ background:#FFF7F0; }}
+tr:nth-child(even) {{ background:#FFF9F2; }}
+.cell-error {{ color:#CC0000; font-weight:600; }}
+.cell-warn {{ color:#A64D00; }}
+.cell-info {{ color:#998F85; }}
+.cell-ok {{ color:#0D7680; }}
+.stage-live {{ background:#D4EDDA; color:#1B5E20; padding:2px 8px; border-radius:3px; font-size:11px; font-weight:600; }}
+.stage-built {{ background:#D6E9F8; color:#1A4971; padding:2px 8px; border-radius:3px; font-size:11px; }}
+.stage-picked {{ background:#FFF3CD; color:#856404; padding:2px 8px; border-radius:3px; font-size:11px; }}
+.stage-generated {{ background:#E8DEF8; color:#4A148C; padding:2px 8px; border-radius:3px; font-size:11px; }}
+.stage-legacy {{ background:#F8D7DA; color:#842029; padding:2px 8px; border-radius:3px; font-size:11px; }}
+.stage-outstanding {{ background:#E8E5E3; color:#807973; padding:2px 8px; border-radius:3px; font-size:11px; }}
+.r2-200 {{ color:#0D7680; }}
+.r2-404 {{ color:#CC0000; }}
 .issue-list {{ list-style:none; display:flex; flex-wrap:wrap; gap:2px 10px; }}
 .issue-list li {{ white-space:nowrap; font-size:11px; }}
 .issue-list li::before {{ content:''; display:inline-block; width:6px; height:6px; border-radius:50%; margin-right:4px; vertical-align:middle; }}
-.issue-error::before {{ background:#ff6b6b; }}
-.issue-warn::before {{ background:#ffd93d; }}
-.issue-info::before {{ background:#616161; }}
-.files-list {{ font-size:11px; color:#8899a6; }}
+.issue-error::before {{ background:#CC0000; }}
+.issue-warn::before {{ background:#A64D00; }}
+.issue-info::before {{ background:#998F85; }}
+.files-list {{ font-size:11px; color:#807973; }}
 .files-list span {{ display:inline; white-space:nowrap; }}
 .files-list span+span::before {{ content:', '; }}
-h2 {{ color:#e8eaed; font-size:16px; margin:28px 0 12px; }}
-.section-sep {{ border:none; border-top:1px solid #2a3a4a; margin:32px 0; }}
-.match {{ color:#4ecdc4; }}
-.mismatch {{ color:#ff6b6b; }}
-.skipped {{ color:#616161; font-style:italic; }}
+h2 {{ color:#1A1817; font-size:16px; font-weight:700; margin:28px 0 12px; }}
+.section-sep {{ border:none; border-top:1px solid #E0CDBF; margin:32px 0; }}
+.match {{ color:#0D7680; }}
+.mismatch {{ color:#CC0000; }}
+.skipped {{ color:#998F85; font-style:italic; }}
 </style>
 </head>
 <body>
