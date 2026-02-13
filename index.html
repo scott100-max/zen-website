@@ -821,7 +821,7 @@
         </div>
         <span class="hb-narrator__time" id="narratorTime">0:00</span>
       </div>
-      <audio id="graceAudio" preload="none" src="https://media.salus-mind.com/content/audio-free/asmr-grace.mp3" loop></audio>
+      <audio id="graceAudio" preload="auto" src="https://media.salus-mind.com/content/audio-free/asmr-grace.mp3" loop></audio>
     </div>
   </div>
 </section>
@@ -1199,14 +1199,16 @@
       },STEP);
     }
 
-    btn.addEventListener('click',function(){if(audio.paused){audio.play()}else{audio.pause()}});
-    audio.addEventListener('play',function(){
-      iconPlay.style.display='none';iconPause.style.display='block';
-      if(grace){grace.volume=0;grace.play();fadeGrace(0,GRACE_VOL,FADE_MS);}
-    });
-    audio.addEventListener('pause',function(){
-      iconPlay.style.display='block';iconPause.style.display='none';
-      if(grace&&!grace.paused)fadeGrace(grace.volume,0,FADE_MS);
+    btn.addEventListener('click',function(){
+      if(audio.paused){
+        audio.play();
+        iconPlay.style.display='none';iconPause.style.display='block';
+        if(grace){grace.volume=0;grace.play().catch(function(){});fadeGrace(0,GRACE_VOL,FADE_MS);}
+      }else{
+        audio.pause();
+        iconPlay.style.display='block';iconPause.style.display='none';
+        if(grace&&!grace.paused)fadeGrace(grace.volume,0,FADE_MS);
+      }
     });
     audio.addEventListener('ended',function(){
       iconPlay.style.display='block';iconPause.style.display='none';bar.style.width='0%';

@@ -699,6 +699,7 @@
     .sc--cbt .sp__bar{background:linear-gradient(90deg,#4ecdc4,#34d399)}
     .sc--advanced .sp__bar{background:linear-gradient(90deg,#a855f7,#c084fc)}
     .sp__time{flex-shrink:0;font-weight:300;font-size:.62rem;color:rgba(255,255,255,0.35);white-space:nowrap;min-width:60px;text-align:right;font-variant-numeric:tabular-nums}
+    .sp--locked{display:flex;align-items:center;gap:4px;padding:6px 0;opacity:0.5}
   
     /* ═══════════════════════════════════
        COURSE SHOWCASE — cards-within-cards
@@ -1204,7 +1205,7 @@
       <div class="sc__meta"><span class="sc__dot"></span>10 min</div>
       <h3 class="sc__title">Morning Meditation</h3>
       <p class="sc__desc">Start your day with intention and clarity. A gentle guided practice to ground yourself before the day begins.</p>
-      <div class="sp"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 0:00</span></div>
+      <div class="sp" data-src="https://media.salus-mind.com/content/audio-free/01-morning-meditation.mp3"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 0:00</span></div>
     </div>
   </div>
 
@@ -1215,7 +1216,7 @@
       <div class="sc__meta"><span class="sc__dot"></span>12 min</div>
       <h3 class="sc__title">Breathing for Anxiety</h3>
       <p class="sc__desc">A guided practice to calm your nervous system when anxiety feels heavy.</p>
-      <div class="sp"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 0:00</span></div>
+      <div class="sp" data-src="https://media.salus-mind.com/content/audio-free/03-breathing-for-anxiety.mp3"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 0:00</span></div>
     </div>
   </div>
 
@@ -1227,7 +1228,7 @@
       <div class="sc__meta"><span class="sc__dot"></span>8 min</div>
       <h3 class="sc__title">Introduction to Mindfulness</h3>
       <p class="sc__desc">Your starting point. A warm, unhurried introduction to the basics — breath, attention, and the art of simply being present.</p>
-      <div class="sp"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 0:00</span></div>
+      <div class="sp" data-src="https://media.salus-mind.com/content/audio-free/25-introduction-to-mindfulness.mp3"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 0:00</span></div>
     </div>
   </div>
 
@@ -1239,7 +1240,7 @@
       <div class="sc__meta"><span class="sc__dot"></span>5 min</div>
       <h3 class="sc__title">Calm in Three Minutes</h3>
       <p class="sc__desc">When you only have a moment. A rapid grounding exercise to reset your nervous system and find your centre.</p>
-      <div class="sp"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 0:00</span></div>
+      <div class="sp" data-src="https://media.salus-mind.com/content/audio-free/18-calm-in-three-minutes.mp3"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 0:00</span></div>
     </div>
   </div>
 
@@ -1250,7 +1251,7 @@
       <div class="sc__meta"><span class="sc__dot"></span>5 min</div>
       <h3 class="sc__title">The Calm Reset</h3>
       <p class="sc__desc">A quick anchor practice. Five minutes to interrupt the stress cycle and return to a state of steady awareness.</p>
-      <div class="sp"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 0:00</span></div>
+      <div class="sp" data-src="https://media.salus-mind.com/content/audio-free/23-the-calm-reset.mp3"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 0:00</span></div>
     </div>
   </div>
 
@@ -1261,7 +1262,7 @@
       <div class="sc__meta"><span class="sc__dot"></span>13 min</div>
       <h3 class="sc__title">Release and Restore</h3>
       <p class="sc__desc">Breathwork meets body awareness. Release accumulated tension from the jaw, shoulders, and chest — then rebuild calm from the ground up.</p>
-      <div class="sp"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 0:00</span></div>
+      <div class="sp" data-src="https://media.salus-mind.com/content/audio-free/19-release-and-restore.mp3"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 0:00</span></div>
     </div>
   </div>
 
@@ -1273,7 +1274,7 @@
       <div class="sc__meta"><span class="sc__dot"></span>9 min</div>
       <h3 class="sc__title">Observing Emotions</h3>
       <p class="sc__desc">Learn to sit with feelings without being swept away. A practice in noticing, naming, and letting emotions pass through.</p>
-      <div class="sp"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 9:24</span></div>
+      <div class="sp" data-src="https://media.salus-mind.com/content/audio-free/32-observing-emotions.mp3"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 0:00</span></div>
     </div>
   </div>
 
@@ -1284,7 +1285,7 @@
       <div class="sc__meta"><span class="sc__dot"></span>11 min</div>
       <h3 class="sc__title">Open Awareness</h3>
       <p class="sc__desc">Move beyond the breath. Expand your attention to hold everything — sounds, sensations, thoughts — without grasping.</p>
-      <div class="sp"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 11:24</span></div>
+      <div class="sp sp--locked"><svg viewBox="0 0 24 24" width="14" height="14" style="fill:rgba(255,255,255,0.3)"><path d="M18 8h-1V6A5 5 0 0 0 7 6v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zM12 17a2 2 0 1 1 0-4 2 2 0 0 1 0 4zM9 8V6a3 3 0 1 1 6 0v2H9z"/></svg><span class="sp__time" style="margin-left:8px">Premium</span></div>
     </div>
   </div>
 
@@ -1296,7 +1297,7 @@
       <div class="sc__meta"><span class="sc__dot"></span>12 min</div>
       <h3 class="sc__title">Loving-Kindness Introduction</h3>
       <p class="sc__desc">The traditional metta practice — extending warmth first to yourself, then outward. A gentle entry point into compassion meditation.</p>
-      <div class="sp"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 10:28</span></div>
+      <div class="sp" data-src="https://media.salus-mind.com/content/audio-free/36-loving-kindness-intro.mp3"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 0:00</span></div>
     </div>
   </div>
 
@@ -1308,7 +1309,7 @@
       <div class="sc__meta"><span class="sc__dot"></span>17 min · Sleep</div>
       <h3 class="sc__title">Rainfall Sleep Journey</h3>
       <p class="sc__desc">Fall asleep to the sound of gentle rain. Our benchmark session — the standard by which all others are measured.</p>
-      <div class="sp"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 0:00</span></div>
+      <div class="sp" data-src="https://media.salus-mind.com/content/audio-free/09-rainfall-sleep-journey.mp3"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 0:00</span></div>
     </div>
   </div>
 
@@ -1319,7 +1320,7 @@
       <div class="sc__meta"><span class="sc__dot"></span>38 min · Sleep</div>
       <h3 class="sc__title">Letting Go of the Day</h3>
       <p class="sc__desc">Unwind the threads of your day one by one. A gentle practice for releasing what no longer serves you before rest.</p>
-      <div class="sp"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 38:30</span></div>
+      <div class="sp sp--locked"><svg viewBox="0 0 24 24" width="14" height="14" style="fill:rgba(255,255,255,0.3)"><path d="M18 8h-1V6A5 5 0 0 0 7 6v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zM12 17a2 2 0 1 1 0-4 2 2 0 0 1 0 4zM9 8V6a3 3 0 1 1 6 0v2H9z"/></svg><span class="sp__time" style="margin-left:8px">Premium</span></div>
     </div>
   </div>
 
@@ -1330,7 +1331,7 @@
       <div class="sc__meta"><span class="sc__dot"></span>50 min · Sleep</div>
       <h3 class="sc__title">Body Scan for Deep Rest</h3>
       <p class="sc__desc">A slow, deliberate journey through every part of your body — releasing tension layer by layer until sleep arrives naturally.</p>
-      <div class="sp"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 50:12</span></div>
+      <div class="sp sp--locked"><svg viewBox="0 0 24 24" width="14" height="14" style="fill:rgba(255,255,255,0.3)"><path d="M18 8h-1V6A5 5 0 0 0 7 6v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zM12 17a2 2 0 1 1 0-4 2 2 0 0 1 0 4zM9 8V6a3 3 0 1 1 6 0v2H9z"/></svg><span class="sp__time" style="margin-left:8px">Premium</span></div>
     </div>
   </div>
 
@@ -1341,7 +1342,7 @@
       <div class="sc__meta"><span class="sc__dot"></span>52 min · Sleep</div>
       <h3 class="sc__title">Moonlight Drift</h3>
       <p class="sc__desc">Guided imagery under a canopy of stars. Let the quiet of the night carry you into deep, unbroken sleep.</p>
-      <div class="sp"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 52:00</span></div>
+      <div class="sp sp--locked"><svg viewBox="0 0 24 24" width="14" height="14" style="fill:rgba(255,255,255,0.3)"><path d="M18 8h-1V6A5 5 0 0 0 7 6v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zM12 17a2 2 0 1 1 0-4 2 2 0 0 1 0 4zM9 8V6a3 3 0 1 1 6 0v2H9z"/></svg><span class="sp__time" style="margin-left:8px">Premium</span></div>
     </div>
   </div>
 
@@ -1352,7 +1353,7 @@
       <div class="sc__meta"><span class="sc__dot"></span>63 min · Sleep</div>
       <h3 class="sc__title">The Quiet Shore</h3>
       <p class="sc__desc">An extended journey to a calm shoreline. Waves, warmth, and a voice that fades as sleep deepens.</p>
-      <div class="sp"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 63:24</span></div>
+      <div class="sp sp--locked"><svg viewBox="0 0 24 24" width="14" height="14" style="fill:rgba(255,255,255,0.3)"><path d="M18 8h-1V6A5 5 0 0 0 7 6v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zM12 17a2 2 0 1 1 0-4 2 2 0 0 1 0 4zM9 8V6a3 3 0 1 1 6 0v2H9z"/></svg><span class="sp__time" style="margin-left:8px">Premium</span></div>
     </div>
   </div>
 
@@ -1364,7 +1365,7 @@
       <div class="sc__meta"><span class="sc__dot"></span>20 min</div>
       <h3 class="sc__title">Non-Dual Awareness</h3>
       <p class="sc__desc">Rest in the space before thought. An advanced practice in observing consciousness itself — the observer and the observed as one.</p>
-      <div class="sp"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 20:06</span></div>
+      <div class="sp" data-src="https://media.salus-mind.com/content/audio-free/43-non-dual-awareness.mp3"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 0:00</span></div>
     </div>
   </div>
 
@@ -1375,7 +1376,7 @@
       <div class="sc__meta"><span class="sc__dot"></span>56 min</div>
       <h3 class="sc__title">Lucid Dream Preparation</h3>
       <p class="sc__desc">A guided practice to strengthen awareness at the threshold of sleep — techniques for recognising and entering lucid states.</p>
-      <div class="sp"><button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 56:12</span></div>
+      <div class="sp sp--locked"><svg viewBox="0 0 24 24" width="14" height="14" style="fill:rgba(255,255,255,0.3)"><path d="M18 8h-1V6A5 5 0 0 0 7 6v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zM12 17a2 2 0 1 1 0-4 2 2 0 0 1 0 4zM9 8V6a3 3 0 1 1 6 0v2H9z"/></svg><span class="sp__time" style="margin-left:8px">Premium</span></div>
     </div>
   </div>
 
@@ -1464,6 +1465,13 @@
     const playSvg = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
     let activePlayer = null;
 
+    function stopGlobalMp() {
+      if (window._salusActiveAudio && window._salusActiveAudio.audio) {
+        window._salusActiveAudio.audio.pause();
+        if (window._salusActiveAudio.btn) window._salusActiveAudio.btn.innerHTML = playSvg;
+      }
+    }
+
     function fmt(s) {
       const m = Math.floor(s / 60);
       const sec = Math.floor(s % 60);
@@ -1488,6 +1496,7 @@
       }
 
       function stopOthers() {
+        stopGlobalMp();
         if (activePlayer && activePlayer !== audio) {
           activePlayer.pause();
           var prev = activePlayer._btn;
@@ -1495,6 +1504,7 @@
         }
         activePlayer = audio;
         audio._btn = btn;
+        window._salusActiveAudio = { audio: audio, btn: btn };
       }
 
       btn.addEventListener('click', function(e) {
@@ -1540,6 +1550,106 @@
           var rect = track.getBoundingClientRect();
           audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
           progress.style.width = (audio.currentTime / audio.duration * 100) + '%';
+          timeEl.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration);
+        }
+      });
+    });
+  })();
+
+  // ═══════════════════════════════════════════
+  // SESSION CARD PLAYERS (.sp[data-src])
+  // ═══════════════════════════════════════════
+  (function() {
+    const pauseSvg = '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" fill="#fff"/><rect x="14" y="4" width="4" height="16" fill="#fff"/></svg>';
+    const playSvg = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+    let activeSpPlayer = null;
+
+    // Stop any m-player audio when sp player starts (and vice versa via shared ref)
+    function stopGlobal() {
+      if (window._salusActiveAudio && window._salusActiveAudio.audio) {
+        window._salusActiveAudio.audio.pause();
+        if (window._salusActiveAudio.btn) window._salusActiveAudio.btn.innerHTML = playSvg;
+      }
+    }
+
+    function fmt(s) {
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60);
+      return m + ':' + (sec < 10 ? '0' : '') + sec;
+    }
+
+    document.querySelectorAll('.sp[data-src]').forEach(function(sp) {
+      const src = sp.dataset.src;
+      const btn = sp.querySelector('.sp__btn');
+      const track = sp.querySelector('.sp__track');
+      const bar = sp.querySelector('.sp__bar');
+      const timeEl = sp.querySelector('.sp__time');
+      const audio = new Audio();
+      let loaded = false;
+
+      function update() {
+        if (audio.duration) {
+          bar.style.width = (audio.currentTime / audio.duration * 100) + '%';
+          timeEl.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration);
+        }
+        if (!audio.paused) requestAnimationFrame(update);
+      }
+
+      function stopOthers() {
+        stopGlobal();
+        if (activeSpPlayer && activeSpPlayer !== audio) {
+          activeSpPlayer.pause();
+          var prev = activeSpPlayer._btn;
+          if (prev) prev.innerHTML = playSvg;
+        }
+        activeSpPlayer = audio;
+        audio._btn = btn;
+        window._salusActiveAudio = { audio: audio, btn: btn };
+      }
+
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (!loaded) {
+          audio.src = src;
+          audio.preload = 'auto';
+          audio.load();
+          loaded = true;
+          btn.innerHTML = '<span style="color:#fff;font-size:10px">...</span>';
+          audio.addEventListener('canplay', function onReady() {
+            audio.removeEventListener('canplay', onReady);
+            stopOthers();
+            audio.play();
+            btn.innerHTML = pauseSvg;
+            update();
+          });
+          audio.addEventListener('error', function() {
+            btn.innerHTML = playSvg;
+            loaded = false;
+          });
+          return;
+        }
+        if (audio.paused) {
+          stopOthers();
+          audio.play();
+          btn.innerHTML = pauseSvg;
+          update();
+        } else {
+          audio.pause();
+          btn.innerHTML = playSvg;
+        }
+      });
+
+      audio.addEventListener('ended', function() {
+        btn.innerHTML = playSvg;
+        bar.style.width = '0%';
+        timeEl.textContent = '0:00 / ' + fmt(audio.duration);
+      });
+
+      track.addEventListener('click', function(e) {
+        if (audio.duration) {
+          var rect = track.getBoundingClientRect();
+          audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+          bar.style.width = (audio.currentTime / audio.duration * 100) + '%';
           timeEl.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration);
         }
       });
