@@ -149,12 +149,12 @@ PAUSE_PROFILES = {
     'advanced': {1: 10, 2: 40, 3: 90},
 }
 
-# Ambient settings (per AUDIO-SPEC.md)
+# Ambient settings (per PROJECT-BIBLE v4.5 — locked values)
 AMBIENT_VOLUME_DB = -14          # Standard ambient level for mindfulness/meditation
 AMBIENT_VOLUME_SILENCE_DB = -13  # Raise 1dB during 30s+ pauses (per spec)
 AMBIENT_FADE_IN_START = 0        # Start fade immediately
 AMBIENT_FADE_IN_DURATION = 10    # 10 seconds fade-in
-AMBIENT_FADE_OUT_DURATION = 10   # 10 seconds fade-out
+AMBIENT_FADE_OUT_DURATION = 60   # 60 seconds fade-out (Bible v4.5 locked)
 
 # ============================================================================
 # SCRIPT PARSING
@@ -906,7 +906,7 @@ def crossfade_audio_files(file_list, output_path, crossfade_ms=CROSSFADE_MS):
 
     cmd = ['ffmpeg', '-y'] + inputs + [
         '-filter_complex', filter_complex,
-        '-c:a', 'libmp3lame', '-q:a', '2',
+        '-c:a', 'libmp3lame', '-b:a', '128k',
         output_path
     ]
 
@@ -1063,7 +1063,7 @@ def cleanup_audio_medium(input_path, output_path):
         'equalizer=f=6000:t=q:w=2:g=-3',      # De-esser: gentler notch at 6kHz
         'highshelf=f=8000:g=-1.5',             # Gentle shelf above 8kHz (was 7kHz/-2)
         'afftdn=nf=-20',                       # Lighter noise reduction (was -25)
-        'loudnorm=I=-24:TP=-2:LRA=11'
+        'loudnorm=I=-26:TP=-2:LRA=11'
     ])
     cmd = [
         'ffmpeg', '-y', '-i', input_path,
@@ -1127,7 +1127,7 @@ def cleanup_audio_light(input_path, output_path):
     """Light cleanup — loudness normalization only (WAV for lossless pipeline)."""
     cmd = [
         'ffmpeg', '-y', '-i', input_path,
-        '-af', 'loudnorm=I=-24:TP=-2:LRA=11',
+        '-af', 'loudnorm=I=-26:TP=-2:LRA=11',
         '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE),
         output_path
     ]
@@ -3168,7 +3168,7 @@ def patch_stitch_clicks(raw_mp3, manifest_data, output_mp3, ambient_name=None, f
     normed_wav = raw_mp3 + ".normed.wav"
     subprocess.run([
         'ffmpeg', '-y', '-i', patched_wav,
-        '-af', 'loudnorm=I=-24:TP=-2:LRA=11',
+        '-af', 'loudnorm=I=-26:TP=-2:LRA=11',
         '-c:a', 'pcm_s16le', '-ar', str(SAMPLE_RATE),
         normed_wav
     ], capture_output=True, check=True)

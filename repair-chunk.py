@@ -39,8 +39,8 @@ AMBIENT_DIR = Path("content/audio/ambient")
 
 AMBIENT_VOLUME_DB = -14
 AMBIENT_FADE_IN_START = 0
-AMBIENT_FADE_IN_DURATION = 15
-AMBIENT_FADE_OUT_DURATION = 8
+AMBIENT_FADE_IN_DURATION = 10    # Bible v4.5 locked
+AMBIENT_FADE_OUT_DURATION = 60   # Bible v4.5 locked
 
 # Session 32 chunk 1 data (from manifest)
 CHUNK1_TEXT = "Today we are going to practise something that might seem uncomfortable at first. Sitting with our emotions. Not fixing them. Not pushing them away. Just observing."
