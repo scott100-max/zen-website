@@ -471,80 +471,18 @@
   document.addEventListener('touchstart', showControls);
   showControls();
 
-  let isPlaying = false;
+  // Audio coming soon — show notice on play click
   const btnPlay = document.getElementById('btnPlay');
-  const playIcon = document.getElementById('playIcon');
-
-  let progress = 0;
-  const totalSeconds = 28 * 60;
-  const progressFill = document.getElementById('progressFill');
   const timeCurrent = document.getElementById('timeCurrent');
-  const storyText = document.querySelector('.story-text');
-
-  let textFadeTimer = null;
-  let textFaded = false;
+  const timeTotal = document.getElementById('timeTotal');
+  if (timeTotal) timeTotal.textContent = '';
+  if (timeCurrent) timeCurrent.textContent = 'Coming soon';
 
   btnPlay.addEventListener('click', () => {
-    isPlaying = !isPlaying;
-    if (isPlaying) {
-      playIcon.innerHTML = `
-        <rect x="7" y="5" width="3" height="14" rx="1" fill="var(--text-primary)" stroke="none"></rect>
-        <rect x="14" y="5" width="3" height="14" rx="1" fill="var(--text-primary)" stroke="none"></rect>
-      `;
-      btnPlay.title = 'Pause';
-      simulateProgress();
-      if (!textFaded) {
-        textFadeTimer = setTimeout(() => {
-          storyText.classList.add('fade-away');
-          textFaded = true;
-        }, 45000);
-      }
-    } else {
-      playIcon.innerHTML = `<polygon points="8,5 20,12 8,19" fill="var(--text-primary)" stroke="none"></polygon>`;
-      btnPlay.title = 'Play';
-      if (textFadeTimer && !textFaded) {
-        clearTimeout(textFadeTimer);
-      }
-    }
-  });
-
-  function formatTime(seconds) {
-    const m = Math.floor(seconds / 60);
-    const s = Math.floor(seconds % 60);
-    return `${m}:${s.toString().padStart(2, '0')}`;
-  }
-
-  function simulateProgress() {
-    if (!isPlaying) return;
-    progress += 1;
-    if (progress > totalSeconds) progress = totalSeconds;
-    const pct = (progress / totalSeconds) * 100;
-    progressFill.style.width = pct + '%';
-    timeCurrent.textContent = formatTime(progress);
-    if (progress < totalSeconds) {
-      setTimeout(simulateProgress, 1000);
-    }
-  }
-
-  const progressBar = document.getElementById('progressBar');
-  progressBar.addEventListener('click', (e) => {
-    const rect = progressBar.getBoundingClientRect();
-    const pct = (e.clientX - rect.left) / rect.width;
-    progress = Math.floor(pct * totalSeconds);
-    progressFill.style.width = (pct * 100) + '%';
-    timeCurrent.textContent = formatTime(progress);
-  });
-
-  document.getElementById('btnRewind').addEventListener('click', () => {
-    progress = Math.max(0, progress - 15);
-    progressFill.style.width = ((progress / totalSeconds) * 100) + '%';
-    timeCurrent.textContent = formatTime(progress);
-  });
-
-  document.getElementById('btnForward').addEventListener('click', () => {
-    progress = Math.min(totalSeconds, progress + 15);
-    progressFill.style.width = ((progress / totalSeconds) * 100) + '%';
-    timeCurrent.textContent = formatTime(progress);
+    if (timeCurrent) timeCurrent.textContent = 'Audio coming soon';
+    btnPlay.style.opacity = '0.4';
+    btnPlay.style.cursor = 'default';
+    setTimeout(() => { btnPlay.style.opacity = ''; btnPlay.style.cursor = ''; }, 2000);
   });
 
   const particlesEl = document.getElementById('particles');
