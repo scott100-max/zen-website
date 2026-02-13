@@ -325,10 +325,10 @@
               <span id="detailTags">Breath awareness · Your foundation</span>
             </div>
             <p class="detail__desc" id="detailDesc">Everything begins with the breath. Today you'll learn to use your breath as an anchor — a place to return to whenever your mind wanders. This single skill is the foundation of every mindfulness practice that follows.</p>
-            <div class="detail__player custom-player" data-src="https://media.salus-mind.com/content/audio-free/38-seven-day-mindfulness-day1.mp3">
-              <button class="detail__play-btn cp-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
-              <div class="detail__track"><div class="detail__progress"></div></div>
-              <span class="detail__time cp-time">0:00 / 0:00</span>
+            <div class="detail__player course-player" id="coursePlayer" data-src="https://media.salus-mind.com/content/audio-free/38-seven-day-mindfulness-day1.mp3">
+              <button class="detail__play-btn" id="cpBtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+              <div class="detail__track" id="cpTrack"><div class="detail__progress" id="cpBar"></div></div>
+              <span class="detail__time" id="cpTime">0:00 / 0:00</span>
             </div>
           </div>
           <div class="detail__locked" id="detailLocked">
@@ -539,7 +539,7 @@
   <script src="js/tracker.js?v=1770917123"></script>
   <script>
     const dayData = [
-      {day:1, title:'The Instrument',            duration:'7 minutes',   tags:'Breath awareness · Your foundation',        desc:'Everything begins with the breath. Today you\'ll learn to use your breath as an anchor — a place to return to whenever your mind wanders. This single skill is the foundation of every mindfulness practice that follows.', free:true,  accent:'#4ecdc4', time:'0:00 / 7:24'},
+      {day:1, title:'The Instrument',            duration:'7 minutes',   tags:'Breath awareness · Your foundation',        desc:'Everything begins with the breath. Today you\'ll learn to use your breath as an anchor — a place to return to whenever your mind wanders. This single skill is the foundation of every mindfulness practice that follows.', free:true,  accent:'#4ecdc4', time:'0:00 / 7:24', src:'https://media.salus-mind.com/content/audio-free/38-seven-day-mindfulness-day1.mp3'},
       {day:2, title:'The Anchor',                duration:'9 minutes',   tags:'Deepening focus · Returning again',          desc:'The breath as anchor — not to control, but to return to. Today you\'ll practise the gentle art of noticing when you\'ve drifted and coming back, again and again.', free:false, accent:'#6dd598', time:'0:00 / 8:30'},
       {day:3, title:'The Map',                   duration:'10 minutes',  tags:'Body awareness · Physical grounding',        desc:'Bring gentle attention to every part of your body, from crown to toes. Learn to notice tension you didn\'t know you were carrying — and let it soften.', free:false, accent:'#3ec9a0', time:'0:00 / 10:06'},
       {day:4, title:'The Stream',                duration:'8 minutes',   tags:'Thought observation · Mental clarity',       desc:'Thoughts flow like a stream — constant, shifting, never the same twice. Today you\'ll practise sitting on the bank and watching them pass without being carried away.', free:false, accent:'#38bdf8', time:'0:00 / 8:24'},
@@ -587,11 +587,14 @@
           document.getElementById('detailDuration').textContent = data.duration;
           document.getElementById('detailTags').textContent = data.tags;
           document.getElementById('detailDesc').textContent = data.desc;
-          document.querySelector('.detail__time').textContent = data.time;
           if (data.src) {
-            const player = document.querySelector('.detail__player');
-            if (player) player.setAttribute('data-src', data.src);
+            const player = document.getElementById('coursePlayer');
+            if (player) { player.setAttribute('data-src', data.src); player.style.display = ''; }
+          } else {
+            const player = document.getElementById('coursePlayer');
+            if (player) player.style.display = 'none';
           }
+          resetCoursePlayer();
         } else {
           detailContent.style.display = 'none';
           detailLocked.style.display = 'flex';
@@ -616,10 +619,85 @@
         await SalusAuth.init();
         if (SalusAuth.isPremium()) {
           allNodes.forEach(n => n.classList.add('unlocked'));
-          // Re-select current day to refresh locked/unlocked view
           var activeNode = document.querySelector('.day-node.active');
           if (activeNode) selectDay(parseInt(activeNode.dataset.day));
         }
+      }
+    });
+
+    // ═══ Course Player — reads data-src dynamically on each play ═══
+    var cpAudio = new Audio();
+    var cpLoaded = false;
+    var cpCurrentSrc = '';
+    var cpBtn = document.getElementById('cpBtn');
+    var cpBar = document.getElementById('cpBar');
+    var cpTime = document.getElementById('cpTime');
+    var cpTrack = document.getElementById('cpTrack');
+    var cpPlayer = document.getElementById('coursePlayer');
+    var playSvgHtml = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+    var pauseSvgHtml = '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg>';
+
+    function fmtCp(s) { var m=Math.floor(s/60); var sec=Math.floor(s%60); return m+':'+(sec<10?'0':'')+sec; }
+
+    function resetCoursePlayer() {
+      if (!cpAudio.paused) cpAudio.pause();
+      cpAudio.removeAttribute('src');
+      cpLoaded = false;
+      cpCurrentSrc = '';
+      if (cpBtn) cpBtn.innerHTML = playSvgHtml;
+      if (cpBar) cpBar.style.width = '0%';
+      if (cpTime) cpTime.textContent = '0:00 / 0:00';
+    }
+
+    function updateCp() {
+      if (cpAudio.duration) {
+        cpBar.style.width = (cpAudio.currentTime / cpAudio.duration * 100) + '%';
+        cpTime.textContent = fmtCp(cpAudio.currentTime) + ' / ' + fmtCp(cpAudio.duration);
+      }
+      if (!cpAudio.paused) requestAnimationFrame(updateCp);
+    }
+
+    cpBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var src = cpPlayer.getAttribute('data-src');
+      if (!src) return;
+
+      if (src !== cpCurrentSrc) {
+        cpAudio.src = src;
+        cpAudio.preload = 'auto';
+        cpAudio.load();
+        cpLoaded = true;
+        cpCurrentSrc = src;
+        cpBtn.innerHTML = '<span style="font-size:10px">...</span>';
+        cpAudio.addEventListener('canplay', function onReady() {
+          cpAudio.removeEventListener('canplay', onReady);
+          cpAudio.play();
+          cpBtn.innerHTML = pauseSvgHtml;
+          updateCp();
+        });
+        return;
+      }
+      if (cpAudio.paused) {
+        cpAudio.play();
+        cpBtn.innerHTML = pauseSvgHtml;
+        updateCp();
+      } else {
+        cpAudio.pause();
+        cpBtn.innerHTML = playSvgHtml;
+      }
+    });
+
+    cpAudio.addEventListener('ended', function() {
+      cpBtn.innerHTML = playSvgHtml;
+      cpBar.style.width = '0%';
+      cpTime.textContent = '0:00 / ' + fmtCp(cpAudio.duration);
+    });
+
+    cpTrack.addEventListener('click', function(e) {
+      if (cpAudio.duration) {
+        var rect = cpTrack.getBoundingClientRect();
+        cpAudio.currentTime = ((e.clientX - rect.left) / rect.width) * cpAudio.duration;
+        updateCp();
       }
     });
   </script>

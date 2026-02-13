@@ -65,6 +65,13 @@
     .court-meta{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:24px;opacity:0;animation:fadeUp 1s 1.1s ease-out forwards}
     .court-tag{font-family:'Outfit',sans-serif;font-weight:300;font-size:.72rem;letter-spacing:.05em;padding:6px 16px;border-radius:40px;border:1px solid rgba(251,191,36,0.12);background:rgba(251,191,36,0.04);color:rgba(251,191,36,0.55)}
     .narrator-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.06);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.08);border-radius:50px;padding:8px 20px;font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:300;letter-spacing:.04em;color:rgba(242,240,250,0.5);opacity:0;animation:fadeUp 1s 1.3s ease-out forwards}
+    .court-player{display:flex;align-items:center;gap:10px;margin:20px auto 0;max-width:320px;opacity:0;animation:fadeUp 1s 1.5s ease-out forwards}
+    .court-player__btn{width:36px;height:36px;border-radius:50%;border:1px solid rgba(251,191,36,0.2);background:rgba(251,191,36,0.08);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;flex-shrink:0}
+    .court-player__btn:hover{background:rgba(251,191,36,0.15);border-color:rgba(251,191,36,0.35)}
+    .court-player__btn svg{width:13px;height:13px;fill:var(--amber);margin-left:2px}
+    .court-player__track{flex:1;height:3px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;cursor:pointer}
+    .court-player__bar{height:100%;width:0%;background:linear-gradient(90deg,var(--amber),var(--amber-dim));border-radius:3px}
+    .court-player__time{font-family:'Outfit',sans-serif;font-weight:300;font-size:.7rem;color:rgba(242,240,250,0.35);white-space:nowrap;min-width:70px;text-align:right}
 
     .hero-fade{position:absolute;bottom:0;left:0;right:0;height:200px;background:linear-gradient(to bottom,transparent,var(--deep));z-index:8;pointer-events:none}
     .scroll-hint{position:absolute;bottom:28px;left:0;right:0;z-index:10;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeUp 1s 2s ease-out forwards}
@@ -351,6 +358,11 @@
         <span class="court-tag">Premium</span>
       </div>
       <div class="narrator-badge">Narrated by Marco</div>
+      <div class="court-player" id="courtPlayer" data-src="https://media.salus-mind.com/content/audio-free/52-the-court-of-your-mind.mp3">
+        <button class="court-player__btn" id="courtBtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+        <div class="court-player__track" id="courtTrack"><div class="court-player__bar" id="courtBar"></div></div>
+        <span class="court-player__time" id="courtTime">0:00 / 0:00</span>
+      </div>
     </div>
 
     <div class="hero-fade"></div>
@@ -436,6 +448,55 @@
   const drawer=document.getElementById("navDrawer");
   if(burger&&drawer){burger.addEventListener("click",()=>{burger.classList.toggle("open");drawer.classList.toggle("open");document.body.style.overflow=drawer.classList.contains("open")?"hidden":""});
   drawer.querySelectorAll(".nav-drawer__link").forEach(l=>{l.addEventListener("click",()=>{burger.classList.remove("open");drawer.classList.remove("open");document.body.style.overflow=""})});}
+
+  // ═══ Court Player ═══
+  (function(){
+    var audio = new Audio();
+    var loaded = false;
+    var btn = document.getElementById('courtBtn');
+    var bar = document.getElementById('courtBar');
+    var time = document.getElementById('courtTime');
+    var track = document.getElementById('courtTrack');
+    var player = document.getElementById('courtPlayer');
+    var src = player.getAttribute('data-src');
+    var playSvg = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+    var pauseSvg = '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" fill="var(--amber)"/><rect x="14" y="4" width="4" height="16" fill="var(--amber)"/></svg>';
+
+    function fmt(s) { var m=Math.floor(s/60); var sec=Math.floor(s%60); return m+':'+(sec<10?'0':'')+sec; }
+    function update() {
+      if (audio.duration) {
+        bar.style.width = (audio.currentTime / audio.duration * 100) + '%';
+        time.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration);
+      }
+      if (!audio.paused) requestAnimationFrame(update);
+    }
+
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (!loaded) {
+        audio.src = src;
+        audio.preload = 'auto';
+        audio.load();
+        loaded = true;
+        btn.innerHTML = '<span style="color:var(--amber);font-size:10px">...</span>';
+        audio.addEventListener('canplay', function onReady() {
+          audio.removeEventListener('canplay', onReady);
+          audio.play();
+          btn.innerHTML = pauseSvg;
+          update();
+        });
+        audio.addEventListener('error', function() { btn.innerHTML = playSvg; loaded = false; });
+        return;
+      }
+      if (audio.paused) { audio.play(); btn.innerHTML = pauseSvg; update(); }
+      else { audio.pause(); btn.innerHTML = playSvg; }
+    });
+
+    audio.addEventListener('ended', function() { btn.innerHTML = playSvg; bar.style.width = '0%'; time.textContent = '0:00 / ' + fmt(audio.duration); });
+    track.addEventListener('click', function(e) {
+      if (audio.duration) { var rect = track.getBoundingClientRect(); audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration; update(); }
+    });
+  })();
 </script>
 </body>
 </html>
