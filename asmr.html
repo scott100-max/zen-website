@@ -776,6 +776,26 @@
     const audioElements = {};
     const grid = document.getElementById('soundGrid');
 
+    // Web Audio API — GainNode gives reliable volume control on iOS
+    // (iOS ignores audio.volume; it's read-only and always returns 1)
+    let audioCtx = null;
+    let corsOk = null;
+    // Probe CORS before first play so crossOrigin is only set when safe
+    fetch(soundDefs[0].src, { method: 'HEAD', mode: 'cors' })
+      .then(() => { corsOk = true; })
+      .catch(() => { corsOk = false; });
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+    function setVol(el, v) {
+      if (el.gain) el.gain.gain.value = v;
+      else el.audio.volume = v;
+    }
+
     // Media Session API — shows lock-screen controls on mobile
     function updateMediaSession() {
       if (!('mediaSession' in navigator)) return;
@@ -845,11 +865,23 @@
         </div>
       `;
 
-      // Plain HTML5 Audio — allows background playback on mobile (no AudioContext)
+      // HTML5 Audio routed through Web Audio GainNode for volume control
       function createSource(src) {
-        const audio = new Audio(src);
+        const audio = new Audio();
         audio.preload = 'auto';
-        return { audio };
+        let gain = null;
+        if (corsOk) {
+          audio.crossOrigin = 'anonymous';
+          try {
+            const ctx = getAudioContext();
+            const source = ctx.createMediaElementSource(audio);
+            gain = ctx.createGain();
+            source.connect(gain);
+            gain.connect(ctx.destination);
+          } catch(e) { /* fallback to audio.volume */ }
+        }
+        audio.src = src;
+        return { audio, gain };
       }
 
       // Seamless crossfade loop — two Audio elements per sound
@@ -860,8 +892,8 @@
           const a = createSource(s.src);
           const b = createSource(s.src);
           const vol = card.querySelector('.sound-card__slider').value / 100;
-          a.audio.volume = vol;
-          b.audio.volume = 0;
+          setVol(a, vol);
+          setVol(b, 0);
           let active = a, standby = b, fading = false;
           let currentTargetVol = vol;
           const XFADE = 5; // crossfade seconds before end
@@ -874,7 +906,7 @@
             if (!fading && active.audio.duration && active.audio.currentTime > active.audio.duration - XFADE) {
               fading = true;
               standby.audio.currentTime = 0;
-              standby.audio.volume = 0;
+              setVol(standby, 0);
               standby.audio.play();
               const steps = 50;
               const interval = (XFADE * 1000) / steps;
@@ -883,8 +915,8 @@
                 step++;
                 const t = step / steps;
                 const tv = currentTargetVol;
-                active.audio.volume = tv * (1 - t);
-                standby.audio.volume = tv * t;
+                setVol(active, tv * (1 - t));
+                setVol(standby, tv * t);
                 if (step >= steps) {
                   clearInterval(fade);
                   active.audio.pause();
@@ -895,7 +927,7 @@
                   fading = false;
                   audioElements[s.id].active = active;
                   audioElements[s.id].standby = standby;
-                  active.audio.volume = currentTargetVol;
+                  setVol(active, currentTargetVol);
                 }
               }, interval);
             }
@@ -906,7 +938,7 @@
             pause() { this.active.audio.pause(); this.standby.audio.pause(); },
             setVolume(v) {
               currentTargetVol = v;
-              if (!fading) this.active.audio.volume = v;
+              if (!fading) setVol(this.active, v);
             }
           };
         }
