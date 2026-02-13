@@ -185,9 +185,8 @@
       if (pct > maxScrollPct) maxScrollPct = Math.min(pct, 100);
     }, { passive: true });
 
-    function sendDuration() {
-      if (!pageViewId || durationSent) return;
-      durationSent = true;
+    function sendDuration(useKeepalive) {
+      if (!pageViewId) return;
       var elapsed = Math.round((Date.now() - pageLoadTime) / 1000);
       if (elapsed > MAX_DURATION) elapsed = MAX_DURATION;
       if (elapsed < 1) return;
@@ -198,7 +197,6 @@
         scroll_depth_pct: maxScrollPct
       });
 
-      // Use fetch with keepalive for page unload reliability
       try {
         fetch(url, {
           method: 'PATCH',
@@ -209,20 +207,21 @@
             'Prefer': 'return=minimal'
           },
           body: body,
-          keepalive: true
+          keepalive: !!useKeepalive
         });
       } catch(e) { /* silent */ }
     }
 
-    // Send on tab hidden or page unload
+    // Heartbeat: update duration every 15s while page is visible
+    setInterval(function() {
+      if (document.visibilityState !== 'hidden') sendDuration(false);
+    }, 15000);
+
+    // Also send on tab hidden / page unload
     document.addEventListener('visibilitychange', function() {
-      if (document.visibilityState === 'hidden') {
-        sendDuration();
-        // Allow re-sending if user comes back and leaves again
-        setTimeout(function() { durationSent = false; }, 1000);
-      }
+      if (document.visibilityState === 'hidden') sendDuration(true);
     });
-    window.addEventListener('pagehide', sendDuration);
+    window.addEventListener('pagehide', function() { sendDuration(true); });
 
     // ===== 6. Event Tracking =====
 
