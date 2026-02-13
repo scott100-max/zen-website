@@ -107,7 +107,7 @@
 
     <div class="table-wrap">
       <table id="visitor-table">
-        <thead><tr><th>Date</th><th>Location</th><th>Pages Visited</th></tr></thead>
+        <thead><tr><th>Date</th><th>Location</th><th>Pages Visited</th><th>Dwell Time</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
@@ -241,13 +241,14 @@
             date: pv.created_at,
             city: pv.city, region: pv.region, country: pv.country,
             latitude: pv.latitude, longitude: pv.longitude,
-            pages: []
+            pages: [], totalDwell: 0
           };
         }
         var page = cleanPage(pv.page_path);
         if (sessionMap[sid].pages.indexOf(page) === -1) {
           sessionMap[sid].pages.push(page);
         }
+        if (pv.duration_seconds > 0) sessionMap[sid].totalDwell += pv.duration_seconds;
         // Use earliest date
         if (pv.created_at < sessionMap[sid].date) sessionMap[sid].date = pv.created_at;
         // Prefer record with geo
@@ -268,7 +269,7 @@
             date: r.created_at,
             city: r.city, region: r.region, country: r.country,
             latitude: r.latitude, longitude: r.longitude,
-            pages: [cleanPage(r.landing_page)]
+            pages: [cleanPage(r.landing_page)], totalDwell: 0
           };
         }
       });
@@ -308,16 +309,18 @@
       // Table
       var tbody = document.querySelector('#visitor-table tbody');
       if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3"><div class="no-data">No visitors yet</div></td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4"><div class="no-data">No visitors yet</div></td></tr>';
         return;
       }
       tbody.innerHTML = filtered.map(function(s) {
         var date = formatDate(s.date);
         var loc = formatLocation(s);
         var pages = s.pages.map(function(p) { return escHtml(p); }).join(', ');
+        var dwell = s.totalDwell > 0 ? formatDwell(s.totalDwell) : '-';
         return '<tr><td style="white-space:nowrap;">' + date + '</td>' +
           '<td>' + escHtml(loc) + '</td>' +
-          '<td class="mono">' + pages + '</td></tr>';
+          '<td class="mono">' + pages + '</td>' +
+          '<td style="white-space:nowrap;">' + dwell + '</td></tr>';
       }).join('');
     }
 
@@ -325,6 +328,13 @@
       var t = new Date(d);
       return t.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }) +
         ' ' + t.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function formatDwell(secs) {
+      if (secs < 60) return secs + 's';
+      var m = Math.floor(secs / 60);
+      var s = secs % 60;
+      return m + 'm ' + s + 's';
     }
 
     function formatLocation(s) {
