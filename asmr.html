@@ -447,6 +447,7 @@
   .sound-card[data-sound="river"]      { --card-accent: var(--accent-teal); }
   .sound-card[data-sound="cave"]       { --card-accent: var(--accent-indigo); }
   .sound-card[data-sound="meadow"]     { --card-accent: var(--accent-emerald); }
+  .sound-card[data-sound="childhood-memories"] { --card-accent: var(--accent-warm); }
 
   /* Coming soon badge */
   .sound-card.coming-soon { opacity: 0.5; pointer-events: none; position: relative; }
@@ -474,6 +475,7 @@
   .sound-card[data-sound="keyboard"] .sound-card__icon   { background: rgba(244,114,182,0.08); }
   .sound-card[data-sound="night"] .sound-card__icon      { background: rgba(124,108,240,0.1); }
   .sound-card[data-sound="waterfall"] .sound-card__icon  { background: rgba(56,189,248,0.08); }
+  .sound-card[data-sound="childhood-memories"] .sound-card__icon { background: rgba(247,160,114,0.08); }
 
   @media (max-width: 600px) {
     .sound-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -576,7 +578,7 @@
       <a href="#sounds" class="hero__cta-secondary">Explore Sounds</a>
     </div>
     <div class="hero__stats">
-      <strong>29</strong>&thinsp;ambient sounds <span>·</span>
+      <strong>30</strong>&thinsp;ambient sounds <span>·</span>
       Layerable mixer <span>·</span>
       Infinite combinations
     </div>
@@ -771,6 +773,7 @@
       { id: 'river',      name: 'River',       icon: '\u{1F6F6}', category: 'nature',  src: 'https://media.salus-mind.com/content/audio-free/asmr-river.mp3' },
       { id: 'cave',       name: 'Cave',        icon: '\u{1F573}', category: 'nature',  src: 'https://media.salus-mind.com/content/audio-free/asmr-cave.mp3' },
       { id: 'meadow',     name: 'Meadow',      icon: '\u{1F33B}', category: 'nature',  src: 'https://media.salus-mind.com/content/audio-free/asmr-meadow.mp3' },
+      { id: 'childhood-memories', name: 'Childhood Memories', icon: '\u{1F9F8}', category: 'ambient', src: 'https://media.salus-mind.com/content/audio-free/asmr-childhood-memories.mp3' },
     ];
 
     const audioElements = {};
