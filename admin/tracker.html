@@ -146,6 +146,10 @@
       p = p.replace(/^\/Users\/[^/]+\/salus-website\//, '/');
       // Ensure leading slash
       if (p.charAt(0) !== '/') p = '/' + p;
+      // Strip .html extension
+      p = p.replace(/\.html$/, '');
+      // /index → /
+      if (p === '/index') p = '/';
       return p;
     }
 
