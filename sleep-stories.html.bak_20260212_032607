@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sleep Stories — Salus Mind</title>
+<meta name="description" content="Drift off to sleep with calming bedtime stories. A new story unlocks every week for Salus Premium members.">
+<link rel="canonical" href="https://salus-mind.com/sleep-stories.html">
+<meta property="og:title" content="Sleep Stories — Salus Mind">
+<meta property="og:description" content="Drift off to sleep with calming bedtime stories. A new story unlocks every week for Salus Premium members.">
+<meta property="og:url" content="https://salus-mind.com/sleep-stories.html">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://salus-mind.com/images/meditation-woman-outdoor.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Inter:wght@200;300;400;500;600&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=1770564391">
+<style>
+  :root {
+    --deep: #060810;
+    --teal: #4ecdc4;
+    --teal-hover: #5ed8d0;
+    --text-bright: #f2f0fa;
+    --text-muted: rgba(242, 240, 250, 0.45);
+    --text-mid: rgba(242, 240, 250, 0.65);
+  }
+
+  /* === HERO === */
+  .ss-hero {
+    position: relative;
+    text-align: center;
+    padding: 140px 24px 70px;
+    overflow: hidden;
+  }
+
+  .ss-hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 20%, rgba(30, 30, 70, 0.3) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 80% 15%, rgba(40, 30, 60, 0.2) 0%, transparent 70%),
+      var(--deep);
+    z-index: 0;
+  }
+
+  .ss-hero-stars {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background-image:
+      radial-gradient(1.5px 1.5px at 10% 15%, rgba(255,255,255,0.3), transparent),
+      radial-gradient(1px 1px at 25% 8%, rgba(255,255,255,0.15), transparent),
+      radial-gradient(1px 1px at 40% 22%, rgba(255,255,255,0.2), transparent),
+      radial-gradient(1.5px 1.5px at 55% 5%, rgba(255,255,255,0.25), transparent),
+      radial-gradient(1px 1px at 70% 18%, rgba(255,255,255,0.12), transparent),
+      radial-gradient(1px 1px at 85% 10%, rgba(255,255,255,0.2), transparent),
+      radial-gradient(1px 1px at 15% 35%, rgba(255,255,255,0.08), transparent),
+      radial-gradient(1px 1px at 60% 30%, rgba(255,255,255,0.1), transparent),
+      radial-gradient(1.5px 1.5px at 90% 28%, rgba(255,255,255,0.15), transparent),
+      radial-gradient(1px 1px at 50% 42%, rgba(255,255,255,0.12), transparent);
+    pointer-events: none;
+  }
+
+  .ss-hero-moon {
+    position: absolute;
+    top: 80px;
+    right: 12%;
+    width: 90px;
+    height: 90px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .ss-moon-body {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #e0ddd0, #c8c4b0 60%, #b0aca0);
+    box-shadow: 0 0 30px 10px rgba(200, 195, 170, 0.06), 0 0 80px 30px rgba(200, 195, 170, 0.03);
+    position: relative;
+  }
+
+  .ss-moon-shadow {
+    position: absolute;
+    top: -5px;
+    right: -15px;
+    width: 90px;
+    height: 100px;
+    border-radius: 50%;
+    background: var(--deep);
+  }
+
+  .ss-hero-content { position: relative; z-index: 3; }
+
+  .ss-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 28px;
+  }
+
+  .ss-hero-badge::before, .ss-hero-badge::after {
+    content: '';
+    width: 28px;
+    height: 1px;
+    background: rgba(242, 240, 250, 0.15);
+  }
+
+  .ss-hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.8rem, 7vw, 4.5rem);
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: 22px;
+    letter-spacing: -1px;
+  }
+
+  .ss-hero-title em { font-style: italic; color: var(--teal); }
+
+  .ss-hero-sub {
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    max-width: 480px;
+    margin: 0 auto 36px;
+    line-height: 1.7;
+  }
+
+  .ss-hero-stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .ss-hero-stat { font-size: 0.78rem; font-weight: 300; color: var(--text-mid); }
+  .ss-hero-stat strong { color: var(--teal); font-weight: 500; }
+  .ss-hero-stat-sep { width: 3px; height: 3px; border-radius: 50%; background: rgba(242, 240, 250, 0.2); }
+
+  .ss-hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--deep);
+    background: var(--teal);
+    border: 1px solid var(--teal);
+    border-radius: 40px;
+    padding: 11px 28px;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 4px 20px rgba(78, 205, 196, 0.2);
+  }
+
+  .ss-hero-cta:hover { background: var(--teal-hover); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(78, 205, 196, 0.3); }
+
+  .ss-hero-latin {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 20px;
+    opacity: 0.5;
+  }
+
+  .ss-hero-content > * { opacity: 0; animation: ssRise 0.8s ease-out forwards; }
+  .ss-hero-content > *:nth-child(1) { animation-delay: 0.1s; }
+  .ss-hero-content > *:nth-child(2) { animation-delay: 0.2s; }
+  .ss-hero-content > *:nth-child(3) { animation-delay: 0.3s; }
+  .ss-hero-content > *:nth-child(4) { animation-delay: 0.4s; }
+  .ss-hero-content > *:nth-child(5) { animation-delay: 0.5s; }
+  .ss-hero-content > *:nth-child(6) { animation-delay: 0.6s; }
+
+  /* === SECTION === */
+  .ss-section { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  .ss-section-head { text-align: center; margin-bottom: 36px; padding-top: 60px; }
+
+  .ss-section-label { font-size: 0.62rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+
+  .ss-section-title { font-family: 'Cormorant Garamond', serif; font-weight: 500; font-style: italic; font-size: 1.8rem; color: var(--text-bright); }
+
+  .ss-section-sub { font-size: 0.82rem; font-weight: 300; color: var(--text-muted); margin-top: 8px; }
+
+  /* === FILTERS === */
+  .ss-filters { display: flex; justify-content: center; gap: 8px; margin-bottom: 44px; flex-wrap: wrap; padding: 0 24px; }
+
+  .ss-filter-btn {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.76rem;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    padding: 7px 18px;
+    border-radius: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: transparent;
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .ss-filter-btn:hover { border-color: rgba(255, 255, 255, 0.18); color: var(--text-bright); background: rgba(255, 255, 255, 0.04); }
+  .ss-filter-btn.active { background: rgba(78, 205, 196, 0.1); border-color: rgba(78, 205, 196, 0.25); color: var(--teal); }
+
+  .ss-filter-btn[data-cat]::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 7px; vertical-align: middle; }
+  .ss-filter-btn[data-cat="nature"]::before { background: #5aad6e; }
+  .ss-filter-btn[data-cat="journey"]::before { background: #5a8ec8; }
+  .ss-filter-btn[data-cat="comfort"]::before { background: #c49a5a; }
+  .ss-filter-btn[data-cat="fantasy"]::before { background: #9a7acc; }
+  .ss-filter-btn[data-cat="history"]::before { background: #c4785a; }
+
+  /* === BOOK GRID === */
+  .ss-book-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+    gap: 28px 20px;
+    padding-bottom: 60px;
+  }
+
+  /* === BOOK COVER === */
+  .ss-book {
+    position: relative;
+    aspect-ratio: 2 / 3;
+    border-radius: 4px 14px 14px 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    transform-origin: left center;
+  }
+
+  .ss-book:hover {
+    transform: translateY(-8px) rotateY(-3deg) scale(1.04);
+    box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.55), 3px 3px 12px rgba(0, 0, 0, 0.35);
+    z-index: 5;
+  }
+
+  /* Spine */
+  .ss-book::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 16px;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(0,0,0,0.4), rgba(0,0,0,0.15) 35%, rgba(0,0,0,0.05) 60%, transparent);
+    z-index: 8;
+    pointer-events: none;
+  }
+
+  /* Light catch */
+  .ss-book::after {
+    content: '';
+    position: absolute;
+    top: -50%; right: -50%;
+    width: 100%; height: 100%;
+    background: linear-gradient(225deg, rgba(255,255,255,0.06), transparent 50%);
+    z-index: 7;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+
+  .ss-book:hover::after { opacity: 0.8; }
+
+  .ss-book-border {
+    position: absolute;
+    inset: 0;
+    border-radius: 4px 14px 14px 4px;
+    border: 1px solid rgba(255,255,255,0.08);
+    z-index: 9;
+    pointer-events: none;
+    transition: border-color 0.3s ease;
+  }
+
+  .ss-book:hover .ss-book-border { border-color: rgba(255,255,255,0.2); }
+
+  /* Cover background */
+  .ss-book-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  /* Motif layer */
+  .ss-book-motif {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .ss-book-motif svg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Ornamental frame */
+  .ss-book-frame {
+    position: absolute;
+    inset: 12px 10px 12px 18px;
+    z-index: 2;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 2px;
+    pointer-events: none;
+  }
+
+  .ss-book-frame::before {
+    content: '';
+    position: absolute;
+    top: 4px; left: 4px; right: 4px; bottom: 4px;
+    border: 1px solid rgba(255,255,255,0.03);
+    border-radius: 1px;
+  }
+
+  /* Content */
+  .ss-book-content {
+    position: relative;
+    z-index: 3;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 22px 18px 16px 26px;
+  }
+
+  .ss-book-week {
+    font-size: 0.45rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+  }
+
+  .ss-book-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 600;
+    font-style: italic;
+    font-size: 1.25rem;
+    line-height: 1.18;
+    color: rgba(255,255,255,0.92);
+    text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+    margin-top: auto;
+    margin-bottom: 4px;
+  }
+
+  .ss-book-cat {
+    font-size: 0.48rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.28);
+  }
+
+  .ss-book-salus {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 0.4rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.12);
+  }
+
+  /* Lock */
+  .ss-book-lock {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 6;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(6, 8, 16, 0.4);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .ss-book.locked .ss-book-lock { opacity: 0.7; }
+  .ss-book.locked:hover .ss-book-lock { opacity: 0.4; }
+
+  .ss-book-lock svg { width: 14px; height: 14px; stroke: rgba(255,255,255,0.5); fill: none; stroke-width: 1.5; stroke-linecap: round; }
+
+  .ss-book.available .ss-book-week { color: rgba(78, 205, 196, 0.5); }
+
+  /* Image cover */
+  .ss-book-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;filter:brightness(0.78) saturate(0.88);transition:transform .6s cubic-bezier(.22,1,.36,1),filter .4s ease}
+  .ss-book:hover .ss-book-img{transform:scale(1.05);filter:brightness(0.85) saturate(0.95)}
+  .ss-book.has-img::before{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(6,8,16,0.1) 0%,rgba(6,8,16,0) 25%,rgba(6,8,16,0) 45%,rgba(6,8,16,0.4) 65%,rgba(6,8,16,0.82) 85%,rgba(6,8,16,0.95) 100%);pointer-events:none}
+  .ss-book.has-img .ss-book-bg,.ss-book.has-img .ss-book-motif,.ss-book.has-img .ss-book-frame{display:none}
+  .ss-book.has-img .ss-book-week{color:rgba(255,255,255,0.85);background:rgba(78,205,196,0.12);border:1px solid rgba(78,205,196,0.2);border-radius:10px;padding:4px 12px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+  .ss-book.has-img .ss-book-title{font-style:normal;font-weight:400;font-size:1.1rem}
+  .ss-book.has-img .ss-book-content{padding:18px 16px 16px 16px}
+
+  /* Noise */
+  .ss-book-noise {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    opacity: 0.12;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 128px 128px;
+  }
+
+  /* === PREMIUM === */
+  .ss-premium-bar { max-width: 1200px; margin: 0 auto 60px; padding: 0 24px; }
+
+  .ss-premium-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 22px 30px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+  }
+
+  .ss-premium-text h3 { font-size: 0.88rem; font-weight: 500; color: var(--text-bright); margin-bottom: 4px; }
+  .ss-premium-text p { font-size: 0.78rem; font-weight: 300; color: var(--text-muted); }
+
+  .ss-premium-btn {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.78rem; font-weight: 400; letter-spacing: 0.04em;
+    color: var(--text-mid); background: transparent;
+    border: 1px solid rgba(255,255,255,0.12); border-radius: 40px;
+    padding: 9px 22px; cursor: pointer;
+    transition: all 0.3s ease; white-space: nowrap;
+    text-decoration: none;
+  }
+
+  .ss-premium-btn:hover { color: var(--text-bright); border-color: rgba(255,255,255,0.25); background: rgba(255,255,255,0.04); }
+
+  @keyframes ssRise {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 900px) {
+    .ss-book-grid { grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 20px 16px; }
+    .ss-hero-moon { display: none; }
+  }
+
+  @media (max-width: 600px) {
+    .ss-book-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px 12px; }
+    .ss-hero { padding: 110px 18px 50px; }
+    .ss-premium-inner { flex-direction: column; text-align: center; }
+    .ss-book-title { font-size: 1.1rem; }
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth.js?v=1770564391"></script>
+</head>
+<body>
+
+<!-- ═══════════════ NAVIGATION ═══════════════ -->
+<nav class="nav-wrap" id="navWrap">
+  <div class="nav-inner">
+    <div class="nav-row-1">
+      <a href="index.html" class="nav-brand">SALUS</a>
+      <ul class="nav-primary">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="mindfulness.html">Mindfulness</a></li>
+        <li><a href="cbt.html">CBT Exercises</a></li>
+        <li><a href="asmr.html">ASMR</a></li>
+        <li><a href="sleep-stories.html" class="active">Sleep Stories</a></li>
+        <li><a href="education.html">Learn</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <div class="nav-ctas">
+        <a href="apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+        <a href="login.html" class="nav-cta nav-cta--login">Log In</a>
+      </div>
+      <button class="nav-burger" id="burgerBtn" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav-row-2">
+      <a href="tools.html">Tools</a>
+      <a href="reading.html">Reading</a>
+      <a href="applied-psychology.html">Applied Psychology</a>
+      <a href="newsletter.html">Newsletter</a>
+      <a href="contact.html">Contact</a>
+      <a href="lend-your-voice.html">Lend Your Voice</a>
+    </div>
+  </div>
+</nav>
+<div class="nav-drawer" id="navDrawer">
+  <div class="nav-drawer__section-label">Main</div>
+  <a href="index.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Home</a>
+  <a href="mindfulness.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Mindfulness</a>
+  <a href="cbt.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>CBT Exercises</a>
+  <a href="asmr.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>ASMR</a>
+  <a href="sleep-stories.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Sleep Stories</a>
+  <a href="education.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>Learn</a>
+  <a href="about.html" class="nav-drawer__link"><span class="nav-drawer__link-dot"></span>About</a>
+
+  <div class="nav-drawer__section-label">More</div>
+  <a href="tools.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Tools</a>
+  <a href="reading.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Reading</a>
+  <a href="applied-psychology.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Applied Psychology</a>
+  <a href="newsletter.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Newsletter</a>
+  <a href="contact.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Contact</a>
+  <a href="lend-your-voice.html" class="nav-drawer__link"><span class="nav-drawer__link-dot" style="background:rgba(240,238,252,0.4)"></span>Lend Your Voice</a>
+
+  <div class="nav-drawer__ctas">
+    <a href="apps.html" class="nav-cta nav-cta--subscribe">Subscribe</a>
+    <a href="login.html" class="nav-cta nav-cta--login">Log In</a>
+  </div>
+</div>
+
+<section class="ss-hero">
+  <div class="ss-hero-bg"></div>
+  <div class="ss-hero-stars"></div>
+  <div class="ss-hero-moon"><div class="ss-moon-body"><div class="ss-moon-shadow"></div></div></div>
+  <div class="ss-hero-content">
+    <div class="ss-hero-badge">Drift Away</div>
+    <h1 class="ss-hero-title">Sleep <em>Stories</em></h1>
+    <p class="ss-hero-sub">Close your eyes and let go. Soothing narrations woven with gentle soundscapes to carry you softly into sleep.</p>
+    <div class="ss-hero-stats">
+      <span class="ss-hero-stat"><strong>52</strong> stories and growing</span>
+      <span class="ss-hero-stat-sep"></span>
+      <span class="ss-hero-stat"><strong>1</strong> new story each week</span>
+      <span class="ss-hero-stat-sep"></span>
+      <span class="ss-hero-stat"><strong>45</strong> min per story</span>
+    </div>
+    <button class="ss-hero-cta" onclick="document.getElementById('library').scrollIntoView({behavior:'smooth'})">Browse Library</button>
+    <p class="ss-hero-latin">Salus — Latin: health, safety, well-being</p>
+  </div>
+</section>
+
+<div class="ss-section" id="library">
+  <div class="ss-section-head">
+    <div class="ss-section-label">The Collection</div>
+    <h2 class="ss-section-title">Close Your Eyes and Listen</h2>
+    <p class="ss-section-sub">Gentle, meandering narratives. No cliffhangers. No tension. Just a voice fading into the dark.</p>
+  </div>
+
+  <div class="ss-filters" id="ssFilters">
+    <button class="ss-filter-btn active" data-filter="all">All Stories</button>
+    <button class="ss-filter-btn" data-cat="nature" data-filter="nature">Nature</button>
+    <button class="ss-filter-btn" data-cat="journey" data-filter="journey">Journey</button>
+    <button class="ss-filter-btn" data-cat="comfort" data-filter="comfort">Comfort</button>
+    <button class="ss-filter-btn" data-cat="fantasy" data-filter="fantasy">Fantasy</button>
+    <button class="ss-filter-btn" data-cat="history" data-filter="history">History</button>
+  </div>
+
+  <div class="ss-book-grid" id="ssGrid"></div>
+</div>
+
+<div class="ss-premium-bar">
+  <div class="ss-premium-inner">
+    <div class="ss-premium-text">
+      <h3>New material unlocked each week</h3>
+      <p>52 sleep stories over 12 months — plus guided meditations, ASMR, tools, and more with Salus Premium.</p>
+    </div>
+    <a href="apps.html" class="ss-premium-btn">Go Premium</a>
+  </div>
+</div>
+
+  <!-- Footer -->
+  <footer class="hb-footer">
+  <div class="hb-footer__inner">
+    <div class="hb-footer__brand">
+      <span class="hb-footer__logo">Salus</span>
+      <p class="hb-footer__tagline">A quieter kind of self-care. Guided practices, sleep stories, ASMR, and mindfulness tools &mdash; built by a family.</p>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Practice</h4>
+      <ul class="hb-footer__links">
+        <li><a href="mindfulness.html">Mindfulness</a></li>
+        <li><a href="asmr.html">ASMR &amp; Sounds</a></li>
+        <li><a href="sleep-stories.html">Sleep Stories</a></li>
+        <li><a href="cbt.html">CBT Exercises</a></li>
+        <li><a href="tools.html">Tools</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Discover</h4>
+      <ul class="hb-footer__links">
+        <li><a href="education.html">Learn</a></li>
+        <li><a href="reading.html">Reading</a></li>
+        <li><a href="applied-psychology.html">Applied Psychology</a></li>
+        <li><a href="newsletter.html">Newsletter</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="hb-footer__col-title">Salus</h4>
+      <ul class="hb-footer__links">
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="apps.html">Go Premium</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="footer-disclaimer">Salus does not provide medical advice. Content is for general wellbeing and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified health provider with any health concerns.</p>
+  <div class="hb-footer__bottom">
+    <span class="hb-footer__copy">&copy; 2026 Salus Mind. All rights reserved.</span>
+    <a href="#" class="hb-footer__back-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">
+      Back to top
+      <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+    </a>
+  </div>
+</footer>
+
+<script src="js/main.js?v=1770564391"></script>
+<script src="js/tracker.js"></script>
+<script>
+const stories = [
+  { w:1,  t:"The Gardener's Almanac",       c:"nature",  m:"moon-garden", img:"https://media.salus-mind.com/sleep-stories/covers/week-01-gardeners-almanac.jpg" },
+  { w:2,  t:"The Slow Train North",         c:"journey", m:"horizon-lights", img:"https://media.salus-mind.com/sleep-stories/covers/week-02-slow-train-north.jpg" },
+  { w:3,  t:"The Bookshop at the End of the Lane", c:"comfort", m:"books", img:"https://media.salus-mind.com/sleep-stories/covers/week-03-bookshop-at-the-end-of-the-lane.jpg" },
+  { w:4,  t:"The Lighthouse Keeper's Log",  c:"nature",  m:"lighthouse", img:"https://media.salus-mind.com/sleep-stories/covers/week-04-lighthouse-keepers-log.jpg" },
+  { w:5,  t:"Castles in the Air",            c:"fantasy", m:"clouds", img:"https://media.salus-mind.com/sleep-stories/covers/week-05-castles-in-the-air.jpg" },
+  { w:6,  t:"Canals of Amsterdam",          c:"journey", m:"water-lines", img:"https://media.salus-mind.com/sleep-stories/covers/week-06-canals-of-amsterdam.jpg" },
+  { w:7,  t:"The Beekeeper's Summer",       c:"nature",  m:"hexagons", img:"https://media.salus-mind.com/sleep-stories/covers/week-07-beekeepers-summer.jpg" },
+  { w:8,  t:"Letters from a Cottage",       c:"comfort", m:"window", img:"https://media.salus-mind.com/sleep-stories/covers/week-08-letters-from-a-cottage.jpg" },
+  { w:9,  t:"The Map Maker's Table",        c:"history", m:"compass", img:"https://media.salus-mind.com/sleep-stories/covers/week-09-map-makers-table.jpg" },
+  { w:10, t:"Tides of England",             c:"nature",  m:"waves", img:"https://media.salus-mind.com/sleep-stories/covers/week-10-tides-of-england.jpg" },
+  { w:11, t:"The Silk Road at Dusk",        c:"journey", m:"path" },
+  { w:12, t:"The Tea Room",                 c:"comfort", m:"steam" },
+  { w:13, t:"The Moth and the Lantern",     c:"fantasy", m:"lantern" },
+  { w:14, t:"Snowfall on Dartmoor",         c:"nature",  m:"snow" },
+  { w:15, t:"The Astronomer's Journal",     c:"history", m:"constellation" },
+  { w:16, t:"The Harbour at Low Tide",      c:"journey", m:"water-lines" },
+  { w:17, t:"The Orchard in Winter",        c:"nature",  m:"tree" },
+  { w:18, t:"The Clockmaker's Workshop",    c:"history", m:"clock" },
+  { w:19, t:"The River Crossing",           c:"journey", m:"river" },
+  { w:20, t:"A Cabin in the Pines",         c:"comfort", m:"pines" },
+  { w:21, t:"The Star Collector",           c:"fantasy", m:"stars-cluster" },
+  { w:22, t:"The Windmill on the Hill",     c:"nature",  m:"windmill" },
+  { w:23, t:"Sunday Morning Rain",          c:"comfort", m:"rain" },
+  { w:24, t:"The Sleeping Mountain",        c:"fantasy", m:"mountain" },
+  { w:25, t:"A Walk Through Kyoto",         c:"journey", m:"torii" },
+  { w:26, t:"The Meadow at Twilight",       c:"nature",  m:"fireflies" },
+  { w:27, t:"The Glassblower's Fire",       c:"history", m:"flame" },
+  { w:28, t:"The Dog-Eared Pages",          c:"comfort", m:"books" },
+  { w:29, t:"Mist Over the Loch",           c:"nature",  m:"mist" },
+  { w:30, t:"The Coastal Path",             c:"journey", m:"path" },
+  { w:31, t:"The Owl and the Hollow",       c:"fantasy", m:"owl-eyes" },
+  { w:32, t:"The Pottery Wheel",            c:"comfort", m:"spiral" },
+  { w:33, t:"The Lamplighter's Round",      c:"history", m:"lantern" },
+  { w:34, t:"The Chalk Downs",              c:"nature",  m:"hills" },
+  { w:35, t:"Ocean Voyage",                 c:"journey", m:"waves" },
+  { w:36, t:"The Weaver's Dream",           c:"fantasy", m:"weave" },
+  { w:37, t:"Fireside Letters",             c:"comfort", m:"flame" },
+  { w:38, t:"The Fallen Leaves",            c:"nature",  m:"leaves" },
+  { w:39, t:"The Calligrapher",             c:"history", m:"quill" },
+  { w:40, t:"The Mountain Pass",            c:"journey", m:"mountain" },
+  { w:41, t:"The Patchwork Quilt",          c:"comfort", m:"quilt" },
+  { w:42, t:"Birdsong at Dawn",             c:"nature",  m:"bird" },
+  { w:43, t:"The Stone Circle",             c:"fantasy", m:"stone-circle" },
+  { w:44, t:"The Printing Press",           c:"history", m:"press" },
+  { w:45, t:"The Canal Boat",               c:"journey", m:"water-lines" },
+  { w:46, t:"The Shepherd's Year",          c:"nature",  m:"hills" },
+  { w:47, t:"The Vinyl Collection",         c:"comfort", m:"vinyl" },
+  { w:48, t:"The Tide Pool",                c:"fantasy", m:"tide-pool" },
+  { w:49, t:"The Instrument Maker",         c:"history", m:"strings" },
+  { w:50, t:"Night Bus to Nowhere",         c:"journey", m:"horizon-lights" },
+  { w:51, t:"The First Snow",               c:"nature",  m:"snow" },
+  { w:52, t:"Home",                         c:"comfort", m:"window" }
+];
+
+// Colour palettes per category
+const catPalettes = {
+  nature:  { bgs:[[12,28,16],[10,24,18],[14,26,12],[8,22,14]], accents:['90,170,100','100,180,120','80,160,90','110,175,95'], glow:'rgba(90,170,110,0.06)' },
+  journey: { bgs:[[10,14,32],[12,16,28],[8,12,30],[14,18,34]], accents:['80,130,210','90,145,220','70,120,195','100,150,215'], glow:'rgba(80,140,210,0.06)' },
+  comfort: { bgs:[[30,18,12],[26,16,10],[28,20,14],[24,14,8]],  accents:['210,160,85','200,150,75','215,170,95','195,145,70'], glow:'rgba(210,160,90,0.06)' },
+  fantasy: { bgs:[[20,12,32],[18,14,28],[22,10,30],[16,12,26]], accents:['165,125,210','155,115,200','175,135,220','150,110,195'], glow:'rgba(160,120,210,0.06)' },
+  history: { bgs:[[28,20,10],[24,18,8],[26,22,14],[22,16,10]],  accents:['200,155,80','190,145,70','210,165,90','185,140,75'], glow:'rgba(200,155,85,0.06)' }
+};
+
+function hash(s) { let h=0; for(let i=0;i<s.length;i++){h=((h<<5)-h+s.charCodeAt(i))|0;} return Math.abs(h); }
+
+// SVG motif generators
+const motifs = {
+  'moon-garden': (a) => `<circle cx="72%" cy="22%" r="28" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.3"/>
+    <circle cx="72%" cy="22%" r="18" fill="${a}" opacity="0.04"/>
+    <circle cx="78%" cy="18%" r="22" fill="rgb(6,8,16)" opacity="0.8"/>
+    <line x1="25%" y1="85%" x2="25%" y2="55%" stroke="${a}" stroke-width="0.3" opacity="0.15"/>
+    <line x1="35%" y1="85%" x2="35%" y2="60%" stroke="${a}" stroke-width="0.3" opacity="0.12"/>
+    <line x1="45%" y1="85%" x2="45%" y2="52%" stroke="${a}" stroke-width="0.3" opacity="0.1"/>`,
+
+  'lighthouse': (a) => `<line x1="70%" y1="25%" x2="70%" y2="70%" stroke="${a}" stroke-width="1" opacity="0.15"/>
+    <circle cx="70%" cy="24%" r="5" fill="${a}" opacity="0.08"/>
+    <circle cx="70%" cy="24%" r="14" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.12"/>
+    <circle cx="70%" cy="24%" r="25" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.06"/>
+    <line x1="0" y1="72%" x2="100%" y2="72%" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <line x1="0" y1="76%" x2="100%" y2="76%" stroke="${a}" stroke-width="0.3" opacity="0.05"/>`,
+
+  'horizon-lights': (a) => `<line x1="0" y1="48%" x2="100%" y2="48%" stroke="${a}" stroke-width="0.4" opacity="0.1"/>
+    <circle cx="15%" cy="47%" r="1.5" fill="${a}" opacity="0.25"/><circle cx="28%" cy="48%" r="1" fill="${a}" opacity="0.18"/>
+    <circle cx="45%" cy="47%" r="1.5" fill="${a}" opacity="0.22"/><circle cx="62%" cy="48%" r="1" fill="${a}" opacity="0.15"/>
+    <circle cx="78%" cy="47%" r="1.5" fill="${a}" opacity="0.2"/><circle cx="90%" cy="48%" r="1" fill="${a}" opacity="0.12"/>`,
+
+  'books': (a) => `<rect x="30%" y="38%" width="6%" height="28%" rx="1" fill="${a}" opacity="0.08"/>
+    <rect x="38%" y="35%" width="5%" height="31%" rx="1" fill="${a}" opacity="0.1"/>
+    <rect x="45%" y="40%" width="7%" height="26%" rx="1" fill="${a}" opacity="0.06"/>
+    <rect x="54%" y="36%" width="4.5%" height="30%" rx="1" fill="${a}" opacity="0.09"/>
+    <rect x="60%" y="42%" width="6%" height="24%" rx="1" fill="${a}" opacity="0.07"/>
+    <line x1="28%" y1="66%" x2="68%" y2="66%" stroke="${a}" stroke-width="0.5" opacity="0.08"/>`,
+
+  'clouds': (a) => `<circle cx="35%" cy="32%" r="20" fill="${a}" opacity="0.04"/><circle cx="45%" cy="30%" r="25" fill="${a}" opacity="0.03"/>
+    <circle cx="55%" cy="33%" r="18" fill="${a}" opacity="0.035"/><circle cx="40%" cy="55%" r="22" fill="${a}" opacity="0.025"/>
+    <circle cx="60%" cy="57%" r="16" fill="${a}" opacity="0.03"/>`,
+
+  'water-lines': (a) => `<path d="M0,45 Q25,40 50,45 T100,45" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.12" vector-effect="non-scaling-stroke"/>
+    <path d="M0,52 Q25,47 50,52 T100,52" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.08" vector-effect="non-scaling-stroke"/>
+    <path d="M0,59 Q25,54 50,59 T100,59" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.06" vector-effect="non-scaling-stroke"/>`,
+
+  'hexagons': (a) => `<polygon points="50,22 58,27 58,37 50,42 42,37 42,27" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.12"/>
+    <polygon points="64,32 72,37 72,47 64,52 56,47 56,37" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <polygon points="36,34 44,39 44,49 36,54 28,49 28,39" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.1"/>
+    <polygon points="50,44 58,49 58,59 50,64 42,59 42,49" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.06"/>`,
+
+  'window': (a) => `<rect x="32%" y="28%" width="36%" height="40%" rx="2" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.12"/>
+    <line x1="50%" y1="28%" x2="50%" y2="68%" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <line x1="32%" y1="48%" x2="68%" y2="48%" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <rect x="35%" y="31%" width="13%" height="15%" fill="${a}" opacity="0.03"/>
+    <rect x="52%" y="31%" width="13%" height="15%" fill="${a}" opacity="0.025"/>`,
+
+  'compass': (a) => `<circle cx="50%" cy="45%" r="28" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.12"/>
+    <circle cx="50%" cy="45%" r="20" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.08"/>
+    <line x1="50%" y1="17%" x2="50%" y2="73%" stroke="${a}" stroke-width="0.3" opacity="0.1"/>
+    <line x1="22%" y1="45%" x2="78%" y2="45%" stroke="${a}" stroke-width="0.3" opacity="0.1"/>
+    <circle cx="50%" cy="45%" r="2.5" fill="${a}" opacity="0.12"/>`,
+
+  'waves': (a) => `<path d="M0,35 Q15,28 30,35 T60,35 T90,35 T120,35" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.15" vector-effect="non-scaling-stroke"/>
+    <path d="M-10,45 Q15,38 30,45 T60,45 T90,45 T120,45" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.1" vector-effect="non-scaling-stroke"/>
+    <path d="M-5,55 Q15,48 30,55 T60,55 T90,55 T120,55" fill="none" stroke="${a}" stroke-width="0.35" opacity="0.07" vector-effect="non-scaling-stroke"/>
+    <path d="M0,65 Q15,58 30,65 T60,65 T90,65" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.05" vector-effect="non-scaling-stroke"/>`,
+
+  'path': (a) => `<path d="M50,85 Q48,60 42,45 Q36,30 45,20 Q54,10 58,18" fill="none" stroke="${a}" stroke-width="0.6" opacity="0.12" stroke-dasharray="2,3"/>
+    <circle cx="58%" cy="18%" r="2" fill="${a}" opacity="0.1"/>`,
+
+  'steam': (a) => `<path d="M42,65 Q40,50 44,42 Q48,34 42,26" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.1"/>
+    <path d="M50,68 Q48,52 52,44 Q56,36 50,28" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <path d="M58,65 Q56,50 60,42 Q64,34 58,26" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.1"/>
+    <ellipse cx="50%" cy="72%" rx="14%" ry="4%" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.08"/>`,
+
+  'lantern': (a) => `<rect x="44%" y="30%" width="12%" height="22%" rx="2" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.15"/>
+    <line x1="50%" y1="28%" x2="50%" y2="22%" stroke="${a}" stroke-width="0.4" opacity="0.12"/>
+    <circle cx="50%" cy="41%" r="4" fill="${a}" opacity="0.06"/>
+    <circle cx="50%" cy="41%" r="12" fill="${a}" opacity="0.025"/>
+    <circle cx="50%" cy="41%" r="22" fill="${a}" opacity="0.012"/>`,
+
+  'snow': (a) => `<circle cx="20%" cy="18%" r="1.5" fill="${a}" opacity="0.2"/><circle cx="45%" cy="12%" r="1" fill="${a}" opacity="0.15"/>
+    <circle cx="70%" cy="20%" r="1.5" fill="${a}" opacity="0.18"/><circle cx="30%" cy="32%" r="1" fill="${a}" opacity="0.12"/>
+    <circle cx="55%" cy="28%" r="1.5" fill="${a}" opacity="0.16"/><circle cx="80%" cy="35%" r="1" fill="${a}" opacity="0.1"/>
+    <circle cx="15%" cy="45%" r="1.5" fill="${a}" opacity="0.14"/><circle cx="40%" cy="42%" r="1" fill="${a}" opacity="0.12"/>
+    <circle cx="65%" cy="48%" r="1.5" fill="${a}" opacity="0.15"/><circle cx="88%" cy="52%" r="1" fill="${a}" opacity="0.1"/>
+    <circle cx="25%" cy="58%" r="1" fill="${a}" opacity="0.12"/><circle cx="50%" cy="55%" r="1.5" fill="${a}" opacity="0.14"/>
+    <circle cx="75%" cy="62%" r="1" fill="${a}" opacity="0.1"/>`,
+
+  'constellation': (a) => `<circle cx="30%" cy="25%" r="2" fill="${a}" opacity="0.25"/><circle cx="55%" cy="20%" r="1.5" fill="${a}" opacity="0.2"/>
+    <circle cx="70%" cy="35%" r="2" fill="${a}" opacity="0.22"/><circle cx="45%" cy="45%" r="1.5" fill="${a}" opacity="0.18"/>
+    <circle cx="60%" cy="55%" r="2" fill="${a}" opacity="0.2"/><circle cx="35%" cy="60%" r="1.5" fill="${a}" opacity="0.15"/>
+    <line x1="30%" y1="25%" x2="55%" y2="20%" stroke="${a}" stroke-width="0.3" opacity="0.1"/>
+    <line x1="55%" y1="20%" x2="70%" y2="35%" stroke="${a}" stroke-width="0.3" opacity="0.1"/>
+    <line x1="70%" y1="35%" x2="45%" y2="45%" stroke="${a}" stroke-width="0.3" opacity="0.08"/>
+    <line x1="45%" y1="45%" x2="60%" y2="55%" stroke="${a}" stroke-width="0.3" opacity="0.08"/>
+    <line x1="60%" y1="55%" x2="35%" y2="60%" stroke="${a}" stroke-width="0.3" opacity="0.06"/>`,
+
+  'tree': (a) => `<line x1="50%" y1="80%" x2="50%" y2="35%" stroke="${a}" stroke-width="0.8" opacity="0.12"/>
+    <line x1="50%" y1="50%" x2="35%" y2="38%" stroke="${a}" stroke-width="0.5" opacity="0.1"/>
+    <line x1="50%" y1="45%" x2="62%" y2="32%" stroke="${a}" stroke-width="0.5" opacity="0.1"/>
+    <line x1="50%" y1="55%" x2="38%" y2="48%" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <circle cx="50%" cy="30%" r="18" fill="${a}" opacity="0.025"/>`,
+
+  'clock': (a) => `<circle cx="50%" cy="42%" r="26" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.12"/>
+    <circle cx="50%" cy="42%" r="1.5" fill="${a}" opacity="0.15"/>
+    <line x1="50%" y1="42%" x2="50%" y2="26%" stroke="${a}" stroke-width="0.4" opacity="0.15"/>
+    <line x1="50%" y1="42%" x2="62%" y2="38%" stroke="${a}" stroke-width="0.3" opacity="0.12"/>`,
+
+  'river': (a) => `<path d="M30,10 Q55,25 40,40 Q25,55 50,70 Q75,85 60,100" fill="none" stroke="${a}" stroke-width="0.8" opacity="0.1"/>
+    <path d="M34,10 Q59,25 44,40 Q29,55 54,70 Q79,85 64,100" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.06"/>`,
+
+  'pines': (a) => `<polygon points="25,70 30,45 35,70" fill="${a}" opacity="0.06" stroke="${a}" stroke-width="0.3" opacity="0.1"/>
+    <polygon points="40,72 47,38 54,72" fill="${a}" opacity="0.05" stroke="${a}" stroke-width="0.3" opacity="0.08"/>
+    <polygon points="58,70 63,42 68,70" fill="${a}" opacity="0.06" stroke="${a}" stroke-width="0.3" opacity="0.1"/>
+    <polygon points="72,72 76,50 80,72" fill="${a}" opacity="0.04" stroke="${a}" stroke-width="0.3" opacity="0.07"/>`,
+
+  'stars-cluster': (a) => `<circle cx="40%" cy="30%" r="3" fill="${a}" opacity="0.2"/>
+    <circle cx="55%" cy="25%" r="2" fill="${a}" opacity="0.15"/><circle cx="65%" cy="35%" r="2.5" fill="${a}" opacity="0.18"/>
+    <circle cx="45%" cy="42%" r="1.5" fill="${a}" opacity="0.12"/><circle cx="58%" cy="48%" r="2" fill="${a}" opacity="0.14"/>
+    <circle cx="50%" cy="35%" r="8" fill="${a}" opacity="0.02"/><circle cx="50%" cy="35%" r="18" fill="${a}" opacity="0.01"/>`,
+
+  'windmill': (a) => `<line x1="50%" y1="30%" x2="50%" y2="75%" stroke="${a}" stroke-width="0.6" opacity="0.12"/>
+    <line x1="50%" y1="30%" x2="35%" y2="15%" stroke="${a}" stroke-width="0.4" opacity="0.1"/>
+    <line x1="50%" y1="30%" x2="65%" y2="15%" stroke="${a}" stroke-width="0.4" opacity="0.1"/>
+    <line x1="50%" y1="30%" x2="35%" y2="45%" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <line x1="50%" y1="30%" x2="65%" y2="45%" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <circle cx="50%" cy="30%" r="2.5" fill="${a}" opacity="0.1"/>`,
+
+  'rain': (a) => `<line x1="20%" y1="15%" x2="20%" y2="22%" stroke="${a}" stroke-width="0.4" opacity="0.12"/>
+    <line x1="35%" y1="20%" x2="35%" y2="27%" stroke="${a}" stroke-width="0.4" opacity="0.1"/>
+    <line x1="50%" y1="12%" x2="50%" y2="19%" stroke="${a}" stroke-width="0.4" opacity="0.14"/>
+    <line x1="65%" y1="18%" x2="65%" y2="25%" stroke="${a}" stroke-width="0.4" opacity="0.1"/>
+    <line x1="80%" y1="14%" x2="80%" y2="21%" stroke="${a}" stroke-width="0.4" opacity="0.12"/>
+    <line x1="28%" y1="30%" x2="28%" y2="37%" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <line x1="42%" y1="28%" x2="42%" y2="35%" stroke="${a}" stroke-width="0.4" opacity="0.1"/>
+    <line x1="58%" y1="32%" x2="58%" y2="39%" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <line x1="72%" y1="26%" x2="72%" y2="33%" stroke="${a}" stroke-width="0.4" opacity="0.1"/>`,
+
+  'mountain': (a) => `<polygon points="15,70 40,25 65,70" fill="${a}" opacity="0.04" stroke="${a}" stroke-width="0.5" stroke-opacity="0.12"/>
+    <polygon points="45,70 65,32 85,70" fill="${a}" opacity="0.03" stroke="${a}" stroke-width="0.4" stroke-opacity="0.08"/>
+    <line x1="0" y1="70%" x2="100%" y2="70%" stroke="${a}" stroke-width="0.3" opacity="0.06"/>`,
+
+  'torii': (a) => `<line x1="35%" y1="25%" x2="35%" y2="70%" stroke="${a}" stroke-width="0.8" opacity="0.12"/>
+    <line x1="65%" y1="25%" x2="65%" y2="70%" stroke="${a}" stroke-width="0.8" opacity="0.12"/>
+    <line x1="28%" y1="28%" x2="72%" y2="28%" stroke="${a}" stroke-width="0.6" opacity="0.15"/>
+    <line x1="30%" y1="35%" x2="70%" y2="35%" stroke="${a}" stroke-width="0.4" opacity="0.1"/>`,
+
+  'fireflies': (a) => `<circle cx="25%" cy="35%" r="2" fill="${a}" opacity="0.2"/><circle cx="25%" cy="35%" r="6" fill="${a}" opacity="0.04"/>
+    <circle cx="60%" cy="28%" r="1.5" fill="${a}" opacity="0.15"/><circle cx="60%" cy="28%" r="5" fill="${a}" opacity="0.03"/>
+    <circle cx="42%" cy="50%" r="2" fill="${a}" opacity="0.18"/><circle cx="42%" cy="50%" r="6" fill="${a}" opacity="0.035"/>
+    <circle cx="75%" cy="45%" r="1.5" fill="${a}" opacity="0.14"/><circle cx="75%" cy="45%" r="5" fill="${a}" opacity="0.03"/>
+    <circle cx="35%" cy="65%" r="2" fill="${a}" opacity="0.16"/><circle cx="35%" cy="65%" r="6" fill="${a}" opacity="0.03"/>`,
+
+  'flame': (a) => `<path d="M50,62 Q44,48 48,38 Q50,30 50,22 Q50,30 52,38 Q56,48 50,62Z" fill="${a}" opacity="0.06" stroke="${a}" stroke-width="0.4" stroke-opacity="0.12"/>
+    <circle cx="50%" cy="55%" r="6" fill="${a}" opacity="0.025"/><circle cx="50%" cy="45%" r="16" fill="${a}" opacity="0.015"/>`,
+
+  'mist': (a) => `<ellipse cx="30%" cy="40%" rx="22%" ry="3%" fill="${a}" opacity="0.04"/>
+    <ellipse cx="60%" cy="48%" rx="25%" ry="3%" fill="${a}" opacity="0.035"/>
+    <ellipse cx="40%" cy="56%" rx="28%" ry="3%" fill="${a}" opacity="0.03"/>
+    <ellipse cx="55%" cy="64%" rx="20%" ry="3%" fill="${a}" opacity="0.025"/>`,
+
+  'owl-eyes': (a) => `<circle cx="40%" cy="38%" r="10" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.12"/>
+    <circle cx="60%" cy="38%" r="10" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.12"/>
+    <circle cx="40%" cy="38%" r="3" fill="${a}" opacity="0.1"/>
+    <circle cx="60%" cy="38%" r="3" fill="${a}" opacity="0.1"/>
+    <path d="M30,38 Q35,28 40,30" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.08"/>
+    <path d="M70,38 Q65,28 60,30" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.08"/>`,
+
+  'spiral': (a) => `<path d="M50,42 Q52,38 56,38 Q62,38 62,44 Q62,52 54,52 Q44,52 44,42 Q44,30 56,30 Q70,30 70,46 Q70,62 52,62 Q34,62 34,42" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.1"/>`,
+
+  'hills': (a) => `<path d="M0,65 Q20,40 40,55 Q55,35 75,50 Q90,42 100,52 L100,100 L0,100Z" fill="${a}" opacity="0.04"/>
+    <path d="M0,72 Q25,55 45,65 Q60,50 80,60 Q95,55 100,60 L100,100 L0,100Z" fill="${a}" opacity="0.03"/>`,
+
+  'weave': (a) => `<path d="M25,20 Q40,30 25,40 Q10,50 25,60 Q40,70 25,80" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.1"/>
+    <path d="M50,20 Q65,30 50,40 Q35,50 50,60 Q65,70 50,80" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <path d="M75,20 Q90,30 75,40 Q60,50 75,60 Q90,70 75,80" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.1"/>`,
+
+  'leaves': (a) => `<path d="M35,55 Q25,40 35,30 Q45,40 35,55Z" fill="${a}" opacity="0.05" stroke="${a}" stroke-width="0.3" stroke-opacity="0.1"/>
+    <path d="M55,50 Q45,35 55,25 Q65,35 55,50Z" fill="${a}" opacity="0.04" stroke="${a}" stroke-width="0.3" stroke-opacity="0.08"/>
+    <path d="M68,60 Q58,48 68,38 Q78,48 68,60Z" fill="${a}" opacity="0.035" stroke="${a}" stroke-width="0.3" stroke-opacity="0.07"/>`,
+
+  'quill': (a) => `<path d="M55,18 Q52,35 48,50 L46,70" fill="none" stroke="${a}" stroke-width="0.6" opacity="0.12"/>
+    <path d="M55,18 Q62,22 58,30" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.08"/>
+    <path d="M55,18 Q50,24 52,32" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.08"/>`,
+
+  'quilt': (a) => `<rect x="25%" y="28%" width="20%" height="18%" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.1"/>
+    <rect x="45%" y="28%" width="20%" height="18%" fill="${a}" opacity="0.03"/>
+    <rect x="25%" y="46%" width="20%" height="18%" fill="${a}" opacity="0.025"/>
+    <rect x="45%" y="46%" width="20%" height="18%" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.08"/>
+    <line x1="25%" y1="28%" x2="45%" y2="46%" stroke="${a}" stroke-width="0.3" opacity="0.06"/>
+    <line x1="45%" y1="28%" x2="65%" y2="46%" stroke="${a}" stroke-width="0.3" opacity="0.06"/>`,
+
+  'bird': (a) => `<path d="M30,40 Q40,30 50,35 Q60,30 70,40" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.12"/>
+    <path d="M35,48 Q42,42 48,45" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.08"/>`,
+
+  'stone-circle': (a) => `<circle cx="50%" cy="50%" r="28" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.06" stroke-dasharray="1,8"/>
+    <rect x="48%" y="24%" width="4%" height="8%" rx="1" fill="${a}" opacity="0.08"/>
+    <rect x="68%" y="34%" width="4%" height="7%" rx="1" fill="${a}" opacity="0.07" transform="rotate(30,72,38)"/>
+    <rect x="72%" y="54%" width="4%" height="7%" rx="1" fill="${a}" opacity="0.06" transform="rotate(60,74,58)"/>
+    <rect x="28%" y="34%" width="4%" height="7%" rx="1" fill="${a}" opacity="0.07" transform="rotate(-30,30,38)"/>
+    <rect x="24%" y="54%" width="4%" height="7%" rx="1" fill="${a}" opacity="0.06" transform="rotate(-60,26,58)"/>
+    <rect x="38%" y="70%" width="4%" height="6%" rx="1" fill="${a}" opacity="0.05"/>
+    <rect x="58%" y="70%" width="4%" height="6%" rx="1" fill="${a}" opacity="0.05"/>`,
+
+  'press': (a) => `<rect x="30%" y="30%" width="40%" height="36%" rx="1" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.1"/>
+    <line x1="34%" y1="40%" x2="66%" y2="40%" stroke="${a}" stroke-width="0.3" opacity="0.08"/>
+    <line x1="34%" y1="46%" x2="60%" y2="46%" stroke="${a}" stroke-width="0.3" opacity="0.06"/>
+    <line x1="34%" y1="52%" x2="66%" y2="52%" stroke="${a}" stroke-width="0.3" opacity="0.08"/>
+    <line x1="34%" y1="58%" x2="55%" y2="58%" stroke="${a}" stroke-width="0.3" opacity="0.06"/>`,
+
+  'vinyl': (a) => `<circle cx="50%" cy="44%" r="26" fill="none" stroke="${a}" stroke-width="0.5" opacity="0.1"/>
+    <circle cx="50%" cy="44%" r="18" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.06"/>
+    <circle cx="50%" cy="44%" r="10" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.08"/>
+    <circle cx="50%" cy="44%" r="3" fill="${a}" opacity="0.1"/>`,
+
+  'tide-pool': (a) => `<circle cx="50%" cy="45%" r="22" fill="none" stroke="${a}" stroke-width="0.4" opacity="0.1"/>
+    <circle cx="45%" cy="42%" r="12" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.07"/>
+    <circle cx="55%" cy="50%" r="8" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.08"/>
+    <circle cx="48%" cy="46%" r="3" fill="${a}" opacity="0.05"/>`,
+
+  'strings': (a) => `<line x1="30%" y1="15%" x2="30%" y2="85%" stroke="${a}" stroke-width="0.3" opacity="0.12"/>
+    <line x1="40%" y1="15%" x2="40%" y2="85%" stroke="${a}" stroke-width="0.3" opacity="0.1"/>
+    <line x1="50%" y1="15%" x2="50%" y2="85%" stroke="${a}" stroke-width="0.3" opacity="0.08"/>
+    <line x1="60%" y1="15%" x2="60%" y2="85%" stroke="${a}" stroke-width="0.3" opacity="0.1"/>
+    <line x1="70%" y1="15%" x2="70%" y2="85%" stroke="${a}" stroke-width="0.3" opacity="0.12"/>
+    <ellipse cx="50%" cy="65%" rx="22%" ry="8%" fill="none" stroke="${a}" stroke-width="0.3" opacity="0.06"/>`
+};
+
+function genBg(story) {
+  const cp = catPalettes[story.c];
+  const s = hash(story.t);
+  const bg = cp.bgs[s % cp.bgs.length];
+  const acc = cp.accents[s % cp.accents.length];
+
+  const x1 = 15+(s%50), y1 = 10+((s>>4)%40);
+  const x2 = 40+((s>>2)%40), y2 = 50+((s>>3)%35);
+  const x3 = 10+((s>>5)%55), y3 = 55+((s>>1)%35);
+  const a = 130+(s%80);
+
+  return {
+    bg: `radial-gradient(ellipse 55% 60% at ${x1}% ${y1}%, rgba(${bg[0]+15},${bg[1]+20},${bg[2]+15},0.5) 0%,transparent 100%),
+      radial-gradient(ellipse 50% 55% at ${x2}% ${y2}%, rgba(${bg[0]+10},${bg[1]+15},${bg[2]+10},0.35) 0%,transparent 100%),
+      radial-gradient(ellipse 60% 65% at ${x3}% ${y3}%, rgba(${bg[0]+8},${bg[1]+12},${bg[2]+8},0.3) 0%,transparent 100%),
+      radial-gradient(ellipse 30% 30% at ${75-(s%30)}% ${15+(s%20)}%, rgba(${acc},0.04) 0%,transparent 100%),
+      linear-gradient(${a}deg, rgb(${bg}) 0%, rgb(${bg[0]+4},${bg[1]+3},${bg[2]+3}) 50%, rgb(${bg}) 100%)`,
+    accent: `rgb(${acc})`
+  };
+}
+
+function render(filter) {
+  const grid = document.getElementById('ssGrid');
+  grid.innerHTML = '';
+  const items = filter === 'all' ? stories : stories.filter(s => s.c === filter);
+
+  items.forEach((s, i) => {
+    const { bg, accent } = genBg(s);
+    const motifFn = motifs[s.m] || motifs['constellation'];
+    const svg = motifFn(accent);
+
+    const el = document.createElement('div');
+    el.className = 'ss-book' + (s.free ? ' available' : ' locked') + (s.img ? ' has-img' : '');
+    el.style.opacity = '0';
+    el.style.animation = `ssRise 0.45s ease-out ${0.025*i}s forwards`;
+
+    el.innerHTML = `
+      ${s.img ? `<img class="ss-book-img" src="${s.img}" alt="">` : `<div class="ss-book-bg" style="background:${bg}"></div>
+      <div class="ss-book-motif"><svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">${svg}</svg></div>
+      <div class="ss-book-frame"></div>`}
+      <div class="ss-book-noise"></div>
+      <div class="ss-book-content">
+        <div class="ss-book-week">Week ${s.w}</div>
+        <div style="margin-top:auto">
+          <div class="ss-book-title">${s.t}</div>
+          <div class="ss-book-cat">${s.c}</div>
+        </div>
+      </div>
+      <div class="ss-book-salus">Salus</div>
+      ${s.free ? '' : '<div class="ss-book-lock"><svg viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>'}
+      <div class="ss-book-border"></div>
+    `;
+
+    grid.appendChild(el);
+  });
+}
+
+document.getElementById('ssFilters').addEventListener('click', e => {
+  const btn = e.target.closest('.ss-filter-btn');
+  if (!btn) return;
+  document.querySelectorAll('.ss-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render(btn.dataset.filter);
+});
+
+render('all');
+
+// Navigation
+const navWrap=document.getElementById("navWrap");
+window.addEventListener("scroll",()=>{navWrap.classList.toggle("scrolled",window.scrollY>30)},{passive:true});
+const burger=document.getElementById("burgerBtn");
+const drawer=document.getElementById("navDrawer");
+burger.addEventListener("click",()=>{burger.classList.toggle("open");drawer.classList.toggle("open");document.body.style.overflow=drawer.classList.contains("open")?"hidden":""});
+drawer.querySelectorAll(".nav-drawer__link").forEach(l=>{l.addEventListener("click",()=>{burger.classList.remove("open");drawer.classList.remove("open");document.body.style.overflow=""})});
+</script>
+
+</body>
+</html>
