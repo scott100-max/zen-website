@@ -586,6 +586,10 @@
   .cc--tools .cc__orb--1{background:radial-gradient(circle,rgba(52,211,153,0.5),transparent 70%)}
   .cc--tools .cc__orb--2{background:radial-gradient(circle,rgba(16,185,129,0.35),transparent 70%)}
 
+  .cc__asmr-eq{position:absolute;z-index:1;bottom:44px;left:50%;transform:translateX(-50%);display:flex;align-items:flex-end;gap:6px;height:80px;opacity:0.3;pointer-events:none}
+  .cc--asmr:hover .cc__asmr-eq{opacity:0.5}
+  .cc__asmr-eq span{width:4px;border-radius:2px;background:linear-gradient(to top,rgba(148,163,184,0.6),rgba(148,163,184,0.15));animation:eqPulse 1.4s ease-in-out infinite alternate;animation-delay:var(--d);height:var(--h)}
+  @keyframes eqPulse{0%{transform:scaleY(0.4)}100%{transform:scaleY(1)}}
   .cc__cbt-triangle{position:absolute;z-index:1;width:280px;bottom:40px;left:50%;transform:translateX(-50%);display:block;opacity:0.55;pointer-events:none}
   .cc--cbt:hover .cc__cbt-triangle{opacity:0.75}
   .cc__body{position:relative;z-index:3;flex:1;padding:26px 24px 0;display:flex;flex-direction:column}
@@ -912,12 +916,26 @@
       <div class="cc__orb cc__orb--2"></div>
       <span class="cc__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
       <div class="cc__body">
-        <span class="cc__count">14 Ambient Sounds</span>
+        <span class="cc__count">30 Ambient Sounds</span>
         <h3 class="cc__title">ASMR &amp; Sound Mixer</h3>
         <p class="cc__desc">Layer rain, fire, birdsong, and more — build your own ambient environment.</p>
       </div>
+      <div class="cc__asmr-eq">
+        <span style="--h:40%;--d:0s"></span>
+        <span style="--h:65%;--d:.12s"></span>
+        <span style="--h:85%;--d:.24s"></span>
+        <span style="--h:55%;--d:.36s"></span>
+        <span style="--h:95%;--d:.08s"></span>
+        <span style="--h:45%;--d:.3s"></span>
+        <span style="--h:70%;--d:.18s"></span>
+        <span style="--h:60%;--d:.42s"></span>
+        <span style="--h:80%;--d:.06s"></span>
+        <span style="--h:50%;--d:.28s"></span>
+        <span style="--h:90%;--d:.15s"></span>
+        <span style="--h:35%;--d:.38s"></span>
+      </div>
       <div class="cc__strip">
-        <span class="cc__stat"><span class="cc__stat-num">14</span> sounds</span>
+        <span class="cc__stat"><span class="cc__stat-num">30</span> sounds</span>
         <span class="cc__stat-sep"></span>
         <span class="cc__stat">layerable mixer</span>
         <span class="cc__stat-sep"></span>
