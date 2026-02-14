@@ -373,12 +373,17 @@ def mix_ambient(voice_wav, ambient_name, output_wav, gain_db=None,
     # Prepend structural pre-roll silence (voice delayed by fade_in_sec)
     preroll_samples = int(fade_in_sec * sr)
     silence_preroll = np.zeros(preroll_samples, dtype=np.int16)
-    voice_with_preroll = np.concatenate([silence_preroll, voice_samples])
+
+    # Append post-roll silence (ambient fades out after voice ends)
+    postroll_samples = int(fade_out_sec * sr)
+    silence_postroll = np.zeros(postroll_samples, dtype=np.int16)
+
+    voice_with_preroll = np.concatenate([silence_preroll, voice_samples, silence_postroll])
     total_len = len(voice_with_preroll)
 
     voice_dur = voice_len / sr
     total_dur = total_len / sr
-    print(f"  Voice: {voice_dur:.1f}s → with {fade_in_sec}s pre-roll: {total_dur:.1f}s")
+    print(f"  Voice: {voice_dur:.1f}s → with {fade_in_sec}s pre-roll + {fade_out_sec}s post-roll: {total_dur:.1f}s")
 
     # Load ambient
     ambient_raw = _load_ambient_as_mono_int16(ambient_path, offset_sec=offset_sec)

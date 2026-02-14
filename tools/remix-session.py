@@ -216,16 +216,18 @@ def remix(session_id, ambient_override=None, fade_in=30, fade_out=60, dry_run=Fa
     voice_len = len(voice_samples)
     voice_dur = voice_len / sr
 
-    # Prepend 30s silence for pre-roll
+    # Prepend 30s silence for pre-roll, append 60s silence for post-roll
     preroll_samples = int(fade_in * sr)
+    postroll_samples = int(fade_out * sr)
     voice_with_preroll = np.concatenate([
         np.zeros(preroll_samples, dtype=np.int16),
-        voice_samples
+        voice_samples,
+        np.zeros(postroll_samples, dtype=np.int16)
     ])
     total_len = len(voice_with_preroll)
     total_dur = total_len / sr
 
-    print(f"  Voice: {voice_dur:.1f}s → with {fade_in}s pre-roll: {total_dur:.1f}s")
+    print(f"  Voice: {voice_dur:.1f}s → with {fade_in}s pre-roll + {fade_out}s post-roll: {total_dur:.1f}s")
 
     # Parse ambient spec (supports "birds+fire" combos)
     ambient_names = [a.strip() for a in ambient_spec.split('+')]
