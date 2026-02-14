@@ -204,7 +204,9 @@ def extract_gate16_features(audio_path, sr=22050):
 
 
 def score_gate16(features):
-    """Compute Gate 16 echo z-score. Positive = more echo-like."""
+    """Compute Gate 16 echo z-score. Positive = more echo-like.
+    DEPRECATED: Anti-correlated on new Fish TTS builds. See echo_v2.
+    """
     if _gate16_config is None or features is None:
         return None
     direction_map = {"echo_higher": 1, "echo_lower": -1}
@@ -216,6 +218,76 @@ def score_gate16(features):
         z = (features[name] - feat_cfg["clean_mean"]) / (feat_cfg["clean_std"] + 1e-10)
         z_sum += z * direction_map[feat_cfg["direction"]]
     return z_sum / len(_gate16_config["features"])
+
+
+# ---------------------------------------------------------------------------
+# Echo Detector v2 — Physics-based replacement for Gate 16 (L-57)
+# Uses cepstral prominence + energy decay + spectral flux stability.
+# No population stats. No training data. AUC 0.766-0.853 on ECHO vs PASS.
+# ---------------------------------------------------------------------------
+
+def extract_echo_v2_features(audio_path, sr=22050):
+    """Extract echo v2 features: cepstral prominence, EDR slope, spectral flux std.
+
+    Returns dict with:
+        echo_v2_ceps: max cepstral prominence in echo region (AUC 0.766, higher=echo)
+        echo_v2_edr: energy decay slope (AUC 0.711, higher/less negative=echo)
+        echo_v2_flux_std: spectral flux std (AUC 0.692, lower=echo)
+    """
+    import librosa
+
+    y, _sr = librosa.load(audio_path, sr=sr, mono=True)
+    if len(y) < sr * 0.3:
+        return None
+
+    min_q = int(15 * sr / 1000)   # 15ms — skip pitch region
+    max_q = int(200 * sr / 1000)  # 200ms — max echo delay
+
+    # --- Feature 1: Cepstral peak prominence (best single feature) ---
+    frame_size = 4096
+    hop_size = 1024
+    frame_prominences = []
+
+    for start in range(0, len(y) - frame_size, hop_size):
+        frame = y[start:start + frame_size]
+        window = np.hanning(frame_size)
+        Y = np.fft.rfft(frame * window)
+        power = np.abs(Y) ** 2
+        log_power = np.log(power + 1e-10)
+        cepstrum = np.fft.irfft(log_power)
+        echo_region = np.abs(cepstrum[min_q:min(max_q, len(cepstrum))])
+        if len(echo_region) == 0:
+            continue
+        peak = float(np.max(echo_region))
+        baseline = float(np.median(echo_region))
+        frame_prominences.append(peak - baseline)
+
+    ceps_prom_max = float(np.max(frame_prominences)) if frame_prominences else 0.0
+
+    # --- Feature 2: Energy Decay Rate (EDR slope) ---
+    y_sq = y ** 2
+    edr = np.cumsum(y_sq[::-1])[::-1]
+    edr_db = 10 * np.log10(edr / (edr[0] + 1e-10) + 1e-10)
+    mask = (edr_db > -20) & (edr_db < -5)
+    if np.sum(mask) > 10:
+        indices = np.where(mask)[0]
+        x = indices.astype(float) / sr
+        y_fit = edr_db[indices]
+        coeffs = np.polyfit(x, y_fit, 1)
+        edr_slope = float(coeffs[0])  # dB/sec, more negative = faster decay = cleaner
+    else:
+        edr_slope = -10.0  # Default: steep decay = clean
+
+    # --- Feature 3: Spectral flux std ---
+    S = np.abs(librosa.stft(y, n_fft=2048, hop_length=256))
+    flux = np.sqrt(np.sum(np.diff(S, axis=1) ** 2, axis=0))
+    flux_std = float(np.std(flux))
+
+    return {
+        "echo_v2_ceps": ceps_prom_max,
+        "echo_v2_edr": edr_slope,
+        "echo_v2_flux_std": flux_std,
+    }
 
 
 def score_gate17(features):
@@ -236,7 +308,7 @@ def score_gate17(features):
 
 
 def precompute_gate_scores(session_id, chunks_data):
-    """Pre-compute Gate 16+17 scores for all candidates. Caches to JSON."""
+    """Pre-compute Gate 16+17 + echo v2 scores for all candidates. Caches to JSON."""
     cache_path = VAULT_DIR / session_id / "gate-scores-cache.json"
     cache = {}
     if cache_path.exists():
@@ -252,10 +324,14 @@ def precompute_gate_scores(session_id, chunks_data):
     for ci, chunk in sorted(chunks_data.items()):
         for c in chunk['candidates']:
             key = f"c{ci:02d}_v{c['version']:02d}"
-            if key in cache:
+            if key in cache and 'echo_v2_ceps' in cache[key]:
+                # Cache hit — load all fields
                 c['echo_z'] = cache[key].get('echo_z')
                 c['breakout_z'] = cache[key].get('breakout_z')
                 c['f0_jump'] = cache[key].get('f0_jump')
+                c['echo_v2_ceps'] = cache[key].get('echo_v2_ceps')
+                c['echo_v2_edr'] = cache[key].get('echo_v2_edr')
+                c['echo_v2_flux_std'] = cache[key].get('echo_v2_flux_std')
                 cached_hits += 1
                 continue
 
@@ -263,6 +339,7 @@ def precompute_gate_scores(session_id, chunks_data):
             if not wav_path or not os.path.exists(wav_path):
                 continue
 
+            # Gate 16 (legacy — stored but NOT used in ranking)
             echo_z = None
             try:
                 g16_feats = extract_gate16_features(wav_path)
@@ -271,6 +348,20 @@ def precompute_gate_scores(session_id, chunks_data):
             except Exception:
                 pass
 
+            # Echo v2 — physics-based replacement (L-57)
+            echo_v2_ceps = None
+            echo_v2_edr = None
+            echo_v2_flux_std = None
+            try:
+                v2_feats = extract_echo_v2_features(wav_path)
+                if v2_feats:
+                    echo_v2_ceps = v2_feats['echo_v2_ceps']
+                    echo_v2_edr = v2_feats['echo_v2_edr']
+                    echo_v2_flux_std = v2_feats['echo_v2_flux_std']
+            except Exception:
+                pass
+
+            # Gate 17 — breakout
             breakout_z = None
             f0_jump = None
             if _extract_breakout:
@@ -284,7 +375,14 @@ def precompute_gate_scores(session_id, chunks_data):
             c['echo_z'] = echo_z
             c['breakout_z'] = breakout_z
             c['f0_jump'] = f0_jump
-            cache[key] = {'echo_z': echo_z, 'breakout_z': breakout_z, 'f0_jump': f0_jump}
+            c['echo_v2_ceps'] = echo_v2_ceps
+            c['echo_v2_edr'] = echo_v2_edr
+            c['echo_v2_flux_std'] = echo_v2_flux_std
+            cache[key] = {
+                'echo_z': echo_z, 'breakout_z': breakout_z, 'f0_jump': f0_jump,
+                'echo_v2_ceps': echo_v2_ceps, 'echo_v2_edr': echo_v2_edr,
+                'echo_v2_flux_std': echo_v2_flux_std,
+            }
             computed += 1
 
             if computed % 50 == 0:
@@ -797,13 +895,14 @@ def select_candidate(chunk_idx, chunk_data, prev_best_mfcc=None, session_log=Non
             if cps > CONTENT_CUTOFF_CPS and tail_ms < COMPOUND_CUTOFF_TAIL_MS:
                 reasons.append(f"compound_cutoff: {cps:.1f}ch/s + {tail_ms:.0f}ms tail (rushing with abrupt end)")
 
-        # 1f: Gate 16 — Echo z-score elimination (Bible v5.0, replaces echo_risk ceiling)
-        echo_z = c.get('echo_z')
-        if echo_z is not None and echo_z > ECHO_Z_ELIMINATE:
-            reasons.append(f"gate16_echo z={echo_z:.3f} > {ECHO_Z_ELIMINATE}")
-        elif c.get('echo_risk') is not None and c['echo_risk'] > ECHO_RISK_CEILING and echo_z is None:
-            # Legacy fallback only if Gate 16 features unavailable
-            reasons.append(f"echo_risk {c['echo_risk']:.6f} > {ECHO_RISK_CEILING} (legacy)")
+        # 1f: Echo — Gate 16 z-score DISABLED (anti-correlated on new builds, 14 Feb 2026)
+        # Echo v2 uses soft ranking penalty only (no hard elimination).
+        # Legacy echo_risk fallback kept for very old vaults without any echo scoring.
+        # echo_z = c.get('echo_z')
+        # if echo_z is not None and echo_z > ECHO_Z_ELIMINATE:
+        #     reasons.append(f"gate16_echo z={echo_z:.3f} > {ECHO_Z_ELIMINATE}")
+        if c.get('echo_risk') is not None and c['echo_risk'] > ECHO_RISK_CEILING and c.get('echo_v2_ceps') is None:
+            reasons.append(f"echo_risk {c['echo_risk']:.6f} > {ECHO_RISK_CEILING} (legacy, no echo_v2)")
 
         # 1f2: Gate 17 — Breakout elimination (Bible v5.0)
         breakout_z = c.get('breakout_z')
@@ -898,11 +997,34 @@ def select_candidate(chunk_idx, chunk_data, prev_best_mfcc=None, session_log=Non
                      if c.get('duration') is not None and c['duration'] > 0]
     dur_median = sorted(all_durations)[len(all_durations) // 2] if all_durations else None
 
+    # Echo v2: chunk-local normalization (L-57)
+    # Compute min/max of echo_v2_ceps within this chunk's remaining candidates
+    _ev2_vals = [c.get('echo_v2_ceps') for c in remaining if c.get('echo_v2_ceps') is not None]
+    _ev2_min = min(_ev2_vals) if _ev2_vals else 0
+    _ev2_max = max(_ev2_vals) if _ev2_vals else 0
+    _ev2_range = _ev2_max - _ev2_min
+
+    # Also compute for edr_slope (higher = more echo)
+    _edr_vals = [c.get('echo_v2_edr') for c in remaining if c.get('echo_v2_edr') is not None]
+    _edr_min = min(_edr_vals) if _edr_vals else -10
+    _edr_max = max(_edr_vals) if _edr_vals else 0
+    _edr_range = _edr_max - _edr_min
+
+    # Also compute for flux_std (lower = more echo, AUC 0.692)
+    _flux_vals = [c.get('echo_v2_flux_std') for c in remaining if c.get('echo_v2_flux_std') is not None]
+    _flux_min = min(_flux_vals) if _flux_vals else 0
+    _flux_max = max(_flux_vals) if _flux_vals else 1
+    _flux_range = _flux_max - _flux_min
+
+    ECHO_V2_RANK_WEIGHT = 100.0  # Weight for echo v2 chunk-local penalty
+
     def rank_score(c):
         """Combined ranking score. Higher = better.
 
-        v8 (Bible v5.0): Gate 16 echo z-score + Gate 17 breakout z-score
-        replace old echo_risk. Tonal consistency remains strongest signal.
+        v9 (L-57): Gate 16 z-score DISABLED (anti-correlated on new builds).
+        Echo v2 uses chunk-local normalized cepstral prominence + EDR slope.
+        Gate 17 breakout z-score retained (suspect but not proven broken).
+        Tonal consistency remains strongest signal.
         Known-pass versions get a bonus. Known-soft-fail-like get penalised.
         """
         flatness = c.get('sp_flatness') or 0
@@ -910,14 +1032,35 @@ def select_candidate(chunk_idx, chunk_data, prev_best_mfcc=None, session_log=Non
         tonal = c.get('tonal_distance') or 0
         hiss = c.get('hiss_risk') or -20  # More negative = better
 
-        # Gate 16: use echo z-score if available, fall back to legacy echo_risk
-        echo_z = c.get('echo_z')
-        if echo_z is not None:
-            echo_penalty = echo_z * ECHO_Z_RANK_WEIGHT
-        else:
+        # Echo v2: chunk-local normalized penalty (replaces Gate 16)
+        # Three orthogonal signals, all chunk-local [0,1] normalized:
+        #   ceps_prom_max (AUC 0.766, higher=echo) — 50% weight
+        #   edr_slope (AUC 0.711, higher=echo) — 25% weight
+        #   flux_std (AUC 0.692, lower=echo) — 25% weight
+        echo_penalty = 0
+        ev2_ceps = c.get('echo_v2_ceps')
+        ev2_edr = c.get('echo_v2_edr')
+        ev2_flux = c.get('echo_v2_flux_std')
+
+        if ev2_ceps is not None and _ev2_range > 0.001:
+            ceps_norm = (ev2_ceps - _ev2_min) / _ev2_range  # [0, 1]
+            echo_penalty += ceps_norm * 0.50
+
+        if ev2_edr is not None and _edr_range > 0.1:
+            edr_norm = (ev2_edr - _edr_min) / _edr_range  # [0, 1], higher = more echo
+            echo_penalty += edr_norm * 0.25
+
+        if ev2_flux is not None and _flux_range > 0.1:
+            flux_norm = 1.0 - (ev2_flux - _flux_min) / _flux_range  # inverted: lower flux = more echo
+            echo_penalty += flux_norm * 0.25
+
+        echo_penalty *= ECHO_V2_RANK_WEIGHT
+
+        # Fallback: legacy echo_risk if no echo_v2 features available
+        if ev2_ceps is None:
             echo_penalty = (c.get('echo_risk') or 0) * ECHO_RANK_WEIGHT
 
-        # Gate 17: breakout z-score penalty
+        # Gate 17: breakout z-score penalty (retained, not proven broken)
         breakout_z = c.get('breakout_z')
         breakout_penalty = 0
         if breakout_z is not None and breakout_z > BREAKOUT_PENALTY:
@@ -963,6 +1106,8 @@ def select_candidate(chunk_idx, chunk_data, prev_best_mfcc=None, session_log=Non
             'duration': c.get('duration'),
             'echo_risk': c.get('echo_risk'),
             'echo_z': c.get('echo_z'),
+            'echo_v2_ceps': c.get('echo_v2_ceps'),
+            'echo_v2_edr': c.get('echo_v2_edr'),
             'breakout_z': c.get('breakout_z'),
             'f0_jump': c.get('f0_jump'),
             'hiss_risk': c.get('hiss_risk'),
