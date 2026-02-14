@@ -467,36 +467,137 @@
   </div>
 </div>
 
+<audio id="audio" preload="metadata" src="https://media.salus-mind.com/content/audio-free/54-the-slow-train-north.mp3"></audio>
+
 <script>
+  // ─── Audio element ───
+  const audio = document.getElementById('audio');
+  const btnPlay = document.getElementById('btnPlay');
+  const playIcon = document.getElementById('playIcon');
+  const progressFill = document.getElementById('progressFill');
+  const progressBar = document.getElementById('progressBar');
+  const timeCurrent = document.getElementById('timeCurrent');
+  const timeTotal = document.getElementById('timeTotal');
+  const storyText = document.querySelector('.story-text');
+
+  const PLAY_SVG = '<polygon points="8,5 20,12 8,19" fill="var(--text-primary)" stroke="none"></polygon>';
+  const PAUSE_SVG = '<rect x="7" y="5" width="3" height="14" rx="1" fill="var(--text-primary)" stroke="none"></rect><rect x="14" y="5" width="3" height="14" rx="1" fill="var(--text-primary)" stroke="none"></rect>';
+
+  function formatTime(s) {
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return m + ':' + sec.toString().padStart(2, '0');
+  }
+
+  // ─── Show/hide controls on interaction ───
   let controlTimer;
   const body = document.body;
 
   function showControls() {
     body.classList.add('show-controls');
     clearTimeout(controlTimer);
-    controlTimer = setTimeout(() => {
-      body.classList.remove('show-controls');
-    }, 3500);
+    controlTimer = setTimeout(() => body.classList.remove('show-controls'), 3500);
   }
 
   document.addEventListener('mousemove', showControls);
   document.addEventListener('touchstart', showControls);
   showControls();
 
-  // Audio coming soon — show notice on play click
-  const btnPlay = document.getElementById('btnPlay');
-  const timeCurrent = document.getElementById('timeCurrent');
-  const timeTotal = document.getElementById('timeTotal');
-  if (timeTotal) timeTotal.textContent = '';
-  if (timeCurrent) timeCurrent.textContent = 'Coming soon';
-
-  btnPlay.addEventListener('click', () => {
-    if (timeCurrent) timeCurrent.textContent = 'Audio coming soon';
-    btnPlay.style.opacity = '0.4';
-    btnPlay.style.cursor = 'default';
-    setTimeout(() => { btnPlay.style.opacity = ''; btnPlay.style.cursor = ''; }, 2000);
+  // ─── Duration display once metadata loads ───
+  audio.addEventListener('loadedmetadata', () => {
+    timeTotal.textContent = formatTime(audio.duration);
   });
 
+  // ─── Play/Pause ───
+  let textFadeTimer = null;
+  let textFaded = false;
+
+  btnPlay.addEventListener('click', () => {
+    if (audio.paused) {
+      audio.play();
+      playIcon.innerHTML = PAUSE_SVG;
+      btnPlay.title = 'Pause';
+      if (!textFaded) {
+        textFadeTimer = setTimeout(() => {
+          storyText.classList.add('fade-away');
+          textFaded = true;
+        }, 45000);
+      }
+    } else {
+      audio.pause();
+      playIcon.innerHTML = PLAY_SVG;
+      btnPlay.title = 'Play';
+      if (textFadeTimer && !textFaded) clearTimeout(textFadeTimer);
+    }
+  });
+
+  // ─── Progress tracking ───
+  audio.addEventListener('timeupdate', () => {
+    if (!audio.duration) return;
+    const pct = (audio.currentTime / audio.duration) * 100;
+    progressFill.style.width = pct + '%';
+    timeCurrent.textContent = formatTime(audio.currentTime);
+  });
+
+  audio.addEventListener('ended', () => {
+    playIcon.innerHTML = PLAY_SVG;
+    btnPlay.title = 'Play';
+  });
+
+  // ─── Progress bar scrubbing ───
+  function scrub(e) {
+    const rect = progressBar.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    audio.currentTime = pct * audio.duration;
+  }
+
+  progressBar.addEventListener('click', scrub);
+
+  let dragging = false;
+  progressBar.addEventListener('mousedown', () => { dragging = true; });
+  progressBar.addEventListener('touchstart', (e) => { dragging = true; scrub(e); }, { passive: true });
+  document.addEventListener('mousemove', (e) => { if (dragging) scrub(e); });
+  document.addEventListener('touchmove', (e) => { if (dragging) scrub(e); }, { passive: true });
+  document.addEventListener('mouseup', () => { dragging = false; });
+  document.addEventListener('touchend', () => { dragging = false; });
+
+  // ─── Skip buttons ───
+  document.getElementById('btnRewind').addEventListener('click', () => {
+    audio.currentTime = Math.max(0, audio.currentTime - 15);
+  });
+
+  document.getElementById('btnForward').addEventListener('click', () => {
+    audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 15);
+  });
+
+  // ─── Sleep timer ───
+  let sleepTimerId = null;
+  const timerOptions = [0, 15, 30, 45, 60];
+  let timerIdx = 0;
+  const timerPill = document.getElementById('timerPill');
+
+  function cycleSleepTimer() {
+    if (sleepTimerId) { clearTimeout(sleepTimerId); sleepTimerId = null; }
+    timerIdx = (timerIdx + 1) % timerOptions.length;
+    const mins = timerOptions[timerIdx];
+    if (mins === 0) {
+      timerPill.textContent = 'Timer';
+    } else {
+      timerPill.textContent = mins + ' min';
+      sleepTimerId = setTimeout(() => {
+        audio.pause();
+        playIcon.innerHTML = PLAY_SVG;
+        timerPill.textContent = 'Timer';
+        timerIdx = 0;
+      }, mins * 60 * 1000);
+    }
+  }
+
+  timerPill.addEventListener('click', cycleSleepTimer);
+  document.getElementById('btnSleepTimer').addEventListener('click', cycleSleepTimer);
+
+  // ─── Ambient particles ───
   const particlesEl = document.getElementById('particles');
   for (let i = 0; i < 20; i++) {
     const p = document.createElement('div');
