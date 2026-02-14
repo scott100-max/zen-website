@@ -912,6 +912,7 @@
       }
       function createSource(src) {
         const audio = new Audio(src);
+        audio.crossOrigin = 'anonymous';
         audio.preload = 'auto';
         audio.loop = true;
         audio.addEventListener('error', () => {
