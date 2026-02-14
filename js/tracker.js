@@ -84,33 +84,21 @@
       geo = geo || {};
 
       // Ensure visitor record exists before inserting page view (FK constraint)
-      var visitorReady;
-      if (isNewVisitor) {
-        visitorReady = sb.from('visitors').insert({
-          id: visitorId,
-          total_sessions: 1,
-          country: geo.country,
-          city: geo.city,
-          region: geo.region,
-          timezone: geo.timezone,
-          user_agent: navigator.userAgent.substring(0, 500)
-        }).then(function() {}).catch(function() {});
-      } else if (isNewSession) {
-        // Returning visitor, new session — update last_seen + increment sessions
-        visitorReady = sb.rpc('increment_visitor_session', { vid: visitorId }).then(function(result) {
-          if (result.error) {
-            return sb.from('visitors')
-              .update({ last_seen: new Date().toISOString() })
-              .eq('id', visitorId);
+      // Always upsert — handles stale localStorage IDs where visitor row was deleted
+      var visitorReady = sb.from('visitors').upsert({
+        id: visitorId,
+        total_sessions: 1,
+        country: geo.country,
+        city: geo.city,
+        region: geo.region,
+        timezone: geo.timezone,
+        user_agent: navigator.userAgent.substring(0, 500)
+      }, { onConflict: 'id', ignoreDuplicates: true })
+        .then(function() {
+          if (isNewSession && !isNewVisitor) {
+            return sb.rpc('increment_visitor_session', { vid: visitorId }).catch(function() {});
           }
-        }).catch(function() {
-          return sb.from('visitors')
-            .update({ last_seen: new Date().toISOString() })
-            .eq('id', visitorId);
-        });
-      } else {
-        visitorReady = Promise.resolve();
-      }
+        }).catch(function() {});
 
       // Also write to legacy visitor_logs (first page view per session only)
       if (isNewSession) {

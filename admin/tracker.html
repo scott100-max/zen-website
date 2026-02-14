@@ -98,7 +98,6 @@
     <div class="dash-header">
       <h1>Visitor Tracker <span class="visitor-count" id="visitor-count"></span></h1>
       <div class="dash-header-right">
-        <button class="btn-sm active" id="exclude-me-btn">Exclude My Region</button>
         <button class="btn-sm" onclick="doLogout()">Sign Out</button>
       </div>
     </div>
@@ -122,22 +121,6 @@
     var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     var map, markerGroup;
-    var excludeMyRegion = true;
-    var MY_REGION = { latMin: 53.6, latMax: 53.85, lngMin: -1.7, lngMax: -1.2 };
-    var MY_COUNTRY = 'United Kingdom';
-
-    function isMyRegion(r) {
-      if (r.latitude && r.longitude) {
-        return r.latitude >= MY_REGION.latMin && r.latitude <= MY_REGION.latMax &&
-               r.longitude >= MY_REGION.lngMin && r.longitude <= MY_REGION.lngMax;
-      }
-      return r.country === MY_COUNTRY;
-    }
-
-    function applyExclusion(data) {
-      if (!excludeMyRegion) return data;
-      return data.filter(function(r) { return !isMyRegion(r); });
-    }
 
     // Clean page paths — strip local file prefixes, trailing .html
     function cleanPage(p) {
@@ -192,12 +175,6 @@
     async function initDashboard() {
       initMap();
       await loadData();
-
-      document.getElementById('exclude-me-btn').addEventListener('click', function() {
-        excludeMyRegion = !excludeMyRegion;
-        this.classList.toggle('active', excludeMyRegion);
-        render();
-      });
     }
 
     function initMap() {
@@ -281,7 +258,7 @@
     }
 
     function render() {
-      var filtered = applyExclusion(allSessions).filter(function(s) {
+      var filtered = allSessions.filter(function(s) {
         return s.city || s.country;
       });
 
