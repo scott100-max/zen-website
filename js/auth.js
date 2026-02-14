@@ -354,6 +354,15 @@ var SalusAuth = (function() {
       document.querySelectorAll('.day-tile--locked').forEach(function(tile) {
         tile.classList.remove('day-tile--locked');
       });
+
+      // Hide "Premium" labels on mindfulness session cards
+      document.querySelectorAll('.sp--locked').forEach(function(el) {
+        el.style.display = 'none';
+      });
+
+      // Hide "Go Premium" hook banner on mindfulness page
+      var subHook = document.getElementById('subHook');
+      if (subHook) subHook.style.display = 'none';
     }
 
     // Handle premium content unlock
