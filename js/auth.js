@@ -355,9 +355,20 @@ var SalusAuth = (function() {
         tile.classList.remove('day-tile--locked');
       });
 
-      // Hide "Premium" labels on mindfulness session cards
+      // Unlock premium session cards — replace lock labels with audio players
       document.querySelectorAll('.sp--locked').forEach(function(el) {
-        el.style.display = 'none';
+        var src = el.getAttribute('data-premium-src');
+        if (src) {
+          // Replace lock with a playable audio player
+          var player = document.createElement('div');
+          player.className = 'sp';
+          player.setAttribute('data-src', src);
+          player.innerHTML = '<button class="sp__btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="sp__track"><div class="sp__bar"></div></div><span class="sp__time">0:00 / 0:00</span>';
+          el.parentNode.replaceChild(player, el);
+          initSpPlayer(player);
+        } else {
+          el.style.display = 'none';
+        }
       });
 
       // Hide "Go Premium" hook banner on mindfulness page
@@ -374,17 +385,108 @@ var SalusAuth = (function() {
     }
   }
 
-  // Handle premium content display
+  // Handle premium content display on session detail pages
   function handlePremiumContent() {
     var unlockCta = document.querySelector('.unlock-cta');
     if (unlockCta && isPremium()) {
-      unlockCta.innerHTML = '<div style="text-align:center;padding:24px;">' +
-        '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#4ecdc4" stroke-width="2" style="margin-bottom:12px;"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>' +
-        '<h3 style="margin-bottom:8px;color:#f0eefc;">Premium Unlocked</h3>' +
-        '<p style="color:rgba(240,238,252,0.55);margin-bottom:16px;">Audio player coming soon. Thank you for subscribing!</p>' +
-        '</div>';
-      unlockCta.style.background = 'rgba(78,205,196,0.06)';
-      unlockCta.style.border = '1px solid rgba(78,205,196,0.2)';
+      var src = unlockCta.getAttribute('data-premium-src');
+      if (src) {
+        // Replace lock gate with a real audio player
+        unlockCta.setAttribute('data-src', src);
+        unlockCta.innerHTML = '<div style="display:flex;align-items:center;gap:12px;">' +
+          '<button class="sp__btn" style="width:40px;height:40px;border-radius:50%;border:1px solid rgba(78,205,196,0.3);background:rgba(78,205,196,0.08);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;"><svg viewBox="0 0 24 24" width="14" height="14" fill="#4ecdc4"><path d="M8 5v14l11-7z"/></svg></button>' +
+          '<div class="sp__track" style="flex:1;height:4px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden;cursor:pointer;"><div class="sp__bar" style="height:100%;width:0%;border-radius:4px;background:linear-gradient(90deg,#4ecdc4,#34d399);"></div></div>' +
+          '<span class="sp__time" style="font-size:0.75rem;color:rgba(240,238,252,0.55);white-space:nowrap;">0:00 / 0:00</span>' +
+          '</div>';
+        unlockCta.style.background = 'rgba(78,205,196,0.06)';
+        unlockCta.style.border = '1px solid rgba(78,205,196,0.2)';
+        unlockCta.style.textAlign = 'left';
+        initSpPlayer(unlockCta);
+      } else {
+        unlockCta.innerHTML = '<div style="text-align:center;padding:24px;">' +
+          '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#4ecdc4" stroke-width="2" style="margin-bottom:12px;"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>' +
+          '<h3 style="margin-bottom:8px;color:#f0eefc;">Premium Unlocked</h3>' +
+          '<p style="color:rgba(240,238,252,0.55);margin-bottom:16px;">Audio player coming soon. Thank you for subscribing!</p>' +
+          '</div>';
+        unlockCta.style.background = 'rgba(78,205,196,0.06)';
+        unlockCta.style.border = '1px solid rgba(78,205,196,0.2)';
+      }
+    }
+  }
+
+  // Initialize an .sp-style audio player element
+  function initSpPlayer(sp) {
+    var src = sp.getAttribute('data-src') || sp.dataset.src;
+    var btn = sp.querySelector('.sp__btn');
+    var track = sp.querySelector('.sp__track');
+    var bar = sp.querySelector('.sp__bar');
+    var timeEl = sp.querySelector('.sp__time');
+    if (!src || !btn) return;
+
+    var playSvg = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+    var pauseSvg = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+    var audio = new Audio();
+    var loaded = false;
+
+    function fmt(s) {
+      var m = Math.floor(s / 60);
+      var sec = Math.floor(s % 60);
+      return m + ':' + (sec < 10 ? '0' : '') + sec;
+    }
+
+    function update() {
+      if (audio.duration) {
+        if (bar) bar.style.width = (audio.currentTime / audio.duration * 100) + '%';
+        if (timeEl) timeEl.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration);
+      }
+      if (!audio.paused) requestAnimationFrame(update);
+    }
+
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (!loaded) {
+        audio.src = src;
+        audio.preload = 'auto';
+        audio.load();
+        loaded = true;
+        btn.innerHTML = '<span style="color:currentColor;font-size:10px">...</span>';
+        audio.addEventListener('canplay', function onReady() {
+          audio.removeEventListener('canplay', onReady);
+          audio.play();
+          btn.innerHTML = pauseSvg;
+          update();
+        });
+        audio.addEventListener('error', function() {
+          btn.innerHTML = playSvg;
+          loaded = false;
+        });
+        return;
+      }
+      if (audio.paused) {
+        audio.play();
+        btn.innerHTML = pauseSvg;
+        update();
+      } else {
+        audio.pause();
+        btn.innerHTML = playSvg;
+      }
+    });
+
+    audio.addEventListener('ended', function() {
+      btn.innerHTML = playSvg;
+      if (bar) bar.style.width = '0%';
+      if (timeEl) timeEl.textContent = '0:00 / ' + fmt(audio.duration);
+    });
+
+    if (track) {
+      track.addEventListener('click', function(e) {
+        if (audio.duration) {
+          var rect = track.getBoundingClientRect();
+          audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+          if (bar) bar.style.width = (audio.currentTime / audio.duration * 100) + '%';
+          if (timeEl) timeEl.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration);
+        }
+      });
     }
   }
 
