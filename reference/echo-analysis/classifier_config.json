@@ -1,0 +1,1196 @@
+{
+  "method": "z_score_composite",
+  "features": [
+    {
+      "name": "mel_00_std",
+      "direction": "echo_lower",
+      "cohens_d": 0.868,
+      "p_value": 0.0001,
+      "clean_mean": 19.18594040590174,
+      "clean_std": 1.3283704964699024
+    },
+    {
+      "name": "mel_01_std",
+      "direction": "echo_lower",
+      "cohens_d": 0.846,
+      "p_value": 0.0001,
+      "clean_mean": 23.698548990137436,
+      "clean_std": 1.6035572092809902
+    },
+    {
+      "name": "corr_range",
+      "direction": "echo_higher",
+      "cohens_d": 0.767,
+      "p_value": 0.0006,
+      "clean_mean": 0.026310392680387415,
+      "clean_std": 0.01082376576878142
+    },
+    {
+      "name": "band_corr_min",
+      "direction": "echo_lower",
+      "cohens_d": 0.784,
+      "p_value": 0.0002,
+      "clean_mean": 0.958970887625073,
+      "clean_std": 0.011929771851937394
+    },
+    {
+      "name": "band_corr_std",
+      "direction": "echo_higher",
+      "cohens_d": 0.723,
+      "p_value": 0.0002,
+      "clean_mean": 0.007818020570839072,
+      "clean_std": 0.0018020616070685612
+    },
+    {
+      "name": "mel_49_skew",
+      "direction": "echo_lower",
+      "cohens_d": 0.698,
+      "p_value": 0.003,
+      "clean_mean": 0.3825066236450392,
+      "clean_std": 0.2018881722676864
+    },
+    {
+      "name": "ratio_lowmid_uppermid",
+      "direction": "echo_higher",
+      "cohens_d": 0.61,
+      "p_value": 0.003,
+      "clean_mean": 7.507045962763768,
+      "clean_std": 1.4940093099429368
+    },
+    {
+      "name": "mel_00_kurt",
+      "direction": "echo_higher",
+      "cohens_d": 0.667,
+      "p_value": 0.002,
+      "clean_mean": -0.9591391892994151,
+      "clean_std": 0.4030874136933088
+    },
+    {
+      "name": "band_corr_mean",
+      "direction": "echo_lower",
+      "cohens_d": 0.65,
+      "p_value": 0.0006,
+      "clean_mean": 0.9852812803054602,
+      "clean_std": 0.002266124733514566
+    },
+    {
+      "name": "contrast_6_std",
+      "direction": "echo_higher",
+      "cohens_d": 0.646,
+      "p_value": 0.005,
+      "clean_mean": 2.6484298307001497,
+      "clean_std": 0.32599563490018185
+    },
+    {
+      "name": "ratio_subbass_std_norm",
+      "direction": "echo_lower",
+      "cohens_d": 0.49,
+      "p_value": 0.033,
+      "clean_mean": 1.4325834690968842,
+      "clean_std": 0.1034889477601892
+    }
+  ],
+  "threshold_balanced": 0.6376598288994806,
+  "threshold_high_recall": -0.3637962875602012,
+  "threshold_low_fpr": 0.4151140252417733,
+  "training_data": {
+    "n_echo": 70,
+    "n_clean": 34,
+    "sessions": [
+      "01-morning-meditation",
+      "03-breathing-for-anxiety",
+      "36-loving-kindness-intro-v3a",
+      "52-the-court-of-your-mind",
+      "52-the-court-of-your-mind-b1",
+      "52-the-court-of-your-mind-b2"
+    ]
+  },
+  "global_metrics_balanced": {
+    "threshold": 0.6376598288994806,
+    "tp": 41,
+    "fp": 3,
+    "fn": 29,
+    "tn": 31,
+    "tpr": 0.585714285713449,
+    "fpr": 0.08823529411738754,
+    "precision": 0.931818181816064,
+    "recall": 0.585714285713449,
+    "f1": 0.7192982455653739,
+    "fnr": 0.41428571428512245,
+    "youdens_j": 0.49747899159606146,
+    "accuracy": 0.6923076923076923
+  },
+  "global_metrics_high_recall": {
+    "threshold": -0.3637962875602012,
+    "tp": 67,
+    "fp": 25,
+    "fn": 3,
+    "tn": 9,
+    "tpr": 0.9571428571414897,
+    "fpr": 0.7352941176448962,
+    "precision": 0.7282608695644258,
+    "recall": 0.9571428571414897,
+    "f1": 0.8271604937770615,
+    "fnr": 0.04285714285708163,
+    "youdens_j": 0.22184873949659356,
+    "accuracy": 0.7307692307692307
+  },
+  "global_metrics_low_fpr": {
+    "threshold": 0.4151140252417733,
+    "tp": 47,
+    "fp": 6,
+    "fn": 23,
+    "tn": 28,
+    "tpr": 0.6714285714276123,
+    "fpr": 0.17647058823477507,
+    "precision": 0.8867924528285155,
+    "recall": 0.6714285714276123,
+    "f1": 0.7642276422261352,
+    "fnr": 0.32857142857095917,
+    "youdens_j": 0.4949579831928372,
+    "accuracy": 0.7211538461538461
+  },
+  "cv_metrics": {
+    "auc": 0.7878151260469776,
+    "fnr": 0.3142857142852653,
+    "fpr": 0.17647058823477507,
+    "f1": 0.7741935483366804,
+    "accuracy": 0.7307692307692307
+  },
+  "roc_points": [
+    [
+      0.0,
+      0.2428571428567959
+    ],
+    [
+      0.0,
+      0.19999999999971427
+    ],
+    [
+      0.0,
+      0.15714285714263265
+    ],
+    [
+      0.0,
+      0.09999999999985713
+    ],
+    [
+      0.0,
+      0.08571428571416326
+    ],
+    [
+      0.0,
+      0.04285714285708163
+    ],
+    [
+      0.0,
+      0.028571428571387756
+    ],
+    [
+      0.0,
+      0.028571428571387756
+    ],
+    [
+      0.0,
+      0.028571428571387756
+    ],
+    [
+      0.0,
+      0.028571428571387756
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.0,
+      0.014285714285693878
+    ],
+    [
+      0.029411764705795845,
+      0.27142857142818366
+    ],
+    [
+      0.05882352941159169,
+      0.5142857142849796
+    ],
+    [
+      0.05882352941159169,
+      0.39999999999942853
+    ],
+    [
+      0.08823529411738754,
+      0.571428571427755
+    ],
+    [
+      0.17647058823477507,
+      0.6571428571419183
+    ],
+    [
+      0.35294117646955014,
+      0.7571428571417755
+    ],
+    [
+      0.6176470588217128,
+      0.8571428571416326
+    ],
+    [
+      0.7352941176448962,
+      0.9571428571414897
+    ],
+    [
+      0.764705882350692,
+      0.9714285714271836
+    ],
+    [
+      0.8529411764680795,
+      0.9999999999985714
+    ],
+    [
+      0.8823529411738754,
+      0.9999999999985714
+    ],
+    [
+      0.9705882352912629,
+      0.9999999999985714
+    ],
+    [
+      0.9705882352912629,
+      0.9999999999985714
+    ],
+    [
+      0.9705882352912629,
+      0.9999999999985714
+    ]
+  ],
+  "cv_predictions": [
+    {
+      "session": "01-morning-meditation",
+      "chunk": 5,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 0.5572310467399645,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 8,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 0.8877185932120514,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 9,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 0.5382541760690485,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 11,
+      "true_label": 1,
+      "predicted": 0,
+      "score": -0.5571498206588206,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 13,
+      "true_label": 1,
+      "predicted": 0,
+      "score": 0.17700739186767087,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 14,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 2.037895443198,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 16,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 0.8362565324975805,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 17,
+      "true_label": 1,
+      "predicted": 0,
+      "score": -0.23431053279649247,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 19,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 1.038918263293415,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 20,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 1.6310403932136621,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 22,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 0.7723626910615021,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 24,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 9.215736473406695,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 25,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 0.5672789083193914,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 0,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 3.287930677591393,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 2,
+      "true_label": 1,
+      "predicted": 0,
+      "score": 0.3843254143297591,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 3,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 0.8569837777806236,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 4,
+      "true_label": 1,
+      "predicted": 0,
+      "score": 0.22862787045613556,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 6,
+      "true_label": 1,
+      "predicted": 0,
+      "score": -0.47637722431456614,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 7,
+      "true_label": 1,
+      "predicted": 0,
+      "score": -0.5367345877204536,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 18,
+      "true_label": 1,
+      "predicted": 0,
+      "score": 0.10975499857490406,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 24,
+      "true_label": 1,
+      "predicted": 0,
+      "score": 0.23257651510902874,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 8,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 0.578154628213058,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 28,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 0.9124173470822956,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 31,
+      "true_label": 1,
+      "predicted": 0,
+      "score": 0.22696213405127424,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 38,
+      "true_label": 1,
+      "predicted": 0,
+      "score": 0.4372357088648362,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 48,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 2.200249723920683,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 14,
+      "true_label": 1,
+      "predicted": 0,
+      "score": 0.2731192631567576,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 26,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 2.244538355283919,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 27,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 1.4535803531904283,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 44,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 1.6235530537061558,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 14,
+      "true_label": 1,
+      "predicted": 0,
+      "score": -0.22308970068175454,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 19,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 0.8814134650025605,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 13,
+      "true_label": 1,
+      "predicted": 0,
+      "score": -0.17067720538426967,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 15,
+      "true_label": 1,
+      "predicted": 0,
+      "score": 0.41776905220470417,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 16,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 0.7545572043706471,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 19,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 1.3865011219808272,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 25,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 1.2617877971553746,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 5,
+      "true_label": 0,
+      "predicted": 0,
+      "score": -0.5135462600137053,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 8,
+      "true_label": 0,
+      "predicted": 1,
+      "score": 0.578154628213058,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 9,
+      "true_label": 0,
+      "predicted": 0,
+      "score": 0.051296149916134605,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 11,
+      "true_label": 0,
+      "predicted": 0,
+      "score": -0.06325711010963529,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 13,
+      "true_label": 0,
+      "predicted": 0,
+      "score": -0.2641175794853746,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 14,
+      "true_label": 0,
+      "predicted": 0,
+      "score": 0.2731192631567576,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 16,
+      "true_label": 0,
+      "predicted": 0,
+      "score": 0.2805120967858605,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 17,
+      "true_label": 0,
+      "predicted": 0,
+      "score": -1.036945253442262,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 20,
+      "true_label": 0,
+      "predicted": 0,
+      "score": -0.0797700555678757,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 22,
+      "true_label": 0,
+      "predicted": 1,
+      "score": 1.5358927291812727,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 25,
+      "true_label": 0,
+      "predicted": 0,
+      "score": -1.0818159001206291,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 0,
+      "true_label": 0,
+      "predicted": 0,
+      "score": -0.05560124386194812,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 2,
+      "true_label": 0,
+      "predicted": 1,
+      "score": 0.569341580886967,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 3,
+      "true_label": 0,
+      "predicted": 0,
+      "score": 0.3826413858861301,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 4,
+      "true_label": 0,
+      "predicted": 0,
+      "score": -0.4684054423033532,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 6,
+      "true_label": 0,
+      "predicted": 0,
+      "score": 0.4085743112536519,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 7,
+      "true_label": 0,
+      "predicted": 0,
+      "score": -1.7417332311890767,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 18,
+      "true_label": 0,
+      "predicted": 0,
+      "score": 0.30512424615594264,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 8,
+      "true_label": 0,
+      "predicted": 1,
+      "score": 0.8877185932120514,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 14,
+      "true_label": 0,
+      "predicted": 0,
+      "score": 0.2731192631567576,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 13,
+      "true_label": 0,
+      "predicted": 0,
+      "score": -0.2641175794853746,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 15,
+      "true_label": 0,
+      "predicted": 0,
+      "score": 0.15386964770949782,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 16,
+      "true_label": 0,
+      "predicted": 0,
+      "score": 0.2805120967858605,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "01-morning-meditation",
+      "chunk": 25,
+      "true_label": 0,
+      "predicted": 0,
+      "score": -1.0818159001206291,
+      "threshold": 0.4974874371859297
+    },
+    {
+      "session": "03-breathing-for-anxiety",
+      "chunk": 6,
+      "true_label": 1,
+      "predicted": 0,
+      "score": 0.22734128204383736,
+      "threshold": 0.658291457286432
+    },
+    {
+      "session": "03-breathing-for-anxiety",
+      "chunk": 47,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 3.2433388266942913,
+      "threshold": 0.658291457286432
+    },
+    {
+      "session": "03-breathing-for-anxiety",
+      "chunk": 48,
+      "true_label": 1,
+      "predicted": 0,
+      "score": 0.10150166276775723,
+      "threshold": 0.658291457286432
+    },
+    {
+      "session": "03-breathing-for-anxiety",
+      "chunk": 43,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 1.6782725117159314,
+      "threshold": 0.658291457286432
+    },
+    {
+      "session": "03-breathing-for-anxiety",
+      "chunk": 10,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 1.1217014555970242,
+      "threshold": 0.658291457286432
+    },
+    {
+      "session": "03-breathing-for-anxiety",
+      "chunk": 23,
+      "true_label": 1,
+      "predicted": 0,
+      "score": 0.43293654758684413,
+      "threshold": 0.658291457286432
+    },
+    {
+      "session": "03-breathing-for-anxiety",
+      "chunk": 28,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 1.3818232803188804,
+      "threshold": 0.658291457286432
+    },
+    {
+      "session": "03-breathing-for-anxiety",
+      "chunk": 33,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 2.3390731302510535,
+      "threshold": 0.658291457286432
+    },
+    {
+      "session": "03-breathing-for-anxiety",
+      "chunk": 36,
+      "true_label": 1,
+      "predicted": 0,
+      "score": -0.18928449305859738,
+      "threshold": 0.658291457286432
+    },
+    {
+      "session": "03-breathing-for-anxiety",
+      "chunk": 47,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 1.855930644131818,
+      "threshold": 0.658291457286432
+    },
+    {
+      "session": "03-breathing-for-anxiety",
+      "chunk": 48,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 0.7166600582494488,
+      "threshold": 0.658291457286432
+    },
+    {
+      "session": "03-breathing-for-anxiety",
+      "chunk": 6,
+      "true_label": 0,
+      "predicted": 0,
+      "score": 0.3464979212776191,
+      "threshold": 0.658291457286432
+    },
+    {
+      "session": "03-breathing-for-anxiety",
+      "chunk": 47,
+      "true_label": 0,
+      "predicted": 0,
+      "score": 0.3363806854064126,
+      "threshold": 0.658291457286432
+    },
+    {
+      "session": "03-breathing-for-anxiety",
+      "chunk": 48,
+      "true_label": 0,
+      "predicted": 0,
+      "score": -0.5552570947195646,
+      "threshold": 0.658291457286432
+    },
+    {
+      "session": "03-breathing-for-anxiety",
+      "chunk": 10,
+      "true_label": 0,
+      "predicted": 0,
+      "score": 0.509161538599266,
+      "threshold": 0.658291457286432
+    },
+    {
+      "session": "03-breathing-for-anxiety",
+      "chunk": 23,
+      "true_label": 0,
+      "predicted": 0,
+      "score": -0.758954329766684,
+      "threshold": 0.658291457286432
+    },
+    {
+      "session": "03-breathing-for-anxiety",
+      "chunk": 28,
+      "true_label": 0,
+      "predicted": 1,
+      "score": 1.4667271727543574,
+      "threshold": 0.658291457286432
+    },
+    {
+      "session": "03-breathing-for-anxiety",
+      "chunk": 33,
+      "true_label": 0,
+      "predicted": 1,
+      "score": 0.8160723094540092,
+      "threshold": 0.658291457286432
+    },
+    {
+      "session": "03-breathing-for-anxiety",
+      "chunk": 36,
+      "true_label": 0,
+      "predicted": 0,
+      "score": 0.09447325699148706,
+      "threshold": 0.658291457286432
+    },
+    {
+      "session": "03-breathing-for-anxiety",
+      "chunk": 47,
+      "true_label": 0,
+      "predicted": 0,
+      "score": 0.3363806854064126,
+      "threshold": 0.658291457286432
+    },
+    {
+      "session": "03-breathing-for-anxiety",
+      "chunk": 48,
+      "true_label": 0,
+      "predicted": 0,
+      "score": -0.5552570947195646,
+      "threshold": 0.658291457286432
+    },
+    {
+      "session": "36-loving-kindness-intro-v3a",
+      "chunk": 3,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 1.1302794917113066,
+      "threshold": 0.37688442211055273
+    },
+    {
+      "session": "36-loving-kindness-intro-v3a",
+      "chunk": 22,
+      "true_label": 1,
+      "predicted": 0,
+      "score": -0.11671446940993585,
+      "threshold": 0.37688442211055273
+    },
+    {
+      "session": "36-loving-kindness-intro-v3a",
+      "chunk": 24,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 0.9844602010010782,
+      "threshold": 0.37688442211055273
+    },
+    {
+      "session": "52-the-court-of-your-mind",
+      "chunk": 4,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 1.1122390441234362,
+      "threshold": 0.37688442211055273
+    },
+    {
+      "session": "52-the-court-of-your-mind",
+      "chunk": 5,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 0.9267133779602479,
+      "threshold": 0.37688442211055273
+    },
+    {
+      "session": "52-the-court-of-your-mind",
+      "chunk": 11,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 1.24960302600923,
+      "threshold": 0.37688442211055273
+    },
+    {
+      "session": "52-the-court-of-your-mind",
+      "chunk": 12,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 2.379786869723211,
+      "threshold": 0.37688442211055273
+    },
+    {
+      "session": "52-the-court-of-your-mind",
+      "chunk": 22,
+      "true_label": 1,
+      "predicted": 0,
+      "score": -0.10918411682788015,
+      "threshold": 0.37688442211055273
+    },
+    {
+      "session": "52-the-court-of-your-mind",
+      "chunk": 26,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 0.9582434826138776,
+      "threshold": 0.37688442211055273
+    },
+    {
+      "session": "52-the-court-of-your-mind",
+      "chunk": 30,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 0.47809711392878357,
+      "threshold": 0.37688442211055273
+    },
+    {
+      "session": "52-the-court-of-your-mind",
+      "chunk": 60,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 1.6983190519040343,
+      "threshold": 0.37688442211055273
+    },
+    {
+      "session": "52-the-court-of-your-mind-b1",
+      "chunk": 4,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 1.1122390441234362,
+      "threshold": 0.37688442211055273
+    },
+    {
+      "session": "52-the-court-of-your-mind-b1",
+      "chunk": 5,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 0.9267133779602479,
+      "threshold": 0.37688442211055273
+    },
+    {
+      "session": "52-the-court-of-your-mind-b1",
+      "chunk": 11,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 1.24960302600923,
+      "threshold": 0.37688442211055273
+    },
+    {
+      "session": "52-the-court-of-your-mind-b1",
+      "chunk": 12,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 2.379786869723211,
+      "threshold": 0.37688442211055273
+    },
+    {
+      "session": "52-the-court-of-your-mind-b1",
+      "chunk": 22,
+      "true_label": 1,
+      "predicted": 0,
+      "score": -0.10918411682788015,
+      "threshold": 0.37688442211055273
+    },
+    {
+      "session": "52-the-court-of-your-mind-b1",
+      "chunk": 26,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 0.9582434826138776,
+      "threshold": 0.37688442211055273
+    },
+    {
+      "session": "52-the-court-of-your-mind-b1",
+      "chunk": 30,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 0.47809711392878357,
+      "threshold": 0.37688442211055273
+    },
+    {
+      "session": "52-the-court-of-your-mind-b1",
+      "chunk": 60,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 1.6983190519040343,
+      "threshold": 0.37688442211055273
+    },
+    {
+      "session": "52-the-court-of-your-mind-b2",
+      "chunk": 18,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 1.139425683516721,
+      "threshold": 0.37688442211055273
+    },
+    {
+      "session": "52-the-court-of-your-mind-b2",
+      "chunk": 29,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 1.9780658872588872,
+      "threshold": 0.37688442211055273
+    },
+    {
+      "session": "52-the-court-of-your-mind-b2",
+      "chunk": 60,
+      "true_label": 1,
+      "predicted": 1,
+      "score": 1.6983190519040343,
+      "threshold": 0.37688442211055273
+    }
+  ]
+}
