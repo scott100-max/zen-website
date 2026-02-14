@@ -430,6 +430,13 @@
   .sound-card:hover .sound-card__slider-row {
     max-height: 50px; opacity: 1; margin-top: 10px; padding-top: 10px; overflow: visible;
   }
+  /* iOS / touch devices: always show slider when playing (no hover available) */
+  @media (hover: none) and (pointer: coarse) {
+    .sound-card.playing .sound-card__slider-row {
+      max-height: 50px; opacity: 1; margin-top: 10px; padding-top: 10px;
+      overflow: visible; transition: none;
+    }
+  }
   .sound-card__vol-icon { flex-shrink: 0; display: flex; align-items: center; }
   .sound-card__vol-icon svg { width: 13px; height: 13px; fill: rgba(240,238,252,0.4); transition: fill 0.3s ease; }
   .sound-card.playing .sound-card__vol-icon svg { fill: var(--card-accent, var(--accent)); }
@@ -982,19 +989,28 @@
       // iOS: native range touch is unreliable — compute value from touch position
       function touchToVal(touch) {
         const rect = slider.getBoundingClientRect();
+        if (rect.width < 1) return parseFloat(slider.value); // guard against zero-width during transition
         return ((touch.clientX - rect.left) / rect.width) * 100;
       }
+      let sliderTouching = false;
       slider.addEventListener('touchstart', (e) => {
+        sliderTouching = true;
         e.stopPropagation(); e.preventDefault();
         updateVol(touchToVal(e.touches[0]));
       }, {passive: false});
       slider.addEventListener('touchmove', (e) => {
+        if (!sliderTouching) return;
         e.stopPropagation(); e.preventDefault();
         updateVol(touchToVal(e.touches[0]));
       }, {passive: false});
       slider.addEventListener('touchend', (e) => {
+        sliderTouching = false;
         e.stopPropagation(); e.preventDefault();
       });
+      // Also handle touches on the slider row itself to prevent card toggle
+      const sliderRow = card.querySelector('.sound-card__slider-row');
+      sliderRow.addEventListener('touchstart', (e) => e.stopPropagation(), {passive: true});
+      sliderRow.addEventListener('click', (e) => e.stopPropagation());
 
       grid.appendChild(card);
     });
