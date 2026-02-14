@@ -469,6 +469,8 @@ sed -i '' 's|../sessions.html">Guided Meditations</a></li>|../sessions.html">Gui
 
 **ASMR slider mobile touch issues (12 Feb 2026):** Volume slider on ASMR cards was unusable on mobile — browser hijacked touch drags for scrolling. Fix: `touch-action: none` on slider, larger thumb (14px → 22px), `touchmove`/`touchend` stopPropagation, `change` event listener for iOS Safari.
 
+**ASMR slider iPhone fix (14 Feb 2026):** Volume slider still non-functional on iPhone specifically. Root cause: iOS native range input unreliable during CSS transitions, and touch events fired after touch ended. Fix: (1) `@media (hover: none) and (pointer: coarse)` rule to always show slider row on touch devices with `transition: none` to prevent overflow clipping, (2) guard against zero-width bounding rect during CSS transitions, (3) `sliderTouching` flag to discard stale touchmove events after touchend, (4) stopPropagation on slider row touchstart/click to prevent accidental play/pause toggle when adjusting volume.
+
 ---
 
 # PART B ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â AUDIO PRODUCTION
@@ -2585,7 +2587,19 @@ Changes:
 
 ---
 
-*Last updated: 12 February 2026 — v4.2: Auto-picker v7 validated (96% pass rate on session 39). Resemble AI removed entirely. 6 new Production Rules. Gate 15 post-deploy scanner. 7 new deployed sessions. CDN cache purge. Mid-sentence conditioning. Fish speaking rate corrected. Sleep story pause profiles. LALAL.AI cleaned from active sections.*
+### 14 February 2026 — v4.3: Resemble Cleanup, ASMR iPhone Fix, Ambient Fade-In Metadata
+
+**Source:** Workflow cleanup and ASMR bug fix 14 Feb 2026.
+
+Changes:
+
+- **Section 7:** ASMR volume slider iPhone-specific fix. Previous 12 Feb fix addressed mobile broadly; this fix targets iOS-specific behaviour — zero-width bounding rect during CSS transitions, stale touchmove events, and accidental play/pause on slider interaction.
+- **Workflows:** Resemble AI removed from both `build-audio-session.yml` and `build-session.yml` — dropdown option and `.env` variable deleted. Ambient fade-in duration now read from script metadata (`Ambient-Fade-In:` header, default 30s) in remix-only mode, replacing the hardcoded 15s value.
+- **Script metadata:** `Ambient-dB` and `Ambient-Fade-In` headers added to session 03 (Breathing for Anxiety) as reference for per-session ambient configuration.
+
+---
+
+*Last updated: 14 February 2026 — v4.3: Resemble removed from workflows. ASMR iPhone volume slider fix. Ambient fade-in reads from script metadata.*
 
 ---
 

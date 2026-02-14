@@ -2,6 +2,8 @@ Breathing for Anxiety
 Duration: 16 minutes
 Category: stress
 Ambient: birds
+Ambient-dB: -4
+Ambient-Fade-In: 30
 Style: Warm, calm, reassuring male narrator
 Expected-Repetitions: breathe in, hold your breath, let it go, breathe out, now hold, and release, breath in through your nose, slow breath
 ---
