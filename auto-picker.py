@@ -65,6 +65,239 @@ _build_spec = importlib.util.spec_from_file_location(
 build = importlib.util.module_from_spec(_build_spec)
 _build_spec.loader.exec_module(build)
 
+import numpy as np
+
+# ---------------------------------------------------------------------------
+# Gate 16 (Echo) + Gate 17 (Breakout) — Bible v5.0
+# ---------------------------------------------------------------------------
+
+_GATE16_CONFIG_PATH = Path(__file__).parent / "reference" / "echo-analysis" / "classifier_config.json"
+_GATE17_STATS_PATH = Path(__file__).parent / "reference" / "breakout-analysis" / "breakout_scan_results.json"
+
+_gate16_config = None
+if _GATE16_CONFIG_PATH.exists():
+    _gate16_config = json.loads(_GATE16_CONFIG_PATH.read_text())
+
+_gate17_pop_stats = None
+if _GATE17_STATS_PATH.exists():
+    _g17_data = json.loads(_GATE17_STATS_PATH.read_text())
+    _gate17_pop_stats = _g17_data.get("population_stats", {})
+
+# Import breakout feature extractor (do NOT reimplement — brief requirement)
+_extract_breakout = None
+try:
+    _bs_spec = importlib.util.spec_from_file_location(
+        "breakout_scanner", Path(__file__).parent / "breakout-scanner.py")
+    _bs_mod = importlib.util.module_from_spec(_bs_spec)
+    _bs_spec.loader.exec_module(_bs_mod)
+    _extract_breakout = _bs_mod.extract_breakout_features
+except Exception as _e:
+    print(f"  WARNING: breakout-scanner.py not loadable: {_e}")
+
+GATE17_SCORE_WEIGHTS = {
+    "f0_max_semitone_jump": 3.0,
+    "centroid_max_jump_ratio": 2.0,
+    "mfcc_max_cosine_dist": 2.0,
+    "mel_flux_max": 1.5,
+    "f0_range_semitones": 1.0,
+    "mel_half_shift_db": 1.0,
+    "mfcc_half_split_dist": 0.5,
+}
+GATE17_TOTAL_WEIGHT = sum(GATE17_SCORE_WEIGHTS.values())  # 11.0
+
+# ---------------------------------------------------------------------------
+# Trigger Word Scanner — Bible v5.0
+# Scans chunk text against trigger-words.json (words + patterns).
+# Chunks matching trigger patterns are flagged for human review since the
+# defect is in the TEXT, not audio — no amount of re-picking fixes it.
+# ---------------------------------------------------------------------------
+
+_TRIGGER_WORDS_PATH = Path(__file__).parent / "content" / "trigger-words.json"
+_trigger_words = []
+_trigger_patterns = []
+
+if _TRIGGER_WORDS_PATH.exists():
+    _tw_data = json.loads(_TRIGGER_WORDS_PATH.read_text())
+    _trigger_words = _tw_data.get("words", [])
+    for p in _tw_data.get("patterns", []):
+        try:
+            _trigger_patterns.append({
+                "regex": re.compile(p["pattern"]),
+                "defect": p.get("defect", "unknown"),
+                "description": p.get("description", ""),
+            })
+        except re.error:
+            pass
+
+
+def scan_chunk_triggers(text):
+    """Scan chunk text against trigger words and patterns.
+
+    Returns list of matches: [{"trigger": str, "defect": str, "type": "word"|"pattern"}, ...]
+    """
+    matches = []
+    text_lower = text.lower()
+    for tw in _trigger_words:
+        word = tw["word"].lower()
+        if word in text_lower:
+            matches.append({
+                "trigger": tw["word"],
+                "defect": tw.get("defect", "unknown"),
+                "type": "word",
+            })
+    for tp in _trigger_patterns:
+        if tp["regex"].search(text):
+            matches.append({
+                "trigger": tp["description"],
+                "defect": tp.get("defect", "unknown"),
+                "type": "pattern",
+            })
+    return matches
+
+
+def extract_gate16_features(audio_path, sr=22050):
+    """Extract the 11 features used by Gate 16 echo detector."""
+    import librosa
+    from scipy.stats import kurtosis, skew
+
+    y, _sr = librosa.load(audio_path, sr=sr, mono=True)
+    if len(y) < sr * 0.3:
+        return None
+
+    S = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=80, n_fft=2048, hop_length=256)
+    S_db = librosa.power_to_db(S, ref=np.max)
+
+    mel_00_std = float(np.std(S_db[0, :]))
+    mel_01_std = float(np.std(S_db[1, :]))
+    mel_49_skew = float(skew(S_db[49, :]))
+    mel_00_kurt = float(kurtosis(S_db[0, :]))
+
+    band_corrs = []
+    for b in range(0, 79, 2):
+        corr = np.corrcoef(S_db[b, :], S_db[b + 1, :])[0, 1]
+        band_corrs.append(corr if not np.isnan(corr) else 0.0)
+    band_corr_mean = float(np.mean(band_corrs))
+    band_corr_std = float(np.std(band_corrs))
+    band_corr_min = float(np.min(band_corrs))
+
+    contrast = librosa.feature.spectral_contrast(
+        y=y, sr=sr, n_fft=2048, hop_length=256, n_bands=6)
+    contrast_6_std = float(np.std(contrast[6]))
+
+    corr_range = band_corr_mean - band_corr_min
+    lm = np.mean([float(np.mean(S_db[b, :])) for b in range(10, 20)])
+    um = np.mean([float(np.mean(S_db[b, :])) for b in range(35, 50)])
+    ratio_lowmid_uppermid = lm - um
+    sub_std = np.mean([float(np.std(S_db[b, :])) for b in range(0, 5)])
+    overall_std = np.mean([float(np.std(S_db[b, :])) for b in range(0, 80)])
+    ratio_subbass_std_norm = sub_std / (overall_std + 1e-10)
+
+    return {
+        "mel_00_std": mel_00_std, "mel_01_std": mel_01_std,
+        "corr_range": corr_range, "band_corr_min": band_corr_min,
+        "band_corr_std": band_corr_std, "mel_49_skew": mel_49_skew,
+        "ratio_lowmid_uppermid": ratio_lowmid_uppermid,
+        "mel_00_kurt": mel_00_kurt, "band_corr_mean": band_corr_mean,
+        "contrast_6_std": contrast_6_std,
+        "ratio_subbass_std_norm": ratio_subbass_std_norm,
+    }
+
+
+def score_gate16(features):
+    """Compute Gate 16 echo z-score. Positive = more echo-like."""
+    if _gate16_config is None or features is None:
+        return None
+    direction_map = {"echo_higher": 1, "echo_lower": -1}
+    z_sum = 0
+    for feat_cfg in _gate16_config["features"]:
+        name = feat_cfg["name"]
+        if name not in features:
+            return None
+        z = (features[name] - feat_cfg["clean_mean"]) / (feat_cfg["clean_std"] + 1e-10)
+        z_sum += z * direction_map[feat_cfg["direction"]]
+    return z_sum / len(_gate16_config["features"])
+
+
+def score_gate17(features):
+    """Compute Gate 17 breakout z-score. Returns (score, f0_jump)."""
+    if _gate17_pop_stats is None or features is None:
+        return None, None
+    weighted_z_sum = 0.0
+    for f, weight in GATE17_SCORE_WEIGHTS.items():
+        val = features.get(f, 0.0)
+        stats = _gate17_pop_stats.get(f)
+        if stats is None:
+            continue
+        z = (val - stats["mean"]) / (stats["std"] + 1e-10)
+        weighted_z_sum += weight * z
+    score = weighted_z_sum / GATE17_TOTAL_WEIGHT
+    f0_jump = features.get("f0_max_semitone_jump", 0.0)
+    return score, f0_jump
+
+
+def precompute_gate_scores(session_id, chunks_data):
+    """Pre-compute Gate 16+17 scores for all candidates. Caches to JSON."""
+    cache_path = VAULT_DIR / session_id / "gate-scores-cache.json"
+    cache = {}
+    if cache_path.exists():
+        try:
+            cache = json.loads(cache_path.read_text())
+        except Exception:
+            cache = {}
+
+    total = sum(len(c['candidates']) for c in chunks_data.values())
+    computed = 0
+    cached_hits = 0
+
+    for ci, chunk in sorted(chunks_data.items()):
+        for c in chunk['candidates']:
+            key = f"c{ci:02d}_v{c['version']:02d}"
+            if key in cache:
+                c['echo_z'] = cache[key].get('echo_z')
+                c['breakout_z'] = cache[key].get('breakout_z')
+                c['f0_jump'] = cache[key].get('f0_jump')
+                cached_hits += 1
+                continue
+
+            wav_path = c.get('wav_path', '')
+            if not wav_path or not os.path.exists(wav_path):
+                continue
+
+            echo_z = None
+            try:
+                g16_feats = extract_gate16_features(wav_path)
+                if g16_feats:
+                    echo_z = score_gate16(g16_feats)
+            except Exception:
+                pass
+
+            breakout_z = None
+            f0_jump = None
+            if _extract_breakout:
+                try:
+                    g17_feats = _extract_breakout(wav_path)
+                    if g17_feats:
+                        breakout_z, f0_jump = score_gate17(g17_feats)
+                except Exception:
+                    pass
+
+            c['echo_z'] = echo_z
+            c['breakout_z'] = breakout_z
+            c['f0_jump'] = f0_jump
+            cache[key] = {'echo_z': echo_z, 'breakout_z': breakout_z, 'f0_jump': f0_jump}
+            computed += 1
+
+            if computed % 50 == 0:
+                print(f"    Gate features: {computed + cached_hits}/{total} "
+                      f"({cached_hits} cached, {computed} computed)")
+                # Incremental cache save
+                cache_path.write_text(json.dumps(cache, indent=2))
+
+    cache_path.write_text(json.dumps(cache, indent=2))
+    print(f"  Gate features: {computed} computed, {cached_hits} cached, "
+          f"{total - computed - cached_hits} skipped")
+
+
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
@@ -75,7 +308,15 @@ AUTH_TOKEN = "salus-vault-2026"
 # Selection thresholds — v5 calibrated from 224 human-picked chunks across 9 sessions
 # COMPOSITE_FLOOR removed — proven useless (complete overlap pass vs hard-fail, killed EXCELLENT candidates)
 DURATION_OUTLIER_PCT = 0.40     # Reject if duration >40% from chunk median (was 20%, eliminated 14 human picks)
-ECHO_RISK_CEILING = 0.003      # Hard ceiling on echo_risk (was 0.0016, eliminated 2 human picks)
+ECHO_RISK_CEILING = 0.003      # Hard ceiling on echo_risk (LEGACY — superseded by Gate 16 z-score)
+# Gate 16+17 thresholds (Bible v5.0)
+ECHO_Z_PENALTY = 0.4           # Echo z-score > 0.4 → ranking penalty
+ECHO_Z_ELIMINATE = 2.5         # Echo z-score > 2.5 → hard elimination
+BREAKOUT_PENALTY = 0.4         # Breakout score > 0.4 → ranking penalty
+BREAKOUT_ELIMINATE = 2.5       # Breakout score > 2.5 → hard elimination
+F0_JUMP_ELIMINATE = 12.0       # f0 jump > 12 semitones → hard elimination (full octave)
+ECHO_Z_RANK_WEIGHT = 200.0    # Weight for echo z-score in ranking
+BREAKOUT_RANK_WEIGHT = 200.0   # Weight for breakout score in ranking
 HISS_RISK_CEILING = -5.0       # Loosened from -10.0 (was eliminating 16 human picks at borderline -6.9 to -9.8)
 CUT_SHORT_RATIO = 0.60         # Reject if duration < 60% of chunk median
 CUTOFF_CHARS_PER_SEC = 22.0    # Loosened from 14.0 (was eliminating 70 human picks; chars/22 keeps 94%)
@@ -556,9 +797,21 @@ def select_candidate(chunk_idx, chunk_data, prev_best_mfcc=None, session_log=Non
             if cps > CONTENT_CUTOFF_CPS and tail_ms < COMPOUND_CUTOFF_TAIL_MS:
                 reasons.append(f"compound_cutoff: {cps:.1f}ch/s + {tail_ms:.0f}ms tail (rushing with abrupt end)")
 
-        # 1f: Echo risk hard ceiling
-        if c.get('echo_risk') is not None and c['echo_risk'] > ECHO_RISK_CEILING:
-            reasons.append(f"echo_risk {c['echo_risk']:.6f} > {ECHO_RISK_CEILING}")
+        # 1f: Gate 16 — Echo z-score elimination (Bible v5.0, replaces echo_risk ceiling)
+        echo_z = c.get('echo_z')
+        if echo_z is not None and echo_z > ECHO_Z_ELIMINATE:
+            reasons.append(f"gate16_echo z={echo_z:.3f} > {ECHO_Z_ELIMINATE}")
+        elif c.get('echo_risk') is not None and c['echo_risk'] > ECHO_RISK_CEILING and echo_z is None:
+            # Legacy fallback only if Gate 16 features unavailable
+            reasons.append(f"echo_risk {c['echo_risk']:.6f} > {ECHO_RISK_CEILING} (legacy)")
+
+        # 1f2: Gate 17 — Breakout elimination (Bible v5.0)
+        breakout_z = c.get('breakout_z')
+        f0_jump = c.get('f0_jump')
+        if breakout_z is not None and breakout_z > BREAKOUT_ELIMINATE:
+            reasons.append(f"gate17_breakout z={breakout_z:.3f} > {BREAKOUT_ELIMINATE}")
+        if f0_jump is not None and f0_jump > F0_JUMP_ELIMINATE:
+            reasons.append(f"gate17_f0_jump {f0_jump:.1f}st > {F0_JUMP_ELIMINATE}st")
 
         # 1g: Over-generation (already flagged by vault-builder)
         if c.get('filtered') and c.get('filter_reason') == 'overgenerated':
@@ -648,17 +901,31 @@ def select_candidate(chunk_idx, chunk_data, prev_best_mfcc=None, session_log=Non
     def rank_score(c):
         """Combined ranking score. Higher = better.
 
-        v6: echo + quality + tonal + flatness. Tonal consistency is the strongest signal.
+        v8 (Bible v5.0): Gate 16 echo z-score + Gate 17 breakout z-score
+        replace old echo_risk. Tonal consistency remains strongest signal.
         Known-pass versions get a bonus. Known-soft-fail-like get penalised.
         """
-        echo = c.get('echo_risk') or 0
         flatness = c.get('sp_flatness') or 0
         quality = c.get('quality_score') or 0
         tonal = c.get('tonal_distance') or 0
         hiss = c.get('hiss_risk') or -20  # More negative = better
 
+        # Gate 16: use echo z-score if available, fall back to legacy echo_risk
+        echo_z = c.get('echo_z')
+        if echo_z is not None:
+            echo_penalty = echo_z * ECHO_Z_RANK_WEIGHT
+        else:
+            echo_penalty = (c.get('echo_risk') or 0) * ECHO_RANK_WEIGHT
+
+        # Gate 17: breakout z-score penalty
+        breakout_z = c.get('breakout_z')
+        breakout_penalty = 0
+        if breakout_z is not None and breakout_z > BREAKOUT_PENALTY:
+            breakout_penalty = breakout_z * BREAKOUT_RANK_WEIGHT
+
         base = (
-            -echo * ECHO_RANK_WEIGHT
+            -echo_penalty
+            - breakout_penalty
             - flatness * FLATNESS_PENALTY_WEIGHT
             + quality * QUALITY_RANK_WEIGHT
             - tonal * TONAL_RANK_WEIGHT       # Lower tonal distance = more consistent = better
@@ -695,6 +962,9 @@ def select_candidate(chunk_idx, chunk_data, prev_best_mfcc=None, session_log=Non
             'composite_score': c.get('composite_score'),
             'duration': c.get('duration'),
             'echo_risk': c.get('echo_risk'),
+            'echo_z': c.get('echo_z'),
+            'breakout_z': c.get('breakout_z'),
+            'f0_jump': c.get('f0_jump'),
             'hiss_risk': c.get('hiss_risk'),
             'sp_flatness': c.get('sp_flatness'),
         })
@@ -743,7 +1013,7 @@ def _load_existing_picks(session_id):
         return {}
 
 
-def auto_pick_session(session_id, chunks_data=None, rechunk_indices=None):
+def auto_pick_session(session_id, chunks_data=None, rechunk_indices=None, force=False):
     """Run the automated picker on a session.
 
     FAILSAFE: If a chunk's text is unchanged and has an existing deployed/verified
@@ -758,6 +1028,10 @@ def auto_pick_session(session_id, chunks_data=None, rechunk_indices=None):
     """
     if chunks_data is None:
         chunks_data = load_vault_candidates(session_id)
+
+    # Pre-compute Gate 16+17 scores for all candidates (Bible v5.0)
+    print(f"  Computing Gate 16 (echo) + Gate 17 (breakout) features...")
+    precompute_gate_scores(session_id, chunks_data)
 
     # Load verdict history for severity-aware picking
     verdict_history = load_verdict_history(session_id)
@@ -875,7 +1149,7 @@ def auto_pick_session(session_id, chunks_data=None, rechunk_indices=None):
     picks = {
         'session': session_id,
         'reviewed': _now_iso(),
-        'method': 'auto-picker v6',
+        'method': 'auto-picker v8 (Gate 16+17)',
         'picks': [],
     }
     selection_logs = []
@@ -903,8 +1177,9 @@ def auto_pick_session(session_id, chunks_data=None, rechunk_indices=None):
             # (fall through to normal selection)
 
         # FAILSAFE: Check if this chunk has an existing pick with matching text
+        # --force bypasses this lock (for gate integration testing)
         existing = existing_picks.get(ci)
-        if existing and existing.get('picked') is not None and rechunk_indices is None:
+        if existing and existing.get('picked') is not None and rechunk_indices is None and not force:
             existing_text = existing.get('text', '').strip()
             current_text = chunk['text'].strip()
             # Text match check (normalise Salus/Salūs)
@@ -924,7 +1199,15 @@ def auto_pick_session(session_id, chunks_data=None, rechunk_indices=None):
                 locked_count += 1
                 continue
 
+        # Trigger word scan — check chunk text BEFORE picking (Bible v5.0)
+        trigger_matches = scan_chunk_triggers(chunk['text'])
+
         version, log = select_candidate(ci, chunk, verdict_history=verdict_history)
+
+        # Tag trigger word matches in log
+        if trigger_matches:
+            log['trigger_matches'] = trigger_matches
+            log['needs_human_review'] = True
 
         # Tag contaminated chunks in log
         if rechunk_indices is not None and ci in contamination:
@@ -942,6 +1225,12 @@ def auto_pick_session(session_id, chunks_data=None, rechunk_indices=None):
         if is_unresolvable:
             pick_entry['notes'] = 'UNRESOLVABLE — all candidates eliminated, needs script split + regen'
             pick_entry['unresolvable'] = True
+        elif trigger_matches:
+            triggers_str = ', '.join(m['trigger'] for m in trigger_matches)
+            pick_entry['notes'] = (f"auto-picked (confidence: {log.get('confidence', 'unknown')}) "
+                                   f"— TRIGGER WARNING: {triggers_str}")
+            pick_entry['trigger_flagged'] = True
+            pick_entry['trigger_matches'] = trigger_matches
         elif rechunk_indices is not None and ci in contamination:
             info = contamination[ci]
             pick_entry['notes'] = (f"auto-picked (confidence: {log.get('confidence', 'unknown')}) "
@@ -1064,6 +1353,8 @@ def main():
     parser.add_argument('--rechunk', metavar='INDICES',
                         help='Re-pick only these chunk indices (comma-separated, e.g. 3,7,11). '
                              'All other chunks are LOCKED with existing picks preserved.')
+    parser.add_argument('--force', action='store_true',
+                        help='Force re-pick all chunks (bypass text-match locking)')
     parser.add_argument('--output', metavar='PATH',
                         help='Output path for picks JSON (default: vault dir)')
     parser.add_argument('--log', metavar='PATH',
@@ -1167,7 +1458,8 @@ def main():
 
     # Run auto-picker
     print(f"\n  Running automated picker...")
-    picks, logs = auto_pick_session(session_id, chunks, rechunk_indices=rechunk_indices)
+    picks, logs = auto_pick_session(session_id, chunks, rechunk_indices=rechunk_indices,
+                                     force=args.force)
 
     # Summary
     picked = sum(1 for p in picks['picks'] if p['picked'] is not None)
@@ -1181,7 +1473,20 @@ def main():
     print(f"    Picked: {picked}/{len(picks['picks'])}")
     print(f"    Confidence: high={confidences['high']}, "
           f"medium={confidences['medium']}, low={confidences['low']}")
+    trigger_flagged = [l for l in logs if l.get('trigger_matches')]
     print(f"    Flagged for human review: {flagged}")
+    if trigger_flagged:
+        print(f"    Trigger word flags: {len(trigger_flagged)}")
+
+    if trigger_flagged:
+        print(f"\n  *** TRIGGER WORD FLAGS ({len(trigger_flagged)}) ***")
+        print(f"  These chunks contain trigger words/patterns — text defect, re-picking won't fix:")
+        for tf in trigger_flagged:
+            ci = tf['chunk']
+            text_preview = tf.get('text', '')[:60]
+            triggers = ', '.join(m['trigger'] for m in tf['trigger_matches'])
+            print(f"    c{ci:02d}: [{triggers}] \"{text_preview}...\"")
+        print()
 
     if unresolvable:
         print(f"\n  *** UNRESOLVABLE CHUNKS ({len(unresolvable)}) ***")

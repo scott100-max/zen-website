@@ -121,6 +121,22 @@
       "description": "Isolated 'be' at end of sentence — embed in longer phrases",
       "alternatives": ["Rewrite to avoid isolated 'be'"],
       "source": "Session 36 review"
+    },
+    {
+      "pattern": "^[A-Z]\\.",
+      "defect": "voice_shift",
+      "description": "Single letter as first word of chunk — Fish cold-start defect",
+      "alternatives": ["Merge with preceding chunk or prepend carrier phrase"],
+      "source": "S85 cognitive shuffle",
+      "added": "2026-02-14"
+    },
+    {
+      "pattern": "^(?:Ten|Nine|Eight|Seven|Six|Five|Four|Three|Two|One)\\b",
+      "defect": "voice_shift",
+      "description": "Number as first word of chunk — Fish cold-start causes voice defect",
+      "alternatives": ["Merge with preceding chunk or prepend carrier phrase"],
+      "source": "S85 verdicts (c13, c18, c31 all hard fail)",
+      "added": "2026-02-14"
     }
   ]
 }

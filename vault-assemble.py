@@ -622,7 +622,8 @@ def run_vault_qa(session_id, final_wav, raw_wav, final_mp3, assembly_manifest,
 
 
 def assemble(session_id, skip_qa=False, no_humanize=False,
-             ambient=None, ambient_gain=None, fade_in=30, fade_out=60):
+             ambient=None, ambient_gain=None, fade_in=30, fade_out=60,
+             picks_path=None, output_dir=None):
     """Full assembly pipeline for a vault session.
 
     Bible v4.6 Section 16D pipeline:
@@ -640,7 +641,11 @@ def assemble(session_id, skip_qa=False, no_humanize=False,
     print(f"{'='*70}")
 
     # Load picks and manifest
-    picks_data = load_picks(session_dir)
+    if picks_path:
+        picks_data = json.loads(Path(picks_path).read_text())
+        print(f"  Loaded picks from: {picks_path}")
+    else:
+        picks_data = load_picks(session_dir)
     manifest = load_manifest(session_dir)
 
     # Validate all chunks have picks
@@ -745,8 +750,11 @@ def assemble(session_id, skip_qa=False, no_humanize=False,
         loudnorm(raw_concat, normed)
 
         # Copy to final directory
-        final_dir = session_dir / "final"
-        final_dir.mkdir(exist_ok=True)
+        if output_dir:
+            final_dir = Path(output_dir)
+        else:
+            final_dir = session_dir / "final"
+        final_dir.mkdir(parents=True, exist_ok=True)
 
         # Save voice-only loudnormed WAV (always useful for re-mixing)
         voice_wav = final_dir / f"{session_id}-vault-voice.wav"
@@ -882,12 +890,17 @@ def main():
                         help='Ambient fade-in / structural pre-roll in seconds (default: 30)')
     parser.add_argument('--fade-out', type=float, default=60,
                         help='Ambient fade-out in seconds (default: 60)')
+    parser.add_argument('--picks', type=str, default=None,
+                        help='Path to custom picks JSON (overrides vault picks)')
+    parser.add_argument('--output-dir', type=str, default=None,
+                        help='Output directory for assembled audio (default: vault dir)')
     args = parser.parse_args()
 
     success = assemble(args.session_id, skip_qa=args.skip_qa,
                        no_humanize=args.no_humanize, ambient=args.ambient,
                        ambient_gain=args.ambient_gain,
-                       fade_in=args.fade_in, fade_out=args.fade_out)
+                       fade_in=args.fade_in, fade_out=args.fade_out,
+                       picks_path=args.picks, output_dir=args.output_dir)
 
     # Auto-regenerate the audit report
     try:

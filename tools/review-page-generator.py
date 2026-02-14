@@ -22,7 +22,7 @@ VAULT_DIR = Path("content/audio-free/vault")
 R2_BASE = "https://media.salus-mind.com/vault"
 
 
-def generate_review_page(session_id, run_id, picks_path=None, subtitle=""):
+def generate_review_page(session_id, run_id, picks_path=None, subtitle="", local=False):
     session_dir = VAULT_DIR / session_id
 
     # Load picks
@@ -46,6 +46,7 @@ def generate_review_page(session_id, run_id, picks_path=None, subtitle=""):
     chunks_html = []
     meta_js = {}
 
+    trigger_skipped = []
     for i, pick in enumerate(picks['picks']):
         ci = pick['chunk']
         ver = pick['picked']
@@ -53,6 +54,12 @@ def generate_review_page(session_id, run_id, picks_path=None, subtitle=""):
             continue
         text = pick.get('text', '')[:80]
         notes = pick.get('notes', '')
+
+        # Skip trigger-flagged chunks (text-level defects, not reviewable)
+        if logs and i < len(logs) and logs[i].get('trigger_matches'):
+            trigger_skipped.append({'chunk': ci, 'text': text,
+                'triggers': [m['trigger'] for m in logs[i]['trigger_matches']]})
+            continue
 
         # Extract metadata from log if available
         q_score = 0
@@ -85,7 +92,7 @@ def generate_review_page(session_id, run_id, picks_path=None, subtitle=""):
         {flag_html}
       </div>
       <div class="chunk-text">{text}</div>
-      <audio controls preload="{'auto' if i == 0 else 'none'}" src="{R2_BASE}/{session_id}/c{ci:02d}/c{ci:02d}_v{ver:02d}.wav"></audio>
+      <audio controls preload="{'auto' if i == 0 else 'none'}" src="{'file://' + str((session_dir / f'c{ci:02d}' / f'c{ci:02d}_v{ver:02d}.wav').resolve()) if local else f'{R2_BASE}/{session_id}/c{ci:02d}/c{ci:02d}_v{ver:02d}.wav'}"></audio>
       <div class="verdict-row">
         <button class="verdict-btn excellent" onclick="setVerdict({ci},'EXCELLENT')">EXCELLENT</button>
         <button class="verdict-btn ok" onclick="setVerdict({ci},'OK')">OK</button>
@@ -159,17 +166,19 @@ audio {{ width: 100%; margin-bottom: 10px; }}
 </head>
 <body>
 <h1>Review {run_id} — {session_id}</h1>
-<div class="subtitle">{subtitle} | {total_chunks} chunks</div>
+<div class="subtitle">{subtitle} | {total_chunks - len(trigger_skipped)} reviewable chunks{f' | {len(trigger_skipped)} excluded (trigger word defects)' if trigger_skipped else ''}</div>
 <div class="stats">
   <div class="stat">Keys: 1=EXCELLENT 2=OK 3=ECHO 4=HISS 5=VOICE 6=CUTOFF 7=BAD | H=Hard S=Soft | Space=Pause Enter=Next</div>
 </div>
 
 {"".join(chunks_html)}
 
+{'<div style="margin-top:30px;padding:16px;background:#1a1020;border:1px solid #5a2d5a;border-radius:8px"><h3 style="color:#f87171;margin-bottom:10px">Excluded — Trigger Word Defects (need script rewrite)</h3>' + ''.join(f'<div style="padding:4px 0;color:#888">c{s["chunk"]:02d}: <span style="color:#f87171">[{", ".join(s["triggers"])}]</span> {s["text"]}</div>' for s in trigger_skipped) + '</div>' if trigger_skipped else ''}
+
 <div class="export-bar">
   <button class="export-btn" id="pause-btn" onclick="togglePause()" style="background:#16a34a">&#9654; Play</button>
   <button class="export-btn" onclick="exportVerdicts()">Export Verdicts</button>
-  <span class="counter" id="counter">0/{total_chunks} reviewed</span>
+  <span class="counter" id="counter">0/{total_chunks - len(trigger_skipped)} reviewed</span>
   <span class="counter" id="save-status" style="color:#4ade80"></span>
 </div>
 
@@ -809,13 +818,14 @@ def main():
     parser.add_argument('--picks', help='Path to picks JSON (single mode only)')
     parser.add_argument('--subtitle', default='', help='Subtitle text')
     parser.add_argument('--output', help='Output path (default: vault dir)')
+    parser.add_argument('--local', action='store_true', help='Use local file:// paths instead of R2 URLs')
     args = parser.parse_args()
 
     if args.mode == 'top3':
         html = generate_top3_review_page(args.session_id, args.run, args.subtitle)
         default_name = f"top3-review-{args.run}.html"
     else:
-        html = generate_review_page(args.session_id, args.run, args.picks, args.subtitle)
+        html = generate_review_page(args.session_id, args.run, args.picks, args.subtitle, local=args.local)
         default_name = f"auto-trial-review-{args.run}.html"
 
     if args.output:
