@@ -1,0 +1,2285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R2 Audio Audit — 14 Feb 2026 07:09</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#FFF1E5; color:#33302E; font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; font-size:13px; padding:20px; }
+h1 { color:#1A1817; font-size:22px; font-weight:700; margin-bottom:4px; }
+.subtitle { color:#807973; font-size:13px; margin-bottom:20px; }
+.summary { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:24px; }
+.stat { background:#F2DFCE; border:1px solid #E0CDBF; border-radius:4px; padding:12px 18px; min-width:120px; }
+.stat-num { font-size:28px; font-weight:700; color:#1A1817; }
+.stat-label { font-size:11px; color:#807973; text-transform:uppercase; letter-spacing:0.5px; margin-top:2px; }
+.stat-live .stat-num { color:#0D7680; }
+.stat-error .stat-num { color:#CC0000; }
+.stat-warn .stat-num { color:#A64D00; }
+.controls { display:flex; gap:12px; align-items:center; margin-bottom:16px; flex-wrap:wrap; }
+.controls select, .controls input { background:#FFF7F0; border:1px solid #E0CDBF; color:#33302E; padding:6px 10px; border-radius:4px; font-size:13px; }
+.controls input { width:220px; }
+table { width:100%; border-collapse:collapse; margin-bottom:32px; border:1px solid #E0CDBF; }
+#mainTable { table-layout:fixed; }
+#mainTable colgroup { display:table-column-group; }
+td { padding:6px 8px; border:1px solid #E0CDBF; vertical-align:middle; font-size:12px; overflow:hidden; text-overflow:ellipsis; }
+th { background:#F2DFCE; color:#807973; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; padding:8px; text-align:left; border:1px solid #E0CDBF; cursor:pointer; user-select:none; white-space:nowrap; }
+th:hover { color:#1A1817; }
+th .arrow { font-size:10px; margin-left:4px; }
+tr:hover { background:#FFF7F0; }
+tr:nth-child(even) { background:#FFF9F2; }
+.cell-error { color:#CC0000; font-weight:600; }
+.cell-warn { color:#A64D00; }
+.cell-info { color:#998F85; }
+.cell-ok { color:#0D7680; }
+.stage-live { background:#D4EDDA; color:#1B5E20; padding:2px 8px; border-radius:3px; font-size:11px; font-weight:600; }
+.stage-built { background:#D6E9F8; color:#1A4971; padding:2px 8px; border-radius:3px; font-size:11px; }
+.stage-picked { background:#FFF3CD; color:#856404; padding:2px 8px; border-radius:3px; font-size:11px; }
+.stage-generated { background:#E8DEF8; color:#4A148C; padding:2px 8px; border-radius:3px; font-size:11px; }
+.stage-legacy { background:#F8D7DA; color:#842029; padding:2px 8px; border-radius:3px; font-size:11px; }
+.stage-outstanding { background:#E8E5E3; color:#807973; padding:2px 8px; border-radius:3px; font-size:11px; }
+.r2-200 { color:#0D7680; }
+.r2-404 { color:#CC0000; }
+.issue-list { list-style:none; display:flex; flex-wrap:wrap; gap:2px 10px; }
+.issue-list li { white-space:nowrap; font-size:11px; }
+.issue-list li::before { content:''; display:inline-block; width:6px; height:6px; border-radius:50%; margin-right:4px; vertical-align:middle; }
+.issue-error::before { background:#CC0000; }
+.issue-warn::before { background:#A64D00; }
+.issue-info::before { background:#998F85; }
+.files-list { font-size:11px; color:#807973; }
+.files-list span { display:inline; white-space:nowrap; }
+.files-list span+span::before { content:', '; }
+h2 { color:#1A1817; font-size:16px; font-weight:700; margin:28px 0 12px; }
+.section-sep { border:none; border-top:1px solid #E0CDBF; margin:32px 0; }
+.match { color:#0D7680; }
+.mismatch { color:#CC0000; }
+.skipped { color:#998F85; font-style:italic; }
+.flag { display:inline-block; width:10px; height:10px; border-radius:50%; }
+.flag-green { background:#1B5E20; }
+.flag-amber { background:#A64D00; }
+.flag-red { background:#CC0000; }
+</style>
+</head>
+<body>
+<h1>R2 Audio Audit Report</h1>
+<div class="subtitle">Generated 14 Feb 2026 at 07:09 &middot; 1.3s &middot; 60 sessions</div>
+
+<div class="summary">
+  <div class="stat stat-live"><div class="stat-num">53</div><div class="stat-label">Live</div></div>
+  <div class="stat"><div class="stat-num">2</div><div class="stat-label">Vault Built</div></div>
+  <div class="stat"><div class="stat-num">0</div><div class="stat-label">Picked</div></div>
+  <div class="stat"><div class="stat-num">0</div><div class="stat-label">Generated</div></div>
+  <div class="stat"><div class="stat-num">2</div><div class="stat-label">Legacy</div></div>
+  <div class="stat"><div class="stat-num">3</div><div class="stat-label">Outstanding</div></div>
+  <div class="stat stat-error"><div class="stat-num">0</div><div class="stat-label">Errors</div></div>
+  <div class="stat stat-warn"><div class="stat-num">39</div><div class="stat-label">Warnings</div></div>
+  <div class="stat"><div class="stat-num" style="color:#1B5E20">23</div><div class="stat-label"><span class="flag flag-green"></span> No Action</div></div>
+  <div class="stat"><div class="stat-num" style="color:#A64D00">35</div><div class="stat-label"><span class="flag flag-amber"></span> Needs Work</div></div>
+  <div class="stat"><div class="stat-num" style="color:#CC0000">2</div><div class="stat-label"><span class="flag flag-red"></span> Action Req</div></div>
+</div>
+
+<div class="controls">
+  <select id="stageFilter" onchange="filterTable()">
+    <option value="">All Stages</option>
+    <option value="live">Live</option>
+    <option value="vault-built">Vault Built</option>
+    <option value="picked">Picked</option>
+    <option value="generated">Generated</option>
+    <option value="legacy">Legacy</option>
+    <option value="outstanding">Outstanding</option>
+  </select>
+  <select id="catFilter" onchange="filterTable()">
+    <option value="">All Categories</option>
+    <option value="mindfulness">Mindfulness</option>
+    <option value="stress">Stress</option>
+    <option value="sleep">Sleep</option>
+  </select>
+  <select id="issueFilter" onchange="filterTable()">
+    <option value="">All Issues</option>
+    <option value="has-error">Has Errors</option>
+    <option value="has-warn">Has Warnings</option>
+    <option value="has-issues">Has Any Issues</option>
+    <option value="no-issues">No Issues</option>
+  </select>
+  <select id="flagFilter" onchange="filterTable()">
+    <option value="">All Flags</option>
+    <option value="red">Red</option>
+    <option value="amber">Amber</option>
+    <option value="green">Green</option>
+  </select>
+  <input type="text" id="searchBox" placeholder="Search name or ID..." oninput="filterTable()">
+</div>
+
+<table id="mainTable">
+<colgroup>
+  <col style="width:20px">
+  <col style="width:36px">
+  <col style="width:150px">
+  <col style="width:80px">
+  <col style="width:50px">
+  <col style="width:50px">
+  <col style="width:70px">
+  <col style="width:110px">
+  <col style="width:90px">
+  <col style="width:90px">
+  <col style="width:140px">
+  <col style="width:120px">
+  <col style="width:80px">
+  <col style="width:70px">
+  <col style="width:44px">
+  <col style="width:72px">
+  <col>
+</colgroup>
+<thead>
+<tr>
+  <th data-col="0" onclick="sortTable(0,'str')"><span class="arrow"></span></th>
+  <th data-col="1" onclick="sortTable(1,'num')"># <span class="arrow"></span></th>
+  <th data-col="2" onclick="sortTable(2,'str')">Name <span class="arrow"></span></th>
+  <th data-col="3" onclick="sortTable(3,'str')">Category <span class="arrow"></span></th>
+  <th data-col="4" onclick="sortTable(4,'num')">Chunks <span class="arrow"></span></th>
+  <th data-col="5" onclick="sortTable(5,'num')">In Vault <span class="arrow"></span></th>
+  <th data-col="6" onclick="sortTable(6,'str')">Last Edit <span class="arrow"></span></th>
+  <th data-col="7" onclick="sortTable(7,'str')">Duration <span class="arrow"></span></th>
+  <th data-col="8" onclick="sortTable(8,'str')">Ambient <span class="arrow"></span></th>
+  <th data-col="9" onclick="sortTable(9,'str')">Fades <span class="arrow"></span></th>
+  <th data-col="10" onclick="sortTable(10,'str')">Local Files <span class="arrow"></span></th>
+  <th data-col="11" onclick="sortTable(11,'str')">R2 URL <span class="arrow"></span></th>
+  <th data-col="12" onclick="sortTable(12,'str')">R2 Status <span class="arrow"></span></th>
+  <th data-col="13" onclick="sortTable(13,'str')">Local=R2? <span class="arrow"></span></th>
+  <th data-col="14" onclick="sortTable(14,'str')">QA <span class="arrow"></span></th>
+  <th data-col="15" onclick="sortTable(15,'str')">Stage <span class="arrow"></span></th>
+  <th data-col="16" onclick="sortTable(16,'str')">Issues <span class="arrow"></span></th>
+</tr>
+</thead>
+<tbody>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="1 morning meditation 01-morning-meditation mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>1</td>
+  <td>Morning Meditation</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">58</td>
+  <td style="text-align:right">2346</td>
+  <td>14 Feb 26</td>
+  <td>25 minutes / 15.1m actual</td>
+  <td>grace (-16.0dB)</td>
+  <td>in:30.0s out:60.0s</td>
+  <td><div class="files-list"><span>01-morning-meditation.mp3 (13.4 MB)</span><span>raw_01-morning-meditation.mp3 (22.4 MB)</span></div></td>
+  <td><span style="font-size:11px">media.html, mindfulness.html, sessions/morning-meditation.html</span></td>
+  <td><span class="r2-200">200</span> (13.8 MB)</td>
+  <td><span class="mismatch">MISMATCH</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-13)</li><li class="issue-warn">Local/R2 size mismatch (389 KB diff)</li><li class="issue-info">4 MP3 variants in vault/final</li></ul></td>
+</tr>
+<tr data-stage="vault-built" data-cat="" data-issues="warn" data-flag="amber" data-search="1 01-morning-meditation-pre-fix 01-morning-meditation-pre-fix ">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>1</td>
+  <td>01-morning-meditation-pre-fix</td>
+  <td>—</td>
+  <td style="text-align:right">—</td>
+  <td style="text-align:right">441</td>
+  <td>11 Feb 26</td>
+  <td>— / 14.1m actual</td>
+  <td>—</td>
+  <td>—</td>
+  <td><span class="cell-info">none</span></td>
+  <td><span class="cell-info">not referenced</span></td>
+  <td><span class="r2-404">404</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-built">vault-built</span></td>
+  <td><ul class="issue-list"><li class="issue-warn">Vault built but no HTML reference</li><li class="issue-info">Not on R2</li><li class="issue-info">2 MP3 variants in vault/final</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="stress" data-issues="info" data-flag="green" data-search="3 breathing for anxiety 03-breathing-for-anxiety stress">
+  <td style="text-align:center"><span class="flag flag-green"></span></td>
+  <td>3</td>
+  <td>Breathing for Anxiety</td>
+  <td>stress</td>
+  <td style="text-align:right">35</td>
+  <td style="text-align:right">2978</td>
+  <td>14 Feb 26</td>
+  <td>16 minutes / 17.0m actual</td>
+  <td>birds (-4.0dB)</td>
+  <td>in:30.0s <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>raw_03-breathing-for-anxiety.mp3 (14.2 MB)</span><span>03-breathing-for-anxiety.mp3 (16.5 MB)</span></div></td>
+  <td><span style="font-size:11px">media.html, mindfulness.html, sessions/breathing-for-anxiety.html</span></td>
+  <td><span class="r2-200">200</span> (16.5 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">2 MP3 variants in vault/final</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="sleep" data-issues="warn" data-flag="amber" data-search="9 rainfall sleep journey 09-rainfall-sleep-journey sleep">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>9</td>
+  <td>Rainfall Sleep Journey</td>
+  <td>sleep</td>
+  <td style="text-align:right">77</td>
+  <td style="text-align:right">1145</td>
+  <td>14 Feb 26</td>
+  <td>30 minutes / 25.7m actual</td>
+  <td>rain</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>09-rainfall-sleep-journey.mp3 (24.4 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness.html, sessions/rainfall-sleep-journey.html</span></td>
+  <td><span class="r2-200">200</span> (24.4 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li><li class="issue-info">4 MP3 variants in vault/final</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="stress" data-issues="warn" data-flag="amber" data-search="18 calm in three minutes 18-calm-in-three-minutes stress">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>18</td>
+  <td>Calm in Three Minutes</td>
+  <td>stress</td>
+  <td style="text-align:right">10</td>
+  <td style="text-align:right">195</td>
+  <td>14 Feb 26</td>
+  <td>3 minutes / 3.4m actual</td>
+  <td>rain</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>18-calm-in-three-minutes.mp3 (3.1 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness.html</span></td>
+  <td><span class="r2-200">200</span> (3.1 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li><li class="issue-info">3 MP3 variants in vault/final</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="stress" data-issues="warn" data-flag="amber" data-search="19 release and restore 19-release-and-restore stress">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>19</td>
+  <td>Release and Restore</td>
+  <td>stress</td>
+  <td style="text-align:right">46</td>
+  <td style="text-align:right">874</td>
+  <td>14 Feb 26</td>
+  <td>15 minutes / 15.0m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>19-release-and-restore-repair-1.mp3 (13.2 MB)</span><span>19-release-and-restore.mp3 (13.7 MB)</span></div></td>
+  <td><span style="font-size:11px">ab-compare-19.html, mindfulness.html</span></td>
+  <td><span class="r2-200">200</span> (13.7 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="stress" data-issues="warn" data-flag="amber" data-search="23 the calm reset 23-the-calm-reset stress">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>23</td>
+  <td>The Calm Reset</td>
+  <td>stress</td>
+  <td style="text-align:right">16</td>
+  <td style="text-align:right">345</td>
+  <td>14 Feb 26</td>
+  <td>5 minutes / 5.9m actual</td>
+  <td>stream</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>23-the-calm-reset.mp3 (5.4 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness.html, sessions/calm-reset.html</span></td>
+  <td><span class="r2-200">200</span> (5.4 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li><li class="issue-info">3 MP3 variants in vault/final</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="25 introduction to mindfulness 25-introduction-to-mindfulness mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>25</td>
+  <td>Introduction to Mindfulness</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">33</td>
+  <td style="text-align:right">540</td>
+  <td>14 Feb 26</td>
+  <td>15 / 16.7m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>25-introduction-to-mindfulness.mp3 (15.3 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness.html</span></td>
+  <td><span class="r2-200">200</span> (15.3 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="32 observing emotions 32-observing-emotions mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>32</td>
+  <td>Observing Emotions</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">23</td>
+  <td style="text-align:right">423</td>
+  <td>14 Feb 26</td>
+  <td>10 minutes / 9.3m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>32-observing-emotions-repair-1.mp3 (8.7 MB)</span><span>32-observing-emotions.mp3 (8.5 MB)</span></div></td>
+  <td><span style="font-size:11px">ab-compare-32.html, mindfulness.html, sessions/observing-emotions.html</span></td>
+  <td><span class="r2-200">200</span> (8.5 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li><li class="issue-info">3 MP3 variants in vault/final</li></ul></td>
+</tr>
+<tr data-stage="legacy" data-cat="mindfulness" data-issues="warn" data-flag="red" data-search="36 loving-kindness introduction 36-loving-kindness-intro mindfulness">
+  <td style="text-align:center"><span class="flag flag-red"></span></td>
+  <td>36</td>
+  <td>Loving-Kindness Introduction</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">28</td>
+  <td style="text-align:right">—</td>
+  <td>—</td>
+  <td>12 minutes</td>
+  <td>loving-kindness-ambient</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>raw_36-loving-kindness-intro.mp3 (12.0 MB)</span><span>36-loving-kindness-intro.mp3 (9.6 MB)</span><span>36-loving-kindness-intro-v3.mp3 (10.3 MB)</span><span>36-loving-kindness-intro-v2.mp3 (9.5 MB)</span></div></td>
+  <td><span class="cell-info">not referenced</span></td>
+  <td><span class="r2-200">200</span> (9.6 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-legacy">legacy</span></td>
+  <td><ul class="issue-list"><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="legacy" data-cat="mindfulness" data-issues="warn" data-flag="red" data-search="36 loving-kindness introduction 36-loving-kindness-intro-v2 mindfulness">
+  <td style="text-align:center"><span class="flag flag-red"></span></td>
+  <td>36</td>
+  <td>Loving-Kindness Introduction</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">27</td>
+  <td style="text-align:right">—</td>
+  <td>—</td>
+  <td>12 minutes</td>
+  <td>loving-kindness-ambient</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>36-loving-kindness-intro-v2.mp3 (9.5 MB)</span></div></td>
+  <td><span class="cell-info">not referenced</span></td>
+  <td><span class="r2-404">404</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-legacy">legacy</span></td>
+  <td><ul class="issue-list"><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li><li class="issue-info">Not on R2</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="36 loving-kindness introduction 36-loving-kindness-intro-v3 mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>36</td>
+  <td>Loving-Kindness Introduction</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">34</td>
+  <td style="text-align:right">620</td>
+  <td>14 Feb 26</td>
+  <td>12 minutes / 11.2m actual</td>
+  <td>loving-kindness-ambient</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>36-loving-kindness-intro-v3.mp3 (10.3 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness.html, sessions/loving-kindness.html</span></td>
+  <td><span class="r2-200">200</span> (10.3 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="info" data-flag="green" data-search="38 seven-day mindfulness — day 1: arriving 38-seven-day-mindfulness-day1 mindfulness">
+  <td style="text-align:center"><span class="flag flag-green"></span></td>
+  <td>38</td>
+  <td>Seven-Day Mindfulness — Day 1: Arriving</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">24</td>
+  <td style="text-align:right">432</td>
+  <td>14 Feb 26</td>
+  <td>8 / 7.4m actual</td>
+  <td>—</td>
+  <td>—</td>
+  <td><div class="files-list"><span>38-seven-day-mindfulness-day1.mp3 (7.3 MB)</span><span>raw_38-seven-day-mindfulness-day1.mp3 (9.8 MB)</span></div></td>
+  <td><span style="font-size:11px">sessions/seven-day-mindfulness-course.html, sessions/seven-day-mindfulness-course.html</span></td>
+  <td><span class="r2-200">200</span> (7.3 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-info">2 MP3 variants in vault/final</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="info" data-flag="green" data-search="39 seven-day mindfulness — day 2: the breath as anchor 39-seven-day-mindfulness-day2 mindfulness">
+  <td style="text-align:center"><span class="flag flag-green"></span></td>
+  <td>39</td>
+  <td>Seven-Day Mindfulness — Day 2: The Breath as Anchor</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">23</td>
+  <td style="text-align:right">530</td>
+  <td>14 Feb 26</td>
+  <td>9 / 8.1m actual</td>
+  <td>—</td>
+  <td>—</td>
+  <td><div class="files-list"><span>39-seven-day-mindfulness-day2.mp3 (7.9 MB)</span></div></td>
+  <td><span style="font-size:11px">sessions/seven-day-mindfulness-course.html</span></td>
+  <td><span class="r2-200">200</span> (7.9 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-info">4 MP3 variants in vault/final</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="info" data-flag="green" data-search="40 seven-day mindfulness — day 3: body awareness 40-seven-day-mindfulness-day3 mindfulness">
+  <td style="text-align:center"><span class="flag flag-green"></span></td>
+  <td>40</td>
+  <td>Seven-Day Mindfulness — Day 3: Body Awareness</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">28</td>
+  <td style="text-align:right">466</td>
+  <td>14 Feb 26</td>
+  <td>10 / 9.6m actual</td>
+  <td>—</td>
+  <td>—</td>
+  <td><div class="files-list"><span>40-seven-day-mindfulness-day3.mp3 (9.3 MB)</span></div></td>
+  <td><span style="font-size:11px">sessions/seven-day-mindfulness-course.html</span></td>
+  <td><span class="r2-200">200</span> (9.3 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-info">2 MP3 variants in vault/final</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="info" data-flag="green" data-search="41 seven-day mindfulness — day 4: working with thoughts 41-seven-day-mindfulness-day4 mindfulness">
+  <td style="text-align:center"><span class="flag flag-green"></span></td>
+  <td>41</td>
+  <td>Seven-Day Mindfulness — Day 4: Working with Thoughts</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">23</td>
+  <td style="text-align:right">446</td>
+  <td>14 Feb 26</td>
+  <td>11 / 7.6m actual</td>
+  <td>—</td>
+  <td>—</td>
+  <td><div class="files-list"><span>41-seven-day-mindfulness-day4.mp3 (7.4 MB)</span></div></td>
+  <td><span style="font-size:11px">sessions/seven-day-mindfulness-course.html</span></td>
+  <td><span class="r2-200">200</span> (7.4 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-info">2 MP3 variants in vault/final</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="info" data-flag="green" data-search="42 seven-day mindfulness — day 5: sounds and environment 42-seven-day-mindfulness-day5 mindfulness">
+  <td style="text-align:center"><span class="flag flag-green"></span></td>
+  <td>42</td>
+  <td>Seven-Day Mindfulness — Day 5: Sounds and Environment</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">22</td>
+  <td style="text-align:right">430</td>
+  <td>14 Feb 26</td>
+  <td>12 / 2.5m actual</td>
+  <td>—</td>
+  <td>—</td>
+  <td><div class="files-list"><span>42-seven-day-mindfulness-day5.mp3 (2.7 MB)</span></div></td>
+  <td><span style="font-size:11px">sessions/seven-day-mindfulness-course.html</span></td>
+  <td><span class="r2-200">200</span> (2.7 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-info">2 MP3 variants in vault/final</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="info" data-flag="green" data-search="43 seven-day mindfulness — day 6: emotions and acceptance 43-seven-day-mindfulness-day6 mindfulness">
+  <td style="text-align:center"><span class="flag flag-green"></span></td>
+  <td>43</td>
+  <td>Seven-Day Mindfulness — Day 6: Emotions and Acceptance</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">25</td>
+  <td style="text-align:right">470</td>
+  <td>14 Feb 26</td>
+  <td>13 / 10.0m actual</td>
+  <td>—</td>
+  <td>—</td>
+  <td><div class="files-list"><span>43-seven-day-mindfulness-day6.mp3 (9.6 MB)</span></div></td>
+  <td><span style="font-size:11px">sessions/seven-day-mindfulness-course.html</span></td>
+  <td><span class="r2-200">200</span> (9.6 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="info" data-flag="green" data-search="43 non-dual awareness 43-non-dual-awareness mindfulness">
+  <td style="text-align:center"><span class="flag flag-green"></span></td>
+  <td>43</td>
+  <td>Non-Dual Awareness</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">42</td>
+  <td style="text-align:right">1295</td>
+  <td>14 Feb 26</td>
+  <td>32 minutes / 31.3m actual</td>
+  <td>—</td>
+  <td>—</td>
+  <td><div class="files-list"><span>43-non-dual-awareness.mp3 (29.1 MB)</span><span>raw_43-non-dual-awareness.mp3 (30.1 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness.html, sessions/non-dual-awareness.html</span></td>
+  <td><span class="r2-200">200</span> (29.1 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="info" data-flag="green" data-search="44 seven-day mindfulness — day 7: open awareness 44-seven-day-mindfulness-day7 mindfulness">
+  <td style="text-align:center"><span class="flag flag-green"></span></td>
+  <td>44</td>
+  <td>Seven-Day Mindfulness — Day 7: Open Awareness</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">25</td>
+  <td style="text-align:right">445</td>
+  <td>14 Feb 26</td>
+  <td>14 / 9.8m actual</td>
+  <td>—</td>
+  <td>—</td>
+  <td><div class="files-list"><span>44-seven-day-mindfulness-day7.mp3 (9.5 MB)</span></div></td>
+  <td><span style="font-size:11px">sessions/seven-day-mindfulness-course.html</span></td>
+  <td><span class="r2-200">200</span> (9.5 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="stress" data-issues="info" data-flag="green" data-search="52 the court of your mind 52-the-court-of-your-mind stress">
+  <td style="text-align:center"><span class="flag flag-green"></span></td>
+  <td>52</td>
+  <td>The Court of Your Mind</td>
+  <td>stress</td>
+  <td style="text-align:right">57</td>
+  <td style="text-align:right">1570</td>
+  <td>14 Feb 26</td>
+  <td>22 / 23.4m actual</td>
+  <td>—</td>
+  <td>—</td>
+  <td><div class="files-list"><span>52-the-court-of-your-mind-noambient.mp3 (22.7 MB)</span><span>52-the-court-of-your-mind.mp3 (21.9 MB)</span></div></td>
+  <td><span style="font-size:11px">cbt.html, sessions/the-court-of-your-mind.html, sessions/the-court-of-your-mind.html</span></td>
+  <td><span class="r2-200">200</span> (21.9 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-info">5 MP3 variants in vault/final</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="story" data-issues="warn" data-flag="amber" data-search="53 the gardener's almanac 53-the-gardeners-almanac story">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>53</td>
+  <td>The Gardener's Almanac</td>
+  <td>story</td>
+  <td style="text-align:right">54</td>
+  <td style="text-align:right">1147</td>
+  <td>14 Feb 26</td>
+  <td>28 / 30.1m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>53-the-gardeners-almanac.mp3 (28.0 MB)</span></div></td>
+  <td><span style="font-size:11px">the-gardeners-almanac.html, sleep-stories.html</span></td>
+  <td><span class="r2-200">200</span> (28.0 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-warn">FAIL</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li><li class="issue-info">3 MP3 variants in vault/final</li></ul></td>
+</tr>
+<tr data-stage="vault-built" data-cat="" data-issues="warn" data-flag="amber" data-search="53 53-the-gardeners-almanac-backup 53-the-gardeners-almanac-backup ">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>53</td>
+  <td>53-the-gardeners-almanac-backup</td>
+  <td>—</td>
+  <td style="text-align:right">—</td>
+  <td style="text-align:right">980</td>
+  <td>13 Feb 26</td>
+  <td>— / 23.2m actual</td>
+  <td>—</td>
+  <td>—</td>
+  <td><span class="cell-info">none</span></td>
+  <td><span class="cell-info">not referenced</span></td>
+  <td><span class="r2-404">404</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-built">vault-built</span></td>
+  <td><ul class="issue-list"><li class="issue-warn">Vault built but no HTML reference</li><li class="issue-info">Not on R2</li><li class="issue-info">3 MP3 variants in vault/final</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="sleep-story" data-issues="warn" data-flag="amber" data-search="54 the slow train north 54-the-slow-train-north sleep-story">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>54</td>
+  <td>The Slow Train North</td>
+  <td>sleep-story</td>
+  <td style="text-align:right">48</td>
+  <td style="text-align:right">847</td>
+  <td>14 Feb 26</td>
+  <td>30 / 10.2m actual</td>
+  <td>rain</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>54-the-slow-train-north.mp3 (9.4 MB)</span></div></td>
+  <td><span style="font-size:11px">the-slow-train-north.html, sleep-stories.html</span></td>
+  <td><span class="r2-200">200</span> (9.4 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="sleep-story" data-issues="warn" data-flag="amber" data-search="55 the bookshop at the end of the lane 55-the-bookshop-at-the-end-of-the-lane sleep-story">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>55</td>
+  <td>The Bookshop at the End of the Lane</td>
+  <td>sleep-story</td>
+  <td style="text-align:right">44</td>
+  <td style="text-align:right">880</td>
+  <td>14 Feb 26</td>
+  <td>28 / 10.5m actual</td>
+  <td>rain</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>55-the-bookshop-at-the-end-of-the-lane.mp3 (9.6 MB)</span></div></td>
+  <td><span style="font-size:11px">the-bookshop-at-the-end-of-the-lane.html, sleep-stories.html</span></td>
+  <td><span class="r2-200">200</span> (9.6 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="sleep-story" data-issues="warn" data-flag="amber" data-search="56 the lighthouse keeper's log 56-the-lighthouse-keepers-log sleep-story">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>56</td>
+  <td>The Lighthouse Keeper's Log</td>
+  <td>sleep-story</td>
+  <td style="text-align:right">49</td>
+  <td style="text-align:right">840</td>
+  <td>14 Feb 26</td>
+  <td>28 / 11.2m actual</td>
+  <td>rain</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>56-the-lighthouse-keepers-log.mp3 (10.3 MB)</span></div></td>
+  <td><span style="font-size:11px">the-lighthouse-keepers-log.html, sleep-stories.html</span></td>
+  <td><span class="r2-200">200</span> (10.3 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="57 the instrument 57-21day-mindfulness-day01 mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>57</td>
+  <td>The Instrument</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">25</td>
+  <td style="text-align:right">460</td>
+  <td>14 Feb 26</td>
+  <td>10 minutes / 10.6m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>57-21day-mindfulness-day01.mp3 (9.7 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness-21-day.html, mindfulness-21-day.html</span></td>
+  <td><span class="r2-200">200</span> (9.7 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="58 the anchor 58-21day-mindfulness-day02 mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>58</td>
+  <td>The Anchor</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">26</td>
+  <td style="text-align:right">455</td>
+  <td>14 Feb 26</td>
+  <td>12 minutes / 11.4m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>58-21day-mindfulness-day02.mp3 (10.5 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness-21-day.html</span></td>
+  <td><span class="r2-200">200</span> (10.5 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="59 the map 59-21day-mindfulness-day03 mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>59</td>
+  <td>The Map</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">33</td>
+  <td style="text-align:right">575</td>
+  <td>14 Feb 26</td>
+  <td>13 minutes / 14.7m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>59-21day-mindfulness-day03.mp3 (13.5 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness-21-day.html</span></td>
+  <td><span class="r2-200">200</span> (13.5 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="60 the stream 60-21day-mindfulness-day04 mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>60</td>
+  <td>The Stream</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">21</td>
+  <td style="text-align:right">475</td>
+  <td>14 Feb 26</td>
+  <td>14 minutes / 12.6m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>60-21day-mindfulness-day04.mp3 (11.5 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness-21-day.html</span></td>
+  <td><span class="r2-200">200</span> (11.5 MB)</td>
+  <td><span class="mismatch">MISMATCH</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li><li class="issue-warn">Local/R2 size mismatch (2 KB diff)</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="61 the soundscape 61-21day-mindfulness-day05 mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>61</td>
+  <td>The Soundscape</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">24</td>
+  <td style="text-align:right">455</td>
+  <td>14 Feb 26</td>
+  <td>15 minutes / 10.9m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>61-21day-mindfulness-day05.mp3 (10.0 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness-21-day.html</span></td>
+  <td><span class="r2-200">200</span> (10.0 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li><li class="issue-info">3 MP3 variants in vault/final</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="62 the pause 62-21day-mindfulness-day06 mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>62</td>
+  <td>The Pause</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">25</td>
+  <td style="text-align:right">520</td>
+  <td>14 Feb 26</td>
+  <td>16 minutes / 13.8m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>62-21day-mindfulness-day06.mp3 (12.7 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness-21-day.html</span></td>
+  <td><span class="r2-200">200</span> (12.7 MB)</td>
+  <td><span class="mismatch">MISMATCH</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li><li class="issue-warn">Local/R2 size mismatch (8 KB diff)</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="63 the review 63-21day-mindfulness-day07 mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>63</td>
+  <td>The Review</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">30</td>
+  <td style="text-align:right">535</td>
+  <td>14 Feb 26</td>
+  <td>18 minutes / 15.8m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>63-21day-mindfulness-day07.mp3 (14.4 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness-21-day.html</span></td>
+  <td><span class="r2-200">200</span> (14.4 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="64 the weather system 64-21day-mindfulness-day08 mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>64</td>
+  <td>The Weather System</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">27</td>
+  <td style="text-align:right">550</td>
+  <td>14 Feb 26</td>
+  <td>18 minutes / 15.4m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>64-21day-mindfulness-day08.mp3 (14.1 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness-21-day.html</span></td>
+  <td><span class="r2-200">200</span> (14.1 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="65 the narrator 65-21day-mindfulness-day09 mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>65</td>
+  <td>The Narrator</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">25</td>
+  <td style="text-align:right">505</td>
+  <td>14 Feb 26</td>
+  <td>20 minutes / 14.3m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>65-21day-mindfulness-day09.mp3 (13.1 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness-21-day.html</span></td>
+  <td><span class="r2-200">200</span> (13.1 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="66 the stories we carry 66-21day-mindfulness-day10 mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>66</td>
+  <td>The Stories We Carry</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">34</td>
+  <td style="text-align:right">560</td>
+  <td>14 Feb 26</td>
+  <td>22 minutes / 15.4m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>66-21day-mindfulness-day10.mp3 (14.1 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness-21-day.html</span></td>
+  <td><span class="r2-200">200</span> (14.1 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="67 the body under pressure 67-21day-mindfulness-day11 mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>67</td>
+  <td>The Body Under Pressure</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">32</td>
+  <td style="text-align:right">675</td>
+  <td>14 Feb 26</td>
+  <td>24 minutes / 20.2m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>67-21day-mindfulness-day11.mp3 (18.5 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness-21-day.html</span></td>
+  <td><span class="r2-200">200</span> (18.5 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="68 the difficult guest 68-21day-mindfulness-day12 mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>68</td>
+  <td>The Difficult Guest</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">25</td>
+  <td style="text-align:right">525</td>
+  <td>14 Feb 26</td>
+  <td>25 minutes / 15.4m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>68-21day-mindfulness-day12.mp3 (14.1 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness-21-day.html</span></td>
+  <td><span class="r2-200">200</span> (14.1 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="69 the walk 69-21day-mindfulness-day13 mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>69</td>
+  <td>The Walk</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">32</td>
+  <td style="text-align:right">523</td>
+  <td>14 Feb 26</td>
+  <td>26 minutes / 16.7m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>69-21day-mindfulness-day13.mp3 (15.3 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness-21-day.html</span></td>
+  <td><span class="r2-200">200</span> (15.3 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="70 the middle ground 70-21day-mindfulness-day14 mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>70</td>
+  <td>The Middle Ground</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">28</td>
+  <td style="text-align:right">615</td>
+  <td>14 Feb 26</td>
+  <td>28 minutes / 17.0m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>70-21day-mindfulness-day14.mp3 (15.6 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness-21-day.html</span></td>
+  <td><span class="r2-200">200</span> (15.6 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="71 the compassion turn 71-21day-mindfulness-day15 mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>71</td>
+  <td>The Compassion Turn</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">36</td>
+  <td style="text-align:right">735</td>
+  <td>14 Feb 26</td>
+  <td>28 minutes / 20.9m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>71-21day-mindfulness-day15.mp3 (19.1 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness-21-day.html</span></td>
+  <td><span class="r2-200">200</span> (19.1 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="72 the forgiveness practice 72-21day-mindfulness-day16 mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>72</td>
+  <td>The Forgiveness Practice</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">35</td>
+  <td style="text-align:right">665</td>
+  <td>14 Feb 26</td>
+  <td>30 minutes / 20.2m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>72-21day-mindfulness-day16.mp3 (18.5 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness-21-day.html</span></td>
+  <td><span class="r2-200">200</span> (18.5 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="73 the space between 73-21day-mindfulness-day17 mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>73</td>
+  <td>The Space Between</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">31</td>
+  <td style="text-align:right">580</td>
+  <td>14 Feb 26</td>
+  <td>32 minutes / 18.6m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>73-21day-mindfulness-day17.mp3 (17.0 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness-21-day.html</span></td>
+  <td><span class="r2-200">200</span> (17.0 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="74 the difficult conversation 74-21day-mindfulness-day18 mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>74</td>
+  <td>The Difficult Conversation</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">39</td>
+  <td style="text-align:right">705</td>
+  <td>14 Feb 26</td>
+  <td>34 minutes / 23.3m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>74-21day-mindfulness-day18.mp3 (21.3 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness-21-day.html</span></td>
+  <td><span class="r2-200">200</span> (21.3 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="75 the gratitude inventory 75-21day-mindfulness-day19 mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>75</td>
+  <td>The Gratitude Inventory</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">31</td>
+  <td style="text-align:right">690</td>
+  <td>14 Feb 26</td>
+  <td>36 minutes / 21.3m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>75-21day-mindfulness-day19.mp3 (19.5 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness-21-day.html</span></td>
+  <td><span class="r2-200">200</span> (19.5 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="76 the long sit 76-21day-mindfulness-day20 mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>76</td>
+  <td>The Long Sit</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">21</td>
+  <td style="text-align:right">375</td>
+  <td>14 Feb 26</td>
+  <td>40 minutes / 11.8m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>76-21day-mindfulness-day20.mp3 (10.8 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness-21-day.html</span></td>
+  <td><span class="r2-200">200</span> (10.8 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li><li class="issue-info">3 MP3 variants in vault/final</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="mindfulness" data-issues="warn" data-flag="amber" data-search="77 the return 77-21day-mindfulness-day21 mindfulness">
+  <td style="text-align:center"><span class="flag flag-amber"></span></td>
+  <td>77</td>
+  <td>The Return</td>
+  <td>mindfulness</td>
+  <td style="text-align:right">48</td>
+  <td style="text-align:right">720</td>
+  <td>14 Feb 26</td>
+  <td>45 minutes / 31.9m actual</td>
+  <td>garden</td>
+  <td><span class="cell-warn">in:none</span> <span class="cell-info">out:none</span></td>
+  <td><div class="files-list"><span>77-21day-mindfulness-day21.mp3 (29.2 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness-21-day.html</span></td>
+  <td><span class="r2-200">200</span> (29.2 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li><li class="issue-warn">No ambient fade-in configured</li><li class="issue-info">No ambient fade-out configured</li><li class="issue-info">No ambient-dB configured</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="stress" data-issues="info" data-flag="green" data-search="78 the thought train 78-cbt-thought-train stress">
+  <td style="text-align:center"><span class="flag flag-green"></span></td>
+  <td>78</td>
+  <td>The Thought Train</td>
+  <td>stress</td>
+  <td style="text-align:right">34</td>
+  <td style="text-align:right">698</td>
+  <td>14 Feb 26</td>
+  <td>15 / 9.9m actual</td>
+  <td>—</td>
+  <td>—</td>
+  <td><div class="files-list"><span>78-cbt-thought-train.mp3 (9.5 MB)</span></div></td>
+  <td><span style="font-size:11px">cbt.html</span></td>
+  <td><span class="r2-200">200</span> (9.5 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="stress" data-issues="info" data-flag="green" data-search="79 the evidence log 79-cbt-evidence-log stress">
+  <td style="text-align:center"><span class="flag flag-green"></span></td>
+  <td>79</td>
+  <td>The Evidence Log</td>
+  <td>stress</td>
+  <td style="text-align:right">28</td>
+  <td style="text-align:right">655</td>
+  <td>14 Feb 26</td>
+  <td>12 / 8.9m actual</td>
+  <td>—</td>
+  <td>—</td>
+  <td><div class="files-list"><span>79-cbt-evidence-log.mp3 (8.6 MB)</span></div></td>
+  <td><span style="font-size:11px">cbt.html</span></td>
+  <td><span class="r2-200">200</span> (8.6 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="stress" data-issues="info" data-flag="green" data-search="80 one small thing 80-cbt-one-small-thing stress">
+  <td style="text-align:center"><span class="flag flag-green"></span></td>
+  <td>80</td>
+  <td>One Small Thing</td>
+  <td>stress</td>
+  <td style="text-align:right">23</td>
+  <td style="text-align:right">510</td>
+  <td>14 Feb 26</td>
+  <td>10 / 7.4m actual</td>
+  <td>—</td>
+  <td>—</td>
+  <td><div class="files-list"><span>80-cbt-one-small-thing.mp3 (7.2 MB)</span></div></td>
+  <td><span style="font-size:11px">cbt.html</span></td>
+  <td><span class="r2-200">200</span> (7.2 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="stress" data-issues="info" data-flag="green" data-search="81 the worry window 81-cbt-worry-window stress">
+  <td style="text-align:center"><span class="flag flag-green"></span></td>
+  <td>81</td>
+  <td>The Worry Window</td>
+  <td>stress</td>
+  <td style="text-align:right">30</td>
+  <td style="text-align:right">705</td>
+  <td>14 Feb 26</td>
+  <td>14 / 9.5m actual</td>
+  <td>—</td>
+  <td>—</td>
+  <td><div class="files-list"><span>81-cbt-worry-window.mp3 (9.2 MB)</span></div></td>
+  <td><span style="font-size:11px">cbt.html</span></td>
+  <td><span class="r2-200">200</span> (9.2 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="default" data-issues="info" data-flag="green" data-search="82 your first meditation 82-your-first-meditation default">
+  <td style="text-align:center"><span class="flag flag-green"></span></td>
+  <td>82</td>
+  <td>Your First Meditation</td>
+  <td>default</td>
+  <td style="text-align:right">22</td>
+  <td style="text-align:right">456</td>
+  <td>14 Feb 26</td>
+  <td>10 / 7.4m actual</td>
+  <td>—</td>
+  <td>—</td>
+  <td><div class="files-list"><span>82-your-first-meditation.mp3 (7.3 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness.html</span></td>
+  <td><span class="r2-200">200</span> (7.3 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="default" data-issues="info" data-flag="green" data-search="83 five minute reset 83-five-minute-reset default">
+  <td style="text-align:center"><span class="flag flag-green"></span></td>
+  <td>83</td>
+  <td>Five Minute Reset</td>
+  <td>default</td>
+  <td style="text-align:right">20</td>
+  <td style="text-align:right">392</td>
+  <td>14 Feb 26</td>
+  <td>6 / 6.8m actual</td>
+  <td>—</td>
+  <td>—</td>
+  <td><div class="files-list"><span>83-five-minute-reset.mp3 (6.7 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness.html</span></td>
+  <td><span class="r2-200">200</span> (6.7 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="stress" data-issues="info" data-flag="green" data-search="84 anxiety unravelled 84-anxiety-unravelled stress">
+  <td style="text-align:center"><span class="flag flag-green"></span></td>
+  <td>84</td>
+  <td>Anxiety Unravelled</td>
+  <td>stress</td>
+  <td style="text-align:right">32</td>
+  <td style="text-align:right">810</td>
+  <td>14 Feb 26</td>
+  <td>15 / 11.1m actual</td>
+  <td>—</td>
+  <td>—</td>
+  <td><div class="files-list"><span>84-anxiety-unravelled.mp3 (10.6 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness.html</span></td>
+  <td><span class="r2-200">200</span> (10.6 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="sleep" data-issues="info" data-flag="green" data-search="85 counting down to sleep 85-counting-down-to-sleep sleep">
+  <td style="text-align:center"><span class="flag flag-green"></span></td>
+  <td>85</td>
+  <td>Counting Down to Sleep</td>
+  <td>sleep</td>
+  <td style="text-align:right">37</td>
+  <td style="text-align:right">740</td>
+  <td>14 Feb 26</td>
+  <td>15 / 11.2m actual</td>
+  <td>—</td>
+  <td>—</td>
+  <td><div class="files-list"><span>85-counting-down-to-sleep.mp3 (10.7 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness.html</span></td>
+  <td><span class="r2-200">200</span> (10.7 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="sleep" data-issues="info" data-flag="green" data-search="86 deep sleep 86-deep-sleep sleep">
+  <td style="text-align:center"><span class="flag flag-green"></span></td>
+  <td>86</td>
+  <td>Deep Sleep</td>
+  <td>sleep</td>
+  <td style="text-align:right">34</td>
+  <td style="text-align:right">745</td>
+  <td>14 Feb 26</td>
+  <td>20 / 10.7m actual</td>
+  <td>—</td>
+  <td>—</td>
+  <td><div class="files-list"><span>86-deep-sleep.mp3 (10.2 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness.html</span></td>
+  <td><span class="r2-200">200</span> (10.2 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li></ul></td>
+</tr>
+<tr data-stage="live" data-cat="sleep" data-issues="info" data-flag="green" data-search="87 ocean voyage 87-ocean-voyage sleep">
+  <td style="text-align:center"><span class="flag flag-green"></span></td>
+  <td>87</td>
+  <td>Ocean Voyage</td>
+  <td>sleep</td>
+  <td style="text-align:right">32</td>
+  <td style="text-align:right">705</td>
+  <td>14 Feb 26</td>
+  <td>20 / 10.6m actual</td>
+  <td>—</td>
+  <td>—</td>
+  <td><div class="files-list"><span>87-ocean-voyage.mp3 (10.2 MB)</span></div></td>
+  <td><span style="font-size:11px">mindfulness.html</span></td>
+  <td><span class="r2-200">200</span> (10.2 MB)</td>
+  <td><span class="match">match</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-live">live</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Approved (2026-02-14)</li></ul></td>
+</tr>
+<tr data-stage="outstanding" data-cat="stress" data-issues="info" data-flag="green" data-search="88 the tabletop 88-cbt-the-tabletop stress">
+  <td style="text-align:center"><span class="flag flag-green"></span></td>
+  <td>88</td>
+  <td>The Tabletop</td>
+  <td>stress</td>
+  <td style="text-align:right">42</td>
+  <td style="text-align:right">—</td>
+  <td>—</td>
+  <td>12</td>
+  <td>—</td>
+  <td>—</td>
+  <td><span class="cell-info">none</span></td>
+  <td><span class="cell-info">not referenced</span></td>
+  <td><span class="r2-404">404</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-outstanding">outstanding</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Not on R2</li><li class="issue-info">Script exists, no audio generated</li></ul></td>
+</tr>
+<tr data-stage="outstanding" data-cat="stress" data-issues="info" data-flag="green" data-search="89 the downward arrow 89-cbt-the-downward-arrow stress">
+  <td style="text-align:center"><span class="flag flag-green"></span></td>
+  <td>89</td>
+  <td>The Downward Arrow</td>
+  <td>stress</td>
+  <td style="text-align:right">44</td>
+  <td style="text-align:right">—</td>
+  <td>—</td>
+  <td>18</td>
+  <td>—</td>
+  <td>—</td>
+  <td><span class="cell-info">none</span></td>
+  <td><span class="cell-info">not referenced</span></td>
+  <td><span class="r2-404">404</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-outstanding">outstanding</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Not on R2</li><li class="issue-info">Script exists, no audio generated</li></ul></td>
+</tr>
+<tr data-stage="outstanding" data-cat="stress" data-issues="info" data-flag="green" data-search="90 rewriting the rule 90-cbt-rewriting-the-rule stress">
+  <td style="text-align:center"><span class="flag flag-green"></span></td>
+  <td>90</td>
+  <td>Rewriting the Rule</td>
+  <td>stress</td>
+  <td style="text-align:right">40</td>
+  <td style="text-align:right">—</td>
+  <td>—</td>
+  <td>20</td>
+  <td>—</td>
+  <td>—</td>
+  <td><span class="cell-info">none</span></td>
+  <td><span class="cell-info">not referenced</span></td>
+  <td><span class="r2-404">404</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="cell-info">—</span></td>
+  <td><span class="stage-outstanding">outstanding</span></td>
+  <td><ul class="issue-list"><li class="issue-info">Not on R2</li><li class="issue-info">Script exists, no audio generated</li></ul></td>
+</tr>
+</tbody>
+</table>
+<hr class="section-sep">
+<h2>Assembly Reviews</h2>
+<h3 style="margin:16px 0 4px;font-size:14px">01-morning-meditation <span style="font-weight:400;color:#807973">— — — final-mix</span></h3>
+<div style="font-size:12px;color:#807973;margin-bottom:8px"> &middot; <strong>38/51 pass (75%)</strong></div>
+<table style="max-width:900px">
+<thead>
+<tr>
+  <th style="width:50px">Chunk</th>
+  <th style="width:50px">Ver</th>
+  <th style="width:60px">Time</th>
+  <th style="width:60px">Result</th>
+  <th style="width:120px">Issue</th>
+  <th>Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr style="opacity:0.5">
+  <td>c00</td>
+  <td>141</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c01</td>
+  <td>10</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c02</td>
+  <td>19</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>c03</td>
+  <td>19</td>
+  <td>—</td>
+  <td><span class="cell-error">FAIL</span></td>
+  <td><span class="cell-error">CUTOFF</span></td>
+  <td><span style="color:#33302E"></span></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c04</td>
+  <td>4</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c05</td>
+  <td>72</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c06</td>
+  <td>0</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c07</td>
+  <td>27</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c08</td>
+  <td>16</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>c09</td>
+  <td>0</td>
+  <td>—</td>
+  <td><span class="cell-error">FAIL</span></td>
+  <td><span class="cell-error">BAD</span></td>
+  <td><span style="color:#33302E"></span></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c10</td>
+  <td>76</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c11</td>
+  <td>28</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c12</td>
+  <td>64</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c13</td>
+  <td>3</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>c14</td>
+  <td>31</td>
+  <td>—</td>
+  <td><span class="cell-error">FAIL</span></td>
+  <td><span class="cell-warn">ECHO</span></td>
+  <td><span style="color:#33302E"></span></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c15</td>
+  <td>10</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c16</td>
+  <td>7</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c17</td>
+  <td>75</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c18</td>
+  <td>10</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>c19</td>
+  <td>47</td>
+  <td>—</td>
+  <td><span class="cell-error">FAIL</span></td>
+  <td><span class="cell-warn">HISS</span></td>
+  <td><span style="color:#33302E"></span></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c20</td>
+  <td>74</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c21</td>
+  <td>5</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c22</td>
+  <td>14</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c23</td>
+  <td>21</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>c24</td>
+  <td>50</td>
+  <td>—</td>
+  <td><span class="cell-error">FAIL</span></td>
+  <td><span class="cell-warn">HISS</span></td>
+  <td><span style="color:#33302E"></span></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c25</td>
+  <td>54</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>c26</td>
+  <td>10</td>
+  <td>—</td>
+  <td><span class="cell-error">FAIL</span></td>
+  <td><span class="cell-warn">ECHO</span></td>
+  <td><span style="color:#33302E"></span></td>
+</tr>
+<tr>
+  <td>c27</td>
+  <td>9</td>
+  <td>—</td>
+  <td><span class="cell-error">FAIL</span></td>
+  <td><span class="cell-warn">ECHO</span></td>
+  <td><span style="color:#33302E"></span></td>
+</tr>
+<tr>
+  <td>c28</td>
+  <td>25</td>
+  <td>—</td>
+  <td><span class="cell-error">FAIL</span></td>
+  <td><span class="cell-warn">ECHO</span></td>
+  <td><span style="color:#33302E"></span></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c29</td>
+  <td>18</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c30</td>
+  <td>20</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c31</td>
+  <td>13</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c32</td>
+  <td>11</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c33</td>
+  <td>11</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>c34</td>
+  <td>13</td>
+  <td>—</td>
+  <td><span class="cell-error">FAIL</span></td>
+  <td><span class="cell-error">CUTOFF</span></td>
+  <td><span style="color:#33302E"></span></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c35</td>
+  <td>7</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c36</td>
+  <td>14</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c37</td>
+  <td>9</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c38</td>
+  <td>6</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c39</td>
+  <td>9</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>c40</td>
+  <td>2</td>
+  <td>—</td>
+  <td><span class="cell-error">FAIL</span></td>
+  <td><span class="cell-error">CUTOFF</span></td>
+  <td><span style="color:#33302E"></span></td>
+</tr>
+<tr>
+  <td>c41</td>
+  <td>18</td>
+  <td>—</td>
+  <td><span class="cell-error">FAIL</span></td>
+  <td><span class="cell-error">CUTOFF</span></td>
+  <td><span style="color:#33302E"></span></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c42</td>
+  <td>3</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c43</td>
+  <td>7</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>c44</td>
+  <td>12</td>
+  <td>—</td>
+  <td><span class="cell-error">FAIL</span></td>
+  <td><span class="cell-warn">ECHO</span> <span class="cell-error">VOICE</span></td>
+  <td><span style="color:#33302E"></span></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c45</td>
+  <td>13</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c46</td>
+  <td>29</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c47</td>
+  <td>4</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>c48</td>
+  <td>16</td>
+  <td>—</td>
+  <td><span class="cell-error">FAIL</span></td>
+  <td><span class="cell-error">VOICE</span> <span class="cell-warn">ECHO</span> <span class="cell-error">BAD</span></td>
+  <td><span style="color:#33302E"></span></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c49</td>
+  <td>18</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c50</td>
+  <td>29</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+<h3 style="margin:16px 0 4px;font-size:14px">03-breathing-for-anxiety <span style="font-weight:400;color:#807973">— — — v8-R4</span></h3>
+<div style="font-size:12px;color:#807973;margin-bottom:8px"> &middot; <strong>3/5 pass (60%)</strong></div>
+<table style="max-width:900px">
+<thead>
+<tr>
+  <th style="width:50px">Chunk</th>
+  <th style="width:50px">Ver</th>
+  <th style="width:60px">Time</th>
+  <th style="width:60px">Result</th>
+  <th style="width:120px">Issue</th>
+  <th>Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>c09</td>
+  <td>—</td>
+  <td>—</td>
+  <td><span class="cell-error">FAIL</span></td>
+  <td><span class="cell-error">CUTOFF</span></td>
+  <td><span style="color:#33302E"></span></td>
+</tr>
+<tr>
+  <td>c14</td>
+  <td>—</td>
+  <td>—</td>
+  <td><span class="cell-error">FAIL</span></td>
+  <td><span class="cell-warn">ECHO</span></td>
+  <td><span style="color:#33302E"></span></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c19</td>
+  <td>—</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c27</td>
+  <td>—</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr style="opacity:0.5">
+  <td>c42</td>
+  <td>—</td>
+  <td>—</td>
+  <td><span class="cell-ok">PASS</span></td>
+  <td></td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+<hr class="section-sep">
+<h2>ASMR / Ambient Tracks</h2>
+<table id="asmrTable">
+<thead>
+<tr>
+  <th>Name</th>
+  <th>Filename</th>
+  <th>Local Size</th>
+  <th>Local Date</th>
+  <th>R2 Status</th>
+  <th>Local=R2?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>birds</td>
+  <td>asmr-birds.mp3</td>
+  <td>54.9 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>bowls</td>
+  <td>asmr-bowls.mp3</td>
+  <td>54.9 MB</td>
+  <td>12 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>cabin</td>
+  <td>asmr-cabin.mp3</td>
+  <td>54.9 MB</td>
+  <td>12 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>cafe</td>
+  <td>asmr-cafe.mp3</td>
+  <td>54.9 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>cave</td>
+  <td>asmr-cave.mp3</td>
+  <td>54.9 MB</td>
+  <td>12 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>chimes</td>
+  <td>asmr-chimes.mp3</td>
+  <td>54.9 MB</td>
+  <td>12 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>court</td>
+  <td>asmr-court.mp3</td>
+  <td>113.4 MB</td>
+  <td>10 Feb 26</td>
+  <td><span class="r2-200">200</span> (113.4 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>court-1hr</td>
+  <td>asmr-court-1hr.mp3</td>
+  <td>113.7 MB</td>
+  <td>10 Feb 26</td>
+  <td><span class="r2-404">404</span></td>
+  <td><span class="cell-info">—</span></td>
+</tr>
+<tr>
+  <td>fan</td>
+  <td>asmr-fan.mp3</td>
+  <td>54.9 MB</td>
+  <td>12 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>fire</td>
+  <td>asmr-fire.mp3</td>
+  <td>54.9 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>forest</td>
+  <td>asmr-forest.mp3</td>
+  <td>54.9 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>fountain</td>
+  <td>asmr-fountain.mp3</td>
+  <td>54.9 MB</td>
+  <td>12 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>garden</td>
+  <td>asmr-garden.mp3</td>
+  <td>54.9 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>grace</td>
+  <td>asmr-grace.mp3</td>
+  <td>54.9 MB</td>
+  <td>12 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>harbor</td>
+  <td>asmr-harbor.mp3</td>
+  <td>54.9 MB</td>
+  <td>12 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>keyboard</td>
+  <td>asmr-keyboard.mp3</td>
+  <td>54.9 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>leaves</td>
+  <td>asmr-leaves.mp3</td>
+  <td>54.9 MB</td>
+  <td>12 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>library</td>
+  <td>asmr-library.mp3</td>
+  <td>54.9 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>meadow</td>
+  <td>asmr-meadow.mp3</td>
+  <td>54.9 MB</td>
+  <td>12 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>night</td>
+  <td>asmr-night.mp3</td>
+  <td>54.9 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>ocean</td>
+  <td>asmr-ocean.mp3</td>
+  <td>54.9 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>rain</td>
+  <td>asmr-rain.mp3</td>
+  <td>54.9 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>rain-tent</td>
+  <td>asmr-rain-tent.mp3</td>
+  <td>54.9 MB</td>
+  <td>12 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>river</td>
+  <td>asmr-river.mp3</td>
+  <td>54.9 MB</td>
+  <td>12 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>snowfall</td>
+  <td>asmr-snowfall.mp3</td>
+  <td>54.9 MB</td>
+  <td>12 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>stream</td>
+  <td>asmr-stream.mp3</td>
+  <td>54.9 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>thunder</td>
+  <td>asmr-thunder.mp3</td>
+  <td>54.9 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>train</td>
+  <td>asmr-train.mp3</td>
+  <td>54.9 MB</td>
+  <td>12 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>waterfall</td>
+  <td>asmr-waterfall.mp3</td>
+  <td>54.9 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>waves</td>
+  <td>asmr-waves.mp3</td>
+  <td>54.9 MB</td>
+  <td>12 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+<tr>
+  <td>wind</td>
+  <td>asmr-wind.mp3</td>
+  <td>54.9 MB</td>
+  <td>12 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+  <td><span class="match">match</span></td>
+</tr>
+</tbody>
+</table>
+<hr class="section-sep">
+<h2>Sounds (content/sounds/)</h2>
+<table>
+<thead>
+<tr>
+  <th>Filename</th>
+  <th>Local Size</th>
+  <th>Local Date</th>
+  <th>R2 Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>birds.mp3</td>
+  <td>4.8 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (4.8 MB)</td>
+</tr>
+<tr>
+  <td>cafe.mp3</td>
+  <td>2.7 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (2.7 MB)</td>
+</tr>
+<tr>
+  <td>chimes.mp3</td>
+  <td>1.1 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (691.5 KB)</td>
+</tr>
+<tr>
+  <td>fire.mp3</td>
+  <td>1.8 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (1.8 MB)</td>
+</tr>
+<tr>
+  <td>forest.mp3</td>
+  <td>971.9 KB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (971.9 KB)</td>
+</tr>
+<tr>
+  <td>garden.mp3</td>
+  <td>2.5 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (2.5 MB)</td>
+</tr>
+<tr>
+  <td>keyboard.mp3</td>
+  <td>618.4 KB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (54.9 MB)</td>
+</tr>
+<tr>
+  <td>library.mp3</td>
+  <td>988.2 KB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (988.2 KB)</td>
+</tr>
+<tr>
+  <td>night.mp3</td>
+  <td>2.1 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (2.1 MB)</td>
+</tr>
+<tr>
+  <td>ocean-breeze.mp3</td>
+  <td>1.1 MB</td>
+  <td>03 Feb 26</td>
+  <td><span class="r2-200">200</span> (1.1 MB)</td>
+</tr>
+<tr>
+  <td>ocean.mp3</td>
+  <td>2.8 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (2.8 MB)</td>
+</tr>
+<tr>
+  <td>piano.mp3</td>
+  <td>6.1 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (6.1 MB)</td>
+</tr>
+<tr>
+  <td>potions.mp3</td>
+  <td>1.8 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (1.8 MB)</td>
+</tr>
+<tr>
+  <td>rain-cabin.mp3</td>
+  <td>1.2 MB</td>
+  <td>03 Feb 26</td>
+  <td><span class="r2-200">200</span> (1.2 MB)</td>
+</tr>
+<tr>
+  <td>rain-campervan.mp3</td>
+  <td>21.5 MB</td>
+  <td>03 Feb 26</td>
+  <td><span class="r2-200">200</span> (21.5 MB)</td>
+</tr>
+<tr>
+  <td>rain.mp3</td>
+  <td>2.7 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (2.7 MB)</td>
+</tr>
+<tr>
+  <td>rainy-morning.mp3</td>
+  <td>2.1 MB</td>
+  <td>03 Feb 26</td>
+  <td><span class="r2-200">200</span> (2.1 MB)</td>
+</tr>
+<tr>
+  <td>snow.mp3</td>
+  <td>3.0 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (3.0 MB)</td>
+</tr>
+<tr>
+  <td>storm-fire.mp3</td>
+  <td>576.5 KB</td>
+  <td>03 Feb 26</td>
+  <td><span class="r2-200">200</span> (576.5 KB)</td>
+</tr>
+<tr>
+  <td>stream.mp3</td>
+  <td>4.1 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (4.1 MB)</td>
+</tr>
+<tr>
+  <td>temple.mp3</td>
+  <td>4.7 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (4.7 MB)</td>
+</tr>
+<tr>
+  <td>thunder.mp3</td>
+  <td>745.6 KB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (745.6 KB)</td>
+</tr>
+<tr>
+  <td>train.mp3</td>
+  <td>984.5 KB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (984.5 KB)</td>
+</tr>
+<tr>
+  <td>waterfall.mp3</td>
+  <td>1.9 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (1.9 MB)</td>
+</tr>
+<tr>
+  <td>waves.mp3</td>
+  <td>1.8 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (1.8 MB)</td>
+</tr>
+<tr>
+  <td>white-noise.mp3</td>
+  <td>1.6 MB</td>
+  <td>12 Feb 26</td>
+  <td><span class="r2-200">200</span> (1.6 MB)</td>
+</tr>
+<tr>
+  <td>whitenoise.mp3</td>
+  <td>1.6 MB</td>
+  <td>03 Feb 26</td>
+  <td><span class="r2-200">200</span> (1.6 MB)</td>
+</tr>
+<tr>
+  <td>wind.mp3</td>
+  <td>1.4 MB</td>
+  <td>09 Feb 26</td>
+  <td><span class="r2-200">200</span> (920.5 KB)</td>
+</tr>
+<tr>
+  <td>woodland.mp3</td>
+  <td>1.1 MB</td>
+  <td>03 Feb 26</td>
+  <td><span class="r2-200">200</span> (1.1 MB)</td>
+</tr>
+</tbody></table>
+
+<script>
+let sortCol = 0, sortAsc = true;
+
+function sortTable(col, type) {
+  const table = document.getElementById('mainTable');
+  const tbody = table.tBodies[0];
+  const rows = Array.from(tbody.rows);
+  if (col === sortCol) sortAsc = !sortAsc;
+  else { sortCol = col; sortAsc = true; }
+
+  rows.sort((a, b) => {
+    let va = a.cells[col].textContent.trim();
+    let vb = b.cells[col].textContent.trim();
+    if (type === 'num') { va = parseInt(va) || 0; vb = parseInt(vb) || 0; }
+    else { va = va.toLowerCase(); vb = vb.toLowerCase(); }
+    if (va < vb) return sortAsc ? -1 : 1;
+    if (va > vb) return sortAsc ? 1 : -1;
+    return 0;
+  });
+
+  rows.forEach(r => tbody.appendChild(r));
+
+  // Update arrows
+  table.querySelectorAll('th .arrow').forEach(a => a.textContent = '');
+  const th = table.querySelector(`th[data-col="${col}"] .arrow`);
+  if (th) th.textContent = sortAsc ? ' \u25B2' : ' \u25BC';
+}
+
+function filterTable() {
+  const stage = document.getElementById('stageFilter').value;
+  const cat = document.getElementById('catFilter').value;
+  const issue = document.getElementById('issueFilter').value;
+  const flag = document.getElementById('flagFilter').value;
+  const search = document.getElementById('searchBox').value.toLowerCase();
+  const rows = document.querySelectorAll('#mainTable tbody tr');
+
+  rows.forEach(row => {
+    let show = true;
+    if (stage && row.dataset.stage !== stage) show = false;
+    if (cat && row.dataset.cat !== cat) show = false;
+    if (flag && row.dataset.flag !== flag) show = false;
+    if (issue) {
+      const ri = row.dataset.issues;
+      if (issue === 'has-error' && ri !== 'error') show = false;
+      if (issue === 'has-warn' && ri !== 'warn' && ri !== 'error') show = false;
+      if (issue === 'has-issues' && ri === 'none') show = false;
+      if (issue === 'no-issues' && ri !== 'none') show = false;
+    }
+    if (search && !row.dataset.search.includes(search)) show = false;
+    row.style.display = show ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>

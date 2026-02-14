@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audio Report &mdash; 14 Feb 2026</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#FFF1E5; color:#33302E; font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; padding:24px; max-width:960px; margin:0 auto; }
+
+h1 { font-size:28px; font-weight:800; margin-bottom:4px; }
+.sub { color:#807973; font-size:13px; margin-bottom:28px; }
+
+/* === Big progress bar === */
+.progress-wrap { background:#fff; border:1px solid #E0CDBF; border-radius:16px; padding:24px; margin-bottom:28px; }
+.progress-title { font-size:18px; font-weight:700; margin-bottom:4px; }
+.progress-subtitle { font-size:13px; color:#807973; margin-bottom:14px; }
+.bar-outer { background:#F0E6DC; border-radius:12px; height:40px; overflow:hidden; display:flex; }
+.bar-done { background:linear-gradient(135deg, #22C55E, #16A34A); height:100%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:15px; min-width:40px; transition:width 0.5s; }
+.bar-working { background:linear-gradient(135deg, #FBBF24, #F59E0B); height:100%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:15px; min-width:40px; transition:width 0.5s; }
+.bar-todo { height:100%; display:flex; align-items:center; justify-content:center; color:#9CA3AF; font-weight:700; font-size:14px; min-width:30px; }
+.bar-labels { display:flex; justify-content:space-between; margin-top:10px; font-size:13px; }
+.bar-labels span { display:flex; align-items:center; gap:5px; }
+.dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
+
+/* === Three big number cards === */
+.three-cards { display:flex; gap:16px; margin-bottom:28px; }
+.big-card { flex:1; background:#fff; border-radius:14px; padding:20px; text-align:center; border:2px solid #E0CDBF; }
+.big-card-emoji { font-size:36px; line-height:1; }
+.big-card-num { font-size:48px; font-weight:900; line-height:1.1; }
+.big-card-label { font-size:14px; font-weight:600; margin-top:4px; }
+.big-card-detail { font-size:11px; color:#807973; margin-top:2px; }
+.bc-done { border-color:#A3D9A5; }
+.bc-done .big-card-num { color:#16A34A; }
+.bc-working { border-color:#FCD34D; }
+.bc-working .big-card-num { color:#D97706; }
+.bc-todo { border-color:#D1D5DB; }
+.bc-todo .big-card-num { color:#9CA3AF; }
+
+/* === Pipeline (how it works) === */
+.pipeline-box { background:#fff; border:1px solid #E0CDBF; border-radius:14px; padding:20px; margin-bottom:28px; text-align:center; }
+.pipeline-box h2 { font-size:15px; font-weight:700; margin-bottom:14px; }
+.pipe { display:flex; align-items:center; justify-content:center; gap:0; flex-wrap:wrap; }
+.pipe-step { display:flex; flex-direction:column; align-items:center; padding:8px 10px; }
+.pipe-step .pe { font-size:28px; }
+.pipe-step .pl { font-size:11px; font-weight:700; margin-top:2px; }
+.pipe-arrow { font-size:22px; color:#D1D5DB; }
+
+/* === Section groups === */
+.section { margin-bottom:28px; }
+.section-head { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.section-head h2 { font-size:18px; font-weight:700; }
+.section-count { background:#F0E6DC; color:#807973; font-size:12px; font-weight:700; padding:2px 10px; border-radius:10px; }
+
+/* === Session tiles === */
+.tiles { display:flex; flex-wrap:wrap; gap:10px; }
+.tile { background:#fff; border:2px solid #E0CDBF; border-radius:10px; padding:10px 14px; width:calc(50% - 5px); display:flex; align-items:flex-start; gap:10px; transition:border-color 0.2s; }
+.tile:hover { border-color:#B0A89F; }
+.tile-emoji { font-size:24px; flex-shrink:0; padding-top:1px; }
+.tile-body { flex:1; min-width:0; }
+.tile-name { font-size:14px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tile-num { color:#B0A89F; font-size:12px; font-weight:600; }
+.tile-stage { font-size:11px; color:#807973; margin-top:1px; }
+.tile-issue { font-size:11px; margin-top:3px; display:flex; align-items:center; gap:4px; }
+.tile-issue .idot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.idot-error { background:#DC2626; }
+.idot-warn { background:#F59E0B; }
+.idot-info { background:#D1D5DB; }
+.tile-ok { font-size:11px; color:#16A34A; font-weight:600; margin-top:3px; }
+
+.tile-done { border-color:#A3D9A5; }
+.tile-done.has-problem { border-color:#FCD34D; }
+.tile-working { border-color:#FCD34D; }
+.tile-todo { border-color:#D1D5DB; }
+
+/* === Footer === */
+.foot { text-align:center; color:#B0A89F; font-size:11px; padding:16px 0; }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .three-cards { flex-direction:column; }
+  .tile { width:100%; }
+}
+</style>
+</head>
+<body>
+
+<h1>Audio Report</h1>
+<div class="sub">14 Feb 2026 &middot; 60 sessions total</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-wrap">
+  <div class="progress-title">88% done</div>
+  <div class="progress-subtitle">53 finished, 4 being worked on, 3 still to do</div>
+  <div class="bar-outer">
+    <div class="bar-done" style="width:88.3%">53</div>
+    <div class="bar-working" style="width:6.7%">4</div>
+    <div class="bar-todo" style="width:5.0%">3</div>
+  </div>
+  <div class="bar-labels">
+    <span><span class="dot" style="background:#16A34A"></span> Done</span>
+    <span><span class="dot" style="background:#F59E0B"></span> Working on it</span>
+    <span><span class="dot" style="background:#D1D5DB"></span> To do</span>
+  </div>
+</div>
+
+<!-- THREE BIG CARDS -->
+<div class="three-cards">
+  <div class="big-card bc-done">
+    <div class="big-card-emoji">&#x2705;</div>
+    <div class="big-card-num">53</div>
+    <div class="big-card-label">Done</div>
+    <div class="big-card-detail">19 perfect, 34 have small issues</div>
+  </div>
+  <div class="big-card bc-working">
+    <div class="big-card-emoji">&#x1F528;</div>
+    <div class="big-card-num">4</div>
+    <div class="big-card-label">Working on it</div>
+    <div class="big-card-detail">2 almost done, 2 old one</div>
+  </div>
+  <div class="big-card bc-todo">
+    <div class="big-card-emoji">&#x1F4DD;</div>
+    <div class="big-card-num">3</div>
+    <div class="big-card-label">To do</div>
+    <div class="big-card-detail">Script written, nothing else yet</div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="pipeline-box">
+<h2>How each session gets made</h2>
+<div class="pipe">
+  <div class="pipe-step"><div class="pe">&#x1F4DD;</div><div class="pl">Write it</div></div>
+  <span class="pipe-arrow">&#x27A1;&#xFE0F;</span>
+  <div class="pipe-step"><div class="pe">&#x1F399;&#xFE0F;</div><div class="pl">Record it</div></div>
+  <span class="pipe-arrow">&#x27A1;&#xFE0F;</span>
+  <div class="pipe-step"><div class="pe">&#x1F44D;</div><div class="pl">Pick best</div></div>
+  <span class="pipe-arrow">&#x27A1;&#xFE0F;</span>
+  <div class="pipe-step"><div class="pe">&#x1F3B5;</div><div class="pl">Build it</div></div>
+  <span class="pipe-arrow">&#x27A1;&#xFE0F;</span>
+  <div class="pipe-step"><div class="pe">&#x1F680;</div><div class="pl">Upload</div></div>
+  <span class="pipe-arrow">&#x27A1;&#xFE0F;</span>
+  <div class="pipe-step"><div class="pe">&#x2705;</div><div class="pl">Live!</div></div>
+</div>
+</div>
+
+<div class="section">
+  <div class="section-head">
+    <h2>&#x2705; Done</h2>
+    <span class="section-count">53</span>
+  </div>
+  <div class="tiles">
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">1.</span> Morning Meditation</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Local file doesn't match website</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">3.</span> Breathing for Anxiety</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">9.</span> Rainfall Sleep Journey</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">18.</span> Calm in Three Minutes</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">19.</span> Release and Restore</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">23.</span> The Calm Reset</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">25.</span> Introduction to Mindfulness</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">32.</span> Observing Emotions</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">36.</span> Loving-Kindness Introduction</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done">
+      <div class="tile-emoji">&#x2705;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">38.</span> Seven-Day Mindfulness — Day 1: Arriving</div>
+        <div class="tile-ok">Approved &#x2714;&#xFE0F;</div>
+      </div>
+    </div>
+    <div class="tile tile-done">
+      <div class="tile-emoji">&#x2705;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">39.</span> Seven-Day Mindfulness — Day 2: The Breath as Anchor</div>
+        <div class="tile-ok">Approved &#x2714;&#xFE0F;</div>
+      </div>
+    </div>
+    <div class="tile tile-done">
+      <div class="tile-emoji">&#x2705;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">40.</span> Seven-Day Mindfulness — Day 3: Body Awareness</div>
+        <div class="tile-ok">Approved &#x2714;&#xFE0F;</div>
+      </div>
+    </div>
+    <div class="tile tile-done">
+      <div class="tile-emoji">&#x2705;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">41.</span> Seven-Day Mindfulness — Day 4: Working with Thoughts</div>
+        <div class="tile-ok">Approved &#x2714;&#xFE0F;</div>
+      </div>
+    </div>
+    <div class="tile tile-done">
+      <div class="tile-emoji">&#x2705;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">42.</span> Seven-Day Mindfulness — Day 5: Sounds and Environment</div>
+        <div class="tile-ok">Approved &#x2714;&#xFE0F;</div>
+      </div>
+    </div>
+    <div class="tile tile-done">
+      <div class="tile-emoji">&#x2705;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">43.</span> Seven-Day Mindfulness — Day 6: Emotions and Acceptance</div>
+        <div class="tile-ok">Approved &#x2714;&#xFE0F;</div>
+      </div>
+    </div>
+    <div class="tile tile-done">
+      <div class="tile-emoji">&#x2705;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">43.</span> Non-Dual Awareness</div>
+        <div class="tile-ok">Approved &#x2714;&#xFE0F;</div>
+      </div>
+    </div>
+    <div class="tile tile-done">
+      <div class="tile-emoji">&#x2705;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">44.</span> Seven-Day Mindfulness — Day 7: Open Awareness</div>
+        <div class="tile-ok">Approved &#x2714;&#xFE0F;</div>
+      </div>
+    </div>
+    <div class="tile tile-done">
+      <div class="tile-emoji">&#x2705;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">52.</span> The Court of Your Mind</div>
+        <div class="tile-ok">Approved &#x2714;&#xFE0F;</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">53.</span> The Gardener's Almanac</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">54.</span> The Slow Train North</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">55.</span> The Bookshop at the End of the Lane</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">56.</span> The Lighthouse Keeper's Log</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">57.</span> The Instrument</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">58.</span> The Anchor</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">59.</span> The Map</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">60.</span> The Stream</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+2 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">61.</span> The Soundscape</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">62.</span> The Pause</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+2 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">63.</span> The Review</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">64.</span> The Weather System</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">65.</span> The Narrator</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">66.</span> The Stories We Carry</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">67.</span> The Body Under Pressure</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">68.</span> The Difficult Guest</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">69.</span> The Walk</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">70.</span> The Middle Ground</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">71.</span> The Compassion Turn</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">72.</span> The Forgiveness Practice</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">73.</span> The Space Between</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">74.</span> The Difficult Conversation</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">75.</span> The Gratitude Inventory</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">76.</span> The Long Sit</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done has-problem">
+      <div class="tile-emoji">&#x26A0;&#xFE0F;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">77.</span> The Return</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-done">
+      <div class="tile-emoji">&#x2705;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">78.</span> The Thought Train</div>
+        <div class="tile-ok">Approved &#x2714;&#xFE0F;</div>
+      </div>
+    </div>
+    <div class="tile tile-done">
+      <div class="tile-emoji">&#x2705;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">79.</span> The Evidence Log</div>
+        <div class="tile-ok">Approved &#x2714;&#xFE0F;</div>
+      </div>
+    </div>
+    <div class="tile tile-done">
+      <div class="tile-emoji">&#x2705;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">80.</span> One Small Thing</div>
+        <div class="tile-ok">Approved &#x2714;&#xFE0F;</div>
+      </div>
+    </div>
+    <div class="tile tile-done">
+      <div class="tile-emoji">&#x2705;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">81.</span> The Worry Window</div>
+        <div class="tile-ok">Approved &#x2714;&#xFE0F;</div>
+      </div>
+    </div>
+    <div class="tile tile-done">
+      <div class="tile-emoji">&#x2705;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">82.</span> Your First Meditation</div>
+        <div class="tile-ok">Approved &#x2714;&#xFE0F;</div>
+      </div>
+    </div>
+    <div class="tile tile-done">
+      <div class="tile-emoji">&#x2705;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">83.</span> Five Minute Reset</div>
+        <div class="tile-ok">Approved &#x2714;&#xFE0F;</div>
+      </div>
+    </div>
+    <div class="tile tile-done">
+      <div class="tile-emoji">&#x2705;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">84.</span> Anxiety Unravelled</div>
+        <div class="tile-ok">Approved &#x2714;&#xFE0F;</div>
+      </div>
+    </div>
+    <div class="tile tile-done">
+      <div class="tile-emoji">&#x2705;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">85.</span> Counting Down to Sleep</div>
+        <div class="tile-ok">Approved &#x2714;&#xFE0F;</div>
+      </div>
+    </div>
+    <div class="tile tile-done">
+      <div class="tile-emoji">&#x2705;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">86.</span> Deep Sleep</div>
+        <div class="tile-ok">Approved &#x2714;&#xFE0F;</div>
+      </div>
+    </div>
+    <div class="tile tile-done">
+      <div class="tile-emoji">&#x2705;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">87.</span> Ocean Voyage</div>
+        <div class="tile-ok">Approved &#x2714;&#xFE0F;</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-head">
+    <h2>&#x1F528; Working on it</h2>
+    <span class="section-count">4</span>
+  </div>
+  <div class="tiles">
+    <div class="tile tile-working">
+      <div class="tile-emoji">&#x1F4E6;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">1.</span> 01-morning-meditation-pre-fix</div>
+        <div class="tile-stage">Almost done</div>
+      </div>
+    </div>
+    <div class="tile tile-working has-problem">
+      <div class="tile-emoji">&#x1F504;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">36.</span> Loving-Kindness Introduction</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-working has-problem">
+      <div class="tile-emoji">&#x1F504;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">36.</span> Loving-Kindness Introduction</div>
+        <div class="tile-issue"><span class="idot idot-warn"></span> Music starts too suddenly</div><div class="tile-issue"><span class="idot idot-warn"></span> Music ends too suddenly</div><div class="tile-issue" style="color:#B0A89F;">+1 more</div>
+      </div>
+    </div>
+    <div class="tile tile-working">
+      <div class="tile-emoji">&#x1F4E6;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">53.</span> 53-the-gardeners-almanac-backup</div>
+        <div class="tile-stage">Almost done</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-head">
+    <h2>&#x1F4DD; To do</h2>
+    <span class="section-count">3</span>
+  </div>
+  <div class="tiles">
+    <div class="tile tile-todo">
+      <div class="tile-emoji">&#x1F4DD;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">88.</span> The Tabletop</div>
+        <div class="tile-stage">Not started</div>
+      </div>
+    </div>
+    <div class="tile tile-todo">
+      <div class="tile-emoji">&#x1F4DD;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">89.</span> The Downward Arrow</div>
+        <div class="tile-stage">Not started</div>
+      </div>
+    </div>
+    <div class="tile tile-todo">
+      <div class="tile-emoji">&#x1F4DD;</div>
+      <div class="tile-body">
+        <div class="tile-name"><span class="tile-num">90.</span> Rewriting the Rule</div>
+        <div class="tile-stage">Not started</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="foot">Generated 14 Feb 2026 at 07:09 in 1.1s</div>
+
+</body>
+</html>
