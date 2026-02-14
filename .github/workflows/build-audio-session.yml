@@ -15,7 +15,6 @@ on:
         options:
           - fish
           - elevenlabs
-          - resemble
       mode:
         description: 'Build mode'
         required: true

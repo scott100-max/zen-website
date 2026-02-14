@@ -15,7 +15,6 @@ on:
         options:
           - fish
           - elevenlabs
-          - resemble
       mode:
         description: 'Build mode'
         required: true
@@ -68,7 +67,6 @@ jobs:
         run: |
           cat <<EOF > .env
           FISH_API_KEY=${{ secrets.FISH_API_KEY }}
-          RESEMBLE_API_KEY=${{ secrets.RESEMBLE_API_KEY }}
           ELEVENLABS_API_KEY=${{ secrets.ELEVENLABS_API_KEY }}
           RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
           EOF
@@ -104,7 +102,11 @@ jobs:
           AMBIENT_DB=$(head -10 content/scripts/${{ inputs.session }}.txt | grep -i "^Ambient-dB:" | sed 's/Ambient-dB: *//i')
           AMBIENT_DB=${AMBIENT_DB:--14}
 
-          echo "Mixing: ambient=$AMBIENT @ ${AMBIENT_DB}dB, fade_out_start=$FADE_OUT_START"
+          # Read ambient fade-in from script metadata (default 30s per PROJECT-BIBLE)
+          AMBIENT_FADE_IN=$(head -10 content/scripts/${{ inputs.session }}.txt | grep -i "^Ambient-Fade-In:" | sed 's/Ambient-Fade-In: *//i')
+          AMBIENT_FADE_IN=${AMBIENT_FADE_IN:-30}
+
+          echo "Mixing: ambient=$AMBIENT @ ${AMBIENT_DB}dB, fade_in=${AMBIENT_FADE_IN}s, fade_out_start=$FADE_OUT_START"
 
           # Mix ambient
           mkdir -p content/audio-free
@@ -112,7 +114,7 @@ jobs:
             -i content/audio-free/raw/${{ inputs.session }}.mp3 \
             -i content/audio/ambient/${AMBIENT}.mp3 \
             -filter_complex \
-              "[1:a]volume=${AMBIENT_DB}dB,afade=t=in:st=0:d=15,afade=t=out:st=${FADE_OUT_START}:d=8[amb];[0:a][amb]amix=inputs=2:duration=first:dropout_transition=2:normalize=0" \
+              "[1:a]volume=${AMBIENT_DB}dB,afade=t=in:st=0:d=${AMBIENT_FADE_IN},afade=t=out:st=${FADE_OUT_START}:d=8[amb];[0:a][amb]amix=inputs=2:duration=first:dropout_transition=2:normalize=0" \
             -b:a 192k \
             content/audio-free/${{ inputs.session }}.mp3
 
