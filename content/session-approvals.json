@@ -1,6 +1,218 @@
 {
   "01-morning-meditation": {
     "date": "2026-02-13",
-    "note": "Rebuilt and approved. QA flags are from automated checks on the current build — manually verified as good."
+    "note": "Rebuilt and approved. QA flags are from automated checks on the current build \u2014 manually verified as good."
+  },
+  "03-breathing-for-anxiety": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "09-rainfall-sleep-journey": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "18-calm-in-three-minutes": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "19-release-and-restore": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "23-the-calm-reset": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "25-introduction-to-mindfulness": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "32-observing-emotions": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "36-loving-kindness-intro-v3": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "38-seven-day-mindfulness-day1": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "39-seven-day-mindfulness-day2": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "40-seven-day-mindfulness-day3": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "41-seven-day-mindfulness-day4": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "42-seven-day-mindfulness-day5": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "43-non-dual-awareness": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "43-seven-day-mindfulness-day6": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "44-seven-day-mindfulness-day7": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "52-the-court-of-your-mind": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "53-the-gardeners-almanac": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "54-the-slow-train-north": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "55-the-bookshop-at-the-end-of-the-lane": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "56-the-lighthouse-keepers-log": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "57-21day-mindfulness-day01": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "58-21day-mindfulness-day02": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "59-21day-mindfulness-day03": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "60-21day-mindfulness-day04": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "61-21day-mindfulness-day05": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "62-21day-mindfulness-day06": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "63-21day-mindfulness-day07": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "64-21day-mindfulness-day08": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "65-21day-mindfulness-day09": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "66-21day-mindfulness-day10": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "67-21day-mindfulness-day11": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "68-21day-mindfulness-day12": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "69-21day-mindfulness-day13": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "70-21day-mindfulness-day14": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "71-21day-mindfulness-day15": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "72-21day-mindfulness-day16": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "73-21day-mindfulness-day17": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "74-21day-mindfulness-day18": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "75-21day-mindfulness-day19": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "76-21day-mindfulness-day20": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "77-21day-mindfulness-day21": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "78-cbt-thought-train": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "79-cbt-evidence-log": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "80-cbt-one-small-thing": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "81-cbt-worry-window": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "82-your-first-meditation": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "83-five-minute-reset": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "84-anxiety-unravelled": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "85-counting-down-to-sleep": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "86-deep-sleep": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "87-ocean-voyage": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
+  },
+  "narrator-welcome": {
+    "date": "2026-02-14",
+    "note": "Night build \u2014 auto-picked, assembled, deployed, MD5-verified"
   }
 }
