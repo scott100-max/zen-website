@@ -20,6 +20,8 @@ import sys
 from pathlib import Path
 
 VAULT_DIR = Path(__file__).parent.parent / "content" / "audio-free" / "vault"
+PRIORITY_FILE = Path(__file__).parent.parent / "vault-topup-priority.json"
+STATE_FILE = Path(__file__).parent.parent / "vault-topup-state.json"
 
 # Import vault-builder
 _vb_spec = importlib.util.spec_from_file_location(
@@ -127,20 +129,45 @@ async def topup_all(target, dry_run=False, session_filter=None, no_upload=False)
         print("\n  All sessions already at target. Nothing to do.")
         return
 
-    # Sort by fewest chunks first (quick wins first)
-    plan.sort(key=lambda p: p['total_chunks'])
-
     print(f"\n  Starting generation...\n")
 
     completed = 0
-    for item in plan:
+    processed_ids = set()
+
+    # Load any previously completed sessions (resume support)
+    if STATE_FILE.exists():
+        try:
+            state = json.loads(STATE_FILE.read_text())
+            processed_ids = set(state.get("completed", []))
+            if processed_ids:
+                print(f"  Resuming — {len(processed_ids)} sessions already done")
+        except Exception:
+            pass
+
+    while True:
+        # Hot-reload priority file before each session
+        remaining = [p for p in plan if p['session_id'] not in processed_ids]
+        if not remaining:
+            break
+
+        remaining = _apply_priority(remaining)
+
+        item = remaining[0]
         session_id = item['session_id']
         chunks = item['chunks']
         count = item['max_needed']
 
+        done_count = len(processed_ids)
+        total_count = len(plan)
+
         print(f"\n{'='*70}")
-        print(f"  [{completed + 1}/{len(plan)}] {session_id}")
+        print(f"  [{done_count + 1}/{total_count}] {session_id}")
         print(f"  Chunks: {len(chunks)} | Adding: +{count}/chunk")
+
+        # Show what's next in queue
+        upcoming = [p['session_id'] for p in remaining[1:4]]
+        if upcoming:
+            print(f"  Queue: {' → '.join(upcoming)}")
         print(f"{'='*70}")
 
         try:
@@ -148,16 +175,55 @@ async def topup_all(target, dry_run=False, session_filter=None, no_upload=False)
             if result:
                 print(f"  Done: +{result['generated']} candidates, "
                       f"{result['uploaded']} uploaded, {result['errors']} errors")
-            completed += 1
         except Exception as e:
             print(f"  ERROR: {e}")
             print(f"  Continuing to next session...")
-            completed += 1
+
+        processed_ids.add(session_id)
+        completed += 1
+
+        # Save state for resume
+        _save_state(processed_ids)
 
     print(f"\n{'='*70}")
     print(f"  TOP-UP COMPLETE")
     print(f"  Sessions processed: {completed}/{len(plan)}")
     print(f"{'='*70}")
+
+    # Clean up state file
+    if STATE_FILE.exists():
+        STATE_FILE.unlink()
+
+
+def _apply_priority(plan):
+    """Re-sort plan based on hot-reloaded priority file."""
+    if not PRIORITY_FILE.exists():
+        # Default: fewest chunks first
+        return sorted(plan, key=lambda p: p['total_chunks'])
+
+    try:
+        priority = json.loads(PRIORITY_FILE.read_text())
+        priority_list = priority if isinstance(priority, list) else priority.get("order", [])
+
+        # Build priority index — lower = higher priority
+        priority_idx = {name: i for i, name in enumerate(priority_list)}
+
+        def sort_key(p):
+            sid = p['session_id']
+            if sid in priority_idx:
+                return (0, priority_idx[sid])  # Priority sessions first, in order
+            return (1, p['total_chunks'])  # Then default sort
+
+        return sorted(plan, key=sort_key)
+    except Exception:
+        return sorted(plan, key=lambda p: p['total_chunks'])
+
+
+def _save_state(processed_ids):
+    """Save progress state for resume."""
+    STATE_FILE.write_text(json.dumps({
+        "completed": sorted(processed_ids),
+    }, indent=2))
 
 
 if __name__ == '__main__':

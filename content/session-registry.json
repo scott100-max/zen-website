@@ -13,22 +13,22 @@
     },
     "09-rainfall-sleep-journey": {
       "ambient": "rain",
-      "category": "sleep",
+      "category": "mindfulness",
       "status": "deployed"
     },
     "18-calm-in-three-minutes": {
       "ambient": "rain",
-      "category": "stress",
+      "category": "mindfulness",
       "status": "deployed"
     },
     "19-release-and-restore": {
       "ambient": "garden",
-      "category": "stress",
+      "category": "mindfulness",
       "status": "deployed"
     },
     "23-the-calm-reset": {
       "ambient": "stream",
-      "category": "stress",
+      "category": "mindfulness",
       "status": "deployed"
     },
     "25-introduction-to-mindfulness": {
@@ -43,7 +43,7 @@
     },
     "36-loving-kindness-intro-v3": {
       "ambient": "grace",
-      "category": "mindfulness",
+      "category": "7day",
       "status": "deployed"
     },
     "38-seven-day-mindfulness-day1": {
@@ -70,12 +70,6 @@
       "ambient": "rain",
       "category": "7day",
       "status": "deployed"
-    },
-    "43-seven-day-mindfulness-day6": {
-      "ambient": "grace",
-      "category": "7day",
-      "status": "deployed",
-      "_note": "session ID 43 also used by non-dual-awareness"
     },
     "43-non-dual-awareness": {
       "ambient": "grace",
@@ -259,17 +253,17 @@
     },
     "85-counting-down-to-sleep": {
       "ambient": "grace",
-      "category": "sleep",
+      "category": "mindfulness",
       "status": "deployed"
     },
     "86-deep-sleep": {
       "ambient": "grace",
-      "category": "sleep",
+      "category": "mindfulness",
       "status": "deployed"
     },
     "87-ocean-voyage": {
       "ambient": "ocean",
-      "category": "sleep",
+      "category": "mindfulness",
       "status": "deployed"
     },
     "88-cbt-the-tabletop": {
