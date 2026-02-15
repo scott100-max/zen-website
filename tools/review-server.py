@@ -121,7 +121,8 @@ class Handler(BaseHTTPRequestHandler):
             ver = cand['version']
             q = round(cand.get('quality_score', 0) or 0, 3)
             dur = round(cand.get('duration', 0) or 0, 1)
-            src = f"c{chunk:02d}/c{chunk:02d}_v{ver:02d}.wav"
+            vfmt = f"{ver:02d}" if ver < 100 else f"{ver:03d}"
+            src = f"c{chunk:02d}/c{chunk:02d}_v{vfmt}.wav"
             options.append({'ver': ver, 'q': q, 'dur': dur, 'src': src})
 
         self.send_response(200)

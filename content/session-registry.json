@@ -297,7 +297,7 @@
       "title": "Narrator Welcome",
       "ambient": "grace",
       "category": "welcome",
-      "status": "building"
+      "status": "deployed"
     }
   }
 }
