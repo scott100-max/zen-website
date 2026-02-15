@@ -84,6 +84,17 @@ Always push directly to main. Do not create branches or PRs. The GitHub API is b
 |Web-only, iOS/Android coming soon|Available on all devices           |
 |New material unlocked each week  |New story every week               |
 
+## Vault Safety — STOP before building
+
+**Vaults are gitignored** (`content/audio-free/` is in `.gitignore`). You CANNOT determine vault existence from git — you MUST check the local filesystem.
+
+Before running `vault-builder.py` or generating TTS for ANY session:
+1. **Check `content/session-registry.json`** — if status is `"deployed"`, the session is DONE. Do NOT rebuild.
+2. **Check the local vault directory** — `ls content/audio-free/vault/{session}/` to see if candidates already exist.
+3. **Check for `live-picks.json`** in the vault dir — if it exists, a human has already picked candidates. Rebuilding would DESTROY those picks.
+
+**Sessions with completed human picks:** S91 (The Body Scan) — 49 chunks, 100 candidates each, fully hand-picked 15 Feb 2026.
+
 ## Style Notes
 
 - Latin phrase on all pages: "Salūs — Latin: health, safety, well-being"
