@@ -43,7 +43,7 @@ SAMPLE_RATE = 44100
 
 # Per-source ambient gain (Bible v4.6 Section 11)
 DEFAULT_AMBIENT_GAINS = {
-    'grace': -14,
+    'grace': -12,
     'rain-8hr': -19,
     'rain': -19,
     'garden-8hr': -19,

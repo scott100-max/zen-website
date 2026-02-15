@@ -49,7 +49,7 @@ SAMPLE_RATE = 44100
 # Per-source ambient gain (Bible v4.6 Section 11)
 # Note from catalogue: birds and garden need +5dB boost (already quiet)
 DEFAULT_AMBIENT_GAINS = {
-    'grace': -14,
+    'grace': -12,
     'rain': -19,
     'garden': -14,      # -19 + 5 boost
     'birds': -9,        # -14 + 5 boost
