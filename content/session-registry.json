@@ -292,6 +292,12 @@
       "status": "deployed",
       "duration": "1.6 min",
       "title": "Narrator Welcome"
+    },
+    "92-narrator-welcome": {
+      "title": "Narrator Welcome",
+      "ambient": "grace",
+      "category": "welcome",
+      "status": "building"
     }
   }
 }
