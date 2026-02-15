@@ -291,6 +291,13 @@
       "ambient": "grace",
       "category": "mindfulness",
       "status": "deployed"
+    },
+    "narrator-welcome": {
+      "ambient": "grace",
+      "category": "homepage",
+      "status": "deployed",
+      "duration": "1.6 min",
+      "title": "Narrator Welcome"
     }
   }
 }
