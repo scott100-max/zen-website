@@ -65,6 +65,8 @@ Always push directly to main. Do not create branches or PRs. The GitHub API is b
 |reference/                 |Competitor analysis, voice-clone experiments, branding, transcripts|
 |test/                      |Test files, audio reports, test HTML pages                         |
 |docs/                      |PROJECT-BIBLE, audio quality analysis, stripe links                |
+|content/audio-free/vault/  |TTS vault dirs per session (gitignored — local only, NOT in git)   |
+|content/audio-free/        |Final deployed MP3s per session (gitignored — local only)          |
 |content/audio/ambient/     |Ambient tracks (8-hour versions preferred)                         |
 |content/audio/marco-master/|Master reference WAVs and measurements                             |
 
@@ -87,6 +89,9 @@ Always push directly to main. Do not create branches or PRs. The GitHub API is b
 ## Vault Safety — STOP before building
 
 **Vaults are gitignored** (`content/audio-free/` is in `.gitignore`). You CANNOT determine vault existence from git — you MUST check the local filesystem.
+
+**Vault path:** `content/audio-free/vault/{session-slug}/` (e.g. `content/audio-free/vault/91-the-body-scan/`)
+Each vault contains: `c00/`, `c01/`, ... chunk dirs with WAV candidates, plus `chunks.json`, `live-picks.json`, `unified-review.html`.
 
 Before running `vault-builder.py` or generating TTS for ANY session:
 1. **Check `content/session-registry.json`** — if status is `"deployed"`, the session is DONE. Do NOT rebuild.
