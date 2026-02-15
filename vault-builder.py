@@ -50,10 +50,10 @@ MAX_CONCURRENT = 15  # Fish Elevated tier (auto at $100+ spend, was 5 Starter)
 
 # Candidate counts by character range
 CANDIDATE_COUNTS = [
-    (0,   50,  30),   # Chunk 0 openings — cold-start + pace filtering
-    (50,  100, 15),   # Short — Fish sweet spot
-    (100, 200, 20),   # Medium — more attempts needed
-    (200, 300, 25),   # Long — highest difficulty
+    (0,   50,  100),  # Chunk 0 openings — 100 candidates
+    (50,  100, 100),  # Short — 100 candidates
+    (100, 200, 100),  # Medium — 100 candidates
+    (200, 300, 100),  # Long — 100 candidates
 ]
 
 SCORE_FILTER_THRESHOLD = 0.30  # Below this = pre-filter flagged (kept, not deleted)
@@ -72,11 +72,11 @@ MARCO_MASTER_WAV = CHUNK0_REFERENCE_WAV if CHUNK0_REFERENCE_WAV.exists() else (
 def get_candidate_count(char_count, is_chunk_0=False):
     """Determine how many candidates to generate for a block."""
     if is_chunk_0 and char_count <= 60:
-        return 30
+        return 100
     for lo, hi, count in CANDIDATE_COUNTS:
         if lo <= char_count < hi:
             return count
-    return 25  # 300+ chars (shouldn't happen after preprocessing)
+    return 100  # 300+ chars (shouldn't happen after preprocessing)
 
 
 def preprocess_blocks(blocks):

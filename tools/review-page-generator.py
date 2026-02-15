@@ -52,7 +52,7 @@ def generate_review_page(session_id, run_id, picks_path=None, subtitle="", local
         ver = pick['picked']
         if ver is None:
             continue
-        text = pick.get('text', '')[:80]
+        text = pick.get('text', '')
         notes = pick.get('notes', '')
 
         # Skip trigger-flagged chunks (text-level defects, not reviewable)
@@ -228,6 +228,8 @@ function setVerdict(chunk, verdict) {{
 
   updateChunkDisplay(chunk);
   autoSave();
+  // Auto-advance after positive verdict
+  if (positive) {{ setTimeout(() => advanceToChunk(chunk + 1, true), 600); }}
 }}
 
 function setSeverity(chunk, sev) {{
@@ -237,6 +239,8 @@ function setSeverity(chunk, sev) {{
   el.querySelector('.sev-btn.' + sev).classList.add('active');
   updateChunkDisplay(chunk);
   autoSave();
+  // Auto-advance after severity set on defect
+  setTimeout(() => advanceToChunk(chunk + 1, true), 600);
 }}
 
 function updateChunkDisplay(chunk) {{
@@ -294,6 +298,9 @@ function autoSave() {{
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {{
     const data = buildExportData();
+    // Save to localStorage (survives refresh)
+    try {{ localStorage.setItem('verdicts-'+SESSION+'-'+RUN, JSON.stringify(data)); }} catch(e) {{}}
+    // Save to Worker API (backup)
     fetch('https://vault-picks.salus-mind.com/verdicts/' + SESSION, {{
       method: 'PUT',
       headers: {{'Authorization':'Bearer salus-vault-2026','Content-Type':'application/json'}},
@@ -301,9 +308,24 @@ function autoSave() {{
     }}).then(r=>r.json()).then(j=>{{
       document.getElementById('save-status').textContent = j.ok ? 'Saved '+new Date().toLocaleTimeString() : 'Save failed';
     }}).catch(()=>{{
-      document.getElementById('save-status').textContent = 'Save failed';
+      document.getElementById('save-status').textContent = 'localStorage only';
     }});
   }}, 500);
+}}
+
+function restoreFromStorage() {{
+  try {{
+    const stored = localStorage.getItem('verdicts-'+SESSION+'-'+RUN);
+    if (!stored) return;
+    const data = JSON.parse(stored);
+    if (!data.chunks) return;
+    for (const [c, info] of Object.entries(data.chunks)) {{
+      const ci = parseInt(c);
+      for (const v of info.verdict) {{ setVerdict(ci, v); }}
+      if (info.severity && info.severity !== 'pass') {{ setSeverity(ci, info.severity); }}
+    }}
+    document.getElementById('save-status').textContent = 'Restored from previous session';
+  }} catch(e) {{}}
 }}
 
 function exportVerdicts() {{
@@ -330,13 +352,14 @@ function togglePause() {{
   }}
 }}
 
-function advanceToChunk(n) {{
-  if (paused) {{ lastChunk = n - 1; return; }}
+function advanceToChunk(n, forcePlay) {{
   const next = document.getElementById('chunk-'+n);
   if (next) {{
     next.scrollIntoView({{behavior:'smooth',block:'center'}});
-    setTimeout(()=>next.querySelector('audio').play(), 2500);
     lastChunk = n;
+    if (!paused || forcePlay) {{
+      setTimeout(()=>next.querySelector('audio').play(), 800);
+    }}
   }}
 }}
 
@@ -375,13 +398,34 @@ document.querySelectorAll('.chunk audio').forEach(audio => {{
 }});
 
 window.addEventListener('load', () => {{
+  restoreFromStorage();
   const first = document.querySelector('#chunk-0 audio');
   if (first) {{
     paused = false;
     const btn = document.getElementById('pause-btn');
     if (btn) {{ btn.textContent = '\u23F8 Pause'; btn.style.background = '#d97706'; }}
-    first.play().catch(()=>{{}});
+    first.play().catch(()=>{{
+      // Autoplay blocked — show click-to-start overlay
+      paused = true;
+      if (btn) {{ btn.textContent = '\u25B6 Play'; btn.style.background = '#16a34a'; }}
+      const overlay = document.createElement('div');
+      overlay.id = 'start-overlay';
+      overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:9999;cursor:pointer';
+      overlay.innerHTML = '<div style="text-align:center;color:#f0eefc"><div style="font-size:4rem">\u25B6</div><div style="font-size:1.2rem;margin-top:12px">Click to start review</div></div>';
+      overlay.addEventListener('click', () => {{
+        overlay.remove();
+        paused = false;
+        if (btn) {{ btn.textContent = '\u23F8 Pause'; btn.style.background = '#d97706'; }}
+        first.play();
+      }});
+      document.body.appendChild(overlay);
+    }});
   }}
+}});
+
+window.addEventListener('beforeunload', () => {{
+  const data = buildExportData();
+  try {{ localStorage.setItem('verdicts-'+SESSION+'-'+RUN, JSON.stringify(data)); }} catch(e) {{}}
 }});
 </script>
 </body>
@@ -819,6 +863,7 @@ def main():
     parser.add_argument('--subtitle', default='', help='Subtitle text')
     parser.add_argument('--output', help='Output path (default: vault dir)')
     parser.add_argument('--local', action='store_true', help='Use local file:// paths instead of R2 URLs')
+    parser.add_argument('--verdicts-output', help='Path for verdicts JSON output (shown in page)')
     args = parser.parse_args()
 
     if args.mode == 'top3':
@@ -833,8 +878,12 @@ def main():
     else:
         out = VAULT_DIR / args.session_id / default_name
 
+    # Default verdicts output path next to the review page
+    verdicts_path = args.verdicts_output or str(out.parent / f"{args.session_id}-{args.run}-verdicts.json")
+
     out.write_text(html)
     print(f"Review page: {out}")
+    print(f"Verdicts will download as: {args.session_id}-{args.run}-verdicts.json")
 
 
 if __name__ == '__main__':
