@@ -145,24 +145,15 @@
     function backfillGeo(geo) {
       if (!geo) return;
 
-      // Patch the page_view with geo data
-      var url = SB_URL + '/rest/v1/page_views?id=eq.' + pageViewId;
-      fetch(url, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SB_KEY,
-          'Authorization': 'Bearer ' + SB_KEY,
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify({
-          country: geo.country,
-          city: geo.city,
-          region: geo.region,
-          latitude: geo.latitude,
-          longitude: geo.longitude
-        })
-      }).catch(function() {});
+      // Backfill geo via RPC (SECURITY DEFINER bypasses RLS)
+      sb.rpc('backfill_page_view_geo', {
+        pv_id: pageViewId,
+        geo_country: geo.country,
+        geo_city: geo.city,
+        geo_region: geo.region,
+        geo_latitude: geo.latitude,
+        geo_longitude: geo.longitude
+      }).then(function() {}).catch(function() {});
 
       // Update visitor record with geo if it was missing
       sb.from('visitors').update({
@@ -199,22 +190,20 @@
       if (elapsed > MAX_DURATION) elapsed = MAX_DURATION;
       if (elapsed < 1) return;
 
-      var url = SB_URL + '/rest/v1/page_views?id=eq.' + pageViewId;
-      var body = JSON.stringify({
-        duration_seconds: elapsed,
-        scroll_depth_pct: maxScrollPct
-      });
-
+      // Use RPC (SECURITY DEFINER bypasses RLS)
       try {
-        fetch(url, {
-          method: 'PATCH',
+        fetch(SB_URL + '/rest/v1/rpc/update_page_view_engagement', {
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'apikey': SB_KEY,
-            'Authorization': 'Bearer ' + SB_KEY,
-            'Prefer': 'return=minimal'
+            'Authorization': 'Bearer ' + SB_KEY
           },
-          body: body,
+          body: JSON.stringify({
+            pv_id: pageViewId,
+            dur: elapsed,
+            scroll: maxScrollPct
+          }),
           keepalive: !!useKeepalive
         });
       } catch(e) { /* silent */ }
