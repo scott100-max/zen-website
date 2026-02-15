@@ -1133,6 +1133,38 @@ init();
     return html
 
 
+def serve_dashboard(target, scan_meta, scan_duration, port=8787):
+    """Run a local HTTP server that regenerates dashboard on each page load."""
+    from http.server import HTTPServer, BaseHTTPRequestHandler
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            if self.path == '/' or self.path == '/index.html':
+                sessions = scan_vaults(target, scan_meta=scan_meta, scan_duration=scan_duration)
+                html = generate_html(sessions, target)
+                self.send_response(200)
+                self.send_header('Content-Type', 'text/html; charset=utf-8')
+                self.end_headers()
+                self.wfile.write(html.encode('utf-8'))
+            else:
+                self.send_response(404)
+                self.end_headers()
+
+        def log_message(self, format, *args):
+            pass  # Suppress request logs
+
+    server = HTTPServer(('127.0.0.1', port), Handler)
+    url = f'http://127.0.0.1:{port}'
+    print(f"Vault Dashboard serving at {url}")
+    print(f"  Live reload on every page refresh. Ctrl+C to stop.")
+    subprocess.Popen(["open", url])
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        print("\n  Server stopped.")
+        server.server_close()
+
+
 def main():
     parser = argparse.ArgumentParser(description="Vault Dashboard — visual pool depth overview")
     parser.add_argument("--target", type=int, default=35, help="Target candidates per chunk (default: 35)")
@@ -1140,9 +1172,16 @@ def main():
     parser.add_argument("--no-meta", action="store_true", help="Skip reading chunk meta files (faster)")
     parser.add_argument("--no-scan-duration", action="store_true", help="Skip ffprobe duration calls (faster)")
     parser.add_argument("--output", type=str, default=None, help="Custom output path")
+    parser.add_argument("--serve", action="store_true", help="Run local server with live data on each refresh")
+    parser.add_argument("--port", type=int, default=8787, help="Port for --serve mode (default: 8787)")
     parser.add_argument("--prioritise", type=str, default=None,
                         help="Set priority queue directly: comma-separated session names")
     args = parser.parse_args()
+
+    # Serve mode
+    if args.serve:
+        serve_dashboard(args.target, not args.no_meta, not args.no_scan_duration, args.port)
+        return
 
     # Handle direct priority setting
     if args.prioritise:

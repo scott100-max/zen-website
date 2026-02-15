@@ -1,15 +1,17 @@
 Narrator Welcome
 Category: mindfulness
 Ambient: grace
-Ambient-Fade-In: 30
+Ambient-Fade-In: 5
 Ambient-Fade-Out: 60
 API-Emotion: calm
 ---
 Welcome to Salus. I'm Marco, and I'll be your guide.
 ...
-In a world built for speed, this place was built to slow your mind down.
+In a world built for speed, this place was designed and built to slow your mind down. To help you create valuable space and time for yourself.
 ...
-A small team created it with one aim. To help you pause, take a breath, and come back to yourself.
+A small dedicated team created Salus with one aim. To help you pause, take a breath, and come back to yourself.
+...
+Our team has a combined 40 years of experience in this field, a qualified physiologist, and lots of creative enthusiasm.  
 ...
 New material is added each and every week to help you sleep, relax, and restore.
 ...
