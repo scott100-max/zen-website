@@ -1,61 +1,296 @@
 {
-  "_note": "Session catalogue — ambient assignments from Salus_Session_Catalogue.docx v14-Feb-2026. Birds and garden require +5dB gain boost (already quiet sources).",
+  "_note": "Session catalogue \u2014 ambient assignments from Salus_Session_Catalogue.docx v14-Feb-2026. Birds and garden require +5dB gain boost (already quiet sources).",
   "sessions": {
-    "01-morning-meditation":              {"ambient": "grace",    "category": "mindfulness", "status": "deployed"},
-    "03-breathing-for-anxiety":           {"ambient": "birds",    "category": "mindfulness", "status": "deployed"},
-    "09-rainfall-sleep-journey":          {"ambient": "rain",     "category": "sleep",       "status": "deployed"},
-    "18-calm-in-three-minutes":           {"ambient": "rain",     "category": "stress",      "status": "deployed"},
-    "19-release-and-restore":             {"ambient": "garden",   "category": "stress",      "status": "deployed"},
-    "23-the-calm-reset":                  {"ambient": "stream",   "category": "stress",      "status": "deployed"},
-    "25-introduction-to-mindfulness":     {"ambient": "garden",   "category": "mindfulness", "status": "deployed"},
-    "32-observing-emotions":              {"ambient": "garden",   "category": "mindfulness", "status": "deployed"},
-    "36-loving-kindness-intro-v3":        {"ambient": "grace",    "category": "mindfulness", "status": "deployed"},
-    "38-seven-day-mindfulness-day1":      {"ambient": "grace",    "category": "7day",        "status": "deployed"},
-    "39-seven-day-mindfulness-day2":      {"ambient": "stream",   "category": "7day",        "status": "deployed"},
-    "40-seven-day-mindfulness-day3":      {"ambient": "birds+fire","category": "7day",       "status": "deployed"},
-    "41-seven-day-mindfulness-day4":      {"ambient": "grace",    "category": "7day",        "status": "deployed"},
-    "42-seven-day-mindfulness-day5":      {"ambient": "rain",     "category": "7day",        "status": "deployed"},
-    "43-seven-day-mindfulness-day6":      {"ambient": "grace",    "category": "7day",        "status": "deployed", "_note": "session ID 43 also used by non-dual-awareness"},
-    "43-non-dual-awareness":              {"ambient": "grace",    "category": "mindfulness", "status": "deployed"},
-    "44-seven-day-mindfulness-day7":      {"ambient": "waves",    "category": "7day",        "status": "deployed"},
-    "52-the-court-of-your-mind":          {"ambient": "courtroom","category": "cbt",         "status": "deployed", "_missing_ambient": true},
-    "53-the-gardeners-almanac":           {"ambient": "garden",   "category": "sleep-story", "status": "deployed"},
-    "54-the-slow-train-north":            {"ambient": "train",    "category": "sleep-story", "status": "deployed"},
-    "55-the-bookshop-at-the-end-of-the-lane": {"ambient": "courtroom","category": "sleep-story","status": "deployed", "_missing_ambient": true},
-    "56-the-lighthouse-keepers-log":      {"ambient": "harbour",  "category": "sleep-story", "status": "deployed", "_missing_ambient": true},
-    "57-21day-mindfulness-day01":          {"ambient": "grace",    "category": "21day",       "status": "deployed"},
-    "58-21day-mindfulness-day02":          {"ambient": "garden",   "category": "21day",       "status": "deployed"},
-    "59-21day-mindfulness-day03":          {"ambient": "birds+fire","category": "21day",      "status": "deployed"},
-    "60-21day-mindfulness-day04":          {"ambient": "grace",    "category": "21day",       "status": "deployed"},
-    "61-21day-mindfulness-day05":          {"ambient": "grace",    "category": "21day",       "status": "deployed"},
-    "62-21day-mindfulness-day06":          {"ambient": "birds+fire","category": "21day",      "status": "deployed"},
-    "63-21day-mindfulness-day07":          {"ambient": "waves",    "category": "21day",       "status": "deployed"},
-    "64-21day-mindfulness-day08":          {"ambient": "stream",   "category": "21day",       "status": "deployed"},
-    "65-21day-mindfulness-day09":          {"ambient": "garden",   "category": "21day",       "status": "deployed"},
-    "66-21day-mindfulness-day10":          {"ambient": "birds",    "category": "21day",       "status": "deployed"},
-    "67-21day-mindfulness-day11":          {"ambient": "garden",   "category": "21day",       "status": "deployed"},
-    "68-21day-mindfulness-day12":          {"ambient": "stream",   "category": "21day",       "status": "deployed"},
-    "69-21day-mindfulness-day13":          {"ambient": "grace",    "category": "21day",       "status": "deployed"},
-    "70-21day-mindfulness-day14":          {"ambient": "birds",    "category": "21day",       "status": "deployed"},
-    "71-21day-mindfulness-day15":          {"ambient": "garden",   "category": "21day",       "status": "deployed"},
-    "72-21day-mindfulness-day16":          {"ambient": "birds+fire","category": "21day",      "status": "deployed"},
-    "73-21day-mindfulness-day17":          {"ambient": "waves",    "category": "21day",       "status": "deployed"},
-    "74-21day-mindfulness-day18":          {"ambient": "rain-on-tent","category": "21day",    "status": "deployed", "_missing_ambient": true},
-    "75-21day-mindfulness-day19":          {"ambient": "grace",    "category": "21day",       "status": "deployed"},
-    "76-21day-mindfulness-day20":          {"ambient": "grace",    "category": "21day",       "status": "deployed"},
-    "77-21day-mindfulness-day21":          {"ambient": "garden",   "category": "21day",       "status": "deployed"},
-    "78-cbt-thought-train":               {"ambient": "train",    "category": "cbt",         "status": "deployed"},
-    "79-cbt-evidence-log":                {"ambient": "grace",    "category": "cbt",         "status": "deployed"},
-    "80-cbt-one-small-thing":             {"ambient": "waves",    "category": "cbt",         "status": "deployed"},
-    "81-cbt-worry-window":                {"ambient": "birds",    "category": "cbt",         "status": "deployed"},
-    "82-your-first-meditation":           {"ambient": "grace+childhood-memories","category": "mindfulness","status": "deployed", "_missing_ambient": true},
-    "83-five-minute-reset":               {"ambient": "grace",    "category": "mindfulness", "status": "deployed"},
-    "84-anxiety-unravelled":              {"ambient": "grace",    "category": "mindfulness", "status": "deployed"},
-    "85-counting-down-to-sleep":          {"ambient": "grace",    "category": "sleep",       "status": "deployed"},
-    "86-deep-sleep":                      {"ambient": "grace",    "category": "sleep",       "status": "deployed"},
-    "87-ocean-voyage":                    {"ambient": "ocean",    "category": "sleep",       "status": "deployed"},
-    "88-cbt-the-tabletop":                {"ambient": null,       "category": "cbt",         "status": "script-only"},
-    "89-cbt-the-downward-arrow":          {"ambient": null,       "category": "cbt",         "status": "script-only"},
-    "90-cbt-rewriting-the-rule":          {"ambient": null,       "category": "cbt",         "status": "script-only"}
+    "01-morning-meditation": {
+      "ambient": "grace",
+      "category": "mindfulness",
+      "status": "deployed"
+    },
+    "03-breathing-for-anxiety": {
+      "ambient": "birds",
+      "category": "mindfulness",
+      "status": "deployed"
+    },
+    "09-rainfall-sleep-journey": {
+      "ambient": "rain",
+      "category": "sleep",
+      "status": "deployed"
+    },
+    "18-calm-in-three-minutes": {
+      "ambient": "rain",
+      "category": "stress",
+      "status": "deployed"
+    },
+    "19-release-and-restore": {
+      "ambient": "garden",
+      "category": "stress",
+      "status": "deployed"
+    },
+    "23-the-calm-reset": {
+      "ambient": "stream",
+      "category": "stress",
+      "status": "deployed"
+    },
+    "25-introduction-to-mindfulness": {
+      "ambient": "garden",
+      "category": "mindfulness",
+      "status": "deployed"
+    },
+    "32-observing-emotions": {
+      "ambient": "garden",
+      "category": "mindfulness",
+      "status": "deployed"
+    },
+    "36-loving-kindness-intro-v3": {
+      "ambient": "grace",
+      "category": "mindfulness",
+      "status": "deployed"
+    },
+    "38-seven-day-mindfulness-day1": {
+      "ambient": "grace",
+      "category": "7day",
+      "status": "deployed"
+    },
+    "39-seven-day-mindfulness-day2": {
+      "ambient": "stream",
+      "category": "7day",
+      "status": "deployed"
+    },
+    "40-seven-day-mindfulness-day3": {
+      "ambient": "birds+fire",
+      "category": "7day",
+      "status": "deployed"
+    },
+    "41-seven-day-mindfulness-day4": {
+      "ambient": "grace",
+      "category": "7day",
+      "status": "deployed"
+    },
+    "42-seven-day-mindfulness-day5": {
+      "ambient": "rain",
+      "category": "7day",
+      "status": "deployed"
+    },
+    "43-seven-day-mindfulness-day6": {
+      "ambient": "grace",
+      "category": "7day",
+      "status": "deployed",
+      "_note": "session ID 43 also used by non-dual-awareness"
+    },
+    "43-non-dual-awareness": {
+      "ambient": "grace",
+      "category": "mindfulness",
+      "status": "deployed"
+    },
+    "44-seven-day-mindfulness-day7": {
+      "ambient": "waves",
+      "category": "7day",
+      "status": "deployed"
+    },
+    "52-the-court-of-your-mind": {
+      "ambient": "courtroom",
+      "category": "cbt",
+      "status": "deployed",
+      "_missing_ambient": true
+    },
+    "53-the-gardeners-almanac": {
+      "ambient": "garden",
+      "category": "sleep-story",
+      "status": "deployed"
+    },
+    "54-the-slow-train-north": {
+      "ambient": "train",
+      "category": "sleep-story",
+      "status": "deployed"
+    },
+    "55-the-bookshop-at-the-end-of-the-lane": {
+      "ambient": "courtroom",
+      "category": "sleep-story",
+      "status": "deployed",
+      "_missing_ambient": true
+    },
+    "56-the-lighthouse-keepers-log": {
+      "ambient": "harbour",
+      "category": "sleep-story",
+      "status": "deployed",
+      "_missing_ambient": true
+    },
+    "57-21day-mindfulness-day01": {
+      "ambient": "grace",
+      "category": "21day",
+      "status": "deployed"
+    },
+    "58-21day-mindfulness-day02": {
+      "ambient": "garden",
+      "category": "21day",
+      "status": "deployed"
+    },
+    "59-21day-mindfulness-day03": {
+      "ambient": "birds+fire",
+      "category": "21day",
+      "status": "deployed"
+    },
+    "60-21day-mindfulness-day04": {
+      "ambient": "grace",
+      "category": "21day",
+      "status": "deployed"
+    },
+    "61-21day-mindfulness-day05": {
+      "ambient": "grace",
+      "category": "21day",
+      "status": "deployed"
+    },
+    "62-21day-mindfulness-day06": {
+      "ambient": "birds+fire",
+      "category": "21day",
+      "status": "deployed"
+    },
+    "63-21day-mindfulness-day07": {
+      "ambient": "waves",
+      "category": "21day",
+      "status": "deployed"
+    },
+    "64-21day-mindfulness-day08": {
+      "ambient": "stream",
+      "category": "21day",
+      "status": "deployed"
+    },
+    "65-21day-mindfulness-day09": {
+      "ambient": "garden",
+      "category": "21day",
+      "status": "deployed"
+    },
+    "66-21day-mindfulness-day10": {
+      "ambient": "birds",
+      "category": "21day",
+      "status": "deployed"
+    },
+    "67-21day-mindfulness-day11": {
+      "ambient": "garden",
+      "category": "21day",
+      "status": "deployed"
+    },
+    "68-21day-mindfulness-day12": {
+      "ambient": "stream",
+      "category": "21day",
+      "status": "deployed"
+    },
+    "69-21day-mindfulness-day13": {
+      "ambient": "grace",
+      "category": "21day",
+      "status": "deployed"
+    },
+    "70-21day-mindfulness-day14": {
+      "ambient": "birds",
+      "category": "21day",
+      "status": "deployed"
+    },
+    "71-21day-mindfulness-day15": {
+      "ambient": "garden",
+      "category": "21day",
+      "status": "deployed"
+    },
+    "72-21day-mindfulness-day16": {
+      "ambient": "birds+fire",
+      "category": "21day",
+      "status": "deployed"
+    },
+    "73-21day-mindfulness-day17": {
+      "ambient": "waves",
+      "category": "21day",
+      "status": "deployed"
+    },
+    "74-21day-mindfulness-day18": {
+      "ambient": "rain-on-tent",
+      "category": "21day",
+      "status": "deployed",
+      "_missing_ambient": true
+    },
+    "75-21day-mindfulness-day19": {
+      "ambient": "grace",
+      "category": "21day",
+      "status": "deployed"
+    },
+    "76-21day-mindfulness-day20": {
+      "ambient": "grace",
+      "category": "21day",
+      "status": "deployed"
+    },
+    "77-21day-mindfulness-day21": {
+      "ambient": "garden",
+      "category": "21day",
+      "status": "deployed"
+    },
+    "78-cbt-thought-train": {
+      "ambient": "train",
+      "category": "cbt",
+      "status": "deployed"
+    },
+    "79-cbt-evidence-log": {
+      "ambient": "grace",
+      "category": "cbt",
+      "status": "deployed"
+    },
+    "80-cbt-one-small-thing": {
+      "ambient": "waves",
+      "category": "cbt",
+      "status": "deployed"
+    },
+    "81-cbt-worry-window": {
+      "ambient": "birds",
+      "category": "cbt",
+      "status": "deployed"
+    },
+    "82-your-first-meditation": {
+      "ambient": "grace+childhood-memories",
+      "category": "mindfulness",
+      "status": "deployed",
+      "_missing_ambient": true
+    },
+    "83-five-minute-reset": {
+      "ambient": "grace",
+      "category": "mindfulness",
+      "status": "deployed"
+    },
+    "84-anxiety-unravelled": {
+      "ambient": "grace",
+      "category": "mindfulness",
+      "status": "deployed"
+    },
+    "85-counting-down-to-sleep": {
+      "ambient": "grace",
+      "category": "sleep",
+      "status": "deployed"
+    },
+    "86-deep-sleep": {
+      "ambient": "grace",
+      "category": "sleep",
+      "status": "deployed"
+    },
+    "87-ocean-voyage": {
+      "ambient": "ocean",
+      "category": "sleep",
+      "status": "deployed"
+    },
+    "88-cbt-the-tabletop": {
+      "ambient": null,
+      "category": "cbt",
+      "status": "script-only"
+    },
+    "89-cbt-the-downward-arrow": {
+      "ambient": null,
+      "category": "cbt",
+      "status": "script-only"
+    },
+    "90-cbt-rewriting-the-rule": {
+      "ambient": null,
+      "category": "cbt",
+      "status": "script-only"
+    },
+    "91-the-body-scan": {
+      "ambient": "grace",
+      "category": "mindfulness",
+      "status": "deployed"
+    }
   }
 }
